@@ -1,0 +1,221 @@
+{
+  "competitionName": "World Cup 2026",
+  "groups": {
+    "A": {
+      "teams": [
+        {"name": "Mexico", "flag": "🇲🇽"},
+        {"name": "South Africa", "flag": "🇿🇦"},
+        {"name": "Korea Republic", "flag": "🇰🇷"},
+        {"name": "Winner Playoff D", "flag": "🏳️"}
+      ],
+      "standings": [
+        {"rank": 1, "team": "Mexico", "flag": "🇲🇽", "goalDifference": 2, "points": 3},
+        {"rank": 2, "team": "South Africa", "flag": "🇿🇦", "goalDifference": 1, "points": 1},
+        {"rank": 3, "team": "Korea Republic", "flag": "🇰🇷", "goalDifference": -1, "points": 1},
+        {"rank": 4, "team": "Winner Playoff D", "flag": "🏳️", "goalDifference": -2, "points": 0}
+      ],
+      "nextMatches": [
+        {"homeTeam": "Mexico", "homeFlag": "🇲🇽", "awayTeam": "South Africa", "awayFlag": "🇿🇦", "dateTime": "2026-06-15T16:00:00-04:00"},
+        {"homeTeam": "Korea Republic", "homeFlag": "🇰🇷", "awayTeam": "Winner Playoff D", "awayFlag": "🏳️", "dateTime": "2026-06-15T19:00:00-04:00"}
+      ]
+    },
+    "B": {
+      "teams": [
+        {"name": "Canada", "flag": "🇨🇦"},
+        {"name": "Winner Playoff A", "flag": "🏳️"},
+        {"name": "Qatar", "flag": "🇶🇦"},
+        {"name": "Switzerland", "flag": "🇨🇭"}
+      ],
+      "standings": [
+        {"rank": 1, "team": "Canada", "flag": "🇨🇦", "goalDifference": 3, "points": 3},
+        {"rank": 2, "team": "Switzerland", "flag": "🇨🇭", "goalDifference": 1, "points": 3},
+        {"rank": 3, "team": "Qatar", "flag": "🇶🇦", "goalDifference": -1, "points": 0},
+        {"rank": 4, "team": "Winner Playoff A", "flag": "🏳️", "goalDifference": -3, "points": 0}
+      ],
+      "nextMatches": [
+        {"homeTeam": "Canada", "homeFlag": "🇨🇦", "awayTeam": "Qatar", "awayFlag": "🇶🇦", "dateTime": "2026-06-16T14:00:00-04:00"},
+        {"homeTeam": "Switzerland", "homeFlag": "🇨🇭", "awayTeam": "Winner Playoff A", "awayFlag": "🏳️", "dateTime": "2026-06-16T18:00:00-04:00"}
+      ]
+    },
+    "C": {
+      "teams": [
+        {"name": "Brazil", "flag": "🇧🇷"},
+        {"name": "Morocco", "flag": "🇲🇦"},
+        {"name": "Haiti", "flag": "🇭🇹"},
+        {"name": "Scotland", "flag": "🏴"}
+      ],
+      "standings": [
+        {"rank": 1, "team": "Brazil", "flag": "🇧🇷", "goalDifference": 4, "points": 3},
+        {"rank": 2, "team": "Morocco", "flag": "🇲🇦", "goalDifference": 1, "points": 1},
+        {"rank": 3, "team": "Scotland", "flag": "🏴", "goalDifference": -1, "points": 1},
+        {"rank": 4, "team": "Haiti", "flag": "🇭🇹", "goalDifference": -4, "points": 0}
+      ],
+      "nextMatches": [
+        {"homeTeam": "Brazil", "homeFlag": "🇧🇷", "awayTeam": "Morocco", "awayFlag": "🇲🇦", "dateTime": "2026-06-17T13:00:00-04:00"},
+        {"homeTeam": "Scotland", "homeFlag": "🏴", "awayTeam": "Haiti", "awayFlag": "🇭🇹", "dateTime": "2026-06-17T17:00:00-04:00"}
+      ]
+    },
+    "D": {
+      "teams": [
+        {"name": "USA", "flag": "🇺🇸"},
+        {"name": "Paraguay", "flag": "🇵🇾"},
+        {"name": "Australia", "flag": "🇦🇺"},
+        {"name": "Winner Playoff C", "flag": "🏳️"}
+      ],
+      "standings": [
+        {"rank": 1, "team": "USA", "flag": "🇺🇸", "goalDifference": 2, "points": 3},
+        {"rank": 2, "team": "Australia", "flag": "🇦🇺", "goalDifference": 1, "points": 3},
+        {"rank": 3, "team": "Paraguay", "flag": "🇵🇾", "goalDifference": -1, "points": 0},
+        {"rank": 4, "team": "Winner Playoff C", "flag": "🏳️", "goalDifference": -2, "points": 0}
+      ],
+      "nextMatches": [
+        {"homeTeam": "USA", "homeFlag": "🇺🇸", "awayTeam": "Paraguay", "awayFlag": "🇵🇾", "dateTime": "2026-06-18T16:00:00-04:00"},
+        {"homeTeam": "Australia", "homeFlag": "🇦🇺", "awayTeam": "Winner Playoff C", "awayFlag": "🏳️", "dateTime": "2026-06-18T20:00:00-04:00"}
+      ]
+    },
+    "E": {
+      "teams": [
+        {"name": "Germany", "flag": "🇩🇪"},
+        {"name": "Curacao", "flag": "🇨🇼"},
+        {"name": "Cote d'Ivoire", "flag": "🇨🇮"},
+        {"name": "Ecuador", "flag": "🇪🇨"}
+      ],
+      "standings": [
+        {"rank": 1, "team": "Germany", "flag": "🇩🇪", "goalDifference": 3, "points": 3},
+        {"rank": 2, "team": "Ecuador", "flag": "🇪🇨", "goalDifference": 1, "points": 3},
+        {"rank": 3, "team": "Cote d'Ivoire", "flag": "🇨🇮", "goalDifference": -1, "points": 0},
+        {"rank": 4, "team": "Curacao", "flag": "🇨🇼", "goalDifference": -3, "points": 0}
+      ],
+      "nextMatches": [
+        {"homeTeam": "Germany", "homeFlag": "🇩🇪", "awayTeam": "Curacao", "awayFlag": "🇨🇼", "dateTime": "2026-06-19T14:00:00-04:00"},
+        {"homeTeam": "Ecuador", "homeFlag": "🇪🇨", "awayTeam": "Cote d'Ivoire", "awayFlag": "🇨🇮", "dateTime": "2026-06-19T18:00:00-04:00"}
+      ]
+    },
+    "F": {
+      "teams": [
+        {"name": "Netherlands", "flag": "🇳🇱"},
+        {"name": "Japan", "flag": "🇯🇵"},
+        {"name": "Winner Playoff B", "flag": "🏳️"},
+        {"name": "Tunisia", "flag": "🇹🇳"}
+      ],
+      "standings": [
+        {"rank": 1, "team": "Netherlands", "flag": "🇳🇱", "goalDifference": 2, "points": 3},
+        {"rank": 2, "team": "Japan", "flag": "🇯🇵", "goalDifference": 1, "points": 1},
+        {"rank": 3, "team": "Tunisia", "flag": "🇹🇳", "goalDifference": -1, "points": 1},
+        {"rank": 4, "team": "Winner Playoff B", "flag": "🏳️", "goalDifference": -2, "points": 0}
+      ],
+      "nextMatches": [
+        {"homeTeam": "Netherlands", "homeFlag": "🇳🇱", "awayTeam": "Japan", "awayFlag": "🇯🇵", "dateTime": "2026-06-20T12:00:00-04:00"},
+        {"homeTeam": "Tunisia", "homeFlag": "🇹🇳", "awayTeam": "Winner Playoff B", "awayFlag": "🏳️", "dateTime": "2026-06-20T16:00:00-04:00"}
+      ]
+    },
+    "G": {
+      "teams": [
+        {"name": "Belgium", "flag": "🇧🇪"},
+        {"name": "Egypt", "flag": "🇪🇬"},
+        {"name": "IR Iran", "flag": "🇮🇷"},
+        {"name": "New Zealand", "flag": "🇳🇿"}
+      ],
+      "standings": [
+        {"rank": 1, "team": "Belgium", "flag": "🇧🇪", "goalDifference": 2, "points": 3},
+        {"rank": 2, "team": "IR Iran", "flag": "🇮🇷", "goalDifference": 0, "points": 1},
+        {"rank": 3, "team": "Egypt", "flag": "🇪🇬", "goalDifference": 0, "points": 1},
+        {"rank": 4, "team": "New Zealand", "flag": "🇳🇿", "goalDifference": -2, "points": 0}
+      ],
+      "nextMatches": [
+        {"homeTeam": "Belgium", "homeFlag": "🇧🇪", "awayTeam": "Egypt", "awayFlag": "🇪🇬", "dateTime": "2026-06-21T15:00:00-04:00"},
+        {"homeTeam": "IR Iran", "homeFlag": "🇮🇷", "awayTeam": "New Zealand", "awayFlag": "🇳🇿", "dateTime": "2026-06-21T19:00:00-04:00"}
+      ]
+    },
+    "H": {
+      "teams": [
+        {"name": "Spain", "flag": "🇪🇸"},
+        {"name": "Cabo Verde", "flag": "🇨🇻"},
+        {"name": "Saudi Arabia", "flag": "🇸🇦"},
+        {"name": "Uruguay", "flag": "🇺🇾"}
+      ],
+      "standings": [
+        {"rank": 1, "team": "Spain", "flag": "🇪🇸", "goalDifference": 3, "points": 3},
+        {"rank": 2, "team": "Uruguay", "flag": "🇺🇾", "goalDifference": 1, "points": 3},
+        {"rank": 3, "team": "Saudi Arabia", "flag": "🇸🇦", "goalDifference": -1, "points": 0},
+        {"rank": 4, "team": "Cabo Verde", "flag": "🇨🇻", "goalDifference": -3, "points": 0}
+      ],
+      "nextMatches": [
+        {"homeTeam": "Spain", "homeFlag": "🇪🇸", "awayTeam": "Cabo Verde", "awayFlag": "🇨🇻", "dateTime": "2026-06-22T14:00:00-04:00"},
+        {"homeTeam": "Uruguay", "homeFlag": "🇺🇾", "awayTeam": "Saudi Arabia", "awayFlag": "🇸🇦", "dateTime": "2026-06-22T18:00:00-04:00"}
+      ]
+    },
+    "I": {
+      "teams": [
+        {"name": "France", "flag": "🇫🇷"},
+        {"name": "Senegal", "flag": "🇸🇳"},
+        {"name": "Winner Playoff E", "flag": "🏳️"},
+        {"name": "Norway", "flag": "🇳🇴"}
+      ],
+      "standings": [
+        {"rank": 1, "team": "France", "flag": "🇫🇷", "goalDifference": 2, "points": 3},
+        {"rank": 2, "team": "Norway", "flag": "🇳🇴", "goalDifference": 1, "points": 1},
+        {"rank": 3, "team": "Senegal", "flag": "🇸🇳", "goalDifference": -1, "points": 1},
+        {"rank": 4, "team": "Winner Playoff E", "flag": "🏳️", "goalDifference": -2, "points": 0}
+      ],
+      "nextMatches": [
+        {"homeTeam": "France", "homeFlag": "🇫🇷", "awayTeam": "Senegal", "awayFlag": "🇸🇳", "dateTime": "2026-06-23T16:00:00-04:00"},
+        {"homeTeam": "Norway", "homeFlag": "🇳🇴", "awayTeam": "Winner Playoff E", "awayFlag": "🏳️", "dateTime": "2026-06-23T20:00:00-04:00"}
+      ]
+    },
+    "J": {
+      "teams": [
+        {"name": "Argentina", "flag": "🇦🇷"},
+        {"name": "Algeria", "flag": "🇩🇿"},
+        {"name": "Austria", "flag": "🇦🇹"},
+        {"name": "Jordan", "flag": "🇯🇴"}
+      ],
+      "standings": [
+        {"rank": 1, "team": "Argentina", "flag": "🇦🇷", "goalDifference": 4, "points": 3},
+        {"rank": 2, "team": "Austria", "flag": "🇦🇹", "goalDifference": 1, "points": 1},
+        {"rank": 3, "team": "Algeria", "flag": "🇩🇿", "goalDifference": -1, "points": 1},
+        {"rank": 4, "team": "Jordan", "flag": "🇯🇴", "goalDifference": -4, "points": 0}
+      ],
+      "nextMatches": [
+        {"homeTeam": "Argentina", "homeFlag": "🇦🇷", "awayTeam": "Algeria", "awayFlag": "🇩🇿", "dateTime": "2026-06-24T15:00:00-04:00"},
+        {"homeTeam": "Austria", "homeFlag": "🇦🇹", "awayTeam": "Jordan", "awayFlag": "🇯🇴", "dateTime": "2026-06-24T19:00:00-04:00"}
+      ]
+    },
+    "K": {
+      "teams": [
+        {"name": "Portugal", "flag": "🇵🇹"},
+        {"name": "Winner Playoff F", "flag": "🏳️"},
+        {"name": "Uzbekistan", "flag": "🇺🇿"},
+        {"name": "Colombia", "flag": "🇨🇴"}
+      ],
+      "standings": [
+        {"rank": 1, "team": "Portugal", "flag": "🇵🇹", "goalDifference": 2, "points": 3},
+        {"rank": 2, "team": "Colombia", "flag": "🇨🇴", "goalDifference": 1, "points": 3},
+        {"rank": 3, "team": "Uzbekistan", "flag": "🇺🇿", "goalDifference": -1, "points": 0},
+        {"rank": 4, "team": "Winner Playoff F", "flag": "🏳️", "goalDifference": -2, "points": 0}
+      ],
+      "nextMatches": [
+        {"homeTeam": "Portugal", "homeFlag": "🇵🇹", "awayTeam": "Uzbekistan", "awayFlag": "🇺🇿", "dateTime": "2026-06-25T16:00:00-04:00"},
+        {"homeTeam": "Colombia", "homeFlag": "🇨🇴", "awayTeam": "Winner Playoff F", "awayFlag": "🏳️", "dateTime": "2026-06-25T20:00:00-04:00"}
+      ]
+    },
+    "L": {
+      "teams": [
+        {"name": "England", "flag": "🏴"},
+        {"name": "Croatia", "flag": "🇭🇷"},
+        {"name": "Ghana", "flag": "🇬🇭"},
+        {"name": "Panama", "flag": "🇵🇦"}
+      ],
+      "standings": [
+        {"rank": 1, "team": "England", "flag": "🏴", "goalDifference": 3, "points": 3},
+        {"rank": 2, "team": "Croatia", "flag": "🇭🇷", "goalDifference": 1, "points": 3},
+        {"rank": 3, "team": "Ghana", "flag": "🇬🇭", "goalDifference": -1, "points": 0},
+        {"rank": 4, "team": "Panama", "flag": "🇵🇦", "goalDifference": -3, "points": 0}
+      ],
+      "nextMatches": [
+        {"homeTeam": "England", "homeFlag": "🏴", "awayTeam": "Croatia", "awayFlag": "🇭🇷", "dateTime": "2026-06-26T14:00:00-04:00"},
+        {"homeTeam": "Ghana", "homeFlag": "🇬🇭", "awayTeam": "Panama", "awayFlag": "🇵🇦", "dateTime": "2026-06-26T18:00:00-04:00"}
+      ]
+    }
+  }
+}

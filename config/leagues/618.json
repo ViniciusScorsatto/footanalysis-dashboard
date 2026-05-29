@@ -1,0 +1,22 @@
+{
+  "leagueId": 618,
+  "leagueName": "Copa São Paulo",
+  "accentColor": "#8E44AD",
+  "secondaryAccentColor": "#F0D500",
+  "standings": {
+    "safeArea": {
+      "left": 64,
+      "right": 92
+    },
+    "zones": [
+      {
+        "key": "classification",
+        "label": "Classificação",
+        "start": 1,
+        "end": 2,
+        "fill": "linear-gradient(90deg, rgba(58, 196, 88, 0.84), rgba(58, 196, 88, 0.28) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(86, 214, 120, 0.62)"
+      }
+    ]
+  }
+}

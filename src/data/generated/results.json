@@ -1,0 +1,142 @@
+[
+  {
+    "homeTeam": "RB Bragantino",
+    "awayTeam": "Botafogo",
+    "homeScore": 1,
+    "awayScore": 2,
+    "homeBadge": {
+      "label": "RB",
+      "logoPath": "/logos/rb-bragantino.png"
+    },
+    "awayBadge": {
+      "label": "B",
+      "logoPath": "/logos/botafogo.png"
+    }
+  },
+  {
+    "homeTeam": "Fluminense",
+    "awayTeam": "Atletico-MG",
+    "homeScore": 1,
+    "awayScore": 0,
+    "homeBadge": {
+      "label": "F",
+      "logoPath": "/logos/fluminense.png"
+    },
+    "awayBadge": {
+      "label": "A",
+      "logoPath": "/logos/atletico-mg.png"
+    }
+  },
+  {
+    "homeTeam": "Sao Paulo",
+    "awayTeam": "Palmeiras",
+    "homeScore": 0,
+    "awayScore": 1,
+    "homeBadge": {
+      "label": "SP",
+      "logoPath": "/logos/sao-paulo.png"
+    },
+    "awayBadge": {
+      "label": "P",
+      "logoPath": "/logos/palmeiras.png"
+    }
+  },
+  {
+    "homeTeam": "Vasco DA Gama",
+    "awayTeam": "Gremio",
+    "homeScore": 2,
+    "awayScore": 1,
+    "homeBadge": {
+      "label": "VDG",
+      "logoPath": "/logos/vasco-da-gama.png"
+    },
+    "awayBadge": {
+      "label": "G",
+      "logoPath": "/logos/gremio.png"
+    }
+  },
+  {
+    "homeTeam": "Atletico Paranaense",
+    "awayTeam": "Coritiba",
+    "homeScore": 2,
+    "awayScore": 0,
+    "homeBadge": {
+      "label": "AP",
+      "logoPath": "/logos/atletico-paranaense.png"
+    },
+    "awayBadge": {
+      "label": "C",
+      "logoPath": "/logos/coritiba.png"
+    }
+  },
+  {
+    "homeTeam": "Cruzeiro",
+    "awayTeam": "Santos",
+    "homeScore": 0,
+    "awayScore": 0,
+    "homeBadge": {
+      "label": "C",
+      "logoPath": "/logos/cruzeiro.png"
+    },
+    "awayBadge": {
+      "label": "S",
+      "logoPath": "/logos/santos.png"
+    }
+  },
+  {
+    "homeTeam": "remo",
+    "awayTeam": "Bahia",
+    "homeScore": 4,
+    "awayScore": 1,
+    "homeBadge": {
+      "label": "R",
+      "logoPath": "/logos/remo.png"
+    },
+    "awayBadge": {
+      "label": "B",
+      "logoPath": "/logos/bahia.png"
+    }
+  },
+  {
+    "homeTeam": "Internacional",
+    "awayTeam": "Chapecoense-sc",
+    "homeScore": 2,
+    "awayScore": 0,
+    "homeBadge": {
+      "label": "I",
+      "logoPath": "/logos/internacional.png"
+    },
+    "awayBadge": {
+      "label": "C",
+      "logoPath": "/logos/chapecoense-sc.png"
+    }
+  },
+  {
+    "homeTeam": "Vitoria",
+    "awayTeam": "Mirassol",
+    "homeScore": 1,
+    "awayScore": 0,
+    "homeBadge": {
+      "label": "V",
+      "logoPath": "/logos/vitoria.png"
+    },
+    "awayBadge": {
+      "label": "M",
+      "logoPath": "/logos/mirassol.png"
+    }
+  },
+  {
+    "homeTeam": "Corinthians",
+    "awayTeam": "Flamengo",
+    "homeScore": 1,
+    "awayScore": 1,
+    "homeBadge": {
+      "label": "C",
+      "logoPath": "/logos/corinthians.png"
+    },
+    "awayBadge": {
+      "label": "F",
+      "logoPath": "/logos/flamengo.png"
+    }
+  }
+]

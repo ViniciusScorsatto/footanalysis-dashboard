@@ -1,0 +1,29 @@
+{
+  "leagueId": 75,
+  "leagueName": "Brasileirão Série C",
+  "accentColor": "#27AE60",
+  "standings": {
+    "safeArea": {
+      "left": 68,
+      "right": 104
+    },
+    "zones": [
+      {
+        "key": "quadrangular",
+        "label": "Quadrangular",
+        "start": 1,
+        "end": 8,
+        "fill": "linear-gradient(90deg, rgba(39, 174, 96, 0.88), rgba(39, 174, 96, 0.24) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(86, 214, 120, 0.62)"
+      },
+      {
+        "key": "rebaixamento",
+        "label": "Rebaixamento",
+        "start": 19,
+        "end": 20,
+        "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(255, 102, 102, 0.56)"
+      }
+    ]
+  }
+}

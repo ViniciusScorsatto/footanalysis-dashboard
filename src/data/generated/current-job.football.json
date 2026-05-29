@@ -1,0 +1,220 @@
+{
+  "sport": "football",
+  "template": "top-scorers",
+  "leagueId": 135,
+  "season": 2025,
+  "leagueName": "Serie A",
+  "channelProfile": "en",
+  "languageProfile": "en",
+  "brandName": "Foot Analysis",
+  "brandLogoPath": "/branding/foot-analysis-logo.png",
+  "soundtrackPath": "/audio/football/Serie A - Ninety Minutes.mp3",
+  "soundtrackLabel": "Serie A - Ninety Minutes",
+  "soundtrackVolume": 0.2,
+  "outputName": "serie-a-2025-top-scorers-en.mp4",
+  "durationInFrames": 270,
+  "compositionId": "FootballTopScorersShort",
+  "leagueConfig": {
+    "leagueId": 135,
+    "accentColor": "#3A78C9",
+    "standings": {
+      "safeArea": {
+        "left": 68,
+        "right": 104
+      },
+      "zones": [
+        {
+          "key": "champions-league",
+          "label": "Champions League",
+          "start": 1,
+          "end": 4,
+          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(101, 227, 133, 0.64)",
+          "textColor": "#27AE60"
+        },
+        {
+          "key": "europa-league",
+          "label": "Europa League",
+          "start": 5,
+          "end": 5,
+          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 190, 92, 0.58)",
+          "textColor": "#F5A134"
+        },
+        {
+          "key": "conference-league-qualifying",
+          "label": "Conference League Qualifying",
+          "start": 6,
+          "end": 6,
+          "fill": "linear-gradient(90deg, rgba(59, 133, 255, 0.82), rgba(59, 133, 255, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(107, 166, 255, 0.54)",
+          "textColor": "#3B85FF"
+        },
+        {
+          "key": "relegation",
+          "label": "Relegated",
+          "start": 18,
+          "end": 20,
+          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 102, 102, 0.56)",
+          "textColor": "#E74C3C"
+        }
+      ]
+    },
+    "leagueName": "Serie A Italy"
+  },
+  "titleLabel": "Top Scorers",
+  "subtitleLabel": "Top 10 scorers",
+  "ctaText": "Lautaro is the Golden Boot of Lega Serie A 25/26",
+  "entries": [
+    {
+      "rank": 1,
+      "playerName": "Lautaro Martínez",
+      "team": "Inter",
+      "teamShort": "INTE",
+      "goals": 17,
+      "assists": 6,
+      "badge": {
+        "label": "I",
+        "logoPath": "/logos/inter-505.png"
+      }
+    },
+    {
+      "rank": 2,
+      "playerName": "T. Douvikas",
+      "team": "Como",
+      "teamShort": "COMO",
+      "goals": 14,
+      "assists": 1,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/como-895.png"
+      }
+    },
+    {
+      "rank": 3,
+      "playerName": "D. Malen",
+      "team": "AS Roma",
+      "teamShort": "AR",
+      "goals": 14,
+      "assists": 2,
+      "badge": {
+        "label": "AR",
+        "logoPath": "/logos/as-roma-497.png"
+      }
+    },
+    {
+      "rank": 4,
+      "playerName": "M. Thuram",
+      "team": "Inter",
+      "teamShort": "INTE",
+      "goals": 13,
+      "assists": 6,
+      "badge": {
+        "label": "I",
+        "logoPath": "/logos/inter-505.png"
+      }
+    },
+    {
+      "rank": 5,
+      "playerName": "N. Paz",
+      "team": "Como",
+      "teamShort": "COMO",
+      "goals": 12,
+      "assists": 6,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/como-895.png"
+      }
+    },
+    {
+      "rank": 6,
+      "playerName": "R. Højlund",
+      "team": "Napoli",
+      "teamShort": "NAPO",
+      "goals": 12,
+      "assists": 5,
+      "badge": {
+        "label": "N",
+        "logoPath": "/logos/napoli-492.png"
+      }
+    },
+    {
+      "rank": 7,
+      "playerName": "G. Simeone",
+      "team": "Torino",
+      "teamShort": "TORI",
+      "goals": 11,
+      "assists": 0,
+      "badge": {
+        "label": "T",
+        "logoPath": "/logos/torino-503.png"
+      }
+    },
+    {
+      "rank": 8,
+      "playerName": "N. Krstović",
+      "team": "Atalanta",
+      "teamShort": "ATAL",
+      "goals": 10,
+      "assists": 5,
+      "badge": {
+        "label": "A",
+        "logoPath": "/logos/atalanta-499.png"
+      }
+    },
+    {
+      "rank": 9,
+      "playerName": "S. McTominay",
+      "team": "Napoli",
+      "teamShort": "NAPO",
+      "goals": 10,
+      "assists": 3,
+      "badge": {
+        "label": "N",
+        "logoPath": "/logos/napoli-492.png"
+      }
+    },
+    {
+      "rank": 10,
+      "playerName": "K. Yıldız",
+      "team": "Juventus",
+      "teamShort": "JUVE",
+      "goals": 10,
+      "assists": 6,
+      "badge": {
+        "label": "J",
+        "logoPath": "/logos/juventus-496.png"
+      }
+    }
+  ],
+  "introTitle": "Serie A",
+  "introSubtitle": "Top 10 scorers",
+  "hookText": "Lautaro is the Golden Boot of Lega Serie A 25/26",
+  "coldOpenData": {
+    "tableRows": [
+      {
+        "rank": 1,
+        "club": "INTER",
+        "pts": 10
+      },
+      {
+        "rank": 2,
+        "club": "COMO",
+        "pts": 8
+      },
+      {
+        "rank": 3,
+        "club": "AS ROMA",
+        "pts": 6
+      },
+      {
+        "rank": 4,
+        "club": "NAPOLI",
+        "pts": 4
+      }
+    ]
+  },
+  "voiceoverEnabled": false,
+  "voiceoverText": "Serie A top scorers"
+}

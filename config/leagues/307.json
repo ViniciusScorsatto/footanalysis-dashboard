@@ -1,0 +1,30 @@
+{
+  "leagueId": 307,
+  "leagueName": "Saudi Pro League",
+  "accentColor": "#0087C7",
+  "secondaryAccentColor": "#E60028",
+  "standings": {
+    "safeArea": {
+      "left": 68,
+      "right": 104
+    },
+    "zones": [
+      {
+        "key": "champions-league",
+        "label": "AFC Champions League",
+        "start": 1,
+        "end": 3,
+        "fill": "linear-gradient(90deg, rgba(46, 204, 113, 0.84), rgba(46, 204, 113, 0.24) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(93, 232, 150, 0.58)"
+      },
+      {
+        "key": "relegation",
+        "label": "Relegation",
+        "start": 16,
+        "end": 18,
+        "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(255, 102, 102, 0.56)"
+      }
+    ]
+  }
+}

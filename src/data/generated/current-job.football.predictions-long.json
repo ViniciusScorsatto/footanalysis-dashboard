@@ -1,0 +1,71 @@
+{
+  "sport": "football",
+  "template": "predictions-long",
+  "compositionId": "FootballPredictionsLong",
+  "leagueId": 71,
+  "season": 2026,
+  "leagueName": "Brasileirão Série A",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
+  "brandName": "Foot Analysis",
+  "brandLogoPath": "/branding/foot-analysis-logo.png",
+  "soundtrackPath": "/audio/football/gol-na-pressao.mp3",
+  "soundtrackLabel": "Gol na Pressão",
+  "soundtrackVolume": 0.92,
+  "outputName": "palpites-longform-sample.mp4",
+  "durationInFrames": 934,
+  "dataSource": "sample",
+  "title": "Palpites da Rodada",
+  "roundLabel": "Rodada",
+  "openingLines": [
+    "Hoje tem rodada cheia e eu separei os jogos que podem mexer na tabela.",
+    "Agora vamos para os palpites, jogo por jogo, com o placar que eu apostaria."
+  ],
+  "introDurationInFrames": 298,
+  "outroDurationInFrames": 210,
+  "transitionDurationInFrames": 18,
+  "disclaimer": "Os palpites têm caráter exclusivamente recreativo.",
+  "voiceoverEnabled": false,
+  "matches": [
+    {
+      "id": "palmeiras-flamengo-1",
+      "homeTeam": "Palmeiras",
+      "awayTeam": "Flamengo",
+      "predictedScore": "2-1",
+      "homeScore": 2,
+      "awayScore": 1,
+      "voiceover": "Palmeiras chega forte em casa, mas o Flamengo tem qualidade para incomodar. Meu palpite é vitória apertada do Palmeiras, dois a um.",
+      "durationInFrames": 210,
+      "homeBadge": {
+        "label": "PAL",
+        "logoPath": "/logos/palmeiras.png",
+        "accentColor": "#27AE60"
+      },
+      "awayBadge": {
+        "label": "FLA",
+        "logoPath": "/logos/flamengo.png",
+        "accentColor": "#C0392B"
+      }
+    },
+    {
+      "id": "gremio-santos-2",
+      "homeTeam": "Grêmio",
+      "awayTeam": "Santos",
+      "predictedScore": "1-1",
+      "homeScore": 1,
+      "awayScore": 1,
+      "voiceover": "Jogo com cara de equilíbrio. O Grêmio deve pressionar, mas o Santos pode achar espaço. Para mim, empate em um a um.",
+      "durationInFrames": 180,
+      "homeBadge": {
+        "label": "GRE",
+        "logoPath": "/logos/gremio.png",
+        "accentColor": "#2E86DE"
+      },
+      "awayBadge": {
+        "label": "SAN",
+        "logoPath": "/logos/santos-u20.png",
+        "accentColor": "#f0f4f8"
+      }
+    }
+  ]
+}

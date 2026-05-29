@@ -1,0 +1,35 @@
+import type {ChampionFinalVideoJob} from '../lib/types';
+
+export const sampleChampionFinalJob: ChampionFinalVideoJob = {
+  sport: 'football',
+  template: 'champion-final',
+  compositionId: 'FootballChampionFinalShort',
+  leagueId: 73,
+  season: 2026,
+  leagueName: 'Copa do Brasil 2026',
+  channelProfile: 'pt',
+  languageProfile: 'pt-br',
+  brandName: 'Foot Analysis',
+  brandLogoPath: '/branding/foot-analysis-logo.png',
+  outputName: 'copa-do-brasil-2026-campeao.mp4',
+  durationInFrames: 270,
+  leagueConfig: {
+    leagueId: 73,
+    leagueName: 'Copa do Brasil',
+    accentColor: '#C0392B',
+  },
+  titleLabel: 'Campeao',
+  subtitleLabel: 'Copa do Brasil 2026',
+  seasonLabel: 'Temporada 2026',
+  championTeam: 'Cruzeiro',
+  championBadge: {label: 'CRU'},
+  finalFixture: {
+    homeTeam: 'Cruzeiro',
+    awayTeam: 'Flamengo',
+    homeScore: 2,
+    awayScore: 1,
+    homeBadge: {label: 'CRU'},
+    awayBadge: {label: 'FLA'},
+  },
+  ctaText: 'Campeao merecido?',
+};

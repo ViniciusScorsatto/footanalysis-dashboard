@@ -1,0 +1,37 @@
+{
+  "leagueId": 72,
+  "leagueName": "Brasileirão Série B",
+  "accentColor": "#2E86DE",
+  "standings": {
+    "safeArea": {
+      "left": 68,
+      "right": 104
+    },
+    "zones": [
+      {
+        "key": "acesso-direto",
+        "label": "Acesso direto",
+        "start": 1,
+        "end": 2,
+        "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(101, 227, 133, 0.64)"
+      },
+      {
+        "key": "playoffs-acesso",
+        "label": "Playoffs de acesso",
+        "start": 3,
+        "end": 6,
+        "fill": "linear-gradient(90deg, rgba(240, 165, 0, 0.88), rgba(240, 165, 0, 0.22) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(240, 165, 0, 0.52)"
+      },
+      {
+        "key": "rebaixamento",
+        "label": "Rebaixamento",
+        "start": 17,
+        "end": 20,
+        "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(255, 102, 102, 0.56)"
+      }
+    ]
+  }
+}

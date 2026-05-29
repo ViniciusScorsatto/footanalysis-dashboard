@@ -1,0 +1,8 @@
+.env
+node_modules
+build/
+out/
+public/voiceovers/football/
+.analysis-frames/
+.qodo/
+*.log

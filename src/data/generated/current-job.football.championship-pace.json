@@ -1,0 +1,234 @@
+{
+  "sport": "football",
+  "template": "championship-pace",
+  "leagueId": 71,
+  "season": 2026,
+  "leagueName": "Brasileirão Série A",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
+  "brandName": "Foot Analysis",
+  "brandLogoPath": "/branding/foot-analysis-logo.png",
+  "soundtrackPath": "/audio/football/gol-de-hoje.mp3",
+  "soundtrackLabel": "Gol de Hoje",
+  "soundtrackVolume": 0.1,
+  "outputName": "brasileirao-serie-a-2026-ritmo-de-campeao-pt-br.mp4",
+  "durationInFrames": 270,
+  "compositionId": "FootballChampionshipPaceShort",
+  "leagueConfig": {
+    "leagueId": 71,
+    "accentColor": "#F0A500",
+    "standings": {
+      "safeArea": {
+        "left": 68,
+        "right": 104
+      },
+      "zones": [
+        {
+          "key": "libertadores",
+          "label": "Libertadores",
+          "start": 1,
+          "end": 4,
+          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(101, 227, 133, 0.64)"
+        },
+        {
+          "key": "pre-libertadores",
+          "label": "Pré-Libertadores",
+          "start": 5,
+          "end": 5,
+          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 190, 92, 0.58)"
+        },
+        {
+          "key": "sul-americana",
+          "label": "Sul-Americana",
+          "start": 6,
+          "end": 11,
+          "fill": "linear-gradient(90deg, rgba(0, 177, 183, 0.82), rgba(0, 177, 183, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(0, 177, 183, 0.54)"
+        },
+        {
+          "key": "rebaixamento",
+          "label": "Rebaixamento",
+          "start": 17,
+          "end": 20,
+          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 102, 102, 0.56)"
+        }
+      ]
+    },
+    "leagueName": "Brasileirão Série A",
+    "pace": {
+      "championship": {
+        "benchmarkPercentage": 68,
+        "benchmarkLabel": "Média dos últimos 10 campeões",
+        "entryCount": 10
+      },
+      "relegation": {
+        "benchmarkPercentage": 38,
+        "benchmarkLabel": "Linha de segurança",
+        "safeRowsAbove": 3,
+        "maxRows": 10
+      }
+    }
+  },
+  "titleLabel": "Ritmo de Campeão",
+  "subtitleLabel": "Aproveitamento na Rodada 17",
+  "benchmarkPercentage": 68,
+  "benchmarkLabel": "Média dos últimos 10 campeões",
+  "noteLabel": "*times com jogos a menos",
+  "ctaText": "Quem segue firme na briga?",
+  "entries": [
+    {
+      "rank": 1,
+      "team": "Palmeiras",
+      "played": 17,
+      "points": 38,
+      "percentage": 75,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "P",
+        "logoPath": "/logos/palmeiras-121.png"
+      }
+    },
+    {
+      "rank": 2,
+      "team": "Flamengo",
+      "played": 16,
+      "points": 31,
+      "percentage": 65,
+      "hasGameInHand": true,
+      "badge": {
+        "label": "F",
+        "logoPath": "/logos/flamengo-127.png"
+      }
+    },
+    {
+      "rank": 3,
+      "team": "Fluminense",
+      "played": 17,
+      "points": 30,
+      "percentage": 59,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "F",
+        "logoPath": "/logos/fluminense-124.png"
+      }
+    },
+    {
+      "rank": 4,
+      "team": "Athletico-PR",
+      "played": 17,
+      "points": 27,
+      "percentage": 53,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "A",
+        "logoPath": "/logos/atletico-paranaense-134.png"
+      }
+    },
+    {
+      "rank": 5,
+      "team": "RB Bragantino",
+      "played": 17,
+      "points": 26,
+      "percentage": 51,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "RB",
+        "logoPath": "/logos/rb-bragantino-794.png"
+      }
+    },
+    {
+      "rank": 6,
+      "team": "Coritiba",
+      "played": 17,
+      "points": 26,
+      "percentage": 51,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/coritiba-147.png"
+      }
+    },
+    {
+      "rank": 7,
+      "team": "Sao Paulo",
+      "played": 17,
+      "points": 25,
+      "percentage": 49,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "SP",
+        "logoPath": "/logos/sao-paulo-126.png"
+      }
+    },
+    {
+      "rank": 8,
+      "team": "Bahia",
+      "played": 16,
+      "points": 23,
+      "percentage": 48,
+      "hasGameInHand": true,
+      "badge": {
+        "label": "B",
+        "logoPath": "/logos/bahia-118.png"
+      }
+    },
+    {
+      "rank": 10,
+      "team": "Botafogo",
+      "played": 16,
+      "points": 22,
+      "percentage": 46,
+      "hasGameInHand": true,
+      "badge": {
+        "label": "B",
+        "logoPath": "/logos/botafogo-120.png"
+      }
+    },
+    {
+      "rank": 11,
+      "team": "Vitoria",
+      "played": 16,
+      "points": 22,
+      "percentage": 46,
+      "hasGameInHand": true,
+      "badge": {
+        "label": "V",
+        "logoPath": "/logos/vitoria-136.png"
+      }
+    }
+  ],
+  "introTitle": "Brasileirão Série A",
+  "introSubtitle": "Aproveitamento na Rodada 17",
+  "hookText": "Quem tem aproveitamento de campeão?",
+  "coldOpenData": {
+    "tableRows": [
+      {
+        "rank": 1,
+        "club": "PALMEIRAS",
+        "pts": 10
+      },
+      {
+        "rank": 2,
+        "club": "FLAMENGO",
+        "pts": 8
+      },
+      {
+        "rank": 3,
+        "club": "FLUMINENSE",
+        "pts": 6
+      },
+      {
+        "rank": 4,
+        "club": "ATHLETICO-PR",
+        "pts": 4
+      }
+    ]
+  },
+  "voiceoverEnabled": true,
+  "voiceoverText": "Fala galera.. agora só o palmeiras está com aproveitamento de campeão... será que o Verdão leva a taça?",
+  "voiceoverPath": "/voiceovers/football/pt-br-23fad9e44c0ac716.mp3",
+  "voiceoverLabel": "Fala galera.. agora só o palmeiras está com aproveitamento de campeão... será que o Verdão leva a taça?"
+}

@@ -1,0 +1,257 @@
+{
+  "sport": "football",
+  "template": "season-final-verdict",
+  "leagueId": 78,
+  "season": 2025,
+  "leagueName": "Bundesliga",
+  "channelProfile": "en",
+  "languageProfile": "en",
+  "brandName": "Foot Analysis",
+  "brandLogoPath": "/branding/foot-analysis-logo.png",
+  "soundtrackPath": "/audio/football/Premier League.mp3",
+  "soundtrackLabel": "Premier League",
+  "soundtrackVolume": 0.1,
+  "outputName": "bundesliga-2025-season-wrap-up-en.mp4",
+  "durationInFrames": 270,
+  "compositionId": "FootballSeasonFinalVerdictShort",
+  "leagueConfig": {
+    "leagueId": 78,
+    "accentColor": "#D43020",
+    "standings": {
+      "safeArea": {
+        "left": 68,
+        "right": 104
+      },
+      "zones": [
+        {
+          "key": "champions-league",
+          "label": "Champions League",
+          "start": 1,
+          "end": 4,
+          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(101, 227, 133, 0.64)",
+          "textColor": "#27AE60"
+        },
+        {
+          "key": "europa-league",
+          "label": "Europa League",
+          "start": 5,
+          "end": 5,
+          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 190, 92, 0.58)",
+          "textColor": "#F5A134"
+        },
+        {
+          "key": "conference-league",
+          "label": "Conference League",
+          "start": 6,
+          "end": 6,
+          "fill": "linear-gradient(90deg, rgba(59, 133, 255, 0.82), rgba(59, 133, 255, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(107, 166, 255, 0.54)",
+          "textColor": "#3B85FF"
+        },
+        {
+          "key": "relegation-playoff",
+          "label": "Relegation Playoff",
+          "start": 16,
+          "end": 16,
+          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 190, 92, 0.58)",
+          "textColor": "#F5A134"
+        },
+        {
+          "key": "relegation",
+          "label": "Relegation",
+          "start": 17,
+          "end": 18,
+          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 102, 102, 0.56)",
+          "textColor": "#E74C3C"
+        }
+      ]
+    },
+    "leagueName": "Bundesliga"
+  },
+  "titleLabel": "Season Wrap-up",
+  "subtitleLabel": "Season 2025/26 Decided",
+  "ctaText": "Wolfsburg is Relegated",
+  "champion": {
+    "rank": 1,
+    "team": "Bayern",
+    "played": 34,
+    "points": 89,
+    "goalDifference": 86,
+    "form": "WWDWW",
+    "badge": {
+      "label": "B",
+      "logoPath": "/logos/bayern-munchen-157.png"
+    }
+  },
+  "qualificationGroups": [
+    {
+      "key": "champions-league",
+      "label": "Champions League",
+      "accentColor": "#27AE60",
+      "entries": [
+        {
+          "rank": 2,
+          "team": "Dortmund",
+          "played": 34,
+          "points": 73,
+          "goalDifference": 36,
+          "form": "WWLWL",
+          "badge": {
+            "label": "D",
+            "logoPath": "/logos/borussia-dortmund-165.png"
+          }
+        },
+        {
+          "rank": 3,
+          "team": "RB Leipzig",
+          "played": 34,
+          "points": 65,
+          "goalDifference": 19,
+          "form": "LWLWW",
+          "badge": {
+            "label": "RL",
+            "logoPath": "/logos/rb-leipzig-173.png"
+          }
+        },
+        {
+          "rank": 4,
+          "team": "VfB Stuttgart",
+          "played": 34,
+          "points": 62,
+          "goalDifference": 22,
+          "form": "DWDDL",
+          "badge": {
+            "label": "VS",
+            "logoPath": "/logos/vfb-stuttgart-172.png"
+          }
+        }
+      ]
+    },
+    {
+      "key": "europa-league",
+      "label": "Europa League",
+      "accentColor": "#F5A134",
+      "entries": [
+        {
+          "rank": 5,
+          "team": "Hoffenheim",
+          "played": 34,
+          "points": 61,
+          "goalDifference": 13,
+          "form": "LWDWW",
+          "badge": {
+            "label": "H",
+            "logoPath": "/logos/1899-hoffenheim-167.png"
+          }
+        },
+        {
+          "rank": 6,
+          "team": "Leverkusen",
+          "played": 34,
+          "points": 59,
+          "goalDifference": 21,
+          "form": "DLWWL",
+          "badge": {
+            "label": "L",
+            "logoPath": "/logos/bayer-leverkusen-168.png"
+          }
+        }
+      ]
+    },
+    {
+      "key": "conference-league",
+      "label": "Conference League",
+      "accentColor": "#3B85FF",
+      "entries": [
+        {
+          "rank": 7,
+          "team": "SC Freiburg",
+          "played": 34,
+          "points": 47,
+          "goalDifference": -6,
+          "form": "WLDLW",
+          "badge": {
+            "label": "SF",
+            "logoPath": "/logos/sc-freiburg-160.png"
+          }
+        }
+      ]
+    }
+  ],
+  "relegationGroup": {
+    "key": "relegation",
+    "label": "Relegated",
+    "accentColor": "#E74C3C",
+    "entries": [
+      {
+        "rank": 16,
+        "team": "Wolfsburg",
+        "played": 34,
+        "points": 29,
+        "goalDifference": -24,
+        "form": "DWLDD",
+        "badge": {
+          "label": "W",
+          "logoPath": "/logos/vfl-wolfsburg-161.png"
+        }
+      },
+      {
+        "rank": 17,
+        "team": "Heidenheim",
+        "played": 34,
+        "points": 26,
+        "goalDifference": -31,
+        "form": "LWDWL",
+        "badge": {
+          "label": "H",
+          "logoPath": "/logos/1-fc-heidenheim-180.png"
+        }
+      },
+      {
+        "rank": 18,
+        "team": "FC St. Pauli",
+        "played": 34,
+        "points": 26,
+        "goalDifference": -31,
+        "form": "LLLLD",
+        "badge": {
+          "label": "FSP",
+          "logoPath": "/logos/fc-st-pauli-186.png"
+        }
+      }
+    ]
+  },
+  "introTitle": "Bundesliga",
+  "introSubtitle": "Season 2025/26 Decided",
+  "hookText": "The season has spoken",
+  "coldOpenData": {
+    "tableRows": [
+      {
+        "rank": 1,
+        "club": "BAYERN",
+        "pts": 89
+      },
+      {
+        "rank": 2,
+        "club": "DORTMUND",
+        "pts": 73
+      },
+      {
+        "rank": 3,
+        "club": "RB LEIPZIG",
+        "pts": 65
+      },
+      {
+        "rank": 4,
+        "club": "VFB STUTTGART",
+        "pts": 62
+      }
+    ]
+  },
+  "voiceoverEnabled": false,
+  "voiceoverText": "Bundesliga season wrap-up"
+}

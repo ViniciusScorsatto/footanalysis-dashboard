@@ -1,0 +1,38 @@
+import type {TopScorersVideoJob} from '../lib/types';
+
+export const sampleTopScorersJob: TopScorersVideoJob = {
+  sport: 'football',
+  template: 'top-scorers',
+  compositionId: 'FootballTopScorersShort',
+  leagueId: 71,
+  season: 2026,
+  leagueName: 'Brasileirão Série A 2026',
+  languageProfile: 'pt-br',
+  channelProfile: 'pt',
+  leagueConfig: {
+    leagueId: 71,
+    leagueName: 'Brasileirão Série A',
+    accentColor: '#F0A500',
+  },
+  brandName: 'Foot Analysis',
+  brandLogoPath: '/branding/foot-analysis-logo.png',
+  soundtrackPath: '/audio/football/fun-vibe-dyalla.mp3',
+  soundtrackLabel: 'Fun Vibe - Dyalla',
+  outputName: 'brasileirao-serie-a-2026-artilheiros-pt-br.mp4',
+  durationInFrames: 270,
+  titleLabel: 'Artilheiros',
+  subtitleLabel: 'Top 10 do campeonato',
+  ctaText: 'Quem termina artilheiro?',
+  entries: [
+    {rank: 1, playerName: 'Pedro', team: 'Flamengo', teamShort: 'FLA', goals: 9, assists: 2, badge: {label: 'FLA'}},
+    {rank: 2, playerName: 'Yuri Alberto', team: 'Corinthians', teamShort: 'COR', goals: 7, assists: 1, badge: {label: 'COR'}},
+    {rank: 3, playerName: 'Luciano', team: 'São Paulo', teamShort: 'SAO', goals: 6, assists: 3, badge: {label: 'SAO'}},
+    {rank: 4, playerName: 'Vegetti', team: 'Vasco da Gama', teamShort: 'VAS', goals: 6, assists: 1, badge: {label: 'VAS'}},
+    {rank: 5, playerName: 'Everaldo', team: 'Bahia', teamShort: 'BAH', goals: 5, assists: 2, badge: {label: 'BAH'}},
+    {rank: 6, playerName: 'Hulk', team: 'Atlético-MG', teamShort: 'CAM', goals: 5, assists: 2, badge: {label: 'CAM'}},
+    {rank: 7, playerName: 'Cano', team: 'Fluminense', teamShort: 'FLU', goals: 5, assists: 1, badge: {label: 'FLU'}},
+    {rank: 8, playerName: 'Raphael Veiga', team: 'Palmeiras', teamShort: 'PAL', goals: 4, assists: 4, badge: {label: 'PAL'}},
+    {rank: 9, playerName: 'Eduardo Sasha', team: 'RB Bragantino', teamShort: 'RBB', goals: 4, assists: 2, badge: {label: 'RBB'}},
+    {rank: 10, playerName: 'Tiquinho Soares', team: 'Botafogo', teamShort: 'BOT', goals: 4, assists: 1, badge: {label: 'BOT'}},
+  ],
+};

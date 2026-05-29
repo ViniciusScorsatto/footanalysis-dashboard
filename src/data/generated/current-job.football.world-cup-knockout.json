@@ -1,0 +1,251 @@
+{
+  "sport": "football",
+  "template": "world-cup-knockout",
+  "leagueId": 1,
+  "season": 2026,
+  "leagueName": "World Cup 2026",
+  "channelProfile": "en",
+  "languageProfile": "en",
+  "brandName": "Foot Analysis",
+  "brandLogoPath": "/branding/foot-analysis-logo.png",
+  "soundtrackPath": "/audio/football/gridiron-surge-1.mp3",
+  "soundtrackLabel": "Gridiron Surge (1)",
+  "soundtrackVolume": 0.15,
+  "outputName": "world-cup-2026-knockout-en.mp4",
+  "durationInFrames": 270,
+  "compositionId": "FootballWorldCupKnockoutShort",
+  "titleLabel": "World Cup 2026",
+  "phaseLabel": "Round of 16",
+  "ctaText": "Lens wins the Coupe de France for the first time in their history.",
+  "matches": [
+    {
+      "homeTeam": "1º Grupo A",
+      "awayTeam": "2º Grupo B",
+      "homeScore": null,
+      "awayScore": null,
+      "homeBadge": {
+        "label": "1GA"
+      },
+      "awayBadge": {
+        "label": "2GB"
+      },
+      "statusLabel": "Match 1",
+      "winner": "none"
+    },
+    {
+      "homeTeam": "1º Grupo C",
+      "awayTeam": "2º Grupo D",
+      "homeScore": null,
+      "awayScore": null,
+      "homeBadge": {
+        "label": "1GC"
+      },
+      "awayBadge": {
+        "label": "2GD"
+      },
+      "statusLabel": "Match 2",
+      "winner": "none"
+    },
+    {
+      "homeTeam": "1º Grupo E",
+      "awayTeam": "2º Grupo F",
+      "homeScore": null,
+      "awayScore": null,
+      "homeBadge": {
+        "label": "1GE"
+      },
+      "awayBadge": {
+        "label": "2GF"
+      },
+      "statusLabel": "Match 3",
+      "winner": "none"
+    },
+    {
+      "homeTeam": "1º Grupo G",
+      "awayTeam": "2º Grupo H",
+      "homeScore": null,
+      "awayScore": null,
+      "homeBadge": {
+        "label": "1GG"
+      },
+      "awayBadge": {
+        "label": "2GH"
+      },
+      "statusLabel": "Match 4",
+      "winner": "none"
+    },
+    {
+      "homeTeam": "1º Grupo I",
+      "awayTeam": "2º Grupo J",
+      "homeScore": null,
+      "awayScore": null,
+      "homeBadge": {
+        "label": "1GI"
+      },
+      "awayBadge": {
+        "label": "2GJ"
+      },
+      "statusLabel": "Match 5",
+      "winner": "none"
+    },
+    {
+      "homeTeam": "1º Grupo K",
+      "awayTeam": "2º Grupo L",
+      "homeScore": null,
+      "awayScore": null,
+      "homeBadge": {
+        "label": "1GK"
+      },
+      "awayBadge": {
+        "label": "2GL"
+      },
+      "statusLabel": "Match 6",
+      "winner": "none"
+    },
+    {
+      "homeTeam": "1º Grupo B",
+      "awayTeam": "Best 3rd",
+      "homeScore": null,
+      "awayScore": null,
+      "homeBadge": {
+        "label": "1GB"
+      },
+      "awayBadge": {
+        "label": "B3"
+      },
+      "statusLabel": "Match 7",
+      "winner": "none"
+    },
+    {
+      "homeTeam": "1º Grupo D",
+      "awayTeam": "Best 3rd",
+      "homeScore": null,
+      "awayScore": null,
+      "homeBadge": {
+        "label": "1GD"
+      },
+      "awayBadge": {
+        "label": "B3"
+      },
+      "statusLabel": "Match 8",
+      "winner": "none"
+    },
+    {
+      "homeTeam": "1º Grupo F",
+      "awayTeam": "2º Grupo C",
+      "homeScore": null,
+      "awayScore": null,
+      "homeBadge": {
+        "label": "1GF"
+      },
+      "awayBadge": {
+        "label": "2GC"
+      },
+      "statusLabel": "Match 9",
+      "winner": "none"
+    },
+    {
+      "homeTeam": "1º Grupo H",
+      "awayTeam": "2º Grupo J",
+      "homeScore": null,
+      "awayScore": null,
+      "homeBadge": {
+        "label": "1GH"
+      },
+      "awayBadge": {
+        "label": "2GJ"
+      },
+      "statusLabel": "Match 10",
+      "winner": "none"
+    },
+    {
+      "homeTeam": "1º Grupo J",
+      "awayTeam": "2º Grupo H",
+      "homeScore": null,
+      "awayScore": null,
+      "homeBadge": {
+        "label": "1GJ"
+      },
+      "awayBadge": {
+        "label": "2GH"
+      },
+      "statusLabel": "Match 11",
+      "winner": "none"
+    },
+    {
+      "homeTeam": "1º Grupo L",
+      "awayTeam": "Best 3rd",
+      "homeScore": null,
+      "awayScore": null,
+      "homeBadge": {
+        "label": "1GL"
+      },
+      "awayBadge": {
+        "label": "B3"
+      },
+      "statusLabel": "Match 12",
+      "winner": "none"
+    },
+    {
+      "homeTeam": "2º Grupo A",
+      "awayTeam": "2º Grupo B",
+      "homeScore": null,
+      "awayScore": null,
+      "homeBadge": {
+        "label": "2GA"
+      },
+      "awayBadge": {
+        "label": "2GB"
+      },
+      "statusLabel": "Match 13",
+      "winner": "none"
+    },
+    {
+      "homeTeam": "2º Grupo D",
+      "awayTeam": "2º Grupo G",
+      "homeScore": null,
+      "awayScore": null,
+      "homeBadge": {
+        "label": "2GD"
+      },
+      "awayBadge": {
+        "label": "2GG"
+      },
+      "statusLabel": "Match 14",
+      "winner": "none"
+    },
+    {
+      "homeTeam": "2º Grupo E",
+      "awayTeam": "2º Grupo I",
+      "homeScore": null,
+      "awayScore": null,
+      "homeBadge": {
+        "label": "2GE"
+      },
+      "awayBadge": {
+        "label": "2GI"
+      },
+      "statusLabel": "Match 15",
+      "winner": "none"
+    },
+    {
+      "homeTeam": "2º Grupo K",
+      "awayTeam": "2º Grupo L",
+      "homeScore": null,
+      "awayScore": null,
+      "homeBadge": {
+        "label": "2GK"
+      },
+      "awayBadge": {
+        "label": "2GL"
+      },
+      "statusLabel": "Match 16",
+      "winner": "none"
+    }
+  ],
+  "introTitle": "World Cup 2026",
+  "introSubtitle": "Round of 16",
+  "hookText": "Knockout mode starts now",
+  "voiceoverEnabled": false,
+  "voiceoverText": "World Cup 2026 knockout stage"
+}

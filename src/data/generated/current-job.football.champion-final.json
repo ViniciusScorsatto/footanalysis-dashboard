@@ -1,0 +1,81 @@
+{
+  "sport": "football",
+  "template": "champion-final",
+  "leagueId": 40,
+  "season": 2025,
+  "leagueName": "Championship",
+  "channelProfile": "en",
+  "languageProfile": "en",
+  "brandName": "Foot Analysis",
+  "brandLogoPath": "/branding/foot-analysis-logo.png",
+  "soundtrackPath": "/audio/football/gridiron-surge-1.mp3",
+  "soundtrackLabel": "Gridiron Surge (1)",
+  "soundtrackVolume": 0.15,
+  "outputName": "championship-2025-champions-en.mp4",
+  "durationInFrames": 270,
+  "compositionId": "FootballChampionFinalShort",
+  "leagueConfig": {
+    "leagueId": 40,
+    "accentColor": "#8CA0B4",
+    "standings": {
+      "safeArea": {
+        "left": 64,
+        "right": 92
+      },
+      "zones": [
+        {
+          "key": "top-three",
+          "label": "Top 3",
+          "start": 1,
+          "end": 3,
+          "fill": "linear-gradient(90deg, rgba(58, 196, 88, 0.84), rgba(58, 196, 88, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(86, 214, 120, 0.62)"
+        },
+        {
+          "key": "bottom-three",
+          "label": "Bottom 3",
+          "start": 18,
+          "end": 20,
+          "fill": "linear-gradient(90deg, rgba(224, 48, 48, 0.84), rgba(224, 48, 48, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 90, 90, 0.56)"
+        }
+      ]
+    },
+    "leagueName": "Championship"
+  },
+  "championTeam": "Hull City",
+  "championBadge": {
+    "label": "HC",
+    "logoPath": "/logos/hull-city-64.png"
+  },
+  "titleLabel": "Champions",
+  "subtitleLabel": "Championship",
+  "seasonLabel": "Season 2025/26",
+  "ctaText": "Lens wins the Coupe de France for the first time in their history.",
+  "finalFixture": {
+    "fixtureId": 1545715,
+    "fixtureDateKey": "2026-05-24",
+    "homeTeam": "Hull City",
+    "awayTeam": "Middlesbrough",
+    "homeScore": 1,
+    "awayScore": 0,
+    "homeEliminated": false,
+    "awayEliminated": false,
+    "hasPenalties": false,
+    "homePenaltyScore": null,
+    "awayPenaltyScore": null,
+    "homeBadge": {
+      "label": "HC",
+      "logoPath": "/logos/hull-city-64.png"
+    },
+    "awayBadge": {
+      "label": "M",
+      "logoPath": "/logos/middlesbrough-70.png"
+    }
+  },
+  "introTitle": "Championship",
+  "introSubtitle": "Championship",
+  "hookText": "The trophy has a home",
+  "voiceoverEnabled": false,
+  "voiceoverText": "Championship champions"
+}

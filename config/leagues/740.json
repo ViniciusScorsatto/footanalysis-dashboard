@@ -1,0 +1,25 @@
+{
+  "leagueId": 740,
+  "leagueName": "Brasileirão Sub-20",
+  "accentColor": "#E67E22",
+  "standings": {
+    "safeArea": {
+      "left": 40,
+      "right": 120
+    },
+    "zones": [
+      {
+        "key": "champion",
+        "label": "Campeão",
+        "start": 1,
+        "end": 1
+      },
+      {
+        "key": "relegation",
+        "label": "Rebaixamento",
+        "start": 18,
+        "end": 20
+      }
+    ]
+  }
+}

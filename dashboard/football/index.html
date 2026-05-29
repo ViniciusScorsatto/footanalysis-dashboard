@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Football Video Dashboard</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <nav class="top-nav dashboard-top-nav">
+        <a class="back-link" href="/">All dashboards</a>
+        <div class="dashboard-status">
+          <span class="chip subtle">Football</span>
+          <span class="chip subtle" id="job-template-chip">loading</span>
+          <span class="chip" id="dashboard-channel-chip">channel</span>
+        </div>
+      </nav>
+
+      <section class="dashboard-header">
+        <div>
+          <p class="eyebrow">Production Console</p>
+          <h1>Football Dashboard</h1>
+        </div>
+        <p id="dashboard-quick-status" class="quick-status">Choose a template and prepare a job.</p>
+      </section>
+
+      <section class="production-grid">
+        <form id="job-form" class="panel form-panel compact-form-panel">
+          <div class="panel-header">
+            <h2>Job Setup</h2>
+            <span class="chip">Smart mode</span>
+          </div>
+
+          <section class="form-section">
+            <div class="section-title">
+              <span>Essentials</span>
+            </div>
+            <div class="two-up">
+              <label>
+                Template
+                <select name="template" id="template"></select>
+              </label>
+              <label>
+                Channel
+                <select name="channelProfile" id="channel-profile"></select>
+              </label>
+            </div>
+            <label class="sr-optional">
+              Language profile
+              <select name="languageProfile" id="language-profile"></select>
+            </label>
+            <div class="two-up">
+              <label id="league-preset-field">
+                League preset
+                <select name="preset" id="preset"></select>
+              </label>
+              <label>
+                Season
+                <input type="number" name="season" required />
+              </label>
+            </div>
+          </section>
+
+          <section class="form-section" id="data-section">
+            <div class="section-title">
+              <span>Data</span>
+            </div>
+            <div class="two-up">
+              <label id="round-field">
+                Round
+                <select name="round" id="round-select">
+                  <option value="">Leave blank to auto-detect</option>
+                </select>
+              </label>
+              <label id="match-date-field">
+                Match date
+                <input type="hidden" name="matchDate" id="match-date-select" />
+                <div id="match-date-options" class="match-date-options" role="group" aria-label="Match dates">
+                  <button type="button" class="date-pill active" data-date="">All dates in this round</button>
+                </div>
+              </label>
+            </div>
+          </section>
+
+          <section class="form-section" id="editor-section">
+            <div class="section-title">
+              <span>Editors</span>
+            </div>
+            <section id="prediction-editor-field" class="prediction-editor" hidden>
+              <div class="prediction-editor-header">
+                <div>
+                  <strong>Auto + edit predictions</strong>
+                  <p>Scores are prefilled from the API when available. Adjust any match before preparing.</p>
+                </div>
+                <button type="button" id="reload-predictions-button" class="secondary">Reload picks</button>
+              </div>
+              <div id="prediction-editor-status" class="prediction-editor-status">Select a round to load fixtures.</div>
+              <div id="prediction-editor-list" class="prediction-editor-list"></div>
+            </section>
+
+            <section id="result-editor-field" class="prediction-editor" hidden>
+              <div class="prediction-editor-header">
+                <div>
+                  <strong>Override results</strong>
+                  <p>Scores are loaded from the API. Edit any fixture where the API is returning wrong data.</p>
+                </div>
+                <button type="button" id="reload-results-button" class="secondary">Reload scores</button>
+              </div>
+              <div id="result-editor-status" class="prediction-editor-status">Select a round to load fixtures.</div>
+              <div id="result-editor-list" class="prediction-editor-list"></div>
+            </section>
+
+            <section id="standings-editor-field" class="prediction-editor" hidden>
+              <div class="prediction-editor-header">
+                <div>
+                  <strong>Override standings</strong>
+                  <p>Preloaded from the API. Edit positions and table data before preparing the video.</p>
+                </div>
+                <button type="button" id="reload-standings-button" class="secondary">Reload table</button>
+              </div>
+              <div id="standings-editor-status" class="prediction-editor-status">Choose a league and season.</div>
+              <div id="standings-editor-list" class="prediction-editor-list"></div>
+            </section>
+
+            <section id="season-verdict-editor-field" class="prediction-editor" hidden>
+              <div class="prediction-editor-header">
+                <div>
+                  <strong>Season Wrap-up overrides</strong>
+                  <p>Move teams manually after playoffs or hide anything you do not want in the final video.</p>
+                </div>
+                <button type="button" id="reload-season-verdict-button" class="secondary">Reload table</button>
+              </div>
+              <div id="season-verdict-editor-status" class="prediction-editor-status">Choose a league and season.</div>
+              <div id="season-verdict-editor-list" class="prediction-editor-list"></div>
+            </section>
+          </section>
+
+          <section class="form-section">
+            <div class="section-title">
+              <span>Content</span>
+            </div>
+            <div class="two-up" id="league-override-fields">
+              <label>
+                League title override
+                <input type="text" name="leagueName" placeholder="Optional" />
+              </label>
+              <label>
+                Label override
+                <input type="text" name="roundLabel" placeholder="Optional" />
+              </label>
+            </div>
+
+            <div class="two-up" id="world-cup-fields" hidden>
+              <label>
+                Group
+                <select name="groupLetter" id="group-letter-select">
+                  <option value="A">Group A</option>
+                  <option value="B">Group B</option>
+                  <option value="C">Group C</option>
+                  <option value="D">Group D</option>
+                  <option value="E">Group E</option>
+                  <option value="F">Group F</option>
+                  <option value="G">Group G</option>
+                  <option value="H">Group H</option>
+                  <option value="I">Group I</option>
+                  <option value="J">Group J</option>
+                  <option value="K">Group K</option>
+                  <option value="L">Group L</option>
+                </select>
+              </label>
+              <label>
+                Competition title override
+                <input type="text" name="competitionName" placeholder="Optional" />
+              </label>
+            </div>
+
+            <label id="cta-field" hidden>
+              CTA preset
+              <select id="cta-preset-select"></select>
+              Custom CTA override
+              <input type="text" name="ctaText" placeholder="Optional" />
+            </label>
+
+            <div id="champion-final-fields" hidden>
+              <div class="champion-final-control">
+                <label>
+                  Campeão
+                  <select id="champion-final-select" name="championFinalRank">
+                    <option value="">Auto pela final selecionada</option>
+                  </select>
+                </label>
+                <button type="button" id="reload-champion-final-button" class="secondary">
+                  Carregar tabela
+                </button>
+              </div>
+              <p id="champion-final-status" class="prediction-editor-status">
+                Auto usa o placar, pênaltis ou o time eliminado na final.
+              </p>
+              <input type="hidden" name="includeFinalResult" value="false" />
+              <label class="toggle-row champion-final-toggle">
+                <input type="checkbox" name="includeFinalResult" value="true" checked />
+                <span>Mostrar placar da final no vídeo</span>
+              </label>
+            </div>
+
+            <label>
+              Output filename
+              <input type="text" name="outputName" placeholder="Optional" />
+            </label>
+          </section>
+
+          <details class="form-section compact-details" id="intro-voiceover-field">
+            <summary>Intro + Narração</summary>
+            <div class="details-body">
+              <input type="hidden" name="voiceoverEnabled" value="false" />
+              <label class="toggle-row">
+                <input type="checkbox" name="voiceoverEnabled" value="true" checked />
+                <span>Gerar narração TTS</span>
+              </label>
+              <label>
+                Intro title
+                <input type="text" name="introTitle" placeholder="Auto" />
+              </label>
+              <label>
+                Hook preset
+                <select id="hook-preset-select"></select>
+              </label>
+              <label>
+                Hook text
+                <input type="text" name="hookText" placeholder="Auto" />
+              </label>
+              <label>
+                Voiceover text
+                <input type="text" name="voiceoverText" placeholder="Auto" />
+              </label>
+              <p>A voz é gerada com Google Text-to-Speech e reutilizada quando o mesmo texto já existe no cache.</p>
+            </div>
+          </details>
+
+          <details class="form-section compact-details">
+            <summary>Advanced</summary>
+            <div class="details-body">
+              <div id="league-core-fields">
+                <label>
+                  League ID
+                  <input type="number" name="leagueId" required />
+                </label>
+              </div>
+              <label>
+                Brand name
+                <input type="text" name="brandName" placeholder="Foot Analysis" />
+              </label>
+              <label>
+                Soundtrack
+                <select name="soundtrackPath" id="soundtrack-select"></select>
+              </label>
+              <label>
+                Background audio volume
+                <div class="volume-control">
+                  <input
+                    type="range"
+                    id="soundtrack-volume-range"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value="0.20"
+                  />
+                  <input
+                    type="number"
+                    name="soundtrackVolume"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    placeholder="0.20"
+                  />
+                </div>
+              </label>
+          </div>
+          </details>
+
+          <section class="job-status-strip">
+            <div id="current-job" class="job-summary"></div>
+            <div id="render-download" class="job-summary"></div>
+          </section>
+
+          <div class="actions sticky-actions">
+            <button type="button" id="prepare-button">Prepare Preview Job</button>
+            <button type="button" id="render-button" class="secondary">Render MP4</button>
+          </div>
+        </form>
+
+        <aside class="preview-rail">
+          <section class="panel preview-panel">
+            <div class="panel-header">
+              <h2>Video Preview</h2>
+              <span class="chip subtle">9:16</span>
+            </div>
+            <div class="preview-toolbar">
+              <label class="preview-url-field">
+                Studio URL
+                <input type="url" id="studio-url" placeholder="http://127.0.0.1:3000" />
+              </label>
+              <div class="preview-actions">
+                <button type="button" id="apply-preview-button" class="secondary">Load</button>
+                <a id="open-preview-link" class="preview-link" href="#" target="_blank" rel="noreferrer">Open Studio</a>
+              </div>
+            </div>
+            <div class="preview-frame-shell video-only-preview">
+              <iframe id="preview-frame" title="Remotion Studio preview"></iframe>
+            </div>
+          </section>
+        </aside>
+      </section>
+
+      <details class="panel log-panel compact-details">
+        <summary>Activity</summary>
+        <pre id="log-output">Loading dashboard…</pre>
+      </details>
+
+    </main>
+    <script type="module" src="/football/app.js"></script>
+  </body>
+</html>

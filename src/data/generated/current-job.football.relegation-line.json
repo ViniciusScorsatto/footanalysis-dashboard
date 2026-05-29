@@ -1,0 +1,234 @@
+{
+  "sport": "football",
+  "template": "relegation-line",
+  "leagueId": 71,
+  "season": 2026,
+  "leagueName": "Brasileirão Série A",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
+  "brandName": "Foot Analysis",
+  "brandLogoPath": "/branding/foot-analysis-logo.png",
+  "soundtrackPath": "/audio/football/gol-de-hoje.mp3",
+  "soundtrackLabel": "Gol de Hoje",
+  "soundtrackVolume": 0.1,
+  "outputName": "brasileirao-serie-a-2026-linha-do-rebaixamento-pt-br.mp4",
+  "durationInFrames": 270,
+  "compositionId": "FootballRelegationLineShort",
+  "leagueConfig": {
+    "leagueId": 71,
+    "accentColor": "#F0A500",
+    "standings": {
+      "safeArea": {
+        "left": 68,
+        "right": 104
+      },
+      "zones": [
+        {
+          "key": "libertadores",
+          "label": "Libertadores",
+          "start": 1,
+          "end": 4,
+          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(101, 227, 133, 0.64)"
+        },
+        {
+          "key": "pre-libertadores",
+          "label": "Pré-Libertadores",
+          "start": 5,
+          "end": 5,
+          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 190, 92, 0.58)"
+        },
+        {
+          "key": "sul-americana",
+          "label": "Sul-Americana",
+          "start": 6,
+          "end": 11,
+          "fill": "linear-gradient(90deg, rgba(0, 177, 183, 0.82), rgba(0, 177, 183, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(0, 177, 183, 0.54)"
+        },
+        {
+          "key": "rebaixamento",
+          "label": "Rebaixamento",
+          "start": 17,
+          "end": 20,
+          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 102, 102, 0.56)"
+        }
+      ]
+    },
+    "leagueName": "Brasileirão Série A",
+    "pace": {
+      "championship": {
+        "benchmarkPercentage": 68,
+        "benchmarkLabel": "Média dos últimos 10 campeões",
+        "entryCount": 10
+      },
+      "relegation": {
+        "benchmarkPercentage": 38,
+        "benchmarkLabel": "Linha de segurança",
+        "safeRowsAbove": 3,
+        "maxRows": 10
+      }
+    }
+  },
+  "titleLabel": "Linha do Rebaixamento",
+  "subtitleLabel": "Aproveitamento na Rodada 17",
+  "benchmarkPercentage": 38,
+  "benchmarkLabel": "Linha de segurança",
+  "noteLabel": "*times com jogos a menos",
+  "ctaText": "Quem escapa da degola?",
+  "entries": [
+    {
+      "rank": 9,
+      "team": "Cruzeiro",
+      "played": 17,
+      "points": 23,
+      "percentage": 45,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/cruzeiro-135.png"
+      }
+    },
+    {
+      "rank": 12,
+      "team": "Atletico-MG",
+      "played": 17,
+      "points": 21,
+      "percentage": 41,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "A",
+        "logoPath": "/logos/atletico-mg-1062.png"
+      }
+    },
+    {
+      "rank": 13,
+      "team": "Internacional",
+      "played": 17,
+      "points": 21,
+      "percentage": 41,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "I",
+        "logoPath": "/logos/internacional-119.png"
+      }
+    },
+    {
+      "rank": 14,
+      "team": "Gremio",
+      "played": 17,
+      "points": 21,
+      "percentage": 41,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "G",
+        "logoPath": "/logos/gremio-130.png"
+      }
+    },
+    {
+      "rank": 15,
+      "team": "Corinthians",
+      "played": 17,
+      "points": 21,
+      "percentage": 41,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/corinthians-131.png"
+      }
+    },
+    {
+      "rank": 16,
+      "team": "Vasco DA Gama",
+      "played": 17,
+      "points": 20,
+      "percentage": 39,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "VDG",
+        "logoPath": "/logos/vasco-da-gama-133.png"
+      }
+    },
+    {
+      "rank": 17,
+      "team": "Santos",
+      "played": 17,
+      "points": 18,
+      "percentage": 35,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "S",
+        "logoPath": "/logos/santos-128.png"
+      }
+    },
+    {
+      "rank": 18,
+      "team": "Mirassol",
+      "played": 16,
+      "points": 16,
+      "percentage": 33,
+      "hasGameInHand": true,
+      "badge": {
+        "label": "M",
+        "logoPath": "/logos/mirassol-7848.png"
+      }
+    },
+    {
+      "rank": 19,
+      "team": "Remo",
+      "played": 17,
+      "points": 15,
+      "percentage": 29,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "R",
+        "logoPath": "/logos/remo-1198.png"
+      }
+    },
+    {
+      "rank": 20,
+      "team": "Chapecoense",
+      "played": 16,
+      "points": 9,
+      "percentage": 19,
+      "hasGameInHand": true,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/chapecoense-sc-132.png"
+      }
+    }
+  ],
+  "introTitle": "Brasileirão Série A",
+  "introSubtitle": "Aproveitamento na Rodada 17",
+  "hookText": "A linha está chegando",
+  "coldOpenData": {
+    "tableRows": [
+      {
+        "rank": 1,
+        "club": "CRUZEIRO",
+        "pts": 10
+      },
+      {
+        "rank": 2,
+        "club": "ATLETICO-MG",
+        "pts": 8
+      },
+      {
+        "rank": 3,
+        "club": "INTERNACIONAL",
+        "pts": 6
+      },
+      {
+        "rank": 4,
+        "club": "GREMIO",
+        "pts": 4
+      }
+    ]
+  },
+  "voiceoverEnabled": true,
+  "voiceoverText": "A briga está feia na parte debaixo da tabela... o Vasco está no limite para baixar da linha de segurança..",
+  "voiceoverPath": "/voiceovers/football/pt-br-8a6e0ddf2787da14.mp3",
+  "voiceoverLabel": "A briga está feia na parte debaixo da tabela... o Vasco está no limite para baixar da linha de segurança.."
+}

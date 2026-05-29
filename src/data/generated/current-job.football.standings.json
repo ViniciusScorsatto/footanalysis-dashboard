@@ -1,0 +1,315 @@
+{
+  "sport": "football",
+  "template": "standings",
+  "leagueId": 740,
+  "season": 2026,
+  "leagueName": "Brasileirão Sub-20",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
+  "brandName": "Foot Analysis",
+  "brandLogoPath": "/branding/foot-analysis-logo.png",
+  "soundtrackPath": "/audio/football/Estádio Vai Ferver.mp3",
+  "soundtrackLabel": "Estádio Vai Ferver",
+  "soundtrackVolume": 0.2,
+  "outputName": "brasileirao-sub-20-2026-classificacao-pt-br.mp4",
+  "durationInFrames": 270,
+  "compositionId": "FootballStandingsShort",
+  "leagueConfig": {
+    "leagueId": 740,
+    "accentColor": "#E67E22",
+    "standings": {
+      "safeArea": {
+        "left": 40,
+        "right": 120
+      },
+      "zones": [
+        {
+          "key": "champion",
+          "label": "Campeão",
+          "start": 1,
+          "end": 1
+        },
+        {
+          "key": "relegation",
+          "label": "Rebaixamento",
+          "start": 18,
+          "end": 20
+        }
+      ]
+    },
+    "leagueName": "Brasileirão Sub-20"
+  },
+  "standingsLabel": "Rodada 14",
+  "ctaText": "Qual placar mais te chamou atenção?",
+  "rows": [
+    {
+      "rank": 1,
+      "team": "Palmeiras U20",
+      "played": 14,
+      "points": 34,
+      "goalDifference": 18,
+      "form": "WWDWW",
+      "badge": {
+        "label": "PU",
+        "logoPath": "/logos/palmeiras-u20-12968.png"
+      }
+    },
+    {
+      "rank": 2,
+      "team": "Vasco da Gama U20",
+      "played": 14,
+      "points": 31,
+      "goalDifference": 18,
+      "form": "LWWWW",
+      "badge": {
+        "label": "VDGU",
+        "logoPath": "/logos/vasco-da-gama-u20-12979.png"
+      }
+    },
+    {
+      "rank": 3,
+      "team": "Cruzeiro U20",
+      "played": 14,
+      "points": 25,
+      "goalDifference": 13,
+      "form": "WDLDW",
+      "badge": {
+        "label": "CU",
+        "logoPath": "/logos/cruzeiro-u20-13000.png"
+      }
+    },
+    {
+      "rank": 4,
+      "team": "Santos U20",
+      "played": 14,
+      "points": 24,
+      "goalDifference": 7,
+      "form": "DLWWL",
+      "badge": {
+        "label": "SU",
+        "logoPath": "/logos/santos-u20-13055.png"
+      }
+    },
+    {
+      "rank": 5,
+      "team": "Botafogo U20",
+      "played": 14,
+      "points": 24,
+      "goalDifference": 7,
+      "form": "DWWWW",
+      "badge": {
+        "label": "BU",
+        "logoPath": "/logos/botafogo-u20-22875.png"
+      }
+    },
+    {
+      "rank": 6,
+      "team": "Athletico PR U20",
+      "played": 14,
+      "points": 22,
+      "goalDifference": 8,
+      "form": "WLWWD",
+      "badge": {
+        "label": "APU",
+        "logoPath": "/logos/athletico-pr-u20-12984.png"
+      }
+    },
+    {
+      "rank": 7,
+      "team": "RB Bragantino U20",
+      "played": 14,
+      "points": 22,
+      "goalDifference": 6,
+      "form": "DWWLW",
+      "badge": {
+        "label": "RBU",
+        "logoPath": "/logos/rb-bragantino-u20-18345.png"
+      }
+    },
+    {
+      "rank": 8,
+      "team": "Bahia U20",
+      "played": 14,
+      "points": 22,
+      "goalDifference": 4,
+      "form": "DWLDW",
+      "badge": {
+        "label": "BU",
+        "logoPath": "/logos/bahia-u20-12954.png"
+      }
+    },
+    {
+      "rank": 9,
+      "team": "América Mineiro U20",
+      "played": 14,
+      "points": 21,
+      "goalDifference": 0,
+      "form": "DLDDW",
+      "badge": {
+        "label": "AMU",
+        "logoPath": "/logos/america-mineiro-u20-12981.png"
+      }
+    },
+    {
+      "rank": 10,
+      "team": "Flamengo U20",
+      "played": 14,
+      "points": 21,
+      "goalDifference": -2,
+      "form": "DWWLL",
+      "badge": {
+        "label": "FU",
+        "logoPath": "/logos/flamengo-u20-11054.png"
+      }
+    },
+    {
+      "rank": 11,
+      "team": "Corinthians U20",
+      "played": 14,
+      "points": 19,
+      "goalDifference": 1,
+      "form": "DLLWL",
+      "badge": {
+        "label": "CU",
+        "logoPath": "/logos/corinthians-u20-12998.png"
+      }
+    },
+    {
+      "rank": 12,
+      "team": "São Paulo U20",
+      "played": 14,
+      "points": 18,
+      "goalDifference": 0,
+      "form": "WWDDL",
+      "badge": {
+        "label": "SPU",
+        "logoPath": "/logos/sao-paulo-u20-12973.png"
+      }
+    },
+    {
+      "rank": 13,
+      "team": "Vitória U20",
+      "played": 14,
+      "points": 17,
+      "goalDifference": -8,
+      "form": "LDDWW",
+      "badge": {
+        "label": "VU",
+        "logoPath": "/logos/vitoria-u20-13072.png"
+      }
+    },
+    {
+      "rank": 14,
+      "team": "Fluminense U20",
+      "played": 14,
+      "points": 15,
+      "goalDifference": -2,
+      "form": "LWLLW",
+      "badge": {
+        "label": "FU",
+        "logoPath": "/logos/fluminense-u20-13008.png"
+      }
+    },
+    {
+      "rank": 15,
+      "team": "Avaí U20",
+      "played": 14,
+      "points": 14,
+      "goalDifference": -11,
+      "form": "WWDLL",
+      "badge": {
+        "label": "AU",
+        "logoPath": "/logos/avai-u20-12953.png"
+      }
+    },
+    {
+      "rank": 16,
+      "team": "Fortaleza U20",
+      "played": 14,
+      "points": 13,
+      "goalDifference": -4,
+      "form": "LLLWL",
+      "badge": {
+        "label": "FU",
+        "logoPath": "/logos/fortaleza-u20-13009.png"
+      }
+    },
+    {
+      "rank": 17,
+      "team": "Grêmio U20",
+      "played": 14,
+      "points": 13,
+      "goalDifference": -11,
+      "form": "LLDLL",
+      "badge": {
+        "label": "GU",
+        "logoPath": "/logos/gremio-u20-13011.png"
+      }
+    },
+    {
+      "rank": 18,
+      "team": "Criciuma U20",
+      "played": 14,
+      "points": 11,
+      "goalDifference": -9,
+      "form": "DLWLD",
+      "badge": {
+        "label": "CU",
+        "logoPath": "/logos/criciuma-u20-12999.png"
+      }
+    },
+    {
+      "rank": 19,
+      "team": "Cuiabá U20",
+      "played": 14,
+      "points": 11,
+      "goalDifference": -12,
+      "form": "WLLLL",
+      "badge": {
+        "label": "CU",
+        "logoPath": "/logos/cuiaba-u20-13001.png"
+      }
+    },
+    {
+      "rank": 20,
+      "team": "Juventude U20",
+      "played": 14,
+      "points": 6,
+      "goalDifference": -23,
+      "form": "LLLLL",
+      "badge": {
+        "label": "JU",
+        "logoPath": "/logos/juventude-u20-13020.png"
+      }
+    }
+  ],
+  "introTitle": "Brasileirão Sub-20",
+  "introSubtitle": "Rodada 14",
+  "hookText": "Palmeiras Liderando, Vasco Tropeça",
+  "coldOpenData": {
+    "tableRows": [
+      {
+        "rank": 1,
+        "club": "PALMEIRAS U20",
+        "pts": 34
+      },
+      {
+        "rank": 2,
+        "club": "VASCO DA GAMA U20",
+        "pts": 31
+      },
+      {
+        "rank": 3,
+        "club": "CRUZEIRO U20",
+        "pts": 25
+      },
+      {
+        "rank": 4,
+        "club": "SANTOS U20",
+        "pts": 24
+      }
+    ]
+  },
+  "voiceoverEnabled": false,
+  "voiceoverText": "Fala Galera, pra vocês... a classificação do Brasileirão Sub-20."
+}

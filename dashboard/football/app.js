@@ -1,0 +1,2393 @@
+const form = document.getElementById('job-form');
+const presetSelect = document.getElementById('preset');
+const templateSelect = document.getElementById('template');
+const channelProfileSelect = document.getElementById('channel-profile');
+const languageProfileSelect = document.getElementById('language-profile');
+const roundSelect = document.getElementById('round-select');
+const matchDateSelect = document.getElementById('match-date-select');
+const matchDateOptions = document.getElementById('match-date-options');
+const ctaPresetSelect = document.getElementById('cta-preset-select');
+const hookPresetSelect = document.getElementById('hook-preset-select');
+const soundtrackSelect = document.getElementById('soundtrack-select');
+const soundtrackVolumeRange = document.getElementById('soundtrack-volume-range');
+const voiceoverEnabledCheckbox = document.querySelector(
+  'input[type="checkbox"][name="voiceoverEnabled"]'
+);
+const prepareButton = document.getElementById('prepare-button');
+const renderButton = document.getElementById('render-button');
+const logOutput = document.getElementById('log-output');
+const currentJobRoot = document.getElementById('current-job');
+const renderDownloadRoot = document.getElementById('render-download');
+const templateChip = document.getElementById('job-template-chip');
+const dashboardChannelChip = document.getElementById('dashboard-channel-chip');
+const dashboardQuickStatus = document.getElementById('dashboard-quick-status');
+const leaguePresetField = document.getElementById('league-preset-field');
+const leagueCoreFields = document.getElementById('league-core-fields');
+const dataSection = document.getElementById('data-section');
+const editorSection = document.getElementById('editor-section');
+const roundField = document.getElementById('round-field');
+const matchDateField = document.getElementById('match-date-field');
+const predictionEditorField = document.getElementById('prediction-editor-field');
+const predictionEditorStatus = document.getElementById('prediction-editor-status');
+const predictionEditorList = document.getElementById('prediction-editor-list');
+const reloadPredictionsButton = document.getElementById('reload-predictions-button');
+const resultEditorField = document.getElementById('result-editor-field');
+const resultEditorStatus = document.getElementById('result-editor-status');
+const resultEditorList = document.getElementById('result-editor-list');
+const reloadResultsButton = document.getElementById('reload-results-button');
+const standingsEditorField = document.getElementById('standings-editor-field');
+const standingsEditorStatus = document.getElementById('standings-editor-status');
+const standingsEditorList = document.getElementById('standings-editor-list');
+const reloadStandingsButton = document.getElementById('reload-standings-button');
+const seasonVerdictEditorField = document.getElementById('season-verdict-editor-field');
+const seasonVerdictEditorStatus = document.getElementById('season-verdict-editor-status');
+const seasonVerdictEditorList = document.getElementById('season-verdict-editor-list');
+const reloadSeasonVerdictButton = document.getElementById('reload-season-verdict-button');
+const leagueOverrideFields = document.getElementById('league-override-fields');
+const worldCupFields = document.getElementById('world-cup-fields');
+const ctaField = document.getElementById('cta-field');
+const championFinalFields = document.getElementById('champion-final-fields');
+const championFinalSelect = document.getElementById('champion-final-select');
+const championFinalStatus = document.getElementById('champion-final-status');
+const reloadChampionFinalButton = document.getElementById('reload-champion-final-button');
+const studioUrlInput = document.getElementById('studio-url');
+const applyPreviewButton = document.getElementById('apply-preview-button');
+const openPreviewLink = document.getElementById('open-preview-link');
+const previewFrame = document.getElementById('preview-frame');
+
+const apiBase = '/api/football';
+const CHAMPIONSHIP_PACE_TEMPLATE = 'championship-pace';
+const RELEGATION_LINE_TEMPLATE = 'relegation-line';
+const CONTINENTAL_GROUPS_TEMPLATE = 'continental-groups-standings';
+const TOP_SCORERS_TEMPLATE = 'top-scorers';
+const PLAYER_OF_ROUND_TEMPLATE = 'player-of-round';
+const SEASON_FINAL_VERDICT_TEMPLATE = 'season-final-verdict';
+const CHAMPION_FINAL_TEMPLATE = 'champion-final';
+const WORLD_CUP_TEMPLATE = 'world-cup-group-standings';
+const WORLD_CUP_KNOCKOUT_TEMPLATE = 'world-cup-knockout';
+const WORLD_CUP_LEAGUE_ID = 1;
+const STUDIO_URL_KEY = 'football-dashboard-studio-url';
+const ROUND_TEMPLATES = new Set([
+  'results',
+  'predictions',
+  CHAMPION_FINAL_TEMPLATE,
+  PLAYER_OF_ROUND_TEMPLATE,
+]);
+const templateCompositionMap = {
+  results: 'FootballResultsShort',
+  predictions: 'FootballPredictionsShort',
+  standings: 'FootballStandingsShort',
+  [SEASON_FINAL_VERDICT_TEMPLATE]: 'FootballSeasonFinalVerdictShort',
+  [CHAMPION_FINAL_TEMPLATE]: 'FootballChampionFinalShort',
+  [TOP_SCORERS_TEMPLATE]: 'FootballTopScorersShort',
+  [PLAYER_OF_ROUND_TEMPLATE]: 'FootballPlayerOfRoundShort',
+  [CHAMPIONSHIP_PACE_TEMPLATE]: 'FootballChampionshipPaceShort',
+  [RELEGATION_LINE_TEMPLATE]: 'FootballRelegationLineShort',
+  [CONTINENTAL_GROUPS_TEMPLATE]: 'FootballContinentalGroupsShort',
+  [WORLD_CUP_TEMPLATE]: 'FootballWorldCupGroupShort',
+  [WORLD_CUP_KNOCKOUT_TEMPLATE]: 'FootballWorldCupKnockoutShort',
+};
+
+const normalizeSoundtrackVolume = (value) => {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) {
+    return '0.20';
+  }
+
+  return Math.max(0, Math.min(1, numericValue)).toFixed(2);
+};
+
+const setSoundtrackVolume = (value) => {
+  const normalizedValue = normalizeSoundtrackVolume(value);
+  form.elements.soundtrackVolume.value = normalizedValue;
+  if (soundtrackVolumeRange) {
+    soundtrackVolumeRange.value = normalizedValue;
+  }
+};
+
+const templateFieldVisibility = {
+  results: {
+    leaguePreset: true,
+    leagueCore: true,
+    round: true,
+    matchDate: true,
+    leagueOverrides: true,
+    worldCupFields: false,
+    cta: true,
+  },
+  predictions: {
+    leaguePreset: true,
+    leagueCore: true,
+    round: true,
+    matchDate: true,
+    leagueOverrides: true,
+    worldCupFields: false,
+    cta: true,
+  },
+  standings: {
+    leaguePreset: true,
+    leagueCore: true,
+    round: false,
+    matchDate: false,
+    leagueOverrides: true,
+    worldCupFields: false,
+    cta: true,
+  },
+  [SEASON_FINAL_VERDICT_TEMPLATE]: {
+    leaguePreset: true,
+    leagueCore: true,
+    round: false,
+    matchDate: false,
+    leagueOverrides: true,
+    worldCupFields: false,
+    cta: true,
+  },
+  [CHAMPION_FINAL_TEMPLATE]: {
+    leaguePreset: true,
+    leagueCore: true,
+    round: true,
+    matchDate: true,
+    leagueOverrides: true,
+    worldCupFields: false,
+    cta: true,
+  },
+  [TOP_SCORERS_TEMPLATE]: {
+    leaguePreset: true,
+    leagueCore: true,
+    round: false,
+    matchDate: false,
+    leagueOverrides: true,
+    worldCupFields: false,
+    cta: true,
+  },
+  [PLAYER_OF_ROUND_TEMPLATE]: {
+    leaguePreset: true,
+    leagueCore: true,
+    round: true,
+    matchDate: true,
+    leagueOverrides: true,
+    worldCupFields: false,
+    cta: true,
+  },
+  [CHAMPIONSHIP_PACE_TEMPLATE]: {
+    leaguePreset: true,
+    leagueCore: true,
+    round: false,
+    matchDate: false,
+    leagueOverrides: true,
+    worldCupFields: false,
+    cta: true,
+  },
+  [RELEGATION_LINE_TEMPLATE]: {
+    leaguePreset: true,
+    leagueCore: true,
+    round: false,
+    matchDate: false,
+    leagueOverrides: true,
+    worldCupFields: false,
+    cta: true,
+  },
+  [CONTINENTAL_GROUPS_TEMPLATE]: {
+    leaguePreset: true,
+    leagueCore: true,
+    round: false,
+    matchDate: false,
+    leagueOverrides: true,
+    worldCupFields: false,
+    cta: true,
+  },
+  [WORLD_CUP_TEMPLATE]: {
+    leaguePreset: false,
+    leagueCore: false,
+    round: false,
+    matchDate: false,
+    leagueOverrides: false,
+    worldCupFields: true,
+    cta: true,
+  },
+  [WORLD_CUP_KNOCKOUT_TEMPLATE]: {
+    leaguePreset: false,
+    leagueCore: false,
+    round: false,
+    matchDate: false,
+    leagueOverrides: false,
+    worldCupFields: false,
+    cta: true,
+  },
+};
+
+const getSelectedOptionLabel = (selectElement) =>
+  selectElement?.selectedOptions?.[0]?.textContent?.trim() ?? '';
+
+const escapeHtml = (value) =>
+  String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+let lastAutoOutputName = '';
+let lastAutoWorldCupCompetitionName = '';
+let lastAutoWorldCupGroupLabel = '';
+let lastAutoLeagueTitle = '';
+let lastAutoSeason = '';
+let hasCustomOutputName = false;
+let hasCustomLeagueTitle = false;
+let currentPredictionFixtures = [];
+let currentResultFixtures = [];
+let currentStandingRows = [];
+let currentChampionFinalRows = [];
+let currentSeasonVerdictRows = [];
+let allLeaguePresets = [];
+let allChannelProfiles = [];
+let dashboardHookOptions = {};
+let availableMatchDates = [];
+const EUROPEAN_LEAGUE_IDS = new Set([39, 40, 140, 135, 78, 61, 2, 3]);
+
+const roundTranslations = {
+  'pt-br': [
+    {
+      pattern: /^regular season\s*-\s*(\d+)$/i,
+      format: (roundNumber) => `Rodada ${roundNumber}`,
+    },
+    {
+      pattern: /^group stage\s*-\s*(\d+)$/i,
+      format: (roundNumber) => `Fase de Grupos - ${roundNumber}`,
+    },
+    {
+      pattern: /^round of\s+(\d+)$/i,
+      format: (roundNumber) => `Fase de ${roundNumber}`,
+    },
+    {
+      pattern: /^quarter-finals?$/i,
+      format: () => 'Quartas de Final',
+    },
+    {
+      pattern: /^semi-finals?$/i,
+      format: () => 'Semifinal',
+    },
+    {
+      pattern: /^final$/i,
+      format: () => 'Final',
+    },
+  ],
+  en: [],
+};
+
+const dashboardCopy = {
+  'pt-br': {
+    ctaOptions: {
+      results: [
+        'Qual foi o melhor jogo?',
+        'Quem te surpreendeu?',
+        'Qual placar mais te chamou atenção?',
+        'Seu time foi bem ou mal?',
+      ],
+      standings: [
+        'Quem sobe e quem cai?',
+        'Quem fica com a taça?',
+        'A tabela está justa?',
+        'Quem ainda pode reagir?',
+      ],
+      [SEASON_FINAL_VERDICT_TEMPLATE]: [
+        'Seu time cumpriu o objetivo?',
+        'Quem surpreendeu na temporada?',
+        'Foi justo assim?',
+        'Quem decepcionou mais?',
+      ],
+      [TOP_SCORERS_TEMPLATE]: [
+        'Quem termina artilheiro?',
+        'Quem passa o líder?',
+        'Quem faz mais gols?',
+        'Esse top 10 muda na próxima?',
+      ],
+      [PLAYER_OF_ROUND_TEMPLATE]: [
+        'Quem foi o craque?',
+        'Concorda com esse top 10?',
+        'Quem merecia estar aí?',
+        'Qual nota foi injusta?',
+      ],
+      [CHAMPIONSHIP_PACE_TEMPLATE]: [
+        'Quem leva o título?',
+        'Quem sustenta esse ritmo?',
+        'Dá pra buscar o líder?',
+        'Quem segue firme na briga?',
+      ],
+      [RELEGATION_LINE_TEMPLATE]: [
+        'Quem cai esse ano?',
+        'Quem escapa da degola?',
+        'Quem reage a tempo?',
+        'Quem está mais ameaçado?',
+      ],
+      [CONTINENTAL_GROUPS_TEMPLATE]: [
+        'Quem avança?',
+        'Quem passa em primeiro?',
+        'Quem segue vivo?',
+        'Qual grupo está mais equilibrado?',
+      ],
+      predictions: [
+        'Quem vence essa rodada?',
+        'Qual jogo você crava?',
+        'Vai dar zebra em qual jogo?',
+        'Quem tropeça nessa rodada?',
+      ],
+      [WORLD_CUP_TEMPLATE]: [
+        'Quem avança?',
+        'Quem passa em 1º?',
+        'Quem fica com a vaga?',
+        'Quem se classifica?',
+        'Quem surpreende nesse grupo?',
+      ],
+      [WORLD_CUP_KNOCKOUT_TEMPLATE]: [
+        'Quem passa?',
+        'Quem vai pra próxima fase?',
+        'Qual zebra vem aí?',
+        'Quem chega na final?',
+      ],
+    },
+    worldCup: {
+      title: (season) => `Copa do Mundo ${season}`,
+      group: (letter) => `Grupo ${letter}`,
+      cta: 'Quem avança?',
+      output: (season, letter) => `copa-do-mundo-${season}-grupo-${String(letter).toLowerCase()}-pt-br.mp4`,
+    },
+  },
+  en: {
+    ctaOptions: {
+      results: [
+        'What was the best match?',
+        'Who surprised you most?',
+        'Which scoreline stood out?',
+        'Did your team deliver?',
+      ],
+      standings: [
+        'Who wins this?',
+        'Is it over?',
+        'Can they catch them?',
+        'Who is climbing late?',
+      ],
+      [SEASON_FINAL_VERDICT_TEMPLATE]: [
+        'Did your team deliver?',
+        'Who overachieved this season?',
+        'Was this table fair?',
+        'Who disappointed most?',
+      ],
+      [TOP_SCORERS_TEMPLATE]: [
+        'Who finishes top scorer?',
+        'Who catches the leader?',
+        'Who scores next?',
+        'Does this top 10 change?',
+      ],
+      [PLAYER_OF_ROUND_TEMPLATE]: [
+        'Who was your MVP?',
+        'Do you agree with this top 10?',
+        'Who deserved a spot?',
+        'Was this rating fair?',
+      ],
+      [CHAMPIONSHIP_PACE_TEMPLATE]: [
+        'Who wins the title?',
+        'Who can keep this pace?',
+        'Can anyone catch the leader?',
+        'Who stays in the race?',
+      ],
+      [RELEGATION_LINE_TEMPLATE]: [
+        'Who goes down?',
+        'Who escapes the drop?',
+        'Who turns it around?',
+        'Who is most in danger?',
+      ],
+      [CONTINENTAL_GROUPS_TEMPLATE]: [
+        'Who goes through?',
+        'Who tops the group?',
+        'Which group is the toughest?',
+        'Who is still alive here?',
+      ],
+      predictions: [
+        'Who wins this round?',
+        'Which match is your lock?',
+        'Where is the upset coming?',
+        'Who drops points next?',
+      ],
+      [WORLD_CUP_TEMPLATE]: [
+        'Who advances?',
+        'Who wins this group?',
+        'Who takes the top spot?',
+        'Who qualifies from here?',
+        'Who is the dark horse?',
+      ],
+      [WORLD_CUP_KNOCKOUT_TEMPLATE]: [
+        'Who goes through?',
+        'Who reaches the next round?',
+        'Where is the upset?',
+        'Who makes the final?',
+      ],
+    },
+    worldCup: {
+      title: (season) => `World Cup ${season}`,
+      group: (letter) => `Group ${letter}`,
+      cta: 'Who advances?',
+      output: (season, letter) => `world-cup-${season}-group-${String(letter).toLowerCase()}-en.mp4`,
+    },
+  },
+};
+
+const getCurrentChannelProfile = () => channelProfileSelect.value || 'pt';
+
+const getChannelLanguageProfile = (channelProfile = getCurrentChannelProfile()) =>
+  allChannelProfiles.find((profile) => profile.value === channelProfile)?.languageProfile ??
+  (channelProfile === 'en' ? 'en' : 'pt-br');
+
+const getPresetsForChannel = (channelProfile = getCurrentChannelProfile()) =>
+  allLeaguePresets.filter((preset) => !preset.channels || preset.channels.includes(channelProfile));
+
+const getDefaultSeasonForContext = ({
+  channelProfile = getCurrentChannelProfile(),
+  leagueId = form.elements.leagueId.value,
+  template = templateSelect.value,
+} = {}) => {
+  if (template === WORLD_CUP_TEMPLATE || template === WORLD_CUP_KNOCKOUT_TEMPLATE) {
+    return '2026';
+  }
+
+  const numericLeagueId = Number(leagueId);
+  if (numericLeagueId === WORLD_CUP_LEAGUE_ID) {
+    return '2026';
+  }
+
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
+  const usesEuropeanSeason =
+    channelProfile === 'en' || EUROPEAN_LEAGUE_IDS.has(numericLeagueId);
+
+  return String(usesEuropeanSeason && currentMonth < 7 ? currentYear - 1 : currentYear);
+};
+
+const syncSeasonFromContext = ({force = false} = {}) => {
+  const nextSeason = getDefaultSeasonForContext();
+  const currentSeason = String(form.elements.season.value || '').trim();
+
+  if (force || !currentSeason || currentSeason === lastAutoSeason) {
+    form.elements.season.value = nextSeason;
+  }
+
+  lastAutoSeason = nextSeason;
+};
+
+const renderLeaguePresetOptions = (preferredLeagueId = form.elements.leagueId.value) => {
+  const presets = getPresetsForChannel();
+  const preferredValue =
+    preferredLeagueId === null || preferredLeagueId === undefined ? '' : String(preferredLeagueId);
+
+  presetSelect.innerHTML = presets
+    .map((preset) => {
+      const value = preset.leagueId === null ? '' : String(preset.leagueId);
+      return `<option value="${value}">${preset.label}</option>`;
+    })
+    .join('');
+
+  const availableValues = new Set(presets.map((preset) => (preset.leagueId === null ? '' : String(preset.leagueId))));
+  if (availableValues.has(preferredValue)) {
+    presetSelect.value = preferredValue;
+  } else if (presets.length > 0) {
+    presetSelect.value = presets[0].leagueId === null ? '' : String(presets[0].leagueId);
+  } else {
+    presetSelect.value = '';
+  }
+
+  form.elements.leagueId.value = presetSelect.value;
+};
+
+const syncLanguageFromChannel = () => {
+  const nextLanguageProfile = getChannelLanguageProfile();
+  languageProfileSelect.value = nextLanguageProfile;
+  languageProfileSelect.disabled = true;
+};
+
+const setBusy = (busy) => {
+  prepareButton.disabled = busy;
+  renderButton.disabled = busy;
+};
+
+const log = (message, replace = false) => {
+  const timestamp = new Date().toLocaleTimeString();
+  logOutput.textContent = replace ? `[${timestamp}] ${message}` : `${logOutput.textContent}\n[${timestamp}] ${message}`;
+  logOutput.scrollTop = logOutput.scrollHeight;
+};
+
+const formDataToObject = () => Object.fromEntries(new FormData(form).entries());
+
+const slugifyOutputPart = (value) =>
+  String(value ?? '')
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+const normalizeSelectedDates = (value) => {
+  const rawValues = Array.isArray(value)
+    ? value
+    : String(value ?? '')
+        .split(',')
+        .map((item) => item.trim());
+
+  return [...new Set(rawValues.map((item) => String(item).trim()).filter(Boolean))];
+};
+
+const getSelectedMatchDates = () => normalizeSelectedDates(matchDateSelect.value);
+
+const getMatchDateSelectionLabel = () => {
+  const selectedDates = getSelectedMatchDates();
+
+  if (selectedDates.length === 0) {
+    return '';
+  }
+
+  if (selectedDates.length <= 2) {
+    return selectedDates.join(' + ');
+  }
+
+  return `${selectedDates.length} dates`;
+};
+
+const translateRoundName = (round, languageProfile = 'pt-br') => {
+  const normalizedRound = String(round ?? '').trim();
+  const translations = roundTranslations[languageProfile] ?? [];
+
+  for (const translation of translations) {
+    const match = normalizedRound.match(translation.pattern);
+    if (match) {
+      return translation.format(...match.slice(1));
+    }
+  }
+
+  return normalizedRound;
+};
+
+const deriveRoundLabel = (template, round, languageProfile = 'pt-br') => {
+  const translatedRound = translateRoundName(round, languageProfile);
+
+  if (!translatedRound) {
+    return '';
+  }
+
+  if (languageProfile === 'en') {
+    return template === 'predictions'
+      ? `Predictions - ${translatedRound}`
+      : template === PLAYER_OF_ROUND_TEMPLATE
+        ? `Round MVPs · ${translatedRound}`
+      : translatedRound;
+  }
+
+  if (template === 'predictions') {
+    return `Palpites da ${translatedRound}`;
+  }
+
+  if (template === PLAYER_OF_ROUND_TEMPLATE) {
+    return `Rodada dos Craques · ${translatedRound}`;
+  }
+
+  return translatedRound;
+};
+
+const normalizeLabelForLanguage = (template, label, languageProfile = 'pt-br') => {
+  const rawLabel = String(label ?? '').trim();
+  const normalized = rawLabel
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase();
+
+  if (
+    template === 'standings' &&
+    ['current table', 'classificacao atual', 'classificacao', 'tabela', 'tabela atual'].includes(
+      normalized
+    )
+  ) {
+    return '';
+  }
+
+  if (languageProfile !== 'en') {
+    return rawLabel;
+  }
+
+  return rawLabel;
+};
+
+const syncLeagueTitleFromPreset = () => {
+  const selectedPreset = presetSelect.selectedOptions?.[0];
+  const leagueTitle = selectedPreset?.textContent?.trim() ?? '';
+
+  if (leagueTitle && presetSelect.value && !hasCustomLeagueTitle) {
+    form.elements.leagueName.value = leagueTitle;
+  }
+
+  if (leagueTitle && presetSelect.value) {
+    lastAutoLeagueTitle = leagueTitle;
+  }
+};
+
+const getTemplateOutputSlug = () => {
+  const template = templateSelect.value;
+  const languageProfile = languageProfileSelect.value || 'pt-br';
+
+  if (languageProfile === 'en') {
+    return (
+      {
+        results: 'results',
+        predictions: 'predictions',
+        standings: 'standings',
+        [SEASON_FINAL_VERDICT_TEMPLATE]: 'season-wrap-up',
+        [CHAMPION_FINAL_TEMPLATE]: 'champions',
+        [TOP_SCORERS_TEMPLATE]: 'top-scorers',
+        [PLAYER_OF_ROUND_TEMPLATE]: 'player-of-round',
+        [CHAMPIONSHIP_PACE_TEMPLATE]: 'championship-pace',
+        [RELEGATION_LINE_TEMPLATE]: 'relegation-line',
+        [CONTINENTAL_GROUPS_TEMPLATE]: 'continental-groups',
+        [WORLD_CUP_TEMPLATE]: 'world-cup-group',
+        [WORLD_CUP_KNOCKOUT_TEMPLATE]: 'world-cup-knockout',
+      }[template] ?? template
+    );
+  }
+
+  return (
+      {
+        results: 'resultados',
+        predictions: 'palpites',
+        standings: 'classificacao',
+        [SEASON_FINAL_VERDICT_TEMPLATE]: 'resumo-final',
+        [CHAMPION_FINAL_TEMPLATE]: 'campeao',
+        [TOP_SCORERS_TEMPLATE]: 'artilheiros',
+        [PLAYER_OF_ROUND_TEMPLATE]: 'craque-da-rodada',
+        [CHAMPIONSHIP_PACE_TEMPLATE]: 'ritmo-de-campeao',
+        [RELEGATION_LINE_TEMPLATE]: 'linha-do-rebaixamento',
+        [CONTINENTAL_GROUPS_TEMPLATE]: 'grupos',
+        [WORLD_CUP_TEMPLATE]: 'grupo-da-copa',
+        [WORLD_CUP_KNOCKOUT_TEMPLATE]: 'mata-mata-da-copa',
+      }[template] ?? template
+  );
+};
+
+const buildAutoOutputName = () => {
+  const template = templateSelect.value;
+  const languageProfile = languageProfileSelect.value || 'pt-br';
+  const season = form.elements.season.value.trim() || '2026';
+
+  if (template === WORLD_CUP_TEMPLATE) {
+    const competitionName =
+      form.elements.competitionName.value.trim() ||
+      dashboardCopy[languageProfile]?.worldCup?.title(season) ||
+      `World Cup ${season}`;
+    const groupLabel =
+      dashboardCopy[languageProfile]?.worldCup?.group(
+        (form.elements.groupLetter.value || 'A').toUpperCase()
+      ) ?? 'Group A';
+
+    return [
+      slugifyOutputPart(competitionName),
+      slugifyOutputPart(groupLabel),
+      slugifyOutputPart(languageProfile),
+    ]
+      .filter(Boolean)
+      .join('-')
+      .concat('.mp4');
+  }
+
+  if (template === WORLD_CUP_KNOCKOUT_TEMPLATE) {
+    const title =
+      dashboardCopy[languageProfile]?.worldCup?.title(season) ||
+      `World Cup ${season}`;
+    const phaseSlug =
+      languageProfile === 'en' ? 'knockout' : 'mata-mata';
+
+    return [slugifyOutputPart(title), slugifyOutputPart(phaseSlug), slugifyOutputPart(languageProfile)]
+      .filter(Boolean)
+      .join('-')
+      .concat('.mp4');
+  }
+
+  if (
+    template === CONTINENTAL_GROUPS_TEMPLATE ||
+    template === SEASON_FINAL_VERDICT_TEMPLATE ||
+    template === CHAMPION_FINAL_TEMPLATE ||
+    template === TOP_SCORERS_TEMPLATE ||
+    template === CHAMPIONSHIP_PACE_TEMPLATE ||
+    template === RELEGATION_LINE_TEMPLATE
+  ) {
+    const leagueName =
+      form.elements.leagueName.value.trim() ||
+      presetSelect.selectedOptions?.[0]?.textContent?.trim() ||
+      `League ${form.elements.leagueId.value || 'Custom'}`;
+
+    return [
+      slugifyOutputPart(leagueName),
+      slugifyOutputPart(season),
+      slugifyOutputPart(getTemplateOutputSlug()),
+      slugifyOutputPart(languageProfile),
+    ]
+      .filter(Boolean)
+      .join('-')
+      .concat('.mp4');
+  }
+
+  const leagueName =
+    form.elements.leagueName.value.trim() ||
+    presetSelect.selectedOptions?.[0]?.textContent?.trim() ||
+    `League ${form.elements.leagueId.value || 'Custom'}`;
+
+  return [
+    slugifyOutputPart(leagueName),
+    slugifyOutputPart(season),
+    slugifyOutputPart(getTemplateOutputSlug()),
+    slugifyOutputPart(roundSelect.value),
+    slugifyOutputPart(getMatchDateSelectionLabel()),
+    slugifyOutputPart(languageProfile),
+  ]
+    .filter(Boolean)
+    .join('-')
+    .concat('.mp4');
+};
+
+const syncOutputNameFromSelections = () => {
+  const outputNameField = form.elements.outputName;
+  const nextAutoOutputName = buildAutoOutputName();
+
+  outputNameField.placeholder = nextAutoOutputName;
+
+  if (
+    !hasCustomOutputName ||
+    !outputNameField.value.trim() ||
+    outputNameField.value === lastAutoOutputName
+  ) {
+    outputNameField.value = nextAutoOutputName;
+    hasCustomOutputName = false;
+  }
+
+  lastAutoOutputName = nextAutoOutputName;
+};
+
+const syncCtaFromPreset = () => {
+  if (ctaPresetSelect.value) {
+    form.elements.ctaText.value = ctaPresetSelect.value;
+  }
+};
+
+const syncHookFromPreset = () => {
+  if (hookPresetSelect.value) {
+    form.elements.hookText.value = hookPresetSelect.value;
+  }
+};
+
+const getCurrentCtaOptions = () => {
+  const languageProfile = languageProfileSelect.value || 'pt-br';
+  const template = templateSelect.value;
+  return dashboardCopy[languageProfile]?.ctaOptions?.[template] ?? [];
+};
+
+const getCurrentHookOptions = () => {
+  const languageProfile = languageProfileSelect.value || 'pt-br';
+  const template = templateSelect.value;
+  return dashboardHookOptions[languageProfile]?.[template] ?? [];
+};
+
+const syncRoundLabelFromRound = () => {
+  const template = templateSelect.value;
+  if (!ROUND_TEMPLATES.has(template)) {
+    return;
+  }
+
+  form.elements.roundLabel.value = deriveRoundLabel(
+    template,
+    roundSelect.value,
+    languageProfileSelect.value || 'pt-br'
+  );
+};
+
+const clearRoundLabelOverride = () => {
+  form.elements.roundLabel.value = '';
+};
+
+const formatSeasonDisplay = (season, languageProfile = languageProfileSelect.value || 'pt-br') => {
+  const numericSeason = Number(season);
+
+  if (languageProfile === 'en' && Number.isFinite(numericSeason)) {
+    return `${numericSeason}/${String(numericSeason + 1).slice(-2)}`;
+  }
+
+  return String(season);
+};
+
+const getLeagueTitleForIntro = () => {
+  const season = form.elements.season.value || '2026';
+  const seasonDisplay = formatSeasonDisplay(season);
+  const leagueName =
+    form.elements.leagueName.value.trim() ||
+    presetSelect.selectedOptions?.[0]?.textContent?.trim() ||
+    `League ${form.elements.leagueId.value || 'Custom'}`;
+
+  return leagueName.includes(season) || leagueName.includes(seasonDisplay)
+    ? leagueName
+    : `${leagueName} ${seasonDisplay}`;
+};
+
+const getAutoIntroCopy = () => {
+  const template = templateSelect.value;
+  const languageProfile = languageProfileSelect.value || 'pt-br';
+  const season = form.elements.season.value || '2026';
+  const seasonDisplay = formatSeasonDisplay(season, languageProfile);
+  const leagueTitle = getLeagueTitleForIntro();
+  const leagueWithoutSeason = leagueTitle
+    .replace(new RegExp(`\\s+${season}$`), '')
+    .replace(new RegExp(`\\s+${seasonDisplay.replace('/', '\\/')}$`), '')
+    .trim();
+  const groupLetter = (form.elements.groupLetter.value || 'A').toUpperCase();
+  const isEnglish = languageProfile === 'en';
+
+  const worldCupTitle = isEnglish ? `World Cup ${season}` : `Copa do Mundo ${season}`;
+  const worldCupGroup = isEnglish ? `Group ${groupLetter}` : `Grupo ${groupLetter}`;
+  const getPtCompetitionArticle = (competitionName) =>
+    /^brasileir[ãa]o\b/i.test(competitionName) ? 'do' : 'da';
+  const ptCompetition = `${getPtCompetitionArticle(leagueWithoutSeason)} ${leagueWithoutSeason}`;
+  const withPtIntro = (subject) => `Fala Galera, pra vocês... ${subject}.`;
+  const voiceoverByTemplate = {
+    results: isEnglish
+      ? `Latest ${leagueWithoutSeason} results`
+      : withPtIntro(`os últimos resultados ${ptCompetition}`),
+    predictions: isEnglish
+      ? `${leagueWithoutSeason} predictions`
+      : withPtIntro(`os palpites ${ptCompetition}`),
+    standings: isEnglish
+      ? `${leagueWithoutSeason} standings`
+      : withPtIntro(`a classificação ${ptCompetition}`),
+    [SEASON_FINAL_VERDICT_TEMPLATE]: isEnglish
+      ? `${leagueWithoutSeason} season wrap-up`
+      : withPtIntro(`o resumo final ${ptCompetition}`),
+    [CHAMPION_FINAL_TEMPLATE]: isEnglish
+      ? `${leagueWithoutSeason} champions`
+      : withPtIntro(`o campeão ${ptCompetition}`),
+    [TOP_SCORERS_TEMPLATE]: isEnglish
+      ? `${leagueWithoutSeason} top scorers`
+      : withPtIntro(`os artilheiros ${ptCompetition}`),
+    [PLAYER_OF_ROUND_TEMPLATE]: isEnglish
+      ? `${leagueWithoutSeason} player of the round`
+      : withPtIntro(`o craque da rodada ${ptCompetition}`),
+    [CHAMPIONSHIP_PACE_TEMPLATE]: isEnglish
+      ? `Title pace in the ${leagueWithoutSeason}`
+      : withPtIntro(`o ritmo de campeão ${ptCompetition}`),
+    [RELEGATION_LINE_TEMPLATE]: isEnglish
+      ? `Relegation line in the ${leagueWithoutSeason}`
+      : withPtIntro(`a linha do rebaixamento ${ptCompetition}`),
+    [CONTINENTAL_GROUPS_TEMPLATE]: isEnglish
+      ? `${leagueWithoutSeason} group standings`
+      : withPtIntro(`a tabela dos grupos ${ptCompetition}`),
+    [WORLD_CUP_TEMPLATE]: isEnglish
+      ? `${worldCupGroup} at the ${worldCupTitle}`
+      : withPtIntro(`${worldCupGroup} da ${worldCupTitle}`),
+    [WORLD_CUP_KNOCKOUT_TEMPLATE]: isEnglish
+      ? `${worldCupTitle} knockout stage`
+      : withPtIntro(`o mata-mata da ${worldCupTitle}`),
+  };
+
+  return {
+    introTitle:
+      template === WORLD_CUP_TEMPLATE || template === WORLD_CUP_KNOCKOUT_TEMPLATE
+        ? worldCupTitle
+        : leagueTitle,
+    voiceoverText: voiceoverByTemplate[template] ?? leagueTitle,
+  };
+};
+
+const syncIntroPlaceholders = () => {
+  const autoCopy = getAutoIntroCopy();
+  form.elements.introTitle.placeholder = autoCopy.introTitle || 'Auto';
+  form.elements.hookText.placeholder = getCurrentHookOptions()[0] ?? 'Auto';
+  form.elements.voiceoverText.placeholder = autoCopy.voiceoverText || 'Auto';
+};
+
+const clearIntroOverrides = () => {
+  form.elements.introTitle.value = '';
+  form.elements.hookText.value = '';
+  form.elements.voiceoverText.value = '';
+};
+
+const setRenderDownload = (job, render) => {
+  if (!job || !render?.outputPath) {
+    renderDownloadRoot.innerHTML = '';
+    return;
+  }
+
+  const downloadPath = `/${render.outputPath
+    .replace(/^\/+/, '')
+    .split('/')
+    .map((part) => encodeURIComponent(part))
+    .join('/')}`;
+  renderDownloadRoot.innerHTML = `
+    <div class="job-download-card">
+      <div>
+        <strong>Render ready</strong>
+        <span>${escapeHtml(job.outputName)}</span>
+      </div>
+      <a class="download-link" href="${downloadPath}" download>Download MP4</a>
+    </div>
+  `;
+};
+
+const renderPredictionEditor = (fixtures = []) => {
+  currentPredictionFixtures = fixtures;
+
+  if (!fixtures.length) {
+    predictionEditorList.innerHTML = '';
+    return;
+  }
+
+  predictionEditorList.innerHTML = fixtures
+    .map((fixture, index) => {
+      const sourceLabel = fixture.predictionSource === 'api' ? 'API' : 'Manual';
+      return `
+        <div class="prediction-card">
+          <label class="prediction-team">
+            <span>${escapeHtml(fixture.homeTeam)}</span>
+          </label>
+          <input
+            class="prediction-score-input"
+            type="number"
+            min="0"
+            step="1"
+            data-fixture-id="${fixture.fixtureId}"
+            data-side="home"
+            value="${fixture.homeScore ?? ''}"
+            aria-label="${fixture.homeTeam} score"
+          />
+          <input
+            class="prediction-score-input"
+            type="number"
+            min="0"
+            step="1"
+            data-fixture-id="${fixture.fixtureId}"
+            data-side="away"
+            value="${fixture.awayScore ?? ''}"
+            aria-label="${fixture.awayTeam} score"
+          />
+          <label class="prediction-team" style="justify-content:flex-end;text-align:right;">
+            <span>${escapeHtml(fixture.awayTeam)}</span>
+          </label>
+          <div class="prediction-source" style="grid-column:1 / -1;">${index + 1}. ${sourceLabel}</div>
+        </div>
+      `;
+    })
+    .join('');
+};
+
+const getPredictionEdits = () => {
+  return currentPredictionFixtures.map((fixture) => {
+    const homeInput = predictionEditorList.querySelector(
+      `[data-fixture-id="${fixture.fixtureId}"][data-side="home"]`
+    );
+    const awayInput = predictionEditorList.querySelector(
+      `[data-fixture-id="${fixture.fixtureId}"][data-side="away"]`
+    );
+
+    return {
+      fixtureId: fixture.fixtureId,
+      homeScore: homeInput?.value ?? '',
+      awayScore: awayInput?.value ?? '',
+    };
+  });
+};
+
+const renderResultEditor = (fixtures = []) => {
+  currentResultFixtures = fixtures;
+
+  if (!fixtures.length) {
+    resultEditorList.innerHTML = '';
+    return;
+  }
+
+  resultEditorList.innerHTML = fixtures
+    .map((fixture) => {
+      return `
+        <div class="prediction-card">
+          <div class="prediction-team-block">
+            <label class="prediction-team">
+              <span>${escapeHtml(fixture.homeTeam)}</span>
+            </label>
+            <label class="eliminated-toggle">
+              <input
+                type="checkbox"
+                data-fixture-id="${fixture.fixtureId}"
+                data-side="home"
+                data-field="eliminated"
+                ${fixture.homeEliminated ? 'checked' : ''}
+              />
+              <span>Elim.</span>
+            </label>
+          </div>
+          <input
+            class="prediction-score-input"
+            type="number"
+            min="0"
+            step="1"
+            data-fixture-id="${fixture.fixtureId}"
+            data-side="home"
+            data-field="score"
+            value="${fixture.homeScore ?? ''}"
+            aria-label="${escapeHtml(fixture.homeTeam)} score"
+          />
+          <input
+            class="prediction-score-input"
+            type="number"
+            min="0"
+            step="1"
+            data-fixture-id="${fixture.fixtureId}"
+            data-side="away"
+            data-field="score"
+            value="${fixture.awayScore ?? ''}"
+            aria-label="${escapeHtml(fixture.awayTeam)} score"
+          />
+          <div class="prediction-team-block align-right">
+            <label class="prediction-team" style="justify-content:flex-end;text-align:right;">
+              <span>${escapeHtml(fixture.awayTeam)}</span>
+            </label>
+            <label class="eliminated-toggle align-right">
+              <span>Elim.</span>
+              <input
+                type="checkbox"
+                data-fixture-id="${fixture.fixtureId}"
+                data-side="away"
+                data-field="eliminated"
+                ${fixture.awayEliminated ? 'checked' : ''}
+              />
+            </label>
+          </div>
+          <div class="penalty-editor-row compact-penalty-row">
+            <label class="eliminated-toggle penalty-toggle">
+              <input
+                type="checkbox"
+                data-fixture-id="${fixture.fixtureId}"
+                data-field="hasPenalties"
+                ${fixture.hasPenalties ? 'checked' : ''}
+              />
+              <span>Pên.</span>
+            </label>
+            <div class="penalty-score-editor" aria-label="Resultado dos pênaltis">
+              <input
+                class="prediction-score-input penalty-score-input"
+                type="number"
+                min="0"
+                step="1"
+                data-fixture-id="${fixture.fixtureId}"
+                data-side="home"
+                data-field="penaltyScore"
+                value="${fixture.homePenaltyScore ?? ''}"
+                aria-label="${escapeHtml(fixture.homeTeam)} penalties"
+              />
+              <strong>–</strong>
+              <input
+                class="prediction-score-input penalty-score-input"
+                type="number"
+                min="0"
+                step="1"
+                data-fixture-id="${fixture.fixtureId}"
+                data-side="away"
+                data-field="penaltyScore"
+                value="${fixture.awayPenaltyScore ?? ''}"
+                aria-label="${escapeHtml(fixture.awayTeam)} penalties"
+              />
+            </div>
+          </div>
+        </div>
+      `;
+    })
+    .join('');
+};
+
+const getFixtureEdits = () => {
+  return currentResultFixtures.map((fixture) => {
+    const homeInput = resultEditorList.querySelector(
+      `[data-fixture-id="${fixture.fixtureId}"][data-side="home"][data-field="score"]`
+    );
+    const awayInput = resultEditorList.querySelector(
+      `[data-fixture-id="${fixture.fixtureId}"][data-side="away"][data-field="score"]`
+    );
+    const homeEliminatedInput = resultEditorList.querySelector(
+      `[data-fixture-id="${fixture.fixtureId}"][data-side="home"][data-field="eliminated"]`
+    );
+    const awayEliminatedInput = resultEditorList.querySelector(
+      `[data-fixture-id="${fixture.fixtureId}"][data-side="away"][data-field="eliminated"]`
+    );
+    const hasPenaltiesInput = resultEditorList.querySelector(
+      `[data-fixture-id="${fixture.fixtureId}"][data-field="hasPenalties"]`
+    );
+    const homePenaltyInput = resultEditorList.querySelector(
+      `[data-fixture-id="${fixture.fixtureId}"][data-side="home"][data-field="penaltyScore"]`
+    );
+    const awayPenaltyInput = resultEditorList.querySelector(
+      `[data-fixture-id="${fixture.fixtureId}"][data-side="away"][data-field="penaltyScore"]`
+    );
+
+    return {
+      fixtureId: fixture.fixtureId,
+      homeScore: homeInput?.value ?? '',
+      awayScore: awayInput?.value ?? '',
+      homeEliminated: Boolean(homeEliminatedInput?.checked),
+      awayEliminated: Boolean(awayEliminatedInput?.checked),
+      hasPenalties: Boolean(hasPenaltiesInput?.checked),
+      homePenaltyScore: homePenaltyInput?.value ?? '',
+      awayPenaltyScore: awayPenaltyInput?.value ?? '',
+    };
+  });
+};
+
+const renderStandingsEditor = (rows = []) => {
+  currentStandingRows = rows;
+
+  if (!rows.length) {
+    standingsEditorList.innerHTML = '';
+    return;
+  }
+
+  standingsEditorList.innerHTML = rows
+    .map((row) => {
+      const logoSource = row.badge?.logoPath ?? row.badge?.imagePath;
+      const badgeHtml = logoSource
+        ? `<img src="${escapeHtml(logoSource)}" alt="" />`
+        : `<span class="season-verdict-fallback-badge">${escapeHtml(row.badge?.label ?? '')}</span>`;
+
+      return `
+        <div class="standings-editor-row" data-original-rank="${row.rank}">
+          <div class="standings-editor-team">
+            ${badgeHtml}
+            <input
+              type="text"
+              data-field="team"
+              value="${escapeHtml(row.team)}"
+              aria-label="${escapeHtml(row.team)} display name"
+            />
+          </div>
+          <label>
+            POS
+            <input type="number" min="1" step="1" data-field="rank" value="${row.rank}" />
+          </label>
+          <label>
+            JG
+            <input type="number" min="0" step="1" data-field="played" value="${row.played}" />
+          </label>
+          <label>
+            SG
+            <input type="number" step="1" data-field="goalDifference" value="${row.goalDifference}" />
+          </label>
+          <label>
+            PTS
+            <input type="number" step="1" data-field="points" value="${row.points}" />
+          </label>
+          <label>
+            Forma
+            <input type="text" maxlength="8" data-field="form" value="${escapeHtml(row.form ?? '')}" />
+          </label>
+        </div>
+      `;
+    })
+    .join('');
+};
+
+const getStandingEdits = () => {
+  return currentStandingRows.map((row) => {
+    const rowElement = standingsEditorList.querySelector(
+      `.standings-editor-row[data-original-rank="${row.rank}"]`
+    );
+    const getValue = (field) => rowElement?.querySelector(`[data-field="${field}"]`)?.value ?? '';
+
+    return {
+      originalRank: row.rank,
+      team: getValue('team'),
+      rank: getValue('rank'),
+      played: getValue('played'),
+      goalDifference: getValue('goalDifference'),
+      points: getValue('points'),
+      form: getValue('form'),
+    };
+  });
+};
+
+const renderChampionFinalOptions = (rows = [], selectedRank = championFinalSelect.value) => {
+  currentChampionFinalRows = rows;
+  championFinalSelect.innerHTML = [
+    '<option value="">Auto pela final selecionada</option>',
+    ...rows.map((row) => {
+      const selected = String(row.rank) === String(selectedRank) ? ' selected' : '';
+      return `<option value="${row.rank}"${selected}>${row.rank}. ${escapeHtml(row.team)}</option>`;
+    }),
+  ].join('');
+};
+
+const getChampionFinalSelection = () => {
+  const selectedRank = Number(championFinalSelect.value);
+  const selectedRow = currentChampionFinalRows.find((row) => row.rank === selectedRank);
+
+  return selectedRow
+    ? {
+        rank: selectedRow.rank,
+        team: selectedRow.team,
+        badge: selectedRow.badge,
+      }
+    : undefined;
+};
+
+const loadChampionFinalOptions = async () => {
+  if (templateSelect.value !== CHAMPION_FINAL_TEMPLATE) {
+    renderChampionFinalOptions([]);
+    return;
+  }
+
+  const leagueIdValue = form.elements.leagueId.value.trim();
+  const seasonValue = form.elements.season.value.trim();
+  const leagueId = Number(leagueIdValue);
+  const season = Number(seasonValue);
+
+  if (!leagueIdValue || !seasonValue || !Number.isFinite(leagueId) || !Number.isFinite(season)) {
+    championFinalStatus.textContent =
+      'Auto usa a final. Escolha uma liga e temporada para carregar campeões da tabela.';
+    renderChampionFinalOptions([]);
+    return;
+  }
+
+  try {
+    reloadChampionFinalButton.disabled = true;
+    championFinalStatus.textContent = 'Carregando tabela para escolher o campeão...';
+    const params = new URLSearchParams({
+      leagueId: String(leagueId),
+      season: String(season),
+    });
+    const response = await fetch(`${apiBase}/standings-editor?${params.toString()}`);
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not load champion options.');
+    }
+
+    renderChampionFinalOptions(data.rows ?? []);
+    championFinalStatus.textContent = data.rows?.length
+      ? 'Auto resolve copas pela final. Para liga, escolha o campeão da tabela.'
+      : 'Sem tabela disponível. Use a final selecionada para resolver o campeão.';
+  } catch (error) {
+    renderChampionFinalOptions([]);
+    championFinalStatus.textContent = 'Não foi possível carregar a tabela. Auto continua disponível.';
+    log(error instanceof Error ? error.message : String(error));
+  } finally {
+    reloadChampionFinalButton.disabled = false;
+  }
+};
+
+const loadStandingsEditor = async () => {
+  const template = templateSelect.value;
+  const leagueIdValue = form.elements.leagueId.value.trim();
+  const seasonValue = form.elements.season.value.trim();
+  const leagueId = Number(leagueIdValue);
+  const season = Number(seasonValue);
+
+  if (template !== 'standings') {
+    standingsEditorStatus.textContent = 'Select Standings to load table overrides.';
+    renderStandingsEditor([]);
+    return;
+  }
+
+  if (!leagueIdValue || !seasonValue || !Number.isFinite(leagueId) || !Number.isFinite(season)) {
+    standingsEditorStatus.textContent = 'Choose a league and season to load standings.';
+    renderStandingsEditor([]);
+    return;
+  }
+
+  try {
+    reloadStandingsButton.disabled = true;
+    standingsEditorStatus.textContent = 'Loading standings…';
+    const params = new URLSearchParams({
+      leagueId: String(leagueId),
+      season: String(season),
+    });
+    const response = await fetch(`${apiBase}/standings-editor?${params.toString()}`);
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not load standings.');
+    }
+
+    renderStandingsEditor(data.rows ?? []);
+    standingsEditorStatus.textContent = data.rows?.length
+      ? `Loaded ${data.rows.length} teams. Edit only what the API got wrong.`
+      : 'No standings rows found.';
+  } catch (error) {
+    renderStandingsEditor([]);
+    standingsEditorStatus.textContent = 'Could not load standings.';
+    log(error instanceof Error ? error.message : String(error));
+  } finally {
+    reloadStandingsButton.disabled = false;
+  }
+};
+
+const renderSeasonVerdictEditor = (rows = [], statusOptions = []) => {
+  currentSeasonVerdictRows = rows;
+
+  if (!rows.length) {
+    seasonVerdictEditorList.innerHTML = '';
+    return;
+  }
+
+  const optionsHtml = (selectedValue = 'auto') =>
+    statusOptions
+      .map((option) => {
+        const selected = option.value === selectedValue ? ' selected' : '';
+        return `<option value="${escapeHtml(option.value)}"${selected}>${escapeHtml(option.label)}</option>`;
+      })
+      .join('');
+
+  seasonVerdictEditorList.innerHTML = rows
+    .map((row) => {
+      const logoSource = row.badge?.logoPath ?? row.badge?.imagePath;
+      const badgeHtml = logoSource
+        ? `<img src="${escapeHtml(logoSource)}" alt="" />`
+        : `<span class="season-verdict-fallback-badge">${escapeHtml(row.badge?.label ?? '')}</span>`;
+
+      return `
+        <div class="season-verdict-row" data-rank="${row.rank}">
+          <div class="season-verdict-team">
+            ${badgeHtml}
+            <div>
+              <strong>${row.rank}. ${escapeHtml(row.team)}</strong>
+              <span>Auto: ${escapeHtml(row.autoStatusLabel ?? 'Mid-table')}</span>
+            </div>
+          </div>
+          <div class="season-verdict-meta">
+            <span>${row.points} pts</span>
+            <span>SG ${row.goalDifference > 0 ? '+' : ''}${row.goalDifference}</span>
+          </div>
+          <label>
+            Final status
+            <select data-rank="${row.rank}" data-team="${escapeHtml(row.team)}">
+              ${optionsHtml('auto')}
+            </select>
+          </label>
+        </div>
+      `;
+    })
+    .join('');
+};
+
+const getSeasonFinalVerdictEdits = () => {
+  return currentSeasonVerdictRows
+    .map((row) => {
+      const select = seasonVerdictEditorList.querySelector(
+        `.season-verdict-row[data-rank="${row.rank}"] select`
+      );
+      const status = select?.value ?? 'auto';
+
+      return {
+        rank: row.rank,
+        team: row.team,
+        status,
+      };
+    })
+    .filter((edit) => edit.status && edit.status !== 'auto');
+};
+
+const loadSeasonFinalVerdictEditor = async () => {
+  const template = templateSelect.value;
+  const leagueIdValue = form.elements.leagueId.value.trim();
+  const seasonValue = form.elements.season.value.trim();
+  const languageProfile = languageProfileSelect.value || 'pt-br';
+  const leagueId = Number(leagueIdValue);
+  const season = Number(seasonValue);
+
+  if (template !== SEASON_FINAL_VERDICT_TEMPLATE) {
+    seasonVerdictEditorStatus.textContent = 'Select Season Wrap-up to load standings overrides.';
+    renderSeasonVerdictEditor([]);
+    return;
+  }
+
+  if (!leagueIdValue || !seasonValue || !Number.isFinite(leagueId) || !Number.isFinite(season)) {
+    seasonVerdictEditorStatus.textContent = 'Choose a league and season to load standings.';
+    renderSeasonVerdictEditor([]);
+    return;
+  }
+
+  try {
+    reloadSeasonVerdictButton.disabled = true;
+    seasonVerdictEditorStatus.textContent = 'Loading standings…';
+    const params = new URLSearchParams({
+      leagueId: String(leagueId),
+      season: String(season),
+      languageProfile,
+    });
+    const response = await fetch(`${apiBase}/season-final-verdict-editor?${params.toString()}`);
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not load standings overrides.');
+    }
+
+    renderSeasonVerdictEditor(data.rows ?? [], data.statusOptions ?? []);
+    seasonVerdictEditorStatus.textContent = data.rows?.length
+      ? `Loaded ${data.rows.length} teams. Change only the teams affected by playoffs.`
+      : 'No standings rows found.';
+  } catch (error) {
+    renderSeasonVerdictEditor([]);
+    seasonVerdictEditorStatus.textContent = 'Could not load standings overrides.';
+    log(error instanceof Error ? error.message : String(error));
+  } finally {
+    reloadSeasonVerdictButton.disabled = false;
+  }
+};
+
+const loadResultFixturesForEditor = async () => {
+  const template = templateSelect.value;
+  const leagueIdValue = form.elements.leagueId.value.trim();
+  const seasonValue = form.elements.season.value.trim();
+  const languageProfile = languageProfileSelect.value || 'pt-br';
+  const leagueId = Number(leagueIdValue);
+  const season = Number(seasonValue);
+
+  if (template !== 'results' && template !== CHAMPION_FINAL_TEMPLATE) {
+    resultEditorStatus.textContent = 'Select Results or Champion Final to load fixtures.';
+    return;
+  }
+
+  if (!leagueIdValue || !seasonValue || !Number.isFinite(leagueId) || !Number.isFinite(season)) {
+    resultEditorStatus.textContent = 'Choose a league and season to load results.';
+    renderResultEditor([]);
+    return;
+  }
+
+  const selectedRound = roundSelect.value.trim();
+  const selectedDates = getSelectedMatchDates();
+
+  resultEditorStatus.textContent = 'Loading result fixtures…';
+
+  try {
+    const params = new URLSearchParams({
+      leagueId: String(leagueId),
+      season: String(season),
+      languageProfile,
+    });
+    if (selectedRound) params.set('round', selectedRound);
+    selectedDates.forEach((dateValue) => params.append('matchDates', dateValue));
+
+    const response = await fetch(`${apiBase}/result-fixtures?${params.toString()}`);
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not load result fixtures.');
+    }
+
+    const visibleFixtures = data.fixtures ?? [];
+    renderResultEditor(visibleFixtures);
+    const dateLabel = getMatchDateSelectionLabel();
+    resultEditorStatus.textContent = visibleFixtures.length
+      ? `Loaded ${visibleFixtures.length} fixtures for ${data.round}${dateLabel ? ` • ${dateLabel}` : ''}.`
+      : 'No fixtures found for the selected round.';
+  } catch (error) {
+    resultEditorStatus.textContent = 'Could not load result fixtures.';
+    log(error instanceof Error ? error.message : String(error));
+  }
+};
+
+const normalizeStudioUrl = (value) => {
+  const trimmed = value.trim();
+  return trimmed || 'http://127.0.0.1:3000';
+};
+
+const buildStudioPreviewUrl = () => {
+  const studioUrl = normalizeStudioUrl(studioUrlInput.value);
+  const compositionId = templateCompositionMap[templateSelect.value];
+  const refreshToken = Date.now().toString();
+
+  try {
+    const url = new URL(studioUrl);
+    const cleanPath = url.pathname === '/' ? '' : url.pathname.replace(/\/+$/, '');
+    url.pathname = compositionId ? `${cleanPath}/${encodeURIComponent(compositionId)}` : cleanPath || '/';
+    url.searchParams.set('codexPreviewTs', refreshToken);
+    return url.toString();
+  } catch {
+    if (!compositionId) {
+      return `${studioUrl}${studioUrl.includes('?') ? '&' : '?'}codexPreviewTs=${refreshToken}`;
+    }
+
+    return `${studioUrl.replace(/\/+$/, '')}/${encodeURIComponent(compositionId)}?codexPreviewTs=${refreshToken}`;
+  }
+};
+
+const updatePreview = () => {
+  const studioUrl = normalizeStudioUrl(studioUrlInput.value);
+  studioUrlInput.value = studioUrl;
+  localStorage.setItem(STUDIO_URL_KEY, studioUrl);
+  const previewUrl = buildStudioPreviewUrl();
+  previewFrame.src = previewUrl;
+  openPreviewLink.href = previewUrl;
+};
+
+const updateDashboardMeta = () => {
+  const templateLabel = getSelectedOptionLabel(templateSelect) || 'template';
+  const channelLabel = getSelectedOptionLabel(channelProfileSelect) || 'channel';
+  const leagueLabel = getSelectedOptionLabel(presetSelect) || form.elements.leagueName.value || 'league';
+  const roundValue = roundSelect.value || getMatchDateSelectionLabel() || 'auto';
+
+  templateChip.textContent = templateLabel;
+  if (dashboardChannelChip) {
+    dashboardChannelChip.textContent = channelLabel;
+  }
+  if (dashboardQuickStatus) {
+    dashboardQuickStatus.textContent = `${templateLabel} • ${leagueLabel} • ${roundValue}`;
+  }
+};
+
+const loadPredictionFixtures = async () => {
+  if (templateSelect.value !== 'predictions') {
+    predictionEditorStatus.textContent = 'Select the Predictions template to load fixtures.';
+    renderPredictionEditor([]);
+    return;
+  }
+
+  const leagueIdValue = form.elements.leagueId.value.trim();
+  const seasonValue = form.elements.season.value.trim();
+  const leagueId = Number(leagueIdValue);
+  const season = Number(seasonValue);
+
+  if (!leagueIdValue || !seasonValue || !Number.isFinite(leagueId) || !Number.isFinite(season)) {
+    predictionEditorStatus.textContent = 'Choose a league and season to load predictions.';
+    renderPredictionEditor([]);
+    return;
+  }
+
+  try {
+    reloadPredictionsButton.disabled = true;
+    predictionEditorStatus.textContent = 'Loading prediction fixtures…';
+
+    const params = new URLSearchParams({
+      leagueId: String(leagueId),
+      season: String(season),
+      round: roundSelect.value,
+      languageProfile: languageProfileSelect.value || 'pt-br',
+    });
+    getSelectedMatchDates().forEach((dateValue) => params.append('matchDates', dateValue));
+
+    const response = await fetch(`${apiBase}/prediction-fixtures?${params.toString()}`);
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not load prediction fixtures.');
+    }
+
+    const selectedDates = getSelectedMatchDates();
+    const selectedDateSet = new Set(selectedDates);
+    const visibleFixtures = selectedDates.length
+      ? (data.fixtures ?? []).filter((fixture) => selectedDateSet.has(fixture.fixtureDateKey))
+      : data.fixtures ?? [];
+    const dateLabel = getMatchDateSelectionLabel();
+
+    renderPredictionEditor(visibleFixtures);
+    predictionEditorStatus.textContent = visibleFixtures.length
+      ? `Loaded ${visibleFixtures.length} fixtures for ${data.round}${dateLabel ? ` • ${dateLabel}` : ''}.`
+      : 'No fixtures found for this selection.';
+    log(
+      `Loaded ${visibleFixtures.length ?? 0} prediction fixtures for ${data.round}${dateLabel ? ` • ${dateLabel}` : ''}.`
+    );
+  } catch (error) {
+    renderPredictionEditor([]);
+    predictionEditorStatus.textContent = 'Could not load prediction fixtures.';
+    log(error instanceof Error ? error.message : String(error));
+  } finally {
+    reloadPredictionsButton.disabled = false;
+  }
+};
+
+const getJobDateLabel = (job) => {
+  const dates = normalizeSelectedDates(job?.matchDates ?? job?.matchDate);
+
+  if (dates.length === 0) {
+    return '';
+  }
+
+  if (dates.length <= 2) {
+    return dates.join(' + ');
+  }
+
+  return `${dates.length} dates`;
+};
+
+const renderCurrentJob = (job) => {
+  if (!job) {
+    templateChip.textContent = 'no job';
+    currentJobRoot.innerHTML =
+      '<div class="job-status-card"><div><strong>No prepared job yet</strong><span>Use the setup above, then prepare a preview job.</span></div></div>';
+    if (dashboardQuickStatus) {
+      dashboardQuickStatus.textContent = 'Choose a template, league, and round/date. Then prepare a preview job.';
+    }
+    return;
+  }
+
+  const templateLabel = getSelectedOptionLabel(templateSelect) || job.template;
+  templateChip.textContent = templateLabel;
+  const detailLine =
+    job.template === 'standings'
+      ? `${job.rows.length} table rows`
+      : job.template === TOP_SCORERS_TEMPLATE
+        ? `${job.entries.length} artilheiros • top 10`
+      : job.template === PLAYER_OF_ROUND_TEMPLATE
+        ? `${job.entries.length} jogadores • ${job.round}${getJobDateLabel(job) ? ` • ${getJobDateLabel(job)}` : ''}`
+      : job.template === SEASON_FINAL_VERDICT_TEMPLATE
+        ? `${job.qualificationGroups?.length ?? 0} groups • ${
+            job.relegationGroup?.entries?.length ?? 0
+          } relegated`
+      : job.template === CHAMPIONSHIP_PACE_TEMPLATE || job.template === RELEGATION_LINE_TEMPLATE
+        ? `${job.entries.length} teams • ${job.benchmarkPercentage}% reference`
+      : job.template === CONTINENTAL_GROUPS_TEMPLATE
+        ? `${job.groups.length} groups • 2 per page`
+      : job.template === WORLD_CUP_TEMPLATE
+        ? `Grupo ${job.groupLetter} • ${job.rows.length} selecoes • ${job.nextMatches.length} jogos`
+      : job.template === WORLD_CUP_KNOCKOUT_TEMPLATE
+        ? `${job.phaseLabel} • ${job.matches.length} jogos`
+        : `${job.fixtures?.length ?? 0} fixtures • ${job.round}${getJobDateLabel(job) ? ` • ${getJobDateLabel(job)}` : ''}`;
+
+  const titleLine =
+    job.template === 'standings'
+      ? job.standingsLabel
+      : job.template === TOP_SCORERS_TEMPLATE
+        ? `${job.titleLabel} • ${job.subtitleLabel}`
+      : job.template === PLAYER_OF_ROUND_TEMPLATE
+        ? `${job.titleLabel} • ${job.subtitleLabel}`
+      : job.template === SEASON_FINAL_VERDICT_TEMPLATE
+        ? `${job.titleLabel} • ${job.subtitleLabel}`
+      : job.template === CHAMPIONSHIP_PACE_TEMPLATE || job.template === RELEGATION_LINE_TEMPLATE
+        ? `${job.titleLabel} • ${job.subtitleLabel}`
+      : job.template === CONTINENTAL_GROUPS_TEMPLATE
+        ? `${job.titleLabel} • ${job.subtitleLabel}`
+      : job.template === WORLD_CUP_TEMPLATE
+        ? `${job.titleLabel} • ${job.groupLabel}`
+        : job.template === WORLD_CUP_KNOCKOUT_TEMPLATE
+          ? `${job.titleLabel} • ${job.phaseLabel}`
+        : job.roundLabel;
+
+  if (dashboardQuickStatus) {
+    dashboardQuickStatus.textContent = `${job.leagueName} • ${titleLine} • ${detailLine}`;
+  }
+
+  currentJobRoot.innerHTML = `
+    <div class="job-status-card">
+      <div>
+        <strong>${escapeHtml(job.leagueName)} • ${escapeHtml(templateLabel)}</strong>
+        <span>${escapeHtml(titleLine)} • ${escapeHtml(detailLine)} • ${escapeHtml(job.outputName)}</span>
+      </div>
+      <div class="job-status-meta">
+        <span class="chip subtle">${escapeHtml(job.languageProfile ?? 'pt-br')}</span>
+        <span class="chip subtle">${escapeHtml(job.brandName)}</span>
+      </div>
+    </div>
+  `;
+};
+
+const updateLocalizedDefaults = () => {
+  const template = templateSelect.value;
+  const languageProfile = languageProfileSelect.value || 'pt-br';
+  const season = form.elements.season.value || '2026';
+  const groupLetter = (form.elements.groupLetter.value || 'A').toUpperCase();
+  const copy = dashboardCopy[languageProfile];
+  const ctaOptions = getCurrentCtaOptions();
+
+  ctaPresetSelect.innerHTML = ctaOptions
+    .map((ctaOption) => {
+      const selected =
+        ctaOption === form.elements.ctaText.value ||
+        (!form.elements.ctaText.value.trim() && ctaOption === ctaOptions[0])
+          ? ' selected'
+          : '';
+      return `<option value="${ctaOption}"${selected}>${ctaOption}</option>`;
+    })
+    .join('');
+
+  const hookOptions = getCurrentHookOptions();
+  hookPresetSelect.innerHTML = [
+    '<option value="">Auto</option>',
+    ...hookOptions.map((hookOption) => {
+      const selected = hookOption === form.elements.hookText.value ? ' selected' : '';
+      return `<option value="${hookOption}"${selected}>${hookOption}</option>`;
+    }),
+  ].join('');
+
+  if (!form.elements.ctaText.value.trim()) {
+    form.elements.ctaText.placeholder = ctaOptions[0] ?? 'Optional';
+    syncCtaFromPreset();
+  }
+
+  syncIntroPlaceholders();
+
+  if (!copy || template !== WORLD_CUP_TEMPLATE) {
+    lastAutoWorldCupCompetitionName = '';
+    lastAutoWorldCupGroupLabel = '';
+    return;
+  }
+
+  const nextCompetitionName = copy.worldCup.title(season);
+  const nextGroupLabel = copy.worldCup.group(groupLetter);
+
+  form.elements.competitionName.placeholder = nextCompetitionName;
+  if (
+    !form.elements.competitionName.value.trim() ||
+    form.elements.competitionName.value === lastAutoWorldCupCompetitionName
+  ) {
+    form.elements.competitionName.value = nextCompetitionName;
+  }
+
+  form.elements.roundLabel.placeholder = nextGroupLabel;
+  if (
+    !form.elements.roundLabel.value.trim() ||
+    form.elements.roundLabel.value === lastAutoWorldCupGroupLabel
+  ) {
+    form.elements.roundLabel.value = nextGroupLabel;
+  }
+
+  lastAutoWorldCupCompetitionName = nextCompetitionName;
+  lastAutoWorldCupGroupLabel = nextGroupLabel;
+
+  if (!form.elements.outputName.value.trim()) {
+    form.elements.outputName.placeholder = copy.worldCup.output(season, groupLetter);
+  }
+
+  syncRoundLabelFromRound();
+  syncOutputNameFromSelections();
+};
+
+const applyTemplateHints = () => {
+  const template = templateSelect.value;
+  const isWorldCupTemplate =
+    template === WORLD_CUP_TEMPLATE || template === WORLD_CUP_KNOCKOUT_TEMPLATE;
+  const shouldUseRounds = ROUND_TEMPLATES.has(template);
+  const visibleFields = templateFieldVisibility[template] ?? templateFieldVisibility.results;
+
+  leaguePresetField.hidden = !visibleFields.leaguePreset;
+  leagueCoreFields.hidden = !visibleFields.leagueCore;
+  roundField.hidden = !visibleFields.round;
+  matchDateField.hidden = !visibleFields.matchDate;
+  predictionEditorField.hidden = template !== 'predictions';
+  resultEditorField.hidden = template !== 'results' && template !== CHAMPION_FINAL_TEMPLATE;
+  standingsEditorField.hidden = template !== 'standings';
+  seasonVerdictEditorField.hidden = template !== SEASON_FINAL_VERDICT_TEMPLATE;
+  dataSection.hidden = !visibleFields.round && !visibleFields.matchDate;
+  editorSection.hidden =
+    template !== 'predictions' &&
+    template !== 'results' &&
+    template !== CHAMPION_FINAL_TEMPLATE &&
+    template !== 'standings' &&
+    template !== SEASON_FINAL_VERDICT_TEMPLATE;
+  leagueOverrideFields.hidden = !visibleFields.leagueOverrides;
+  worldCupFields.hidden = !visibleFields.worldCupFields;
+  ctaField.hidden = !visibleFields.cta;
+  championFinalFields.hidden = template !== CHAMPION_FINAL_TEMPLATE;
+
+  form.elements.leagueId.required = visibleFields.leagueCore;
+  form.elements.season.required = true;
+
+  if (isWorldCupTemplate) {
+    form.elements.groupLetter.value = (form.elements.groupLetter.value || 'A').toUpperCase();
+    updateLocalizedDefaults();
+  } else if (shouldUseRounds) {
+    const hint =
+      template === 'predictions'
+        ? 'Auto-detect next upcoming round'
+        : 'Auto-detect latest completed round';
+    if (roundSelect.options.length > 0) {
+      roundSelect.options[0].textContent = hint;
+    }
+  }
+
+  updateLocalizedDefaults();
+  updateDashboardMeta();
+};
+
+const setRoundOptions = (rounds, selectedRound = '') => {
+  const template = templateSelect.value;
+  const hint =
+    template === 'predictions'
+      ? 'Auto-detect next upcoming round'
+      : 'Auto-detect latest completed round';
+
+  const options = [`<option value="">${hint}</option>`].concat(
+    rounds.map((round) => {
+      const value = String(round);
+      const selected = value === selectedRound ? ' selected' : '';
+      return `<option value="${value}"${selected}>${value}</option>`;
+    })
+  );
+
+  roundSelect.innerHTML = options.join('');
+};
+
+const setSelectedMatchDates = (dates) => {
+  const selectedDates = normalizeSelectedDates(dates).filter(
+    (dateValue) => availableMatchDates.includes(dateValue)
+  );
+
+  matchDateSelect.value = selectedDates.join(',');
+
+  matchDateOptions.querySelectorAll('[data-date]').forEach((button) => {
+    const dateValue = button.dataset.date ?? '';
+    button.classList.toggle(
+      'active',
+      dateValue ? selectedDates.includes(dateValue) : selectedDates.length === 0
+    );
+  });
+};
+
+const setMatchDateOptions = (dates, selectedDates = '') => {
+  availableMatchDates = dates.map((dateValue) => String(dateValue));
+  const selectedDateList = normalizeSelectedDates(selectedDates).filter((dateValue) =>
+    availableMatchDates.includes(dateValue)
+  );
+
+  matchDateOptions.innerHTML = [
+    '<button type="button" class="date-pill" data-date="">All dates in this round</button>',
+    ...availableMatchDates.map(
+      (dateValue) =>
+        `<button type="button" class="date-pill" data-date="${escapeHtml(dateValue)}">${escapeHtml(
+          dateValue
+        )}</button>`
+    ),
+  ].join('');
+  setSelectedMatchDates(selectedDateList);
+};
+
+const setMatchDatePickerDisabled = (disabled) => {
+  matchDateOptions.querySelectorAll('button').forEach((button) => {
+    button.disabled = disabled;
+  });
+};
+
+const loadRoundDates = async (preferredDate = form.elements.matchDate.value) => {
+  const template = templateSelect.value;
+  const leagueIdValue = form.elements.leagueId.value.trim();
+  const seasonValue = form.elements.season.value.trim();
+  const roundValue = roundSelect.value.trim();
+  const languageProfile = languageProfileSelect.value || 'pt-br';
+  const leagueId = Number(leagueIdValue);
+  const season = Number(seasonValue);
+
+  if (
+    !ROUND_TEMPLATES.has(template) ||
+    !leagueIdValue ||
+    !seasonValue ||
+    !roundValue ||
+    !Number.isFinite(leagueId) ||
+    !Number.isFinite(season)
+  ) {
+    setMatchDateOptions([], preferredDate);
+    if (template === 'predictions') {
+      await loadPredictionFixtures();
+    } else if (template === 'results' || template === CHAMPION_FINAL_TEMPLATE) {
+      await loadResultFixturesForEditor();
+    }
+    return;
+  }
+
+  try {
+    setMatchDatePickerDisabled(true);
+    setMatchDateOptions([], preferredDate);
+
+    const response = await fetch(
+      `${apiBase}/round-dates?leagueId=${encodeURIComponent(
+        String(leagueId)
+      )}&season=${encodeURIComponent(String(season))}&round=${encodeURIComponent(
+        roundValue
+      )}&languageProfile=${encodeURIComponent(languageProfile)}`
+    );
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not load match dates.');
+    }
+
+    setMatchDateOptions(data.dates ?? [], preferredDate);
+    syncOutputNameFromSelections();
+    log(`Loaded ${data.dates?.length ?? 0} match dates for ${roundValue}.`);
+    if (template === 'predictions') {
+      await loadPredictionFixtures();
+    } else if (template === 'results' || template === CHAMPION_FINAL_TEMPLATE) {
+      await loadResultFixturesForEditor();
+    }
+  } catch (error) {
+    setMatchDateOptions([], preferredDate);
+    syncOutputNameFromSelections();
+    log(error instanceof Error ? error.message : String(error));
+    if (template === 'predictions') {
+      await loadPredictionFixtures();
+    } else if (template === 'results' || template === CHAMPION_FINAL_TEMPLATE) {
+      await loadResultFixturesForEditor();
+    }
+  } finally {
+    setMatchDatePickerDisabled(false);
+  }
+};
+
+const loadRounds = async (preferredRound = form.elements.round.value) => {
+  const template = templateSelect.value;
+  const leagueIdValue = form.elements.leagueId.value.trim();
+  const seasonValue = form.elements.season.value.trim();
+  const leagueId = Number(leagueIdValue);
+  const season = Number(seasonValue);
+
+  if (
+    !ROUND_TEMPLATES.has(template) ||
+    !leagueIdValue ||
+    !seasonValue ||
+    !Number.isFinite(leagueId) ||
+    !Number.isFinite(season)
+  ) {
+    setRoundOptions([], preferredRound);
+    setMatchDateOptions([], form.elements.matchDate.value);
+    syncOutputNameFromSelections();
+    if (template === 'predictions') {
+      await loadPredictionFixtures();
+    } else if (template === 'results' || template === CHAMPION_FINAL_TEMPLATE) {
+      await loadResultFixturesForEditor();
+    }
+    return;
+  }
+
+  try {
+    roundSelect.disabled = true;
+    setRoundOptions([], preferredRound);
+
+    const response = await fetch(
+      `${apiBase}/rounds?leagueId=${encodeURIComponent(String(leagueId))}&season=${encodeURIComponent(String(season))}`
+    );
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not load rounds.');
+    }
+
+    setRoundOptions(data.rounds ?? [], preferredRound);
+    syncRoundLabelFromRound();
+    await loadRoundDates(form.elements.matchDate.value);
+    syncOutputNameFromSelections();
+    log(`Loaded ${data.rounds?.length ?? 0} rounds for league ${leagueId} season ${season}.`);
+  } catch (error) {
+    setRoundOptions([], preferredRound);
+    setMatchDateOptions([], form.elements.matchDate.value);
+    syncOutputNameFromSelections();
+    log(error instanceof Error ? error.message : String(error));
+    if (template === 'predictions') {
+      await loadPredictionFixtures();
+    } else if (template === 'results' || template === CHAMPION_FINAL_TEMPLATE) {
+      await loadResultFixturesForEditor();
+    }
+  } finally {
+    roundSelect.disabled = false;
+  }
+};
+
+const loadOptions = async () => {
+  const response = await fetch(`${apiBase}/options`);
+  const data = await response.json();
+
+  allChannelProfiles = data.channelProfiles ?? [];
+  allLeaguePresets = data.leaguePresets ?? [];
+  dashboardHookOptions = data.hookOptions ?? {};
+
+  templateSelect.innerHTML = data.templates
+    .map((template) => `<option value="${template.value}">${template.label}</option>`)
+    .join('');
+
+  channelProfileSelect.innerHTML = allChannelProfiles
+    .map((profile) => `<option value="${profile.value}">${profile.label}</option>`)
+    .join('');
+
+  languageProfileSelect.innerHTML = data.languageProfiles
+    .map((profile) => `<option value="${profile.value}">${profile.label}</option>`)
+    .join('');
+
+  soundtrackSelect.innerHTML = data.soundtrackPresets
+    .map((preset) => `<option value="${preset.value}">${preset.label}</option>`)
+    .join('');
+
+  const currentJob = data.currentJob;
+  if (currentJob) {
+    form.elements.template.value = currentJob.template;
+    form.elements.channelProfile.value =
+      currentJob.channelProfile ?? (currentJob.languageProfile === 'en' ? 'en' : 'pt');
+    form.elements.leagueId.value = currentJob.leagueId;
+    form.elements.season.value = currentJob.season;
+    form.elements.round.value = currentJob.round ?? '';
+    form.elements.matchDate.value = normalizeSelectedDates(currentJob.matchDates ?? currentJob.matchDate).join(',');
+    form.elements.brandName.value = currentJob.brandName;
+    form.elements.leagueName.value = currentJob.leagueName;
+    form.elements.roundLabel.value =
+      currentJob.roundLabel ?? currentJob.standingsLabel ?? currentJob.subtitleLabel ?? '';
+    form.elements.outputName.value = currentJob.outputName;
+    form.elements.languageProfile.value = currentJob.languageProfile ?? getChannelLanguageProfile(form.elements.channelProfile.value);
+    form.elements.groupLetter.value = currentJob.groupLetter ?? 'A';
+    form.elements.competitionName.value = currentJob.competitionName ?? '';
+    form.elements.ctaText.value = currentJob.ctaText ?? '';
+    form.elements.introTitle.value = currentJob.introTitle ?? '';
+    form.elements.hookText.value = currentJob.hookText ?? '';
+    form.elements.voiceoverText.value = currentJob.voiceoverText ?? '';
+    voiceoverEnabledCheckbox.checked = currentJob.voiceoverEnabled !== false;
+    form.elements.soundtrackPath.value = currentJob.soundtrackPath ?? '';
+    setSoundtrackVolume(currentJob.soundtrackVolume ?? 0.2);
+    renderLeaguePresetOptions(currentJob.leagueId ?? '');
+    lastAutoLeagueTitle = presetSelect.selectedOptions?.[0]?.textContent?.trim() ?? currentJob.leagueName ?? '';
+    hasCustomLeagueTitle =
+      Boolean(currentJob.leagueName) &&
+      Boolean(lastAutoLeagueTitle) &&
+      currentJob.leagueName !== lastAutoLeagueTitle;
+    lastAutoOutputName = currentJob.outputName ?? '';
+    lastAutoSeason = String(currentJob.season ?? '');
+    if (currentJob.template === WORLD_CUP_TEMPLATE) {
+      lastAutoWorldCupCompetitionName = currentJob.competitionName ?? '';
+      lastAutoWorldCupGroupLabel = currentJob.groupLabel ?? '';
+    }
+    hasCustomOutputName = false;
+  } else {
+    form.elements.template.value = 'results';
+    form.elements.channelProfile.value = 'pt';
+    form.elements.leagueId.value = 72;
+    form.elements.season.value = 2026;
+    form.elements.round.value = '';
+    form.elements.matchDate.value = '';
+    form.elements.brandName.value = 'Foot Analysis';
+    form.elements.languageProfile.value = 'pt-br';
+    form.elements.groupLetter.value = 'A';
+    form.elements.competitionName.value = '';
+    form.elements.ctaText.value = '';
+    form.elements.introTitle.value = '';
+    form.elements.hookText.value = '';
+    form.elements.voiceoverText.value = '';
+    voiceoverEnabledCheckbox.checked = true;
+    form.elements.soundtrackPath.value = data.soundtrackPresets?.[0]?.value ?? '';
+    setSoundtrackVolume(0.2);
+    renderLeaguePresetOptions('72');
+    syncSeasonFromContext({force: true});
+    syncLeagueTitleFromPreset();
+    lastAutoWorldCupCompetitionName = '';
+    lastAutoWorldCupGroupLabel = '';
+    hasCustomOutputName = false;
+    hasCustomLeagueTitle = false;
+  }
+
+  syncLanguageFromChannel();
+  applyTemplateHints();
+  updateLocalizedDefaults();
+  await loadRounds(currentJob?.round ?? '');
+  await loadRoundDates(currentJob ? normalizeSelectedDates(currentJob.matchDates ?? currentJob.matchDate) : '');
+  syncOutputNameFromSelections();
+  renderCurrentJob(currentJob);
+  updateDashboardMeta();
+  const savedStudioUrl = localStorage.getItem(STUDIO_URL_KEY) || 'http://127.0.0.1:3000';
+  studioUrlInput.value = savedStudioUrl;
+  updatePreview();
+  if (form.elements.template.value === 'predictions') {
+    await loadPredictionFixtures();
+  } else if (
+    form.elements.template.value === 'results' ||
+    form.elements.template.value === CHAMPION_FINAL_TEMPLATE
+  ) {
+    await loadResultFixturesForEditor();
+    if (form.elements.template.value === CHAMPION_FINAL_TEMPLATE) {
+      await loadChampionFinalOptions();
+    }
+  } else if (form.elements.template.value === 'standings') {
+    await loadStandingsEditor();
+  } else if (form.elements.template.value === SEASON_FINAL_VERDICT_TEMPLATE) {
+    await loadSeasonFinalVerdictEditor();
+  }
+  log('Football dashboard ready.', true);
+};
+
+presetSelect.addEventListener('change', async () => {
+  form.elements.leagueId.value = presetSelect.value;
+  hasCustomLeagueTitle = false;
+  syncSeasonFromContext();
+  clearRoundLabelOverride();
+  clearIntroOverrides();
+  syncLeagueTitleFromPreset();
+  syncOutputNameFromSelections();
+  syncIntroPlaceholders();
+  updateDashboardMeta();
+  await loadRounds('');
+  if (templateSelect.value === 'standings') {
+    await loadStandingsEditor();
+  }
+  if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
+    await loadSeasonFinalVerdictEditor();
+  }
+  if (templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
+    await loadChampionFinalOptions();
+  }
+});
+
+channelProfileSelect.addEventListener('change', async () => {
+  syncLanguageFromChannel();
+  renderLeaguePresetOptions();
+  hasCustomLeagueTitle = false;
+  syncSeasonFromContext();
+  clearRoundLabelOverride();
+  clearIntroOverrides();
+  syncLeagueTitleFromPreset();
+  updateLocalizedDefaults();
+  await loadRounds('');
+  syncOutputNameFromSelections();
+  syncIntroPlaceholders();
+  updatePreview();
+  updateDashboardMeta();
+  if (templateSelect.value === 'predictions') {
+    await loadPredictionFixtures();
+  } else if (templateSelect.value === 'results' || templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
+    await loadResultFixturesForEditor();
+    if (templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
+      await loadChampionFinalOptions();
+    }
+  } else if (templateSelect.value === 'standings') {
+    await loadStandingsEditor();
+  } else if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
+    await loadSeasonFinalVerdictEditor();
+  }
+});
+
+templateSelect.addEventListener('change', async () => {
+  syncSeasonFromContext();
+  clearRoundLabelOverride();
+  clearIntroOverrides();
+  syncLeagueTitleFromPreset();
+  applyTemplateHints();
+  await loadRounds(form.elements.round.value);
+  syncOutputNameFromSelections();
+  syncIntroPlaceholders();
+  updatePreview();
+  updateDashboardMeta();
+  if (templateSelect.value === 'predictions') {
+    await loadPredictionFixtures();
+    renderResultEditor([]);
+    renderStandingsEditor([]);
+    renderSeasonVerdictEditor([]);
+  } else if (templateSelect.value === 'results' || templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
+    await loadResultFixturesForEditor();
+    if (templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
+      await loadChampionFinalOptions();
+    }
+    renderPredictionEditor([]);
+    renderStandingsEditor([]);
+    renderSeasonVerdictEditor([]);
+  } else if (templateSelect.value === 'standings') {
+    await loadStandingsEditor();
+    renderPredictionEditor([]);
+    renderResultEditor([]);
+    renderSeasonVerdictEditor([]);
+  } else if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
+    await loadSeasonFinalVerdictEditor();
+    renderPredictionEditor([]);
+    renderResultEditor([]);
+    renderStandingsEditor([]);
+  } else {
+    renderPredictionEditor([]);
+    renderResultEditor([]);
+    renderStandingsEditor([]);
+    renderSeasonVerdictEditor([]);
+  }
+});
+languageProfileSelect.addEventListener('change', () => {
+  updateLocalizedDefaults();
+  syncRoundLabelFromRound();
+  syncOutputNameFromSelections();
+  syncIntroPlaceholders();
+  updateDashboardMeta();
+  if (templateSelect.value === 'predictions') {
+    loadPredictionFixtures();
+  } else if (templateSelect.value === 'results' || templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
+    loadResultFixturesForEditor();
+    if (templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
+      loadChampionFinalOptions();
+    }
+  } else if (templateSelect.value === 'standings') {
+    loadStandingsEditor();
+  } else if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
+    loadSeasonFinalVerdictEditor();
+  }
+});
+ctaPresetSelect.addEventListener('change', syncCtaFromPreset);
+hookPresetSelect.addEventListener('change', syncHookFromPreset);
+roundSelect.addEventListener('change', () => {
+  syncRoundLabelFromRound();
+  loadRoundDates('');
+  syncOutputNameFromSelections();
+  updateDashboardMeta();
+});
+matchDateOptions.addEventListener('click', (event) => {
+  const target = event.target.closest('[data-date]');
+
+  if (!target || target.disabled) {
+    return;
+  }
+
+  const dateValue = target.dataset.date ?? '';
+
+  if (!dateValue) {
+    setSelectedMatchDates([]);
+  } else {
+    const selectedDates = getSelectedMatchDates();
+    const nextDates = selectedDates.includes(dateValue)
+      ? selectedDates.filter((selectedDate) => selectedDate !== dateValue)
+      : [...selectedDates, dateValue];
+    setSelectedMatchDates(nextDates);
+  }
+
+  matchDateSelect.dispatchEvent(new Event('change', {bubbles: true}));
+});
+form.elements.groupLetter.addEventListener('change', () => {
+  form.elements.groupLetter.value = (form.elements.groupLetter.value || 'A')
+    .toUpperCase()
+    .slice(0, 1);
+  updateLocalizedDefaults();
+  syncOutputNameFromSelections();
+  syncIntroPlaceholders();
+  updateDashboardMeta();
+});
+form.elements.leagueId.addEventListener('change', async () => {
+  syncSeasonFromContext();
+  hasCustomLeagueTitle = false;
+  clearRoundLabelOverride();
+  clearIntroOverrides();
+  await loadRounds(form.elements.round.value);
+  syncOutputNameFromSelections();
+  syncIntroPlaceholders();
+  updateDashboardMeta();
+  if (templateSelect.value === 'standings') {
+    await loadStandingsEditor();
+  }
+  if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
+    await loadSeasonFinalVerdictEditor();
+  }
+});
+form.elements.leagueName.addEventListener('input', () => {
+  const currentValue = form.elements.leagueName.value.trim();
+  hasCustomLeagueTitle = Boolean(currentValue) && currentValue !== lastAutoLeagueTitle;
+  syncOutputNameFromSelections();
+  syncIntroPlaceholders();
+});
+form.elements.season.addEventListener('change', async () => {
+  updateLocalizedDefaults();
+  await loadRounds(form.elements.round.value);
+  syncOutputNameFromSelections();
+  syncIntroPlaceholders();
+  lastAutoSeason = String(form.elements.season.value || '').trim();
+  updateDashboardMeta();
+  if (templateSelect.value === 'standings') {
+    await loadStandingsEditor();
+  }
+  if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
+    await loadSeasonFinalVerdictEditor();
+  }
+});
+form.elements.season.addEventListener('input', () => {
+  updateLocalizedDefaults();
+  syncOutputNameFromSelections();
+  syncIntroPlaceholders();
+  updateDashboardMeta();
+});
+form.elements.matchDate.addEventListener('change', () => {
+  syncOutputNameFromSelections();
+  updateDashboardMeta();
+  if (templateSelect.value === 'predictions') loadPredictionFixtures();
+  else if (templateSelect.value === 'results' || templateSelect.value === CHAMPION_FINAL_TEMPLATE)
+    loadResultFixturesForEditor();
+  else if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) loadSeasonFinalVerdictEditor();
+});
+form.elements.soundtrackPath.addEventListener('change', syncOutputNameFromSelections);
+soundtrackVolumeRange?.addEventListener('input', () => {
+  setSoundtrackVolume(soundtrackVolumeRange.value);
+});
+form.elements.soundtrackVolume.addEventListener('input', () => {
+  setSoundtrackVolume(form.elements.soundtrackVolume.value);
+});
+form.elements.competitionName.addEventListener('input', syncOutputNameFromSelections);
+form.elements.ctaText.addEventListener('input', () => {
+  if (!form.elements.ctaText.value.trim()) {
+    ctaPresetSelect.value = getCurrentCtaOptions()[0] ?? '';
+    return;
+  }
+
+  ctaPresetSelect.value = form.elements.ctaText.value;
+});
+form.elements.hookText.addEventListener('input', () => {
+  if (!form.elements.hookText.value.trim()) {
+    hookPresetSelect.value = '';
+    return;
+  }
+
+  hookPresetSelect.value = form.elements.hookText.value;
+});
+form.elements.outputName.addEventListener('input', () => {
+  const currentValue = form.elements.outputName.value.trim();
+  hasCustomOutputName = Boolean(currentValue) && currentValue !== lastAutoOutputName;
+});
+applyPreviewButton.addEventListener('click', updatePreview);
+reloadPredictionsButton.addEventListener('click', loadPredictionFixtures);
+reloadResultsButton.addEventListener('click', loadResultFixturesForEditor);
+reloadStandingsButton.addEventListener('click', loadStandingsEditor);
+reloadSeasonVerdictButton.addEventListener('click', loadSeasonFinalVerdictEditor);
+reloadChampionFinalButton.addEventListener('click', loadChampionFinalOptions);
+
+const submitJob = async (endpoint, actionLabel) => {
+  try {
+    setBusy(true);
+    log(`${actionLabel}…`);
+    const payload = formDataToObject();
+    // languageProfile select is disabled in UI, so inject it explicitly.
+    payload.languageProfile = languageProfileSelect.value || getChannelLanguageProfile();
+    payload.channelProfile = channelProfileSelect.value || getCurrentChannelProfile();
+    payload.roundLabel = normalizeLabelForLanguage(
+      payload.template,
+      payload.roundLabel,
+      payload.languageProfile
+    );
+    payload.matchDates = getSelectedMatchDates();
+    if (templateSelect.value === 'predictions') {
+      payload.predictionEdits = getPredictionEdits();
+    }
+    if (templateSelect.value === 'results' || templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
+      payload.fixtureEdits = getFixtureEdits();
+    }
+    if (templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
+      payload.championFinalSelection = getChampionFinalSelection();
+    }
+    if (templateSelect.value === 'standings') {
+      payload.standingEdits = getStandingEdits();
+    }
+    if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
+      payload.seasonFinalVerdictEdits = getSeasonFinalVerdictEdits();
+    }
+    const response = await fetch(`${apiBase}${endpoint}`, {
+      method: 'POST',
+      headers: {'content-type': 'application/json'},
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Unknown error');
+    }
+
+    renderCurrentJob(data.job);
+    setRenderDownload(data.job, data.render);
+    updatePreview();
+    log(data.message || `${actionLabel} finished.`);
+    if (data.render?.outputPath) {
+      log(`Rendered file: ${data.render.outputPath}`);
+    }
+  } catch (error) {
+    log(error instanceof Error ? error.message : String(error));
+  } finally {
+    setBusy(false);
+  }
+};
+
+prepareButton.addEventListener('click', () => submitJob('/jobs/prepare', 'Preparing job'));
+renderButton.addEventListener('click', () => submitJob('/jobs/render', 'Rendering video'));
+
+loadOptions();

@@ -1,0 +1,58 @@
+{
+  "leagueId": 78,
+  "leagueName": "Bundesliga",
+  "accentColor": "#D43020",
+  "standings": {
+    "safeArea": {
+      "left": 68,
+      "right": 104
+    },
+    "zones": [
+      {
+        "key": "champions-league",
+        "label": "Champions League",
+        "start": 1,
+        "end": 4,
+        "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(101, 227, 133, 0.64)",
+        "textColor": "#27AE60"
+      },
+      {
+        "key": "europa-league",
+        "label": "Europa League",
+        "start": 5,
+        "end": 5,
+        "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(255, 190, 92, 0.58)",
+        "textColor": "#F5A134"
+      },
+      {
+        "key": "conference-league",
+        "label": "Conference League",
+        "start": 6,
+        "end": 6,
+        "fill": "linear-gradient(90deg, rgba(59, 133, 255, 0.82), rgba(59, 133, 255, 0.22) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(107, 166, 255, 0.54)",
+        "textColor": "#3B85FF"
+      },
+      {
+        "key": "relegation-playoff",
+        "label": "Relegation Playoff",
+        "start": 16,
+        "end": 16,
+        "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.22) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(255, 190, 92, 0.58)",
+        "textColor": "#F5A134"
+      },
+      {
+        "key": "relegation",
+        "label": "Relegation",
+        "start": 17,
+        "end": 18,
+        "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(255, 102, 102, 0.56)",
+        "textColor": "#E74C3C"
+      }
+    ]
+  }
+}

@@ -1,0 +1,255 @@
+{
+  "sport": "football",
+  "template": "player-of-round",
+  "leagueId": 71,
+  "season": 2026,
+  "leagueName": "Brasileirão Série A",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
+  "brandName": "Foot Analysis",
+  "brandLogoPath": "/branding/foot-analysis-logo.png",
+  "soundtrackPath": "/audio/football/get-tough-tracktribe.mp3",
+  "soundtrackLabel": "Get Tough - TrackTribe",
+  "outputName": "brasileirao-serie-a-2026-craque-da-rodada-pt-br.mp4",
+  "durationInFrames": 240,
+  "compositionId": "FootballPlayerOfRoundShort",
+  "leagueConfig": {
+    "leagueId": 71,
+    "accentColor": "#F0A500",
+    "standings": {
+      "safeArea": {
+        "left": 68,
+        "right": 104
+      },
+      "zones": [
+        {
+          "key": "libertadores",
+          "label": "Libertadores",
+          "start": 1,
+          "end": 4,
+          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(101, 227, 133, 0.64)"
+        },
+        {
+          "key": "pre-libertadores",
+          "label": "Pré-Libertadores",
+          "start": 5,
+          "end": 5,
+          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 190, 92, 0.58)"
+        },
+        {
+          "key": "sul-americana",
+          "label": "Sul-Americana",
+          "start": 6,
+          "end": 11,
+          "fill": "linear-gradient(90deg, rgba(0, 177, 183, 0.82), rgba(0, 177, 183, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(0, 177, 183, 0.54)"
+        },
+        {
+          "key": "rebaixamento",
+          "label": "Rebaixamento",
+          "start": 17,
+          "end": 20,
+          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 102, 102, 0.56)"
+        }
+      ]
+    },
+    "leagueName": "Brasileirão Série A",
+    "pace": {
+      "championship": {
+        "benchmarkPercentage": 68,
+        "benchmarkLabel": "Média dos últimos 10 campeões",
+        "entryCount": 10
+      },
+      "relegation": {
+        "benchmarkPercentage": 38,
+        "benchmarkLabel": "Linha de segurança",
+        "safeRowsAbove": 3,
+        "maxRows": 10
+      }
+    }
+  },
+  "round": "Regular Season - 15",
+  "titleLabel": "Craque da Rodada",
+  "subtitleLabel": "Rodada dos Craques · Rodada 15",
+  "ctaText": "Quem termina artilheiro?",
+  "entries": [
+    {
+      "rank": 1,
+      "playerName": "Thiago Mendes",
+      "team": "Vasco DA Gama",
+      "teamShort": "VDG",
+      "position": "M",
+      "rating": 8.7,
+      "goals": 1,
+      "assists": 0,
+      "shotsOn": 1,
+      "keyPasses": 2,
+      "minutes": 97,
+      "badge": {
+        "label": "VDG",
+        "logoPath": "/logos/vasco-da-gama.png"
+      }
+    },
+    {
+      "rank": 2,
+      "playerName": "Weverton",
+      "team": "Gremio",
+      "teamShort": "GREM",
+      "position": "G",
+      "rating": 8.5,
+      "goals": 0,
+      "assists": 0,
+      "shotsOn": 0,
+      "keyPasses": 1,
+      "minutes": 96,
+      "badge": {
+        "label": "G",
+        "logoPath": "/logos/gremio.png"
+      }
+    },
+    {
+      "rank": 3,
+      "playerName": "Neymar",
+      "team": "Santos",
+      "teamShort": "SANT",
+      "position": "M",
+      "rating": 8.3,
+      "goals": 1,
+      "assists": 0,
+      "shotsOn": 1,
+      "keyPasses": 1,
+      "minutes": 82,
+      "badge": {
+        "label": "S",
+        "logoPath": "/logos/santos.png"
+      }
+    },
+    {
+      "rank": 4,
+      "playerName": "John Kennedy",
+      "team": "Fluminense",
+      "teamShort": "FLUM",
+      "position": "F",
+      "rating": 8.2,
+      "goals": 1,
+      "assists": 1,
+      "shotsOn": 2,
+      "keyPasses": 1,
+      "minutes": 99,
+      "badge": {
+        "label": "F",
+        "logoPath": "/logos/fluminense.png"
+      }
+    },
+    {
+      "rank": 5,
+      "playerName": "Robert Renan",
+      "team": "Vasco DA Gama",
+      "teamShort": "VDG",
+      "position": "D",
+      "rating": 8.2,
+      "goals": 0,
+      "assists": 0,
+      "shotsOn": 0,
+      "keyPasses": 1,
+      "minutes": 97,
+      "badge": {
+        "label": "VDG",
+        "logoPath": "/logos/vasco-da-gama.png"
+      }
+    },
+    {
+      "rank": 6,
+      "playerName": "Rodrigo Garro",
+      "team": "Corinthians",
+      "teamShort": "CORI",
+      "position": "M",
+      "rating": 8.2,
+      "goals": 0,
+      "assists": 2,
+      "shotsOn": 0,
+      "keyPasses": 4,
+      "minutes": 88,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/corinthians.png"
+      }
+    },
+    {
+      "rank": 7,
+      "playerName": "Kaique Kenji",
+      "team": "Cruzeiro",
+      "teamShort": "CRUZ",
+      "position": "F",
+      "rating": 8.2,
+      "goals": 1,
+      "assists": 0,
+      "shotsOn": 1,
+      "keyPasses": 2,
+      "minutes": 45,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/cruzeiro.png"
+      }
+    },
+    {
+      "rank": 8,
+      "playerName": "Puma Rodríguez",
+      "team": "Vasco DA Gama",
+      "teamShort": "VDG",
+      "position": "D",
+      "rating": 8,
+      "goals": 0,
+      "assists": 1,
+      "shotsOn": 0,
+      "keyPasses": 6,
+      "minutes": 97,
+      "badge": {
+        "label": "VDG",
+        "logoPath": "/logos/vasco-da-gama.png"
+      }
+    },
+    {
+      "rank": 9,
+      "playerName": "Adonis Frías",
+      "team": "Santos",
+      "teamShort": "SANT",
+      "position": "D",
+      "rating": 8,
+      "goals": 1,
+      "assists": 0,
+      "shotsOn": 1,
+      "keyPasses": 0,
+      "minutes": 96,
+      "badge": {
+        "label": "S",
+        "logoPath": "/logos/santos.png"
+      }
+    },
+    {
+      "rank": 10,
+      "playerName": "Kauã Moraes",
+      "team": "Cruzeiro",
+      "teamShort": "CRUZ",
+      "position": "D",
+      "rating": 8,
+      "goals": 1,
+      "assists": 0,
+      "shotsOn": 1,
+      "keyPasses": 0,
+      "minutes": 72,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/cruzeiro.png"
+      }
+    }
+  ],
+  "introTitle": "Brasileirão Série A",
+  "introSubtitle": "Rodada dos Craques · Rodada 15",
+  "voiceoverText": "Fala Galera, pra vocês... o craque da rodada do Brasileirão Série A.",
+  "voiceoverPath": "/voiceovers/football/pt-br-95ed0c838f9ed4b7.mp3",
+  "voiceoverLabel": "Fala Galera, pra vocês... o craque da rodada do Brasileirão Série A."
+}

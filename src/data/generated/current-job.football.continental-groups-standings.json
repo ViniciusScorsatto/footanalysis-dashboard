@@ -1,0 +1,456 @@
+{
+  "sport": "football",
+  "template": "continental-groups-standings",
+  "leagueId": 11,
+  "season": 2026,
+  "leagueName": "Copa Sulamericana",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
+  "brandName": "Foot Analysis",
+  "brandLogoPath": "/branding/foot-analysis-logo.png",
+  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
+  "soundtrackLabel": "Gol de Arena",
+  "soundtrackVolume": 0.2,
+  "outputName": "copa-sulamericana-2026-grupos-pt-br.mp4",
+  "durationInFrames": 270,
+  "compositionId": "FootballContinentalGroupsShort",
+  "leagueConfig": {
+    "leagueId": 11,
+    "accentColor": "#1ABC9C",
+    "standings": {
+      "safeArea": {
+        "left": 64,
+        "right": 92
+      },
+      "zones": [
+        {
+          "key": "top-three",
+          "label": "Top 3",
+          "start": 1,
+          "end": 3,
+          "fill": "linear-gradient(90deg, rgba(58, 196, 88, 0.84), rgba(58, 196, 88, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(86, 214, 120, 0.62)"
+        },
+        {
+          "key": "bottom-three",
+          "label": "Bottom 3",
+          "start": 18,
+          "end": 20,
+          "fill": "linear-gradient(90deg, rgba(224, 48, 48, 0.84), rgba(224, 48, 48, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 90, 90, 0.56)"
+        }
+      ]
+    },
+    "leagueName": "Copa Sul-Americana"
+  },
+  "titleLabel": "Tabela dos Grupos",
+  "subtitleLabel": "Fase de Grupos",
+  "tableLabels": {
+    "pos": "Pos",
+    "team": "Equipe",
+    "gd": "SG",
+    "pts": "Pts"
+  },
+  "ctaText": "Veja quem passou para próxima fase da Libertadores",
+  "groups": [
+    {
+      "groupKey": "A",
+      "groupLabel": "Grupo A",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Macara",
+          "goalDifference": 3,
+          "points": 10,
+          "badge": {
+            "label": "M",
+            "logoPath": "/logos/macara-1155.png"
+          }
+        },
+        {
+          "rank": 2,
+          "team": "Tigre",
+          "goalDifference": 3,
+          "points": 9,
+          "badge": {
+            "label": "T",
+            "logoPath": "/logos/tigre-452.png"
+          }
+        },
+        {
+          "rank": 3,
+          "team": "Ame. Cali",
+          "goalDifference": 1,
+          "points": 9,
+          "badge": {
+            "label": "AC",
+            "logoPath": "/logos/america-de-cali-1138.png"
+          }
+        },
+        {
+          "rank": 4,
+          "team": "Alianza Atl.",
+          "goalDifference": -7,
+          "points": 2,
+          "badge": {
+            "label": "AA",
+            "logoPath": "/logos/alianza-atletico-2560.png"
+          }
+        }
+      ]
+    },
+    {
+      "groupKey": "B",
+      "groupLabel": "Grupo B",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Atletico-MG",
+          "goalDifference": 2,
+          "points": 10,
+          "badge": {
+            "label": "A",
+            "logoPath": "/logos/atletico-mg-1062.png"
+          }
+        },
+        {
+          "rank": 2,
+          "team": "Cienciano",
+          "goalDifference": -2,
+          "points": 8,
+          "badge": {
+            "label": "C",
+            "logoPath": "/logos/cienciano-2562.png"
+          }
+        },
+        {
+          "rank": 3,
+          "team": "Juventud",
+          "goalDifference": 3,
+          "points": 7,
+          "badge": {
+            "label": "J",
+            "logoPath": "/logos/juventud-2353.png"
+          }
+        },
+        {
+          "rank": 4,
+          "team": "P. Cabello",
+          "goalDifference": -3,
+          "points": 7,
+          "badge": {
+            "label": "PC",
+            "logoPath": "/logos/puerto-cabello-2827.png"
+          }
+        }
+      ]
+    },
+    {
+      "groupKey": "C",
+      "groupLabel": "Grupo C",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Sao Paulo",
+          "goalDifference": 5,
+          "points": 12,
+          "badge": {
+            "label": "SP",
+            "logoPath": "/logos/sao-paulo-126.png"
+          }
+        },
+        {
+          "rank": 2,
+          "team": "O'Higgins",
+          "goalDifference": 2,
+          "points": 10,
+          "badge": {
+            "label": "O",
+            "logoPath": "/logos/o-higgins-2320.png"
+          }
+        },
+        {
+          "rank": 3,
+          "team": "Millonarios",
+          "goalDifference": 0,
+          "points": 8,
+          "badge": {
+            "label": "M",
+            "logoPath": "/logos/millonarios-1125.png"
+          }
+        },
+        {
+          "rank": 4,
+          "team": "Boston River",
+          "goalDifference": -7,
+          "points": 3,
+          "badge": {
+            "label": "BR",
+            "logoPath": "/logos/boston-river-2361.png"
+          }
+        }
+      ]
+    },
+    {
+      "groupKey": "D",
+      "groupLabel": "Grupo D",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Recoleta",
+          "goalDifference": 1,
+          "points": 8,
+          "badge": {
+            "label": "R",
+            "logoPath": "/logos/deportivo-recoleta-10476.png"
+          }
+        },
+        {
+          "rank": 2,
+          "team": "Santos",
+          "goalDifference": 2,
+          "points": 7,
+          "badge": {
+            "label": "S",
+            "logoPath": "/logos/santos-128.png"
+          }
+        },
+        {
+          "rank": 3,
+          "team": "San Lorenzo",
+          "goalDifference": 1,
+          "points": 7,
+          "badge": {
+            "label": "SL",
+            "logoPath": "/logos/san-lorenzo-460.png"
+          }
+        },
+        {
+          "rank": 4,
+          "team": "Dep. Cuenca",
+          "goalDifference": -4,
+          "points": 6,
+          "badge": {
+            "label": "DC",
+            "logoPath": "/logos/deportivo-cuenca-1154.png"
+          }
+        }
+      ]
+    },
+    {
+      "groupKey": "E",
+      "groupLabel": "Grupo E",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Botafogo",
+          "goalDifference": 10,
+          "points": 16,
+          "badge": {
+            "label": "B",
+            "logoPath": "/logos/botafogo-120.png"
+          }
+        },
+        {
+          "rank": 2,
+          "team": "Caracas FC",
+          "goalDifference": 0,
+          "points": 9,
+          "badge": {
+            "label": "CF",
+            "logoPath": "/logos/caracas-fc-2808.png"
+          }
+        },
+        {
+          "rank": 3,
+          "team": "Racing Club",
+          "goalDifference": 2,
+          "points": 8,
+          "badge": {
+            "label": "RC",
+            "logoPath": "/logos/racing-club-436.png"
+          }
+        },
+        {
+          "rank": 4,
+          "team": "Ind. Petrolero",
+          "goalDifference": -12,
+          "points": 0,
+          "badge": {
+            "label": "IP",
+            "logoPath": "/logos/independiente-petrolero-15702.png"
+          }
+        }
+      ]
+    },
+    {
+      "groupKey": "F",
+      "groupLabel": "Grupo F",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Atl. Torque",
+          "goalDifference": 6,
+          "points": 13,
+          "badge": {
+            "label": "AT",
+            "logoPath": "/logos/atletico-torque-2365.png"
+          }
+        },
+        {
+          "rank": 2,
+          "team": "Gremio",
+          "goalDifference": 5,
+          "points": 11,
+          "badge": {
+            "label": "G",
+            "logoPath": "/logos/gremio-130.png"
+          }
+        },
+        {
+          "rank": 3,
+          "team": "Dep. Riestra",
+          "goalDifference": -6,
+          "points": 5,
+          "badge": {
+            "label": "DR",
+            "logoPath": "/logos/deportivo-riestra-476.png"
+          }
+        },
+        {
+          "rank": 4,
+          "team": "Palestino",
+          "goalDifference": -5,
+          "points": 3,
+          "badge": {
+            "label": "P",
+            "logoPath": "/logos/palestino-2318.png"
+          }
+        }
+      ]
+    },
+    {
+      "groupKey": "G",
+      "groupLabel": "Grupo G",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Olimpia",
+          "goalDifference": 4,
+          "points": 13,
+          "badge": {
+            "label": "O",
+            "logoPath": "/logos/olimpia-1182.png"
+          }
+        },
+        {
+          "rank": 2,
+          "team": "Vasco DA Gama",
+          "goalDifference": 4,
+          "points": 10,
+          "badge": {
+            "label": "VDG",
+            "logoPath": "/logos/vasco-da-gama-133.png"
+          }
+        },
+        {
+          "rank": 3,
+          "team": "A. Italiano",
+          "goalDifference": -2,
+          "points": 7,
+          "badge": {
+            "label": "AI",
+            "logoPath": "/logos/a-italiano-2329.png"
+          }
+        },
+        {
+          "rank": 4,
+          "team": "Barracas",
+          "goalDifference": -6,
+          "points": 3,
+          "badge": {
+            "label": "B",
+            "logoPath": "/logos/barracas-central-2432.png"
+          }
+        }
+      ]
+    },
+    {
+      "groupKey": "H",
+      "groupLabel": "Grupo H",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "River Plate",
+          "goalDifference": 6,
+          "points": 14,
+          "badge": {
+            "label": "RP",
+            "logoPath": "/logos/river-plate-435.png"
+          }
+        },
+        {
+          "rank": 2,
+          "team": "RB Bragantino",
+          "goalDifference": 7,
+          "points": 10,
+          "badge": {
+            "label": "RB",
+            "logoPath": "/logos/rb-bragantino-794.png"
+          }
+        },
+        {
+          "rank": 3,
+          "team": "Carabobo FC",
+          "goalDifference": 1,
+          "points": 9,
+          "badge": {
+            "label": "CF",
+            "logoPath": "/logos/carabobo-fc-2810.png"
+          }
+        },
+        {
+          "rank": 4,
+          "team": "Blooming",
+          "goalDifference": -14,
+          "points": 1,
+          "badge": {
+            "label": "B",
+            "logoPath": "/logos/blooming-3701.png"
+          }
+        }
+      ]
+    }
+  ],
+  "introTitle": "Copa Sulamericana",
+  "introSubtitle": "Fase de Grupos",
+  "hookText": "Veja quem passou pras Oitavas na Sulamericana e quem vai para os Playoffs",
+  "coldOpenData": {
+    "tableRows": [
+      {
+        "rank": 1,
+        "club": "MACARA",
+        "pts": 10
+      },
+      {
+        "rank": 2,
+        "club": "TIGRE",
+        "pts": 9
+      },
+      {
+        "rank": 3,
+        "club": "AME. CALI",
+        "pts": 9
+      },
+      {
+        "rank": 4,
+        "club": "ALIANZA ATL.",
+        "pts": 2
+      }
+    ]
+  },
+  "voiceoverEnabled": true,
+  "voiceoverText": "Fechamento da Primeira fase da Sulamericana.... Veja quem passou para as Oitavas e quem vai para os Playoffs",
+  "voiceoverPath": "/voiceovers/football/pt-br-5d234c8e543c5ee4.mp3",
+  "voiceoverLabel": "Fechamento da Primeira fase da Sulamericana.... Veja quem passou para as Oitavas e quem vai para os Playoffs"
+}

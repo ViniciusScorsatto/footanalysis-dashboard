@@ -1,0 +1,29 @@
+{
+  "leagueId": 848,
+  "leagueName": "Conference League",
+  "accentColor": "#00E676",
+  "standings": {
+    "safeArea": {
+      "left": 68,
+      "right": 104
+    },
+    "zones": [
+      {
+        "key": "knockout",
+        "label": "Knockout",
+        "start": 1,
+        "end": 8,
+        "fill": "linear-gradient(90deg, rgba(46, 204, 113, 0.84), rgba(46, 204, 113, 0.24) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(93, 232, 150, 0.58)"
+      },
+      {
+        "key": "playoff",
+        "label": "Playoff",
+        "start": 9,
+        "end": 24,
+        "fill": "linear-gradient(90deg, rgba(10, 132, 255, 0.72), rgba(10, 132, 255, 0.18) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(76, 166, 255, 0.54)"
+      }
+    ]
+  }
+}

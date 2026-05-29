@@ -1,0 +1,278 @@
+{
+  "template": "standings",
+  "leagueId": 71,
+  "season": 2026,
+  "leagueName": "Serie A 2026",
+  "leagueConfig": {
+    "leagueId": 71,
+    "leagueName": "Brasil Serie A",
+    "standings": {
+      "safeArea": {
+        "left": 68,
+        "right": 104
+      },
+      "zones": [
+        {
+          "key": "libertadores",
+          "label": "Libertadores",
+          "start": 1,
+          "end": 4,
+          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(101, 227, 133, 0.64)"
+        },
+        {
+          "key": "pre-libertadores",
+          "label": "Pre-Libertadores",
+          "start": 5,
+          "end": 6,
+          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 190, 92, 0.58)"
+        },
+        {
+          "key": "sul-americana",
+          "label": "Sul-Americana",
+          "start": 7,
+          "end": 12,
+          "fill": "linear-gradient(90deg, rgba(59, 133, 255, 0.82), rgba(59, 133, 255, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(107, 166, 255, 0.54)"
+        },
+        {
+          "key": "rebaixamento",
+          "label": "Rebaixamento",
+          "start": 17,
+          "end": 20,
+          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 102, 102, 0.56)"
+        }
+      ]
+    }
+  },
+  "brandName": "Foot Analysis",
+  "brandLogoPath": "/branding/foot-analysis-logo.png",
+  "outputName": "serie-a-2026-standings.mp4",
+  "durationInFrames": 330,
+  "compositionId": "FootballStandingsShort",
+  "standingsLabel": "Current Table",
+  "rows": [
+    {
+      "rank": 1,
+      "team": "Palmeiras",
+      "played": 8,
+      "points": 19,
+      "goalDifference": 9,
+      "badge": {
+        "label": "P",
+        "logoPath": "/logos/palmeiras.png"
+      }
+    },
+    {
+      "rank": 2,
+      "team": "Sao Paulo",
+      "played": 8,
+      "points": 16,
+      "goalDifference": 5,
+      "badge": {
+        "label": "SP",
+        "logoPath": "/logos/sao-paulo.png"
+      }
+    },
+    {
+      "rank": 3,
+      "team": "Fluminense",
+      "played": 8,
+      "points": 16,
+      "goalDifference": 4,
+      "badge": {
+        "label": "F",
+        "logoPath": "/logos/fluminense.png"
+      }
+    },
+    {
+      "rank": 4,
+      "team": "Flamengo",
+      "played": 7,
+      "points": 14,
+      "goalDifference": 8,
+      "badge": {
+        "label": "F",
+        "logoPath": "/logos/flamengo.png"
+      }
+    },
+    {
+      "rank": 5,
+      "team": "Bahia",
+      "played": 7,
+      "points": 14,
+      "goalDifference": 2,
+      "badge": {
+        "label": "B",
+        "logoPath": "/logos/bahia.png"
+      }
+    },
+    {
+      "rank": 6,
+      "team": "Atletico Paranaense",
+      "played": 7,
+      "points": 13,
+      "goalDifference": 3,
+      "badge": {
+        "label": "AP",
+        "logoPath": "/logos/atletico-paranaense.png"
+      }
+    },
+    {
+      "rank": 7,
+      "team": "Coritiba",
+      "played": 8,
+      "points": 13,
+      "goalDifference": 1,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/coritiba.png"
+      }
+    },
+    {
+      "rank": 8,
+      "team": "Gremio",
+      "played": 8,
+      "points": 11,
+      "goalDifference": 1,
+      "badge": {
+        "label": "G",
+        "logoPath": "/logos/gremio.png"
+      }
+    },
+    {
+      "rank": 9,
+      "team": "Vasco DA Gama",
+      "played": 8,
+      "points": 11,
+      "goalDifference": 0,
+      "badge": {
+        "label": "VDG",
+        "logoPath": "/logos/vasco-da-gama.png"
+      }
+    },
+    {
+      "rank": 10,
+      "team": "Vitoria",
+      "played": 7,
+      "points": 10,
+      "goalDifference": -2,
+      "badge": {
+        "label": "V",
+        "logoPath": "/logos/vitoria.png"
+      }
+    },
+    {
+      "rank": 11,
+      "team": "Corinthians",
+      "played": 8,
+      "points": 10,
+      "goalDifference": 0,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/corinthians.png"
+      }
+    },
+    {
+      "rank": 12,
+      "team": "Internacional",
+      "played": 8,
+      "points": 8,
+      "goalDifference": -2,
+      "badge": {
+        "label": "I",
+        "logoPath": "/logos/internacional.png"
+      }
+    },
+    {
+      "rank": 13,
+      "team": "Atletico-MG",
+      "played": 8,
+      "points": 8,
+      "goalDifference": -3,
+      "badge": {
+        "label": "A",
+        "logoPath": "/logos/atletico-mg.png"
+      }
+    },
+    {
+      "rank": 14,
+      "team": "RB Bragantino",
+      "played": 8,
+      "points": 8,
+      "goalDifference": -4,
+      "badge": {
+        "label": "RB",
+        "logoPath": "/logos/rb-bragantino.png"
+      }
+    },
+    {
+      "rank": 15,
+      "team": "Chapecoense-sc",
+      "played": 7,
+      "points": 7,
+      "goalDifference": -2,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/chapecoense-sc.png"
+      }
+    },
+    {
+      "rank": 16,
+      "team": "Santos",
+      "played": 8,
+      "points": 7,
+      "goalDifference": -3,
+      "badge": {
+        "label": "S",
+        "logoPath": "/logos/santos.png"
+      }
+    },
+    {
+      "rank": 17,
+      "team": "Botafogo",
+      "played": 6,
+      "points": 6,
+      "goalDifference": -2,
+      "badge": {
+        "label": "B",
+        "logoPath": "/logos/botafogo.png"
+      }
+    },
+    {
+      "rank": 18,
+      "team": "Mirassol",
+      "played": 7,
+      "points": 6,
+      "goalDifference": -2,
+      "badge": {
+        "label": "M",
+        "logoPath": "/logos/mirassol.png"
+      }
+    },
+    {
+      "rank": 19,
+      "team": "remo",
+      "played": 8,
+      "points": 6,
+      "goalDifference": -5,
+      "badge": {
+        "label": "R",
+        "logoPath": "/logos/remo.png"
+      }
+    },
+    {
+      "rank": 20,
+      "team": "Cruzeiro",
+      "played": 8,
+      "points": 4,
+      "goalDifference": -8,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/cruzeiro.png"
+      }
+    }
+  ]
+}
