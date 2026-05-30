@@ -15,6 +15,9 @@ const voiceoverEnabledCheckbox = document.querySelector(
 );
 const prepareButton = document.getElementById('prepare-button');
 const renderButton = document.getElementById('render-button');
+const settingsToggleButton = document.getElementById('settings-toggle-button');
+const settingsPanel = document.getElementById('settings-panel');
+const settingsStatus = document.getElementById('settings-status');
 const logOutput = document.getElementById('log-output');
 const currentJobRoot = document.getElementById('current-job');
 const renderDownloadRoot = document.getElementById('render-download');
@@ -54,8 +57,19 @@ const studioUrlInput = document.getElementById('studio-url');
 const applyPreviewButton = document.getElementById('apply-preview-button');
 const openPreviewLink = document.getElementById('open-preview-link');
 const previewFrame = document.getElementById('preview-frame');
+const publishingCopyModelInput = document.getElementById('publishing-copy-model');
+const publishingExtraContextInput = document.getElementById('publishing-extra-context');
+const generatePublishingButton = document.getElementById('generate-publishing-button');
+const copyPublishingJsonButton = document.getElementById('copy-publishing-json-button');
+const publishingStatus = document.getElementById('publishing-status');
+const publishingMetadataRoot = document.getElementById('publishing-metadata');
+const publishingDraftRoot = document.getElementById('publishing-draft-root');
+const publishingModelChip = document.getElementById('publishing-model-chip');
+let youtubeUploadStatusRoot = null;
+let tiktokUploadStatusRoot = null;
 
 const apiBase = '/api/football';
+const NEXT_GAMES_TEMPLATE = 'next-games';
 const CHAMPIONSHIP_PACE_TEMPLATE = 'championship-pace';
 const RELEGATION_LINE_TEMPLATE = 'relegation-line';
 const CONTINENTAL_GROUPS_TEMPLATE = 'continental-groups-standings';
@@ -69,12 +83,14 @@ const WORLD_CUP_LEAGUE_ID = 1;
 const STUDIO_URL_KEY = 'football-dashboard-studio-url';
 const ROUND_TEMPLATES = new Set([
   'results',
+  NEXT_GAMES_TEMPLATE,
   'predictions',
   CHAMPION_FINAL_TEMPLATE,
   PLAYER_OF_ROUND_TEMPLATE,
 ]);
 const templateCompositionMap = {
   results: 'FootballResultsShort',
+  [NEXT_GAMES_TEMPLATE]: 'FootballNextGamesShort',
   predictions: 'FootballPredictionsShort',
   standings: 'FootballStandingsShort',
   [SEASON_FINAL_VERDICT_TEMPLATE]: 'FootballSeasonFinalVerdictShort',
@@ -107,6 +123,15 @@ const setSoundtrackVolume = (value) => {
 
 const templateFieldVisibility = {
   results: {
+    leaguePreset: true,
+    leagueCore: true,
+    round: true,
+    matchDate: true,
+    leagueOverrides: true,
+    worldCupFields: false,
+    cta: true,
+  },
+  [NEXT_GAMES_TEMPLATE]: {
     leaguePreset: true,
     leagueCore: true,
     round: true,
@@ -239,11 +264,14 @@ let currentResultFixtures = [];
 let currentStandingRows = [];
 let currentChampionFinalRows = [];
 let currentSeasonVerdictRows = [];
+let lastPreparedJob = null;
+let currentPublishingDraft = null;
 let allLeaguePresets = [];
 let allChannelProfiles = [];
 let dashboardHookOptions = {};
 let availableMatchDates = [];
 const EUROPEAN_LEAGUE_IDS = new Set([39, 40, 140, 135, 78, 61, 2, 3]);
+const UPCOMING_FIXTURE_TEMPLATES = new Set([NEXT_GAMES_TEMPLATE, 'predictions']);
 
 const roundTranslations = {
   'pt-br': [
@@ -283,6 +311,12 @@ const dashboardCopy = {
         'Quem te surpreendeu?',
         'Qual placar mais te chamou atenção?',
         'Seu time foi bem ou mal?',
+      ],
+      [NEXT_GAMES_TEMPLATE]: [
+        'Qual jogo você vai assistir?',
+        'Quem vence essa rodada?',
+        'Qual jogo promete mais?',
+        'Onde vem a surpresa?',
       ],
       standings: [
         'Quem sobe e quem cai?',
@@ -360,6 +394,12 @@ const dashboardCopy = {
         'Who surprised you most?',
         'Which scoreline stood out?',
         'Did your team deliver?',
+      ],
+      [NEXT_GAMES_TEMPLATE]: [
+        'Which match is must-watch?',
+        'Who wins this round?',
+        'Which fixture is the biggest?',
+        'Where is the upset?',
       ],
       standings: [
         'Who wins this?',
@@ -509,6 +549,36 @@ const setBusy = (busy) => {
   renderButton.disabled = busy;
 };
 
+const startYouTubeOAuth = async (channel) => {
+  try {
+    settingsStatus.textContent = `Preparing YouTube ${channel.toUpperCase()} consent link…`;
+    const response = await fetch(`${apiBase}/settings/youtube/oauth-url?channel=${encodeURIComponent(channel)}`);
+    const data = await response.json();
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not create YouTube OAuth URL');
+    }
+    window.open(data.authUrl, '_blank', 'noopener,noreferrer');
+    settingsStatus.textContent = `Consent opened for ${channel.toUpperCase()}. Finish it in the new tab.`;
+  } catch (error) {
+    settingsStatus.textContent = error instanceof Error ? error.message : String(error);
+  }
+};
+
+const startTikTokOAuth = async (channel) => {
+  try {
+    settingsStatus.textContent = `Preparing TikTok ${channel.toUpperCase()} consent link…`;
+    const response = await fetch(`${apiBase}/settings/tiktok/oauth-url?channel=${encodeURIComponent(channel)}`);
+    const data = await response.json();
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not create TikTok OAuth URL');
+    }
+    window.open(data.authUrl, '_blank', 'noopener,noreferrer');
+    settingsStatus.textContent = `Consent opened for TikTok ${channel.toUpperCase()}. Finish it in the new tab.`;
+  } catch (error) {
+    settingsStatus.textContent = error instanceof Error ? error.message : String(error);
+  }
+};
+
 const log = (message, replace = false) => {
   const timestamp = new Date().toLocaleTimeString();
   logOutput.textContent = replace ? `[${timestamp}] ${message}` : `${logOutput.textContent}\n[${timestamp}] ${message}`;
@@ -576,6 +646,8 @@ const deriveRoundLabel = (template, round, languageProfile = 'pt-br') => {
   if (languageProfile === 'en') {
     return template === 'predictions'
       ? `Predictions - ${translatedRound}`
+      : template === NEXT_GAMES_TEMPLATE
+        ? `Fixtures - ${translatedRound}`
       : template === PLAYER_OF_ROUND_TEMPLATE
         ? `Round MVPs · ${translatedRound}`
       : translatedRound;
@@ -583,6 +655,10 @@ const deriveRoundLabel = (template, round, languageProfile = 'pt-br') => {
 
   if (template === 'predictions') {
     return `Palpites da ${translatedRound}`;
+  }
+
+  if (template === NEXT_GAMES_TEMPLATE) {
+    return `Próximos Jogos · ${translatedRound}`;
   }
 
   if (template === PLAYER_OF_ROUND_TEMPLATE) {
@@ -636,6 +712,7 @@ const getTemplateOutputSlug = () => {
     return (
       {
         results: 'results',
+        [NEXT_GAMES_TEMPLATE]: 'fixtures',
         predictions: 'predictions',
         standings: 'standings',
         [SEASON_FINAL_VERDICT_TEMPLATE]: 'season-wrap-up',
@@ -654,6 +731,7 @@ const getTemplateOutputSlug = () => {
   return (
       {
         results: 'resultados',
+        [NEXT_GAMES_TEMPLATE]: 'proximos-jogos',
         predictions: 'palpites',
         standings: 'classificacao',
         [SEASON_FINAL_VERDICT_TEMPLATE]: 'resumo-final',
@@ -854,6 +932,9 @@ const getAutoIntroCopy = () => {
     results: isEnglish
       ? `Latest ${leagueWithoutSeason} results`
       : withPtIntro(`os últimos resultados ${ptCompetition}`),
+    [NEXT_GAMES_TEMPLATE]: isEnglish
+      ? `Upcoming ${leagueWithoutSeason} fixtures`
+      : withPtIntro(`os próximos jogos ${ptCompetition}`),
     predictions: isEnglish
       ? `${leagueWithoutSeason} predictions`
       : withPtIntro(`os palpites ${ptCompetition}`),
@@ -931,6 +1012,351 @@ const setRenderDownload = (job, render) => {
       <a class="download-link" href="${downloadPath}" download>Download MP4</a>
     </div>
   `;
+};
+
+const joinList = (value) => (Array.isArray(value) ? value.join(', ') : String(value ?? ''));
+
+const copyText = async (value) => {
+  const text = String(value ?? '');
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  textarea.remove();
+};
+
+const updatePublishingMetadata = (job) => {
+  if (!publishingMetadataRoot) return;
+  if (!job) {
+    publishingMetadataRoot.innerHTML = '';
+    return;
+  }
+
+  const chips = [
+    job.template,
+    job.leagueName ?? job.competitionName,
+    job.roundLabel ?? job.round,
+    job.season,
+    job.languageProfile,
+    job.outputName,
+  ].filter(Boolean);
+
+  publishingMetadataRoot.innerHTML = chips
+    .map((chip) => `<span class="chip subtle">${escapeHtml(chip)}</span>`)
+    .join('');
+};
+
+const draftField = ({platform, label, key, value, multiline = true}) => {
+  const fieldValue = joinList(value);
+  const escapedValue = escapeHtml(fieldValue);
+  const control = multiline
+    ? `<textarea data-platform="${platform}" data-key="${key}" rows="4">${escapedValue}</textarea>`
+    : `<input data-platform="${platform}" data-key="${key}" type="text" value="${escapedValue}" />`;
+  return `
+    <label class="publishing-field">
+      <span>${escapeHtml(label)}</span>
+      ${control}
+      <button type="button" class="copy-field-button secondary" data-copy-value="${escapeHtml(fieldValue)}">Copy</button>
+    </label>
+  `;
+};
+
+const renderPublishingDraft = (draft) => {
+  currentPublishingDraft = draft;
+  copyPublishingJsonButton.disabled = !draft;
+
+  if (!draft) {
+    publishingDraftRoot.innerHTML = '';
+    return;
+  }
+
+  const platforms = draft.platforms ?? {};
+  const platformCards = [
+    {
+      key: 'youtube',
+      label: 'YouTube',
+      fields: [
+        ['Title', 'title', platforms.youtube?.title, false],
+        ['Description', 'description', platforms.youtube?.description, true],
+        ['Tags', 'tags', platforms.youtube?.tags, true],
+        ['Hashtags', 'hashtags', platforms.youtube?.hashtags, true],
+        ['Thumbnail notes', 'thumbnailNotes', platforms.youtube?.thumbnailNotes, true],
+      ],
+    },
+    {
+      key: 'reddit',
+      label: 'Reddit',
+      fields: [
+        ['Subreddit', 'subreddit', platforms.reddit?.subreddit, false],
+        ['Title', 'title', platforms.reddit?.title, false],
+        ['Body', 'body', platforms.reddit?.body, true],
+        ['Flair', 'flairSuggestion', platforms.reddit?.flairSuggestion, false],
+        ['Tags', 'tags', platforms.reddit?.tags, true],
+      ],
+    },
+    {
+      key: 'tiktok',
+      label: 'TikTok',
+      fields: [
+        ['Caption', 'caption', platforms.tiktok?.caption, true],
+        ['Hashtags', 'hashtags', platforms.tiktok?.hashtags, true],
+        ['Cover text', 'coverText', platforms.tiktok?.coverText, false],
+      ],
+    },
+    {
+      key: 'instagram',
+      label: 'Instagram',
+      fields: [
+        ['Caption', 'caption', platforms.instagram?.caption, true],
+        ['Hashtags', 'hashtags', platforms.instagram?.hashtags, true],
+        ['Cover text', 'coverText', platforms.instagram?.coverText, false],
+      ],
+    },
+    {
+      key: 'x',
+      label: 'X',
+      fields: [
+        ['Post text', 'postText', platforms.x?.postText, true],
+        ['Hashtags', 'hashtags', platforms.x?.hashtags, true],
+      ],
+    },
+  ];
+
+  publishingDraftRoot.innerHTML = `
+    <div class="publishing-summary">
+      <strong>Draft summary</strong>
+      <p>${escapeHtml(draft.summary)}</p>
+    </div>
+    ${platformCards
+      .map(
+        (card) => `
+          <section class="publishing-card">
+            <div class="publishing-card-header">
+              <h3>${escapeHtml(card.label)}</h3>
+              <span class="chip subtle">draft</span>
+            </div>
+            ${card.fields
+              .map(([label, key, value, multiline]) =>
+                draftField({platform: card.key, label, key, value, multiline})
+              )
+              .join('')}
+            ${
+              card.key === 'youtube'
+                ? `
+                  <div class="youtube-upload-box">
+                    <label class="publishing-field">
+                      <span>Privacy</span>
+                      <select id="youtube-privacy-status">
+                        <option value="private" selected>Private</option>
+                        <option value="unlisted">Unlisted</option>
+                        <option value="public">Public</option>
+                      </select>
+                    </label>
+                    <button type="button" id="upload-youtube-button" class="secondary">Upload to YouTube</button>
+                    <p id="youtube-upload-status" class="publishing-status">Upload uses the rendered MP4 and keeps manual review in YouTube Studio.</p>
+                  </div>
+                `
+                : card.key === 'tiktok'
+                  ? `
+                    <div class="youtube-upload-box">
+                      <button type="button" id="upload-tiktok-button" class="secondary">Upload to TikTok Inbox</button>
+                      <p id="tiktok-upload-status" class="publishing-status">TikTok upload sends the rendered MP4 to your inbox/draft flow. Copy the caption and finish in TikTok.</p>
+                    </div>
+                  `
+                : ''
+            }
+          </section>
+        `
+      )
+      .join('')}
+  `;
+  youtubeUploadStatusRoot = document.getElementById('youtube-upload-status');
+  tiktokUploadStatusRoot = document.getElementById('tiktok-upload-status');
+};
+
+const generatePublishingDraft = async () => {
+  try {
+    generatePublishingButton.disabled = true;
+    publishingStatus.textContent = 'Generating publishing draft from current video metadata…';
+    const response = await fetch(`${apiBase}/publishing/draft`, {
+      method: 'POST',
+      headers: {'content-type': 'application/json'},
+      body: JSON.stringify({
+        copyModelInstructions: publishingCopyModelInput.value,
+        extraContext: publishingExtraContextInput.value,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not generate publishing draft');
+    }
+
+    if (publishingModelChip) {
+      publishingModelChip.textContent = data.templateName
+        ? `${data.templateName} · ${data.model ?? 'OpenAI'}`
+        : data.model ?? 'draft ready';
+    }
+    renderPublishingDraft(data.draft);
+    publishingStatus.textContent = 'Draft ready. Review, edit, copy, then publish manually.';
+    log('Publishing draft generated.');
+  } catch (error) {
+    publishingStatus.textContent = error instanceof Error ? error.message : String(error);
+    log(publishingStatus.textContent);
+  } finally {
+    generatePublishingButton.disabled = false;
+  }
+};
+
+const collectPublishingDraftFromFields = () => {
+  if (!currentPublishingDraft) return null;
+  const nextDraft = structuredClone(currentPublishingDraft);
+  publishingDraftRoot.querySelectorAll('[data-platform][data-key]').forEach((field) => {
+    const platform = field.dataset.platform;
+    const key = field.dataset.key;
+    if (!nextDraft.platforms?.[platform]) return;
+    const rawValue = field.value ?? '';
+    const originalValue = nextDraft.platforms[platform][key];
+    nextDraft.platforms[platform][key] = Array.isArray(originalValue)
+      ? rawValue
+          .split(',')
+          .map((item) => item.trim())
+          .filter(Boolean)
+      : rawValue;
+  });
+  return nextDraft;
+};
+
+const uploadYouTubeDraft = async () => {
+  const draft = collectPublishingDraftFromFields();
+  const youtube = draft?.platforms?.youtube;
+  if (!youtube) {
+    publishingStatus.textContent = 'Generate a YouTube draft before uploading.';
+    return;
+  }
+
+  const privacyStatus =
+    document.getElementById('youtube-privacy-status')?.value ?? 'private';
+
+  try {
+    const button = document.getElementById('upload-youtube-button');
+    if (button) button.disabled = true;
+    if (youtubeUploadStatusRoot) {
+      youtubeUploadStatusRoot.textContent = 'Uploading to YouTube…';
+    }
+    publishingStatus.textContent = 'Uploading YouTube video…';
+
+    const response = await fetch(`${apiBase}/publishing/youtube/upload`, {
+      method: 'POST',
+      headers: {'content-type': 'application/json'},
+      body: JSON.stringify({
+        youtube,
+        privacyStatus,
+        outputName: lastPreparedJob?.outputName,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'YouTube upload failed');
+    }
+
+    const link = data.youtube?.shortsUrl
+      ? `<a class="download-link" href="${escapeHtml(data.youtube.shortsUrl)}" target="_blank" rel="noreferrer">Open Short</a>`
+      : data.youtube?.url
+        ? `<a class="download-link" href="${escapeHtml(data.youtube.url)}" target="_blank" rel="noreferrer">Open video</a>`
+        : '';
+    const shortsCheck = data.youtube?.shortsCheck;
+    const shortsCheckLabel = shortsCheck
+      ? ` Shorts check: ${Number(shortsCheck.width)}x${Number(shortsCheck.height)}, ${Number(
+          shortsCheck.duration
+        ).toFixed(1)}s.`
+      : '';
+    if (youtubeUploadStatusRoot) {
+      youtubeUploadStatusRoot.innerHTML = `Uploaded as ${escapeHtml(
+        data.youtube?.privacyStatus ?? privacyStatus
+      )}.${escapeHtml(shortsCheckLabel)} ${link}`;
+    }
+    publishingStatus.textContent = 'YouTube upload completed.';
+    log(`YouTube upload completed: ${data.youtube?.shortsUrl ?? data.youtube?.url ?? data.youtube?.videoId ?? 'uploaded'}`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (youtubeUploadStatusRoot) {
+      youtubeUploadStatusRoot.textContent = message;
+    }
+    publishingStatus.textContent = message;
+    log(message);
+  } finally {
+    const button = document.getElementById('upload-youtube-button');
+    if (button) button.disabled = false;
+  }
+};
+
+const uploadTikTokDraft = async () => {
+  const draft = collectPublishingDraftFromFields();
+  const tiktok = draft?.platforms?.tiktok;
+  if (!tiktok) {
+    publishingStatus.textContent = 'Generate a TikTok draft before uploading.';
+    return;
+  }
+
+  try {
+    const button = document.getElementById('upload-tiktok-button');
+    if (button) button.disabled = true;
+    if (tiktokUploadStatusRoot) {
+      tiktokUploadStatusRoot.textContent = 'Uploading to TikTok inbox…';
+    }
+    publishingStatus.textContent = 'Uploading TikTok draft…';
+
+    const response = await fetch(`${apiBase}/publishing/tiktok/upload`, {
+      method: 'POST',
+      headers: {'content-type': 'application/json'},
+      body: JSON.stringify({
+        tiktok,
+        outputName: lastPreparedJob?.outputName,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'TikTok upload failed');
+    }
+
+    const statusText = [
+      `Uploaded to TikTok inbox.`,
+      data.tiktok?.publishId ? `Publish ID: ${data.tiktok.publishId}.` : '',
+      data.tiktok?.shortsCheck
+        ? `Video check: ${Number(data.tiktok.shortsCheck.width)}x${Number(
+            data.tiktok.shortsCheck.height
+          )}, ${Number(data.tiktok.shortsCheck.duration).toFixed(1)}s.`
+        : '',
+      'Open TikTok notifications/inbox to finish the post.',
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+    if (tiktokUploadStatusRoot) {
+      tiktokUploadStatusRoot.textContent = statusText;
+    }
+    publishingStatus.textContent = 'TikTok inbox upload completed.';
+    log(`TikTok upload completed: ${data.tiktok?.publishId ?? 'uploaded'}`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (tiktokUploadStatusRoot) {
+      tiktokUploadStatusRoot.textContent = message;
+    }
+    publishingStatus.textContent = message;
+    log(message);
+  } finally {
+    const button = document.getElementById('upload-tiktok-button');
+    if (button) button.disabled = false;
+  }
 };
 
 const renderPredictionEditor = (fixtures = []) => {
@@ -1615,6 +2041,8 @@ const getJobDateLabel = (job) => {
 
 const renderCurrentJob = (job) => {
   if (!job) {
+    lastPreparedJob = null;
+    updatePublishingMetadata(null);
     templateChip.textContent = 'no job';
     currentJobRoot.innerHTML =
       '<div class="job-status-card"><div><strong>No prepared job yet</strong><span>Use the setup above, then prepare a preview job.</span></div></div>';
@@ -1624,6 +2052,8 @@ const renderCurrentJob = (job) => {
     return;
   }
 
+  lastPreparedJob = job;
+  updatePublishingMetadata(job);
   const templateLabel = getSelectedOptionLabel(templateSelect) || job.template;
   templateChip.textContent = templateLabel;
   const detailLine =
@@ -1790,7 +2220,7 @@ const applyTemplateHints = () => {
     updateLocalizedDefaults();
   } else if (shouldUseRounds) {
     const hint =
-      template === 'predictions'
+      UPCOMING_FIXTURE_TEMPLATES.has(template)
         ? 'Auto-detect next upcoming round'
         : 'Auto-detect latest completed round';
     if (roundSelect.options.length > 0) {
@@ -1805,7 +2235,7 @@ const applyTemplateHints = () => {
 const setRoundOptions = (rounds, selectedRound = '') => {
   const template = templateSelect.value;
   const hint =
-    template === 'predictions'
+    UPCOMING_FIXTURE_TEMPLATES.has(template)
       ? 'Auto-detect next upcoming round'
       : 'Auto-detect latest completed round';
 
@@ -2332,6 +2762,39 @@ reloadResultsButton.addEventListener('click', loadResultFixturesForEditor);
 reloadStandingsButton.addEventListener('click', loadStandingsEditor);
 reloadSeasonVerdictButton.addEventListener('click', loadSeasonFinalVerdictEditor);
 reloadChampionFinalButton.addEventListener('click', loadChampionFinalOptions);
+settingsToggleButton.addEventListener('click', () => {
+  settingsPanel.hidden = !settingsPanel.hidden;
+});
+document.querySelectorAll('.youtube-oauth-button').forEach((button) => {
+  button.addEventListener('click', () => startYouTubeOAuth(button.dataset.channel ?? 'pt'));
+});
+document.querySelectorAll('.tiktok-oauth-button').forEach((button) => {
+  button.addEventListener('click', () => startTikTokOAuth(button.dataset.channel ?? 'pt'));
+});
+generatePublishingButton.addEventListener('click', generatePublishingDraft);
+copyPublishingJsonButton.addEventListener('click', async () => {
+  const draft = collectPublishingDraftFromFields();
+  if (!draft) return;
+  await copyText(JSON.stringify(draft, null, 2));
+  publishingStatus.textContent = 'Edited draft JSON copied.';
+});
+publishingDraftRoot.addEventListener('click', async (event) => {
+  if (event.target.closest('#upload-youtube-button')) {
+    await uploadYouTubeDraft();
+    return;
+  }
+
+  if (event.target.closest('#upload-tiktok-button')) {
+    await uploadTikTokDraft();
+    return;
+  }
+
+  const button = event.target.closest('.copy-field-button');
+  if (!button) return;
+  const field = button.closest('.publishing-field')?.querySelector('textarea, input');
+  await copyText(field?.value ?? '');
+  publishingStatus.textContent = 'Field copied.';
+});
 
 const submitJob = async (endpoint, actionLabel) => {
   try {

@@ -7,6 +7,7 @@ const copyByLanguage = {
   'pt-br': {
     hooks: {
       results: ['Olha o que aconteceu na rodada', 'Essa rodada teve surpresa', 'Seu time saiu bem dessa?'],
+      'next-games': ['Olha os próximos jogos', 'A próxima rodada vem aí', 'Qual jogo pesa mais?'],
       standings: ['A tabela virou?', 'Quem lidera agora?', 'Tem briga até o fim'],
       'season-final-verdict': ['A temporada decidiu tudo', 'Quem cumpriu o objetivo?', 'O veredito final chegou'],
       'champion-final': ['A taça tem dono', 'Quem levantou o troféu?', 'O campeão está aqui'],
@@ -25,6 +26,12 @@ const copyByLanguage = {
         'Quem te surpreendeu?',
         'Qual placar mais te chamou atenção?',
         'Seu time foi bem ou mal?',
+      ],
+      'next-games': [
+        'Qual jogo você vai assistir?',
+        'Quem vence essa rodada?',
+        'Qual jogo promete mais?',
+        'Onde vem a surpresa?',
       ],
       standings: [
         'Quem sobe e quem cai?',
@@ -95,6 +102,7 @@ const copyByLanguage = {
     },
     templateLabels: {
       results: 'Últimos Resultados',
+      'next-games': 'Próximos Jogos',
       standings: 'Classificação',
       'season-final-verdict': 'Resumo Final',
       'champion-final': 'Campeão',
@@ -131,6 +139,7 @@ const copyByLanguage = {
   en: {
     hooks: {
       results: ['This round had a twist', 'Look what just happened', 'Did your team survive it?'],
+      'next-games': ['Next fixtures are set', 'The next round is here', 'Which match matters most?'],
       standings: ['Did the table just change?', 'Who leads now?', 'The race is still alive'],
       'season-final-verdict': ['The season has spoken', 'Who met the target?', 'Final verdict time'],
       'champion-final': ['The trophy has a home', 'Who lifted it?', 'Champions decided'],
@@ -149,6 +158,12 @@ const copyByLanguage = {
         'Who surprised you most?',
         'Which scoreline stood out?',
         'Did your team deliver?',
+      ],
+      'next-games': [
+        'Which match is must-watch?',
+        'Who wins this round?',
+        'Which fixture is the biggest?',
+        'Where is the upset?',
       ],
       standings: [
         'Who wins this?',
@@ -219,6 +234,7 @@ const copyByLanguage = {
     },
     templateLabels: {
       results: 'Last Round Results',
+      'next-games': 'Upcoming Fixtures',
       standings: 'Standings',
       'season-final-verdict': 'Season Wrap-up',
       'champion-final': 'Champions',
@@ -330,13 +346,23 @@ export const deriveFootballRoundLabel = (
   const translatedRound = translateFootballRoundName(round, languageProfile);
 
   if (languageProfile === 'en') {
-    return template === 'predictions'
-      ? `Predictions - ${translatedRound}`
-      : translatedRound;
+    if (template === 'predictions') {
+      return `Predictions - ${translatedRound}`;
+    }
+
+    if (template === 'next-games') {
+      return `Fixtures - ${translatedRound}`;
+    }
+
+    return translatedRound;
   }
 
   if (template === 'predictions') {
     return `Palpites da ${translatedRound}`;
+  }
+
+  if (template === 'next-games') {
+    return `Próximos Jogos · ${translatedRound}`;
   }
 
   return translatedRound;
@@ -406,6 +432,9 @@ export const getFootballIntroDefaults = ({
     results: pt
       ? withPtIntro(`os últimos resultados ${ptCompetition}`)
       : `Latest ${leagueWithoutSeason} results`,
+    'next-games': pt
+      ? withPtIntro(`os próximos jogos ${ptCompetition}`)
+      : `Upcoming ${leagueWithoutSeason} fixtures`,
     predictions: pt
       ? withPtIntro(`os palpites ${ptCompetition}`)
       : `${leagueWithoutSeason} predictions`,

@@ -8,9 +8,9 @@
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/gol-de-hoje.mp3",
-  "soundtrackLabel": "Gol de Hoje",
-  "soundtrackVolume": 0.1,
+  "soundtrackPath": "/audio/football/Serie A - Ninety Minutes.mp3",
+  "soundtrackLabel": "Serie A - Ninety Minutes",
+  "soundtrackVolume": 0.2,
   "outputName": "brasileirao-serie-a-2026-linha-do-rebaixamento-pt-br.mp4",
   "durationInFrames": 270,
   "compositionId": "FootballRelegationLineShort",
@@ -227,8 +227,6 @@
       }
     ]
   },
-  "voiceoverEnabled": true,
-  "voiceoverText": "A briga está feia na parte debaixo da tabela... o Vasco está no limite para baixar da linha de segurança..",
-  "voiceoverPath": "/voiceovers/football/pt-br-8a6e0ddf2787da14.mp3",
-  "voiceoverLabel": "A briga está feia na parte debaixo da tabela... o Vasco está no limite para baixar da linha de segurança.."
+  "voiceoverEnabled": false,
+  "voiceoverText": "Fala Galera, pra vocês... a linha do rebaixamento do Brasileirão Série A."
 }

@@ -5,7 +5,7 @@ import {entranceStyle, rowStartFrame, scorePopStyle} from '../lib/animations';
 
 type ResultRowProps = {
   fixture: FixtureCard;
-  variant: 'results' | 'predictions';
+  variant: 'results' | 'next-games' | 'predictions';
   rowIndex: number;
   accentColor?: string;
   channelProfile?: FootballChannelProfile;
@@ -20,7 +20,7 @@ export const ResultRow = ({
   channelProfile = 'pt',
   leagueId,
 }: ResultRowProps) => {
-  if (variant === 'results' || variant === 'predictions') {
+  if (variant === 'results' || variant === 'next-games' || variant === 'predictions') {
     return (
       <BrandedResultRow
         fixture={fixture}
@@ -43,7 +43,7 @@ const BrandedResultRow = ({
   leagueId,
 }: {
   fixture: FixtureCard;
-  variant: 'results' | 'predictions';
+  variant: 'results' | 'next-games' | 'predictions';
   rowIndex: number;
   accentColor: string;
   channelProfile: FootballChannelProfile;
@@ -188,7 +188,7 @@ const BrandedScore = ({
   hasPenalties?: boolean;
   homePenaltyScore?: number | null;
   awayPenaltyScore?: number | null;
-  variant: 'results' | 'predictions';
+  variant: 'results' | 'next-games' | 'predictions';
   accentColor: string;
   channelProfile: FootballChannelProfile;
   isEuropeanNight: boolean;

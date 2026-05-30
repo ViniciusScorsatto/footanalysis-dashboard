@@ -1,22 +1,22 @@
 {
   "sport": "football",
   "template": "top-scorers",
-  "leagueId": 135,
+  "leagueId": 307,
   "season": 2025,
-  "leagueName": "Serie A",
+  "leagueName": "Saudi Pro League",
   "channelProfile": "en",
   "languageProfile": "en",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Serie A - Ninety Minutes.mp3",
-  "soundtrackLabel": "Serie A - Ninety Minutes",
+  "soundtrackPath": "/audio/football/Champions - The Anthem plays.mp3",
+  "soundtrackLabel": "Champions - The Anthem Plays",
   "soundtrackVolume": 0.2,
-  "outputName": "serie-a-2025-top-scorers-en.mp4",
+  "outputName": "saudi-pro-league-2025-top-scorers-en.mp4",
   "durationInFrames": 270,
   "compositionId": "FootballTopScorersShort",
   "leagueConfig": {
-    "leagueId": 135,
-    "accentColor": "#3A78C9",
+    "leagueId": 307,
+    "accentColor": "#0087C7",
     "standings": {
       "safeArea": {
         "left": 68,
@@ -25,196 +25,177 @@
       "zones": [
         {
           "key": "champions-league",
-          "label": "Champions League",
+          "label": "AFC Champions League",
           "start": 1,
-          "end": 4,
-          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(101, 227, 133, 0.64)",
-          "textColor": "#27AE60"
-        },
-        {
-          "key": "europa-league",
-          "label": "Europa League",
-          "start": 5,
-          "end": 5,
-          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 190, 92, 0.58)",
-          "textColor": "#F5A134"
-        },
-        {
-          "key": "conference-league-qualifying",
-          "label": "Conference League Qualifying",
-          "start": 6,
-          "end": 6,
-          "fill": "linear-gradient(90deg, rgba(59, 133, 255, 0.82), rgba(59, 133, 255, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(107, 166, 255, 0.54)",
-          "textColor": "#3B85FF"
+          "end": 3,
+          "fill": "linear-gradient(90deg, rgba(46, 204, 113, 0.84), rgba(46, 204, 113, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(93, 232, 150, 0.58)"
         },
         {
           "key": "relegation",
-          "label": "Relegated",
-          "start": 18,
-          "end": 20,
+          "label": "Relegation",
+          "start": 16,
+          "end": 18,
           "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 102, 102, 0.56)",
-          "textColor": "#E74C3C"
+          "accent": "rgba(255, 102, 102, 0.56)"
         }
       ]
     },
-    "leagueName": "Serie A Italy"
+    "leagueName": "Saudi Pro League",
+    "secondaryAccentColor": "#E60028"
   },
   "titleLabel": "Top Scorers",
   "subtitleLabel": "Top 10 scorers",
-  "ctaText": "Lautaro is the Golden Boot of Lega Serie A 25/26",
+  "ctaText": "Quiñones is de Golden Boot of the Saudi Pro League",
   "entries": [
     {
       "rank": 1,
-      "playerName": "Lautaro Martínez",
-      "team": "Inter",
-      "teamShort": "INTE",
-      "goals": 17,
-      "assists": 6,
+      "playerName": "J. Quiñones",
+      "team": "Al-Qadisiyah FC",
+      "teamShort": "AL-Q",
+      "goals": 33,
+      "assists": 4,
       "badge": {
-        "label": "I",
-        "logoPath": "/logos/inter-505.png"
+        "label": "AF",
+        "logoPath": "/logos/al-qadisiyah-fc-2933.png"
       }
     },
     {
       "rank": 2,
-      "playerName": "T. Douvikas",
-      "team": "Como",
-      "teamShort": "COMO",
-      "goals": 14,
-      "assists": 1,
+      "playerName": "I. Toney",
+      "team": "Al-Ahli Jeddah",
+      "teamShort": "AJ",
+      "goals": 31,
+      "assists": 7,
       "badge": {
-        "label": "C",
-        "logoPath": "/logos/como-895.png"
+        "label": "AJ",
+        "logoPath": "/logos/al-ahli-jeddah-2929.png"
       }
     },
     {
       "rank": 3,
-      "playerName": "D. Malen",
-      "team": "AS Roma",
-      "teamShort": "AR",
-      "goals": 14,
+      "playerName": "Cristiano Ronaldo",
+      "team": "Al-Nassr",
+      "teamShort": "AL-N",
+      "goals": 28,
       "assists": 2,
       "badge": {
-        "label": "AR",
-        "logoPath": "/logos/as-roma-497.png"
+        "label": "A",
+        "logoPath": "/logos/al-nassr-2939.png"
       }
     },
     {
       "rank": 4,
-      "playerName": "M. Thuram",
-      "team": "Inter",
-      "teamShort": "INTE",
-      "goals": 13,
-      "assists": 6,
+      "playerName": "Roger Martínez",
+      "team": "Al Taawon",
+      "teamShort": "AT",
+      "goals": 23,
+      "assists": 2,
       "badge": {
-        "label": "I",
-        "logoPath": "/logos/inter-505.png"
+        "label": "AT",
+        "logoPath": "/logos/al-taawon-2936.png"
       }
     },
     {
       "rank": 5,
-      "playerName": "N. Paz",
-      "team": "Como",
-      "teamShort": "COMO",
-      "goals": 12,
-      "assists": 6,
+      "playerName": "J. King",
+      "team": "Al Khaleej Saihat",
+      "teamShort": "AKS",
+      "goals": 20,
+      "assists": 2,
       "badge": {
-        "label": "C",
-        "logoPath": "/logos/como-895.png"
+        "label": "AKS",
+        "logoPath": "/logos/al-khaleej-saihat-2928.png"
       }
     },
     {
       "rank": 6,
-      "playerName": "R. Højlund",
-      "team": "Napoli",
-      "teamShort": "NAPO",
-      "goals": 12,
-      "assists": 5,
+      "playerName": "João Félix",
+      "team": "Al-Nassr",
+      "teamShort": "AL-N",
+      "goals": 20,
+      "assists": 13,
       "badge": {
-        "label": "N",
-        "logoPath": "/logos/napoli-492.png"
+        "label": "A",
+        "logoPath": "/logos/al-nassr-2939.png"
       }
     },
     {
       "rank": 7,
-      "playerName": "G. Simeone",
-      "team": "Torino",
-      "teamShort": "TORI",
-      "goals": 11,
-      "assists": 0,
+      "playerName": "Y. Carrasco",
+      "team": "Al Shabab",
+      "teamShort": "AS",
+      "goals": 18,
+      "assists": 8,
       "badge": {
-        "label": "T",
-        "logoPath": "/logos/torino-503.png"
+        "label": "AS",
+        "logoPath": "/logos/al-shabab-2940.png"
       }
     },
     {
       "rank": 8,
-      "playerName": "N. Krstović",
-      "team": "Atalanta",
-      "teamShort": "ATAL",
-      "goals": 10,
-      "assists": 5,
+      "playerName": "G. Wijnaldum",
+      "team": "Al-Ettifaq",
+      "teamShort": "AL-E",
+      "goals": 16,
+      "assists": 6,
       "badge": {
         "label": "A",
-        "logoPath": "/logos/atalanta-499.png"
+        "logoPath": "/logos/al-ettifaq-2934.png"
       }
     },
     {
       "rank": 9,
-      "playerName": "S. McTominay",
-      "team": "Napoli",
-      "teamShort": "NAPO",
-      "goals": 10,
-      "assists": 3,
+      "playerName": "M. Retegui",
+      "team": "Al-Qadisiyah FC",
+      "teamShort": "AL-Q",
+      "goals": 16,
+      "assists": 1,
       "badge": {
-        "label": "N",
-        "logoPath": "/logos/napoli-492.png"
+        "label": "AF",
+        "logoPath": "/logos/al-qadisiyah-fc-2933.png"
       }
     },
     {
       "rank": 10,
-      "playerName": "K. Yıldız",
-      "team": "Juventus",
-      "teamShort": "JUVE",
-      "goals": 10,
-      "assists": 6,
+      "playerName": "R. Enrique",
+      "team": "Al Kholood",
+      "teamShort": "AK",
+      "goals": 15,
+      "assists": 0,
       "badge": {
-        "label": "J",
-        "logoPath": "/logos/juventus-496.png"
+        "label": "AK",
+        "logoPath": "/logos/al-kholood-10509.png"
       }
     }
   ],
-  "introTitle": "Serie A",
+  "introTitle": "Saudi Pro League",
   "introSubtitle": "Top 10 scorers",
-  "hookText": "Lautaro is the Golden Boot of Lega Serie A 25/26",
+  "hookText": "Quiñones is de Golden Boot of the Saudi Pro League",
   "coldOpenData": {
     "tableRows": [
       {
         "rank": 1,
-        "club": "INTER",
+        "club": "AL-QADISIYAH FC",
         "pts": 10
       },
       {
         "rank": 2,
-        "club": "COMO",
+        "club": "AL-AHLI JEDDAH",
         "pts": 8
       },
       {
         "rank": 3,
-        "club": "AS ROMA",
+        "club": "AL-NASSR",
         "pts": 6
       },
       {
         "rank": 4,
-        "club": "NAPOLI",
+        "club": "AL TAAWON",
         "pts": 4
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "Serie A top scorers"
+  "voiceoverText": "Saudi Pro League top scorers"
 }

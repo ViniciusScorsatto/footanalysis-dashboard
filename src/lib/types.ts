@@ -5,6 +5,7 @@ export type FootballChannelProfile = 'pt' | 'en';
 
 export type FootballVideoTemplate =
   | 'results'
+  | 'next-games'
   | 'predictions'
   | 'predictions-long'
   | 'standings'
@@ -149,8 +150,8 @@ type FootballBaseVideoJob = BaseVideoJob & {
 };
 
 export type ResultsVideoJob = FootballBaseVideoJob & {
-  template: 'results' | 'predictions';
-  compositionId: 'FootballResultsShort' | 'FootballPredictionsShort';
+  template: 'results' | 'next-games' | 'predictions';
+  compositionId: 'FootballResultsShort' | 'FootballNextGamesShort' | 'FootballPredictionsShort';
   round: string;
   matchDate?: string;
   matchDates?: string[];

@@ -11,6 +11,7 @@ import {FootballTopScorersComposition} from './compositions/FootballTopScorersCo
 import {FootballWorldCupGroupComposition} from './compositions/FootballWorldCupGroupComposition';
 import {FootballWorldCupKnockoutComposition} from './compositions/FootballWorldCupKnockoutComposition';
 import footballResultsJobJson from './data/generated/current-job.football.results.json';
+import footballNextGamesJobJson from './data/generated/current-job.football.next-games.json';
 import footballPredictionsJobJson from './data/generated/current-job.football.predictions.json';
 import footballPredictionsLongJobJson from './data/generated/current-job.football.predictions-long.json';
 import footballStandingsJobJson from './data/generated/current-job.football.standings.json';
@@ -35,6 +36,7 @@ import {sampleWorldCupGroupJob, sampleWorldCupKnockoutJob} from './data/worldCup
 import type {FootballPredictionsLongVideoJob, FootballVideoJob} from './lib/types';
 
 const footballResultsJob = footballResultsJobJson as Partial<FootballVideoJob>;
+const footballNextGamesJob = footballNextGamesJobJson as Partial<FootballVideoJob>;
 const footballPredictionsJob = footballPredictionsJobJson as Partial<FootballVideoJob>;
 const footballPredictionsLongJob =
   footballPredictionsLongJobJson as Partial<FootballVideoJob>;
@@ -159,6 +161,63 @@ const predictionsProps = {
     footballPredictionsJob.template === 'predictions'
       ? footballPredictionsJob.ctaText
       : 'Quem vence essa rodada?',
+};
+
+const nextGamesProps = {
+  ...resultsProps,
+  variant: 'next-games' as const,
+  channelProfile:
+    footballNextGamesJob.template === 'next-games' && footballNextGamesJob.channelProfile
+      ? footballNextGamesJob.channelProfile
+      : footballNextGamesJob.languageProfile === 'en'
+        ? 'en'
+        : resultsProps.channelProfile,
+  languageProfile:
+    footballNextGamesJob.template === 'next-games' && footballNextGamesJob.languageProfile
+      ? footballNextGamesJob.languageProfile
+      : resultsProps.languageProfile,
+  leagueName:
+    footballNextGamesJob.template === 'next-games' && footballNextGamesJob.leagueName
+      ? footballNextGamesJob.leagueName
+      : resultsProps.leagueName,
+  roundLabel:
+    footballNextGamesJob.template === 'next-games' && footballNextGamesJob.roundLabel
+      ? footballNextGamesJob.roundLabel
+      : footballNextGamesJob.languageProfile === 'en'
+        ? 'Upcoming Fixtures'
+        : 'Próximos Jogos',
+  fixtures:
+    footballNextGamesJob.template === 'next-games' &&
+    Array.isArray(footballNextGamesJob.fixtures) &&
+    footballNextGamesJob.fixtures.length > 0
+      ? footballNextGamesJob.fixtures
+      : sampleFixtures.map((fixture) => ({
+          ...fixture,
+          homeScore: null,
+          awayScore: null,
+        })),
+  brandName: footballNextGamesJob.brandName ?? resultsProps.brandName,
+  brandLogoPath: footballNextGamesJob.brandLogoPath ?? resultsProps.brandLogoPath,
+  backgroundImagePath: footballNextGamesJob.backgroundImagePath ?? resultsProps.backgroundImagePath,
+  soundtrackPath: footballNextGamesJob.soundtrackPath ?? defaultFootballSoundtrack,
+  soundtrackVolume: footballNextGamesJob.soundtrackVolume ?? resultsProps.soundtrackVolume,
+  voiceoverPath:
+    footballNextGamesJob.template === 'next-games' ? footballNextGamesJob.voiceoverPath : undefined,
+  introTitle:
+    footballNextGamesJob.template === 'next-games' ? footballNextGamesJob.introTitle : undefined,
+  introSubtitle:
+    footballNextGamesJob.template === 'next-games' ? footballNextGamesJob.introSubtitle : undefined,
+  hookText:
+    footballNextGamesJob.template === 'next-games' ? footballNextGamesJob.hookText : undefined,
+  coldOpenData:
+    footballNextGamesJob.template === 'next-games' ? footballNextGamesJob.coldOpenData : undefined,
+  leagueConfig: footballNextGamesJob.leagueConfig,
+  ctaText:
+    footballNextGamesJob.template === 'next-games'
+      ? footballNextGamesJob.ctaText
+      : footballNextGamesJob.languageProfile === 'en'
+        ? 'Which match is must-watch?'
+        : 'Qual jogo você vai assistir?',
 };
 
 const predictionsLongFallback =
@@ -909,6 +968,15 @@ export const RemotionRoot = () => {
         width={1080}
         height={1920}
         defaultProps={resultsProps}
+      />
+      <Composition
+        id="FootballNextGamesShort"
+        component={FootballFixturesComposition}
+        durationInFrames={FOOTBALL_DURATION_IN_FRAMES}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={nextGamesProps}
       />
       <Composition
         id="FootballPredictionsShort"

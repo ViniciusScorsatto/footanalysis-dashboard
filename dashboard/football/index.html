@@ -11,11 +11,45 @@
       <nav class="top-nav dashboard-top-nav">
         <a class="back-link" href="/">All dashboards</a>
         <div class="dashboard-status">
+          <button type="button" class="settings-button secondary" id="settings-toggle-button">Settings</button>
           <span class="chip subtle">Football</span>
           <span class="chip subtle" id="job-template-chip">loading</span>
           <span class="chip" id="dashboard-channel-chip">channel</span>
         </div>
       </nav>
+
+      <section class="panel settings-panel" id="settings-panel" hidden>
+        <div class="panel-header">
+          <div>
+            <h2>Settings</h2>
+            <p class="panel-subtitle">Generate platform refresh tokens for each channel. Consent screens open in a new tab.</p>
+          </div>
+          <span class="chip subtle">OAuth</span>
+        </div>
+        <div class="settings-grid">
+          <section class="settings-card">
+            <h3>YouTube PT</h3>
+            <p>Authorize the Portuguese channel and copy the generated env lines.</p>
+            <button type="button" class="secondary youtube-oauth-button" data-channel="pt">Generate PT Refresh Token</button>
+          </section>
+          <section class="settings-card">
+            <h3>YouTube EN</h3>
+            <p>Authorize the English channel and copy the generated env lines.</p>
+            <button type="button" class="secondary youtube-oauth-button" data-channel="en">Generate EN Refresh Token</button>
+          </section>
+          <section class="settings-card">
+            <h3>TikTok PT</h3>
+            <p>Authorize the Portuguese TikTok account with video upload access.</p>
+            <button type="button" class="secondary tiktok-oauth-button" data-channel="pt">Generate PT Refresh Token</button>
+          </section>
+          <section class="settings-card">
+            <h3>TikTok EN</h3>
+            <p>Authorize the English TikTok account with video upload access.</p>
+            <button type="button" class="secondary tiktok-oauth-button" data-channel="en">Generate EN Refresh Token</button>
+          </section>
+        </div>
+        <p class="settings-status" id="settings-status">Client credentials are read from your local .env.</p>
+      </section>
 
       <section class="dashboard-header">
         <div>
@@ -311,6 +345,44 @@
             </div>
           </section>
         </aside>
+      </section>
+
+      <section class="panel publishing-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Publishing Draft</h2>
+            <p class="panel-subtitle">Generate platform copy from the current video metadata, edit it, then copy each field when you are ready.</p>
+          </div>
+          <span class="chip subtle" id="publishing-model-chip">manual approval</span>
+        </div>
+
+        <div class="publishing-context-grid">
+          <label>
+            Extra copy instructions
+            <textarea
+              id="publishing-copy-model"
+              rows="5"
+              placeholder="Optional adjustments on top of the saved master template: subreddit mapping, special angle, tone tweak, platform-specific rules..."
+            ></textarea>
+          </label>
+          <label>
+            Extra video context
+            <textarea
+              id="publishing-extra-context"
+              rows="5"
+              placeholder="Add anything the job metadata does not capture: final result angle, story hook, target subreddit, thumbnail idea, player narrative..."
+            ></textarea>
+          </label>
+        </div>
+
+        <div class="publishing-actions">
+          <button type="button" id="generate-publishing-button" class="secondary">Generate Draft</button>
+          <button type="button" id="copy-publishing-json-button" class="secondary" disabled>Copy JSON</button>
+          <p id="publishing-status" class="publishing-status">Prepare or render a job, then generate the publishing draft.</p>
+        </div>
+
+        <div id="publishing-metadata" class="publishing-metadata"></div>
+        <div id="publishing-draft-root" class="publishing-draft-grid"></div>
       </section>
 
       <details class="panel log-panel compact-details">

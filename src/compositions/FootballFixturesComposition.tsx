@@ -38,7 +38,7 @@ type FootballFixturesCompositionProps = {
   coldOpenData?: FootballColdOpenData;
   leagueConfig?: LeagueConfig;
   ctaText?: string;
-  variant: 'results' | 'predictions';
+  variant: 'results' | 'next-games' | 'predictions';
 };
 
 export const FootballFixturesComposition = ({
@@ -75,6 +75,10 @@ export const FootballFixturesComposition = ({
       ? isEnglish
         ? 'Results'
         : 'Resultados'
+      : variant === 'next-games'
+        ? isEnglish
+          ? 'Fixtures'
+          : 'Próximos Jogos'
       : isEnglish
         ? 'Predictions'
         : 'Palpites';
@@ -86,7 +90,7 @@ export const FootballFixturesComposition = ({
   const titleAnim = headerEntranceStyle(frame, fps, HEADER_STAGGER_FRAMES);
   const roundAnim = headerEntranceStyle(frame, fps, HEADER_STAGGER_FRAMES * 2);
   const footerAnim = fadeInStyle(frame, fps, footerStartFrame(fixtures.length));
-  const ctaAccentColor = isEnglish && variant === 'predictions' ? '#0A84FF' : accentColor;
+  const ctaAccentColor = isEnglish && variant !== 'results' ? '#0A84FF' : accentColor;
 
   return (
     <AbsoluteFill

@@ -101,6 +101,7 @@ const execFileAsync = promisify(execFile);
 
 export const templates = [
   {value: 'results', label: 'Last Round Results'},
+  {value: 'next-games', label: 'Next Games / Upcoming Fixtures'},
   {value: 'standings', label: 'Standings'},
   {value: 'season-final-verdict', label: 'Season Wrap-up'},
   {value: 'champion-final', label: 'Champion Final'},
@@ -1217,6 +1218,57 @@ export const loadPredictionFixtures = async ({
   const cards = await buildFixtures({
     fixtures: roundFixtures,
     template: 'predictions',
+    leagueId,
+    aliasesConfig,
+    apiKey,
+    apiHost,
+    languageProfile,
+  });
+
+  return {
+    round: detectedRound,
+    matchDate: normalizedMatchDate || undefined,
+    matchDates: normalizedMatchDates.length ? normalizedMatchDates : undefined,
+    fixtures: cards,
+  };
+};
+
+export const loadNextFixtures = async ({
+  apiKey,
+  apiHost = 'v3.football.api-sports.io',
+  leagueId,
+  season,
+  round,
+  matchDate,
+  matchDates,
+  languageProfile = 'pt-br',
+}) => {
+  if (!apiKey) {
+    throw new Error('Missing FOOTBALL_API_KEY.');
+  }
+
+  const aliasesConfig = await loadTeamNameAliases();
+  await ensureDirectories();
+
+  const payload = await fetchJson(
+    `https://${apiHost}/fixtures?league=${leagueId}&season=${season}`,
+    apiKey,
+    apiHost
+  );
+  const fixtures = Array.isArray(payload.response) ? payload.response : [];
+  const {detectedRound, normalizedMatchDate, normalizedMatchDates, roundFixtures} =
+    resolveTemplateFixtures({
+    fixtures,
+    template: 'next-games',
+    round,
+    matchDate,
+    matchDates,
+    languageProfile,
+  });
+
+  const cards = await buildFixtures({
+    fixtures: roundFixtures,
+    template: 'next-games',
     leagueId,
     aliasesConfig,
     apiKey,
@@ -3218,7 +3270,12 @@ export const prepareJob = async ({
       soundtrackPath,
       soundtrackVolume,
     }),
-    compositionId: template === 'results' ? 'FootballResultsShort' : 'FootballPredictionsShort',
+    compositionId:
+      template === 'results'
+        ? 'FootballResultsShort'
+        : template === 'next-games'
+          ? 'FootballNextGamesShort'
+          : 'FootballPredictionsShort',
     leagueConfig,
     round: detectedRound,
     matchDate: normalizedMatchDate || undefined,

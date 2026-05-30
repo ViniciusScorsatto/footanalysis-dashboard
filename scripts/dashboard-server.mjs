@@ -1,13 +1,15 @@
 import fs from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
-import {spawn} from 'node:child_process';
+import {execFile, spawn} from 'node:child_process';
+import {promisify} from 'node:util';
 import {
   footballChannelProfiles,
   footballLanguageProfiles,
   footballSoundtrackPresets,
   leaguePresets,
   loadCurrentJob,
+  loadNextFixtures,
   loadPredictionFixtures,
   loadResultFixtures,
   loadStandingsEditor,
@@ -25,8 +27,10 @@ import {getFootballHookOptions} from './lib/football-copy.mjs';
 
 const dashboardDir = path.join(projectRoot, 'dashboard');
 const outDir = path.join(projectRoot, 'out');
+const publishingTemplateDir = path.join(projectRoot, 'config', 'publishing');
 const port = Number(process.env.DASHBOARD_PORT ?? '4321');
 const host = process.env.DASHBOARD_HOST ?? '127.0.0.1';
+const execFileAsync = promisify(execFile);
 
 const contentTypes = {
   '.html': 'text/html; charset=utf-8',
@@ -212,6 +216,38 @@ const sendFootballPredictionFixtures = async (response, url) => {
   }
 };
 
+const sendFootballNextFixtures = async (response, url) => {
+  try {
+    const leagueId = Number(url.searchParams.get('leagueId'));
+    const season = Number(url.searchParams.get('season'));
+    const round = url.searchParams.get('round') ?? '';
+    const matchDate = url.searchParams.get('matchDate') ?? '';
+    const matchDates = parseMatchDates(matchDate, url.searchParams.getAll('matchDates'));
+    const languageProfile = url.searchParams.get('languageProfile') ?? 'pt-br';
+    const data = await loadNextFixtures({
+      apiKey: process.env.FOOTBALL_API_KEY,
+      apiHost: process.env.FOOTBALL_API_HOST,
+      leagueId,
+      season,
+      round,
+      matchDate,
+      matchDates,
+      languageProfile,
+    });
+
+    sendJson(response, 200, {
+      ok: true,
+      ...data,
+    });
+  } catch (error) {
+    sendJson(response, 500, {
+      ok: false,
+      error: error instanceof Error ? error.message : String(error),
+      fixtures: [],
+    });
+  }
+};
+
 const sendFootballResultFixtures = async (response, url) => {
   try {
     const leagueId = Number(url.searchParams.get('leagueId'));
@@ -330,6 +366,1159 @@ const prepareFootballJob = async (body) =>
     seasonFinalVerdictEdits: body.seasonFinalVerdictEdits,
   });
 
+const compactText = (value, maxLength = 900) => {
+  const text = String(value ?? '').replace(/\s+/g, ' ').trim();
+  return text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text;
+};
+
+const summarizeFixture = (fixture) => {
+  const home = fixture.homeTeam ?? fixture.home ?? fixture.homeName ?? '';
+  const away = fixture.awayTeam ?? fixture.away ?? fixture.awayName ?? '';
+  const score =
+    fixture.homeScore !== undefined && fixture.awayScore !== undefined
+      ? `${fixture.homeScore ?? '-'}-${fixture.awayScore ?? '-'}`
+      : fixture.predictedScore ?? fixture.score ?? '';
+  const status = fixture.statusLabel ?? fixture.status ?? fixture.venue ?? '';
+  return compactText([home, score, away, status].filter(Boolean).join(' '), 160);
+};
+
+const summarizeRows = (rows = [], mapRow) =>
+  rows
+    .slice(0, 12)
+    .map(mapRow)
+    .filter(Boolean)
+    .map((item) => compactText(item, 180));
+
+const formatTeamMetric = (entry) => {
+  if (!entry) return '';
+  const name = entry.team ?? entry.playerName ?? entry.name ?? '';
+  const rank = entry.rank ? `${entry.rank}º ` : '';
+  const metrics = [
+    entry.points !== undefined ? `${entry.points} pts` : '',
+    entry.percentage !== undefined ? `${entry.percentage}%` : '',
+    entry.goals !== undefined ? `${entry.goals} goals` : '',
+    entry.assists !== undefined ? `${entry.assists} assists` : '',
+    entry.goalDifference !== undefined ? `${entry.goalDifference} GD` : '',
+    entry.form ? `form ${entry.form}` : '',
+  ].filter(Boolean);
+  return `${rank}${name}${metrics.length ? `: ${metrics.join(', ')}` : ''}`;
+};
+
+const fixtureScore = (fixture) => ({
+  homeScore: Number(fixture.homeScore),
+  awayScore: Number(fixture.awayScore),
+});
+
+const hasNumericScore = (fixture) => {
+  const {homeScore, awayScore} = fixtureScore(fixture);
+  return Number.isFinite(homeScore) && Number.isFinite(awayScore);
+};
+
+const fixtureWinner = (fixture) => {
+  if (!hasNumericScore(fixture)) return null;
+  const {homeScore, awayScore} = fixtureScore(fixture);
+  if (homeScore === awayScore) return null;
+  return homeScore > awayScore ? fixture.homeTeam : fixture.awayTeam;
+};
+
+const fixtureMargin = (fixture) => {
+  if (!hasNumericScore(fixture)) return 0;
+  const {homeScore, awayScore} = fixtureScore(fixture);
+  return Math.abs(homeScore - awayScore);
+};
+
+const formatFixtureStory = (fixture) => {
+  const score = hasNumericScore(fixture)
+    ? `${fixture.homeTeam} ${fixture.homeScore}-${fixture.awayScore} ${fixture.awayTeam}`
+    : `${fixture.homeTeam} vs ${fixture.awayTeam}`;
+  const winner = fixtureWinner(fixture);
+  const suffix = winner ? `winner: ${winner}` : hasNumericScore(fixture) ? 'draw' : '';
+  return [score, suffix, fixture.fixtureDateKey].filter(Boolean).join(' · ');
+};
+
+const getZoneRows = (rows, start, end) =>
+  rows.filter((row) => Number(row.rank) >= start && Number(row.rank) <= end);
+
+const publishingTemplateContext = {
+  standings: {
+    contentType: 'league_standings',
+    editorialAngle: 'full table/classification update; focus on leader, top-zone movement, continental spots, and relegation zone only as part of the table.',
+  },
+  results: {
+    contentType: 'round_results',
+    editorialAngle: 'latest match results; focus on scorelines, surprises, big wins, and what changed after the round.',
+  },
+  'next-games': {
+    contentType: 'upcoming_fixtures',
+    editorialAngle: 'upcoming matches; focus on must-watch games, direct clashes, schedule tension, and what each team needs.',
+  },
+  predictions: {
+    contentType: 'predictions',
+    editorialAngle: 'match predictions; focus on favorites, balanced fixtures, upset potential, and score discussion.',
+  },
+  'world-cup-knockout': {
+    contentType: 'knockout_bracket',
+    editorialAngle: 'knockout stage bracket; focus on who advances, elimination pressure, decisive ties, and tournament drama.',
+  },
+  'champion-final': {
+    contentType: 'champion_decider',
+    editorialAngle: 'champion/final result; focus on the title winner, decisive match, trophy narrative, and celebration.',
+  },
+  'top-scorers': {
+    contentType: 'top_scorers',
+    editorialAngle: 'scoring race; focus on the leading scorer, close pursuers, goals gap, and who can overtake.',
+  },
+  'player-of-round': {
+    contentType: 'player_ranking',
+    editorialAngle: 'player of the round ranking; focus on standout performances, rating leaders, goals, assists, and debate.',
+  },
+  'championship-pace': {
+    contentType: 'title_race_pace',
+    editorialAngle: 'title race pace; focus on championship percentage, pressure at the top, who can sustain the pace, and the benchmark.',
+  },
+  'relegation-line': {
+    contentType: 'relegation_battle',
+    editorialAngle: 'relegation line, not a full classification; focus on danger, safety line, teams near the drop, points/percentage needed to escape, and pressure at the bottom.',
+  },
+  'continental-groups-standings': {
+    contentType: 'continental_group_standings',
+    editorialAngle: 'group qualification race; focus on who advances, who is alive, group pressure, and decisive standings.',
+  },
+  'world-cup-group-standings': {
+    contentType: 'world_cup_group_race',
+    editorialAngle: 'World Cup group standings; focus on qualification spots, who advances, and group pressure.',
+  },
+  'season-final-verdict': {
+    contentType: 'season_wrap_up',
+    editorialAngle: 'final season verdict; focus on champion, qualified teams, relegated teams, surprises, and disappointments.',
+  },
+};
+
+const buildTemplateSpecificMetadata = (job) => {
+  if (job.template === 'predictions') {
+    const fixtures = job.fixtures ?? [];
+    const homeWins = fixtures.filter((fixture) => hasNumericScore(fixture) && fixture.homeScore > fixture.awayScore);
+    const awayWins = fixtures.filter((fixture) => hasNumericScore(fixture) && fixture.awayScore > fixture.homeScore);
+    const draws = fixtures.filter((fixture) => hasNumericScore(fixture) && fixture.homeScore === fixture.awayScore);
+    const tightGames = fixtures.filter((fixture) => hasNumericScore(fixture) && fixtureMargin(fixture) <= 1);
+    const strongestPicks = fixtures
+      .filter((fixture) => hasNumericScore(fixture) && fixtureMargin(fixture) >= 2)
+      .map(formatFixtureStory);
+    const upsetCandidates = awayWins.map(formatFixtureStory);
+
+    return {
+      totalFixtures: fixtures.length,
+      favoriteLean: {
+        homeWins: homeWins.length,
+        awayWins: awayWins.length,
+        draws: draws.length,
+      },
+      strongestPicks,
+      tightGames: tightGames.map(formatFixtureStory),
+      upsetCandidates,
+      mostCommentableFixtures: fixtures.slice(0, 5).map(formatFixtureStory),
+    };
+  }
+
+  if (job.template === 'results') {
+    const fixtures = job.fixtures ?? [];
+    const decidedGames = fixtures.filter(hasNumericScore);
+    const draws = decidedGames.filter((fixture) => fixture.homeScore === fixture.awayScore);
+    const bigWins = decidedGames
+      .filter((fixture) => fixtureMargin(fixture) >= 3)
+      .sort((a, b) => fixtureMargin(b) - fixtureMargin(a));
+    const awayWins = decidedGames.filter((fixture) => fixture.awayScore > fixture.homeScore);
+    const eliminatedTeams = fixtures
+      .flatMap((fixture) => [
+        fixture.homeEliminated ? fixture.homeTeam : '',
+        fixture.awayEliminated ? fixture.awayTeam : '',
+      ])
+      .filter(Boolean);
+
+    return {
+      totalFixtures: fixtures.length,
+      resultStories: decidedGames.map(formatFixtureStory),
+      bigWins: bigWins.map(formatFixtureStory),
+      surpriseCandidates: awayWins.map(formatFixtureStory),
+      draws: draws.map(formatFixtureStory),
+      eliminatedTeams,
+    };
+  }
+
+  if (job.template === 'standings') {
+    const rows = job.rows ?? [];
+    const leader = rows.find((row) => Number(row.rank) === 1) ?? rows[0];
+    const second = rows.find((row) => Number(row.rank) === 2);
+    const topZone = getZoneRows(rows, 1, 6);
+    const continentalZone = getZoneRows(rows, 1, 6);
+    const relegationZone = rows.filter((row) => Number(row.rank) >= Math.max(1, rows.length - 3));
+    const leaderGap =
+      leader?.points !== undefined && second?.points !== undefined
+        ? Number(leader.points) - Number(second.points)
+        : undefined;
+
+    return {
+      standingsLabel: job.standingsLabel,
+      leader: formatTeamMetric(leader),
+      leaderGapToSecond: leaderGap,
+      topZone: topZone.map(formatTeamMetric),
+      continentalZone: continentalZone.map(formatTeamMetric),
+      relegationZone: relegationZone.map(formatTeamMetric),
+      closestChasers: rows.slice(1, 5).map(formatTeamMetric),
+    };
+  }
+
+  if (job.template === 'top-scorers') {
+    const entries = job.entries ?? [];
+    const leader = entries[0];
+    const second = entries[1];
+    const goalGap =
+      leader?.goals !== undefined && second?.goals !== undefined
+        ? Number(leader.goals) - Number(second.goals)
+        : undefined;
+
+    return {
+      leader: formatTeamMetric(leader),
+      goalGapToSecond: goalGap,
+      chasers: entries.slice(1, 6).map(formatTeamMetric),
+      tiedWithSecond: entries
+        .slice(1)
+        .filter((entry) => second?.goals !== undefined && Number(entry.goals) === Number(second.goals))
+        .map(formatTeamMetric),
+      topFive: entries.slice(0, 5).map(formatTeamMetric),
+    };
+  }
+
+  if (job.template === 'relegation-line') {
+    const entries = job.entries ?? [];
+    const dangerEntries = entries.filter((entry) => Number(entry.rank) >= 17);
+    const safeLineEntry = entries.find((entry) => Number(entry.rank) === 16);
+    const closestSafeEntries = entries.filter((entry) => Number(entry.rank) >= 13 && Number(entry.rank) <= 16);
+    return {
+      benchmarkPercentage: job.benchmarkPercentage,
+      benchmarkLabel: job.benchmarkLabel,
+      noteLabel: job.noteLabel,
+      safetyLine: safeLineEntry
+        ? `${safeLineEntry.team} is just above the drop: ${safeLineEntry.points} pts, ${safeLineEntry.percentage}%`
+        : '',
+      dangerTeams: dangerEntries.map(
+        (entry) => `${entry.rank}º ${entry.team}: ${entry.points} pts, ${entry.percentage}%`
+      ),
+      teamsNearSafety: closestSafeEntries.map(
+        (entry) => `${entry.rank}º ${entry.team}: ${entry.points} pts, ${entry.percentage}%`
+      ),
+    };
+  }
+
+  if (job.template === 'championship-pace') {
+    const entries = job.entries ?? [];
+    const aboveBenchmark = entries.filter(
+      (entry) => Number(entry.percentage) >= Number(job.benchmarkPercentage)
+    );
+    const belowBenchmark = entries.filter(
+      (entry) => Number(entry.percentage) < Number(job.benchmarkPercentage)
+    );
+    return {
+      benchmarkPercentage: job.benchmarkPercentage,
+      benchmarkLabel: job.benchmarkLabel,
+      leadingPaceTeams: entries.slice(0, 5).map(formatTeamMetric),
+      teamsAboveChampionLine: aboveBenchmark.map(formatTeamMetric),
+      teamsBelowChampionLine: belowBenchmark.slice(0, 6).map(formatTeamMetric),
+      closestToLine: entries
+        .slice()
+        .sort(
+          (a, b) =>
+            Math.abs(Number(a.percentage) - Number(job.benchmarkPercentage)) -
+            Math.abs(Number(b.percentage) - Number(job.benchmarkPercentage))
+        )
+        .slice(0, 5)
+        .map(formatTeamMetric),
+    };
+  }
+
+  return {};
+};
+
+const buildPublishingMetadata = (job) => {
+  const rows =
+    job.rows ?? job.standings ?? job.tableRows ?? job.entries ?? job.players ?? job.groups ?? [];
+  const fixtures = job.fixtures ?? job.matches ?? job.nextMatches ?? job.results ?? [];
+  const context = publishingTemplateContext[job.template] ?? {
+    contentType: job.template ?? 'football_video',
+    editorialAngle: 'football short video; use the current template and metadata to choose the strongest story.',
+  };
+
+  return {
+    sport: job.sport ?? 'football',
+    template: job.template ?? '',
+    contentType: context.contentType,
+    editorialAngle: context.editorialAngle,
+    compositionId: job.compositionId ?? '',
+    channelProfile: job.channelProfile ?? '',
+    languageProfile: job.languageProfile ?? '',
+    leagueId: job.leagueId ?? '',
+    leagueName: job.leagueName ?? job.competitionName ?? '',
+    season: job.season ?? '',
+    round: job.round ?? '',
+    roundLabel: job.roundLabel ?? job.titleLabel ?? job.subtitleLabel ?? '',
+    titleLabel: job.titleLabel ?? '',
+    subtitleLabel: job.subtitleLabel ?? '',
+    outputName: job.outputName ?? '',
+    renderPath: job.outputName ? `/out/${job.outputName}` : '',
+    ctaText: job.ctaText ?? '',
+    hookText: job.hookText ?? '',
+    introTitle: job.introTitle ?? '',
+    introSubtitle: job.introSubtitle ?? '',
+    voiceoverText: job.voiceoverText ?? '',
+    champion: job.championTeam ?? job.champion?.team ?? '',
+    groupLabel: job.groupLabel ?? '',
+    dataSource: job.dataSource ?? '',
+    templateSpecific: buildTemplateSpecificMetadata(job),
+    summaryRows: summarizeRows(rows, (row) => {
+      const rank = row.rank ?? row.position ?? '';
+      const name = row.team ?? row.playerName ?? row.groupName ?? row.name ?? '';
+      const stat =
+        row.points !== undefined && row.percentage !== undefined
+          ? `${row.points} pts · ${row.percentage}%`
+          : row.points !== undefined
+            ? `${row.points} pts`
+          : row.goals !== undefined
+            ? `${row.goals} goals`
+            : row.rating !== undefined
+              ? `${row.rating} rating`
+              : row.percentage !== undefined
+                ? `${row.percentage}%`
+                : '';
+      return [rank, name, stat].filter(Boolean).join(' · ');
+    }),
+    fixtures: fixtures.slice(0, 14).map(summarizeFixture),
+  };
+};
+
+const getPublishingTemplateFile = (languageProfile = 'pt-br') =>
+  languageProfile === 'en'
+    ? path.join(publishingTemplateDir, 'youtube-shorts-football-en.md')
+    : path.join(publishingTemplateDir, 'youtube-shorts-football-pt.md');
+
+const getYouTubeDescriptionFooterFile = (languageProfile = 'pt-br') =>
+  languageProfile === 'en'
+    ? path.join(publishingTemplateDir, 'youtube-description-footer-en.md')
+    : path.join(publishingTemplateDir, 'youtube-description-footer-pt.md');
+
+const loadPublishingTemplate = async (languageProfile = 'pt-br') => {
+  const filePath = getPublishingTemplateFile(languageProfile);
+  const templateText = await fs.readFile(filePath, 'utf8');
+  return {
+    filePath,
+    name: path.basename(filePath),
+    templateText,
+  };
+};
+
+const loadYouTubeDescriptionFooter = async (languageProfile = 'pt-br') => {
+  const filePath = getYouTubeDescriptionFooterFile(languageProfile);
+  try {
+    return (await fs.readFile(filePath, 'utf8')).trim();
+  } catch (error) {
+    if (error?.code === 'ENOENT') return '';
+    throw error;
+  }
+};
+
+const sectionBetween = (templateText, startPattern, endPattern) => {
+  const start = templateText.search(startPattern);
+  if (start === -1) return '';
+  const rest = templateText.slice(start);
+  const end = rest.slice(1).search(endPattern);
+  return end === -1 ? rest.trim() : rest.slice(0, end + 1).trim();
+};
+
+const templateSectionMap = {
+  standings: /^# A\) CLASSIFICAÇÃO/m,
+  results: /^# B\) ÚLTIMOS JOGOS/m,
+  'next-games': /^# F\) JOGOS DO DIA/m,
+  predictions: /^# C\) PALPITES/m,
+  'world-cup-knockout': /^# D\) MATA-MATA/m,
+  'champion-final': /^# D\) MATA-MATA/m,
+  'top-scorers': /^# E\) ARTILHARIA/m,
+  'player-of-round': /^# E\) ARTILHARIA/m,
+  'championship-pace': /^# G\) TITLE RACE \/ DISPUTA PELO TÍTULO/m,
+  'relegation-line': /^# H\) REBAIXAMENTO/m,
+  'continental-groups-standings': /^# D\) MATA-MATA/m,
+  'world-cup-group-standings': /^# A\) CLASSIFICAÇÃO/m,
+  'season-final-verdict': /^# A\) CLASSIFICAÇÃO/m,
+};
+
+const compactPublishingTemplate = ({templateText, template, languageProfile}) => {
+  const titleRules = sectionBetween(templateText, /^## Regras do Título/m, /^# DESCRIÇÃO UNIVERSAL/m);
+  const descriptionRules = sectionBetween(templateText, /^# DESCRIÇÃO UNIVERSAL/m, /^# BLOCOS DINÂMICOS POR FORMATO/m);
+  const formatRules = sectionBetween(
+    templateText,
+    templateSectionMap[template] ?? /^# A\) CLASSIFICAÇÃO/m,
+    /^# [A-H]\) |^# TEMPLATE DE HASHTAGS/m
+  );
+  const hashtagRules = sectionBetween(templateText, /^# TEMPLATE DE HASHTAGS/m, /^# Fórmula de Conteúdo por Plataforma/m);
+  const platformRules = sectionBetween(templateText, /^# Fórmula de Conteúdo por Plataforma/m, /^# Estratégia de Automação/m);
+  const finalStrategy = sectionBetween(templateText, /^# Estratégia Final/m, /$^/m);
+
+  return [
+    `Language profile: ${languageProfile}.`,
+    'Use the master template compact brief below instead of the full template.',
+    titleRules,
+    descriptionRules,
+    formatRules,
+    hashtagRules,
+    platformRules,
+    finalStrategy,
+  ]
+    .filter(Boolean)
+    .join('\n\n---\n\n');
+};
+
+const publishingDraftSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['summary', 'platforms'],
+  properties: {
+    summary: {type: 'string'},
+    platforms: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['youtube', 'reddit', 'tiktok', 'instagram', 'x'],
+      properties: {
+        youtube: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['title', 'description', 'tags', 'hashtags', 'thumbnailNotes'],
+          properties: {
+            title: {type: 'string'},
+            description: {type: 'string'},
+            tags: {type: 'array', items: {type: 'string'}},
+            hashtags: {type: 'array', items: {type: 'string'}},
+            thumbnailNotes: {type: 'string'},
+          },
+        },
+        reddit: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['subreddit', 'title', 'body', 'flairSuggestion', 'tags'],
+          properties: {
+            subreddit: {type: 'string'},
+            title: {type: 'string'},
+            body: {type: 'string'},
+            flairSuggestion: {type: 'string'},
+            tags: {type: 'array', items: {type: 'string'}},
+          },
+        },
+        tiktok: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['caption', 'hashtags', 'coverText'],
+          properties: {
+            caption: {type: 'string'},
+            hashtags: {type: 'array', items: {type: 'string'}},
+            coverText: {type: 'string'},
+          },
+        },
+        instagram: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['caption', 'hashtags', 'coverText'],
+          properties: {
+            caption: {type: 'string'},
+            hashtags: {type: 'array', items: {type: 'string'}},
+            coverText: {type: 'string'},
+          },
+        },
+        x: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['postText', 'hashtags'],
+          properties: {
+            postText: {type: 'string'},
+            hashtags: {type: 'array', items: {type: 'string'}},
+          },
+        },
+      },
+    },
+  },
+};
+
+const extractResponseText = (data) => {
+  if (typeof data.output_text === 'string') {
+    return data.output_text;
+  }
+
+  return (data.output ?? [])
+    .flatMap((item) => item.content ?? [])
+    .map((content) => content.text ?? '')
+    .join('')
+    .trim();
+};
+
+const generatePublishingDraft = async ({job, extraContext, copyModelInstructions}) => {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    const error = new Error('Missing OPENAI_API_KEY. Add it to .env to generate publishing drafts.');
+    error.errorType = 'missing_openai_key';
+    throw error;
+  }
+
+  const metadata = buildPublishingMetadata(job);
+  const publishingTemplate = await loadPublishingTemplate(metadata.languageProfile);
+  const compactTemplate = compactPublishingTemplate({
+    templateText: publishingTemplate.templateText,
+    template: metadata.template,
+    languageProfile: metadata.languageProfile,
+  });
+  const model = process.env.OPENAI_PUBLISHING_MODEL ?? process.env.OPENAI_MODEL ?? 'gpt-4.1-mini';
+  const prompt = [
+    'Generate a publishing draft for a short football video.',
+    'Return platform-specific copy only. Do not invent match facts beyond the metadata.',
+    'Prioritize native style for each platform and keep the user able to manually approve before posting.',
+    'Use tags as comma-friendly keywords without #. Use hashtags with # when the platform field is named hashtags.',
+    'Respect metadata.contentType and metadata.editorialAngle. For relegation_battle, do not describe the video as a general league table; make the safety line, danger zone, and escape pressure the central story.',
+    `Compact master publishing template (${publishingTemplate.name}):\n${compactTemplate}`,
+    copyModelInstructions
+      ? `Additional editor instructions:\n${copyModelInstructions}`
+      : '',
+    extraContext ? `Additional context from editor:\n${extraContext}` : '',
+    `Video metadata JSON:\n${JSON.stringify(metadata, null, 2)}`,
+  ]
+    .filter(Boolean)
+    .join('\n\n');
+
+  const openaiResponse = await fetch('https://api.openai.com/v1/responses', {
+    method: 'POST',
+    headers: {
+      authorization: `Bearer ${apiKey}`,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      model,
+      input: [
+        {
+          role: 'system',
+          content:
+            'You are a football social media publishing assistant. Produce concise, platform-ready JSON.',
+        },
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+      text: {
+        format: {
+          type: 'json_schema',
+          name: 'football_publishing_draft',
+          strict: true,
+          schema: publishingDraftSchema,
+        },
+      },
+    }),
+  });
+
+  const data = await openaiResponse.json().catch(() => ({}));
+  if (!openaiResponse.ok) {
+    const message = data?.error?.message ?? `OpenAI request failed with ${openaiResponse.status}`;
+    throw new Error(message);
+  }
+
+  const outputText = extractResponseText(data);
+  if (!outputText) {
+    throw new Error('OpenAI returned an empty publishing draft.');
+  }
+
+  const draft = JSON.parse(outputText);
+  const youtubeFooter = await loadYouTubeDescriptionFooter(metadata.languageProfile);
+  if (draft.platforms?.youtube) {
+    draft.platforms.youtube.description = appendYouTubeDescriptionFooter({
+      description: draft.platforms.youtube.description,
+      footer: youtubeFooter,
+    });
+  }
+
+  return {
+    draft,
+    metadata,
+    model,
+    templateName: publishingTemplate.name,
+  };
+};
+
+const getYouTubeCredential = (channelProfile, key) => {
+  const normalizedChannel = String(channelProfile ?? 'pt').toUpperCase() === 'EN' ? 'EN' : 'PT';
+  return process.env[`YOUTUBE_${normalizedChannel}_${key}`] ?? process.env[`YOUTUBE_${key}`];
+};
+
+const getTikTokCredential = (channelProfile, key) => {
+  const normalizedChannel = String(channelProfile ?? 'pt').toUpperCase() === 'EN' ? 'EN' : 'PT';
+  return process.env[`TIKTOK_${normalizedChannel}_${key}`] ?? process.env[`TIKTOK_${key}`];
+};
+
+const getRequestOrigin = (request) => {
+  const forwardedProto = request.headers['x-forwarded-proto'];
+  const protocol = Array.isArray(forwardedProto) ? forwardedProto[0] : forwardedProto;
+  return `${protocol ?? 'http'}://${request.headers.host ?? `${host}:${port}`}`;
+};
+
+const getYouTubeRedirectUri = (request) =>
+  `${getRequestOrigin(request)}/oauth/youtube/callback`;
+
+const getTikTokRedirectUri = (request) =>
+  process.env.TIKTOK_REDIRECT_URI || `${getRequestOrigin(request)}/oauth/tiktok/callback`;
+
+const getYouTubeOAuthClient = (channelProfile = 'pt') => {
+  const clientId = getYouTubeCredential(channelProfile, 'CLIENT_ID');
+  const clientSecret = getYouTubeCredential(channelProfile, 'CLIENT_SECRET');
+
+  if (!clientId || !clientSecret) {
+    const error = new Error(
+      `Missing YouTube ${String(channelProfile).toUpperCase()} client ID or secret in .env.`
+    );
+    error.errorType = 'missing_youtube_client';
+    throw error;
+  }
+
+  return {clientId, clientSecret};
+};
+
+const createYouTubeOAuthUrl = ({channelProfile, redirectUri}) => {
+  const {clientId} = getYouTubeOAuthClient(channelProfile);
+  const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+  authUrl.searchParams.set('client_id', clientId);
+  authUrl.searchParams.set('redirect_uri', redirectUri);
+  authUrl.searchParams.set('response_type', 'code');
+  authUrl.searchParams.set('scope', 'https://www.googleapis.com/auth/youtube.upload');
+  authUrl.searchParams.set('access_type', 'offline');
+  authUrl.searchParams.set('prompt', 'consent');
+  authUrl.searchParams.set('state', channelProfile === 'en' ? 'en' : 'pt');
+  return authUrl.toString();
+};
+
+const exchangeYouTubeAuthorizationCode = async ({channelProfile, code, redirectUri}) => {
+  const {clientId, clientSecret} = getYouTubeOAuthClient(channelProfile);
+  const response = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: {'content-type': 'application/x-www-form-urlencoded'},
+    body: new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      code,
+      redirect_uri: redirectUri,
+      grant_type: 'authorization_code',
+    }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data?.error_description ?? data?.error ?? 'Could not exchange YouTube authorization code.');
+  }
+
+  return {
+    clientId,
+    clientSecret,
+    refreshToken: data.refresh_token,
+  };
+};
+
+const getYouTubeAccessToken = async (channelProfile = 'pt') => {
+  const accessToken = getYouTubeCredential(channelProfile, 'ACCESS_TOKEN');
+  if (accessToken) {
+    return accessToken;
+  }
+
+  const clientId = getYouTubeCredential(channelProfile, 'CLIENT_ID');
+  const clientSecret = getYouTubeCredential(channelProfile, 'CLIENT_SECRET');
+  const refreshToken = getYouTubeCredential(channelProfile, 'REFRESH_TOKEN');
+
+  if (!clientId || !clientSecret || !refreshToken) {
+    const error = new Error(
+      'Missing YouTube OAuth credentials. Add YOUTUBE_CLIENT_ID, YOUTUBE_CLIENT_SECRET, and YOUTUBE_REFRESH_TOKEN to .env.'
+    );
+    error.errorType = 'missing_youtube_credentials';
+    throw error;
+  }
+
+  const response = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: {'content-type': 'application/x-www-form-urlencoded'},
+    body: new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      refresh_token: refreshToken,
+      grant_type: 'refresh_token',
+    }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data?.error_description ?? data?.error ?? 'Could not refresh YouTube access token.');
+  }
+
+  return data.access_token;
+};
+
+const normalizeTagList = (tags) => {
+  if (Array.isArray(tags)) {
+    return tags.map((tag) => String(tag).trim()).filter(Boolean);
+  }
+
+  return String(tags ?? '')
+    .split(',')
+    .map((tag) => tag.trim())
+    .filter(Boolean);
+};
+
+const hasShortsMarker = (value) => /#shorts\b/i.test(String(value ?? ''));
+
+const appendYouTubeDescriptionFooter = ({description, footer}) => {
+  const descriptionText = String(description ?? '').trim();
+  const footerText = String(footer ?? '').trim();
+  if (!footerText || descriptionText.includes(footerText)) {
+    return descriptionText;
+  }
+
+  const descriptionWithoutShorts = descriptionText.replace(/(^|\n)\s*#shorts\s*$/i, '').trim();
+  return [descriptionWithoutShorts, footerText].filter(Boolean).join('\n\n');
+};
+
+const ensureShortsMetadata = ({title, description, tags}) => {
+  const normalizedTags = [...new Set([...normalizeTagList(tags), 'shorts'])];
+  const titleText = String(title ?? '').trim();
+  const descriptionText = String(description ?? '').trim();
+  const nextTitle = hasShortsMarker(titleText)
+    ? titleText
+    : `${titleText.slice(0, 92).trim()} #Shorts`.trim();
+  const nextDescription = hasShortsMarker(descriptionText)
+    ? descriptionText
+    : `${descriptionText}${descriptionText ? '\n\n' : ''}#Shorts`;
+
+  return {
+    title: nextTitle,
+    description: nextDescription,
+    tags: normalizedTags,
+  };
+};
+
+const resolveRenderedVideoPath = async ({outputName, renderPath}) => {
+  const rawPath = String(renderPath || outputName || '').trim();
+  if (!rawPath) {
+    throw new Error('Missing rendered video path. Render the MP4 first.');
+  }
+
+  const relativePath = rawPath
+    .replace(/^\/out\//, '')
+    .replace(/^out\//, '')
+    .replace(/^\/+/, '');
+  const filePath = path.resolve(outDir, relativePath);
+  if (!filePath.startsWith(`${outDir}${path.sep}`)) {
+    throw new Error('Invalid render path.');
+  }
+
+  await fs.access(filePath);
+  return filePath;
+};
+
+const inspectVideoForShorts = async (filePath) => {
+  try {
+    const {stdout} = await execFileAsync('ffprobe', [
+      '-v',
+      'error',
+      '-select_streams',
+      'v:0',
+      '-show_entries',
+      'stream=width,height:format=duration',
+      '-of',
+      'json',
+      filePath,
+    ]);
+    const data = JSON.parse(stdout);
+    const stream = data.streams?.[0] ?? {};
+    const width = Number(stream.width);
+    const height = Number(stream.height);
+    const duration = Number(data.format?.duration);
+    const isVertical = Number.isFinite(width) && Number.isFinite(height) && height > width;
+    const isUnderSixtySeconds = Number.isFinite(duration) && duration < 60;
+
+    return {
+      width,
+      height,
+      duration,
+      isVertical,
+      isUnderSixtySeconds,
+      eligible: isVertical && isUnderSixtySeconds,
+    };
+  } catch (error) {
+    throw new Error(
+      `Could not inspect rendered video with ffprobe: ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
+  }
+};
+
+const uploadYouTubeVideo = async ({job, body}) => {
+  const accessToken = await getYouTubeAccessToken(job.channelProfile);
+  const youtube = body.youtube ?? {};
+  const filePath = await resolveRenderedVideoPath({
+    outputName: body.outputName ?? job.outputName,
+    renderPath: body.renderPath,
+  });
+  const shortsCheck = await inspectVideoForShorts(filePath);
+  if (!shortsCheck.eligible) {
+    throw new Error(
+      `Rendered video is not eligible for Shorts: ${shortsCheck.width}x${shortsCheck.height}, ${Number.isFinite(shortsCheck.duration) ? `${shortsCheck.duration.toFixed(1)}s` : 'unknown duration'}. Use a vertical video under 60 seconds.`
+    );
+  }
+  const youtubeFooter = await loadYouTubeDescriptionFooter(job.languageProfile);
+  const shortsMetadata = ensureShortsMetadata({
+    title: youtube.title ?? body.title,
+    description: appendYouTubeDescriptionFooter({
+      description: youtube.description ?? body.description,
+      footer: youtubeFooter,
+    }),
+    tags: youtube.tags ?? body.tags,
+  });
+  const title = compactText(shortsMetadata.title, 100);
+  const description = shortsMetadata.description;
+  const tags = shortsMetadata.tags;
+  const privacyStatus = String(
+    body.privacyStatus ?? process.env.YOUTUBE_PRIVACY_STATUS ?? 'private'
+  ).toLowerCase();
+  const allowedPrivacyStatuses = new Set(['private', 'unlisted', 'public']);
+
+  if (!title) {
+    throw new Error('Missing YouTube title.');
+  }
+
+  const metadata = {
+    snippet: {
+      title,
+      description,
+      tags,
+      categoryId: '17',
+    },
+    status: {
+      privacyStatus: allowedPrivacyStatuses.has(privacyStatus) ? privacyStatus : 'private',
+      selfDeclaredMadeForKids: false,
+    },
+  };
+
+  const boundary = `foot-analysis-${Date.now().toString(36)}-${Math.random()
+    .toString(36)
+    .slice(2)}`;
+  const videoBytes = await fs.readFile(filePath);
+  const bodyBuffer = Buffer.concat([
+    Buffer.from(
+      `--${boundary}\r\ncontent-type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(
+        metadata
+      )}\r\n--${boundary}\r\ncontent-type: video/mp4\r\n\r\n`
+    ),
+    videoBytes,
+    Buffer.from(`\r\n--${boundary}--\r\n`),
+  ]);
+
+  const response = await fetch(
+    'https://www.googleapis.com/upload/youtube/v3/videos?part=snippet,status&uploadType=multipart',
+    {
+      method: 'POST',
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+        'content-type': `multipart/related; boundary=${boundary}`,
+        'content-length': String(bodyBuffer.length),
+      },
+      body: bodyBuffer,
+    }
+  );
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data?.error?.message ?? `YouTube upload failed with ${response.status}`);
+  }
+
+  return {
+    videoId: data.id,
+    url: data.id ? `https://www.youtube.com/watch?v=${data.id}` : '',
+    shortsUrl: data.id ? `https://www.youtube.com/shorts/${data.id}` : '',
+    privacyStatus: metadata.status.privacyStatus,
+    title,
+    filePath: path.relative(projectRoot, filePath),
+    shortsCheck,
+  };
+};
+
+const sendYouTubeOAuthCallback = async (request, response, url) => {
+  const channelProfile = url.searchParams.get('state') === 'en' ? 'en' : 'pt';
+  const code = url.searchParams.get('code');
+  const error = url.searchParams.get('error');
+
+  if (error || !code) {
+    response.writeHead(400, {'content-type': 'text/html; charset=utf-8'});
+    response.end(`<h1>YouTube authorization failed</h1><p>${error ?? 'Missing authorization code.'}</p>`);
+    return;
+  }
+
+  try {
+    const token = await exchangeYouTubeAuthorizationCode({
+      channelProfile,
+      code,
+      redirectUri: getYouTubeRedirectUri(request),
+    });
+    const prefix = channelProfile.toUpperCase();
+    const envLines = [
+      `YOUTUBE_${prefix}_CLIENT_ID=${token.clientId}`,
+      `YOUTUBE_${prefix}_CLIENT_SECRET=${token.clientSecret}`,
+      `YOUTUBE_${prefix}_REFRESH_TOKEN=${token.refreshToken}`,
+    ].join('\n');
+
+    response.writeHead(200, {'content-type': 'text/html; charset=utf-8'});
+    response.end(`<!doctype html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <title>YouTube OAuth Complete</title>
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 32px; color: #102033; }
+            pre { padding: 16px; border-radius: 10px; background: #f2f5f8; white-space: pre-wrap; word-break: break-all; }
+            button { padding: 10px 14px; border-radius: 8px; border: 0; background: #0a66d8; color: #fff; font-weight: 700; cursor: pointer; }
+          </style>
+        </head>
+        <body>
+          <h1>YouTube ${prefix} refresh token generated</h1>
+          <p>Add these lines to your local <code>.env</code>, then restart the dashboard server.</p>
+          <pre id="env-lines">${envLines}</pre>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('env-lines').textContent)">Copy env lines</button>
+        </body>
+      </html>`);
+  } catch (callbackError) {
+    response.writeHead(500, {'content-type': 'text/html; charset=utf-8'});
+    response.end(
+      `<h1>YouTube authorization failed</h1><p>${
+        callbackError instanceof Error ? callbackError.message : String(callbackError)
+      }</p>`
+    );
+  }
+};
+
+const getTikTokOAuthClient = (channelProfile = 'pt') => {
+  const clientKey = getTikTokCredential(channelProfile, 'CLIENT_KEY');
+  const clientSecret = getTikTokCredential(channelProfile, 'CLIENT_SECRET');
+
+  if (!clientKey || !clientSecret) {
+    const error = new Error(
+      `Missing TikTok ${String(channelProfile).toUpperCase()} client key or secret in .env.`
+    );
+    error.errorType = 'missing_tiktok_client';
+    throw error;
+  }
+
+  return {clientKey, clientSecret};
+};
+
+const createTikTokOAuthUrl = ({channelProfile, redirectUri}) => {
+  const {clientKey} = getTikTokOAuthClient(channelProfile);
+  const authUrl = new URL('https://www.tiktok.com/v2/auth/authorize/');
+  authUrl.searchParams.set('client_key', clientKey);
+  authUrl.searchParams.set('redirect_uri', redirectUri);
+  authUrl.searchParams.set('response_type', 'code');
+  authUrl.searchParams.set('scope', 'user.info.basic,video.upload');
+  authUrl.searchParams.set('state', channelProfile === 'en' ? 'en' : 'pt');
+  authUrl.searchParams.set('disable_auto_auth', '1');
+  return authUrl.toString();
+};
+
+const exchangeTikTokAuthorizationCode = async ({channelProfile, code, redirectUri}) => {
+  const {clientKey, clientSecret} = getTikTokOAuthClient(channelProfile);
+  const response = await fetch('https://open.tiktokapis.com/v2/oauth/token/', {
+    method: 'POST',
+    headers: {'content-type': 'application/x-www-form-urlencoded'},
+    body: new URLSearchParams({
+      client_key: clientKey,
+      client_secret: clientSecret,
+      code,
+      redirect_uri: redirectUri,
+      grant_type: 'authorization_code',
+    }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || data.error) {
+    throw new Error(data?.error_description ?? data?.error ?? 'Could not exchange TikTok authorization code.');
+  }
+
+  return {
+    clientKey,
+    clientSecret,
+    refreshToken: data.refresh_token,
+    openId: data.open_id,
+    scope: data.scope,
+    refreshExpiresIn: data.refresh_expires_in,
+  };
+};
+
+const getTikTokAccessToken = async (channelProfile = 'pt') => {
+  const accessToken = getTikTokCredential(channelProfile, 'ACCESS_TOKEN');
+  if (accessToken) {
+    return accessToken;
+  }
+
+  const clientKey = getTikTokCredential(channelProfile, 'CLIENT_KEY');
+  const clientSecret = getTikTokCredential(channelProfile, 'CLIENT_SECRET');
+  const refreshToken = getTikTokCredential(channelProfile, 'REFRESH_TOKEN');
+
+  if (!clientKey || !clientSecret || !refreshToken) {
+    const error = new Error(
+      'Missing TikTok OAuth credentials. Add TIKTOK_CLIENT_KEY, TIKTOK_CLIENT_SECRET, and TIKTOK_REFRESH_TOKEN to .env.'
+    );
+    error.errorType = 'missing_tiktok_credentials';
+    throw error;
+  }
+
+  const response = await fetch('https://open.tiktokapis.com/v2/oauth/token/', {
+    method: 'POST',
+    headers: {'content-type': 'application/x-www-form-urlencoded'},
+    body: new URLSearchParams({
+      client_key: clientKey,
+      client_secret: clientSecret,
+      refresh_token: refreshToken,
+      grant_type: 'refresh_token',
+    }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || data.error) {
+    throw new Error(data?.error_description ?? data?.error ?? 'Could not refresh TikTok access token.');
+  }
+
+  return data.access_token;
+};
+
+const uploadTikTokVideo = async ({job, body}) => {
+  const accessToken = await getTikTokAccessToken(job.channelProfile);
+  const filePath = await resolveRenderedVideoPath({
+    outputName: body.outputName ?? job.outputName,
+    renderPath: body.renderPath,
+  });
+  const shortsCheck = await inspectVideoForShorts(filePath);
+  if (!shortsCheck.eligible) {
+    throw new Error(
+      `Rendered video is not eligible for TikTok short-form upload: ${shortsCheck.width}x${shortsCheck.height}, ${Number.isFinite(shortsCheck.duration) ? `${shortsCheck.duration.toFixed(1)}s` : 'unknown duration'}. Use a vertical video under 60 seconds.`
+    );
+  }
+
+  const fileStats = await fs.stat(filePath);
+  if (!fileStats.size) {
+    throw new Error('Rendered video is empty.');
+  }
+
+  const initResponse = await fetch('https://open.tiktokapis.com/v2/post/publish/inbox/video/init/', {
+    method: 'POST',
+    headers: {
+      authorization: `Bearer ${accessToken}`,
+      'content-type': 'application/json; charset=UTF-8',
+    },
+    body: JSON.stringify({
+      source_info: {
+        source: 'FILE_UPLOAD',
+        video_size: fileStats.size,
+        chunk_size: fileStats.size,
+        total_chunk_count: 1,
+      },
+    }),
+  });
+
+  const initData = await initResponse.json().catch(() => ({}));
+  if (!initResponse.ok || initData?.error?.code !== 'ok') {
+    throw new Error(
+      initData?.error?.message || initData?.error?.code || `TikTok upload init failed with ${initResponse.status}`
+    );
+  }
+
+  const uploadUrl = initData?.data?.upload_url;
+  const publishId = initData?.data?.publish_id;
+  if (!uploadUrl || !publishId) {
+    throw new Error('TikTok did not return an upload URL.');
+  }
+
+  const videoBytes = await fs.readFile(filePath);
+  const uploadResponse = await fetch(uploadUrl, {
+    method: 'PUT',
+    headers: {
+      'content-type': 'video/mp4',
+      'content-length': String(fileStats.size),
+      'content-range': `bytes 0-${fileStats.size - 1}/${fileStats.size}`,
+    },
+    body: videoBytes,
+  });
+
+  if (!uploadResponse.ok) {
+    const errorText = await uploadResponse.text().catch(() => '');
+    throw new Error(errorText || `TikTok video upload failed with ${uploadResponse.status}`);
+  }
+
+  return {
+    publishId,
+    filePath: path.relative(projectRoot, filePath),
+    shortsCheck,
+    note: 'Open TikTok notifications/inbox to complete caption, cover, and posting.',
+  };
+};
+
+const sendTikTokOAuthCallback = async (request, response, url) => {
+  const channelProfile = url.searchParams.get('state') === 'en' ? 'en' : 'pt';
+  const code = url.searchParams.get('code');
+  const error = url.searchParams.get('error');
+  const errorDescription = url.searchParams.get('error_description');
+
+  if (error || !code) {
+    response.writeHead(400, {'content-type': 'text/html; charset=utf-8'});
+    response.end(`<h1>TikTok authorization failed</h1><p>${errorDescription ?? error ?? 'Missing authorization code.'}</p>`);
+    return;
+  }
+
+  try {
+    const token = await exchangeTikTokAuthorizationCode({
+      channelProfile,
+      code,
+      redirectUri: getTikTokRedirectUri(request),
+    });
+    const prefix = channelProfile.toUpperCase();
+    const envLines = [
+      `TIKTOK_${prefix}_CLIENT_KEY=${token.clientKey}`,
+      `TIKTOK_${prefix}_CLIENT_SECRET=${token.clientSecret}`,
+      `TIKTOK_${prefix}_REFRESH_TOKEN=${token.refreshToken}`,
+    ].join('\n');
+
+    response.writeHead(200, {'content-type': 'text/html; charset=utf-8'});
+    response.end(`<!doctype html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <title>TikTok OAuth Complete</title>
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 32px; color: #102033; }
+            pre { padding: 16px; border-radius: 10px; background: #f2f5f8; white-space: pre-wrap; word-break: break-all; }
+            button { padding: 10px 14px; border-radius: 8px; border: 0; background: #0a66d8; color: #fff; font-weight: 700; cursor: pointer; }
+          </style>
+        </head>
+        <body>
+          <h1>TikTok ${prefix} refresh token generated</h1>
+          <p>Add these lines to your local <code>.env</code>, then restart the dashboard server.</p>
+          <pre id="env-lines">${envLines}</pre>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('env-lines').textContent)">Copy env lines</button>
+        </body>
+      </html>`);
+  } catch (callbackError) {
+    response.writeHead(500, {'content-type': 'text/html; charset=utf-8'});
+    response.end(
+      `<h1>TikTok authorization failed</h1><p>${
+        callbackError instanceof Error ? callbackError.message : String(callbackError)
+      }</p>`
+    );
+  }
+};
+
 
 const runRender = async (compositionId, outputName) => {
   const outputPath = path.join('out', outputName);
@@ -429,6 +1618,53 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
+  if (request.method === 'GET' && url.pathname === '/api/football/settings/youtube/oauth-url') {
+    try {
+      const channelProfile = url.searchParams.get('channel') === 'en' ? 'en' : 'pt';
+      const authUrl = createYouTubeOAuthUrl({
+        channelProfile,
+        redirectUri: getYouTubeRedirectUri(request),
+      });
+      sendJson(response, 200, {ok: true, authUrl});
+    } catch (error) {
+      sendJson(response, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        errorType: error?.errorType ?? undefined,
+      });
+    }
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/football/settings/tiktok/oauth-url') {
+    try {
+      const channelProfile = url.searchParams.get('channel') === 'en' ? 'en' : 'pt';
+      const redirectUri = getTikTokRedirectUri(request);
+      const authUrl = createTikTokOAuthUrl({
+        channelProfile,
+        redirectUri,
+      });
+      sendJson(response, 200, {ok: true, authUrl, redirectUri});
+    } catch (error) {
+      sendJson(response, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        errorType: error?.errorType ?? undefined,
+      });
+    }
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/oauth/youtube/callback') {
+    await sendYouTubeOAuthCallback(request, response, url);
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/oauth/tiktok/callback') {
+    await sendTikTokOAuthCallback(request, response, url);
+    return;
+  }
+
   if (request.method === 'GET' && url.pathname === '/api/football/longform/options') {
     await sendFootballLongformOptions(response);
     return;
@@ -460,6 +1696,11 @@ const server = http.createServer(async (request, response) => {
 
   if (request.method === 'GET' && url.pathname === '/api/football/prediction-fixtures') {
     await sendFootballPredictionFixtures(response, url);
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/football/next-fixtures') {
+    await sendFootballNextFixtures(response, url);
     return;
   }
 
@@ -587,6 +1828,78 @@ const server = http.createServer(async (request, response) => {
     sendJson(response, 200, {
       currentJob,
     });
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/publishing/draft') {
+    try {
+      const body = await readBody(request);
+      const currentJob = await loadCurrentJob();
+      const result = await generatePublishingDraft({
+        job: currentJob,
+        extraContext: body.extraContext,
+        copyModelInstructions: body.copyModelInstructions,
+      });
+
+      sendJson(response, 200, {
+        ok: true,
+        ...result,
+      });
+    } catch (error) {
+      sendJson(response, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        errorType: error?.errorType ?? undefined,
+      });
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/publishing/youtube/upload') {
+    try {
+      const body = await readBody(request);
+      const currentJob = await loadCurrentJob();
+      const result = await uploadYouTubeVideo({
+        job: currentJob,
+        body,
+      });
+
+      sendJson(response, 200, {
+        ok: true,
+        message: 'YouTube upload completed.',
+        youtube: result,
+      });
+    } catch (error) {
+      sendJson(response, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        errorType: error?.errorType ?? undefined,
+      });
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/publishing/tiktok/upload') {
+    try {
+      const body = await readBody(request);
+      const currentJob = await loadCurrentJob();
+      const result = await uploadTikTokVideo({
+        job: currentJob,
+        body,
+      });
+
+      sendJson(response, 200, {
+        ok: true,
+        message: 'TikTok inbox upload completed.',
+        tiktok: result,
+      });
+    } catch (error) {
+      sendJson(response, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        errorType: error?.errorType ?? undefined,
+      });
+    }
     return;
   }
 

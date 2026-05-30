@@ -1,22 +1,22 @@
 {
   "sport": "football",
   "template": "season-final-verdict",
-  "leagueId": 78,
+  "leagueId": 307,
   "season": 2025,
-  "leagueName": "Bundesliga",
+  "leagueName": "Saudi Pro League",
   "channelProfile": "en",
   "languageProfile": "en",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Premier League.mp3",
-  "soundtrackLabel": "Premier League",
-  "soundtrackVolume": 0.1,
-  "outputName": "bundesliga-2025-season-wrap-up-en.mp4",
+  "soundtrackPath": "/audio/football/Champions - The Anthem plays.mp3",
+  "soundtrackLabel": "Champions - The Anthem Plays",
+  "soundtrackVolume": 0.2,
+  "outputName": "saudi-pro-league-2025-season-wrap-up-en.mp4",
   "durationInFrames": 270,
   "compositionId": "FootballSeasonFinalVerdictShort",
   "leagueConfig": {
-    "leagueId": 78,
-    "accentColor": "#D43020",
+    "leagueId": 307,
+    "accentColor": "#0087C7",
     "standings": {
       "safeArea": {
         "left": 68,
@@ -25,158 +25,68 @@
       "zones": [
         {
           "key": "champions-league",
-          "label": "Champions League",
+          "label": "AFC Champions League",
           "start": 1,
-          "end": 4,
-          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(101, 227, 133, 0.64)",
-          "textColor": "#27AE60"
-        },
-        {
-          "key": "europa-league",
-          "label": "Europa League",
-          "start": 5,
-          "end": 5,
-          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 190, 92, 0.58)",
-          "textColor": "#F5A134"
-        },
-        {
-          "key": "conference-league",
-          "label": "Conference League",
-          "start": 6,
-          "end": 6,
-          "fill": "linear-gradient(90deg, rgba(59, 133, 255, 0.82), rgba(59, 133, 255, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(107, 166, 255, 0.54)",
-          "textColor": "#3B85FF"
-        },
-        {
-          "key": "relegation-playoff",
-          "label": "Relegation Playoff",
-          "start": 16,
-          "end": 16,
-          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 190, 92, 0.58)",
-          "textColor": "#F5A134"
+          "end": 3,
+          "fill": "linear-gradient(90deg, rgba(46, 204, 113, 0.84), rgba(46, 204, 113, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(93, 232, 150, 0.58)"
         },
         {
           "key": "relegation",
           "label": "Relegation",
-          "start": 17,
+          "start": 16,
           "end": 18,
           "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 102, 102, 0.56)",
-          "textColor": "#E74C3C"
+          "accent": "rgba(255, 102, 102, 0.56)"
         }
       ]
     },
-    "leagueName": "Bundesliga"
+    "leagueName": "Saudi Pro League",
+    "secondaryAccentColor": "#E60028"
   },
   "titleLabel": "Season Wrap-up",
   "subtitleLabel": "Season 2025/26 Decided",
-  "ctaText": "Wolfsburg is Relegated",
+  "ctaText": "Quiñones is de Golden Boot of the Saudi Pro League",
   "champion": {
     "rank": 1,
-    "team": "Bayern",
+    "team": "Al-Nassr",
     "played": 34,
-    "points": 89,
-    "goalDifference": 86,
-    "form": "WWDWW",
+    "points": 86,
+    "goalDifference": 63,
+    "form": "WDWLW",
     "badge": {
-      "label": "B",
-      "logoPath": "/logos/bayern-munchen-157.png"
+      "label": "A",
+      "logoPath": "/logos/al-nassr-2939.png"
     }
   },
   "qualificationGroups": [
     {
       "key": "champions-league",
-      "label": "Champions League",
-      "accentColor": "#27AE60",
+      "label": "AFC Champions League",
+      "accentColor": "rgba(93, 232, 150, 0.58)",
       "entries": [
         {
           "rank": 2,
-          "team": "Dortmund",
+          "team": "Al-Hilal Saudi FC",
           "played": 34,
-          "points": 73,
-          "goalDifference": 36,
-          "form": "WWLWL",
+          "points": 84,
+          "goalDifference": 58,
+          "form": "WWDWW",
           "badge": {
-            "label": "D",
-            "logoPath": "/logos/borussia-dortmund-165.png"
+            "label": "ASF",
+            "logoPath": "/logos/al-hilal-saudi-fc-2932.png"
           }
         },
         {
           "rank": 3,
-          "team": "RB Leipzig",
+          "team": "Al-Ahli Jeddah",
           "played": 34,
-          "points": 65,
-          "goalDifference": 19,
-          "form": "LWLWW",
+          "points": 81,
+          "goalDifference": 46,
+          "form": "WWWWW",
           "badge": {
-            "label": "RL",
-            "logoPath": "/logos/rb-leipzig-173.png"
-          }
-        },
-        {
-          "rank": 4,
-          "team": "VfB Stuttgart",
-          "played": 34,
-          "points": 62,
-          "goalDifference": 22,
-          "form": "DWDDL",
-          "badge": {
-            "label": "VS",
-            "logoPath": "/logos/vfb-stuttgart-172.png"
-          }
-        }
-      ]
-    },
-    {
-      "key": "europa-league",
-      "label": "Europa League",
-      "accentColor": "#F5A134",
-      "entries": [
-        {
-          "rank": 5,
-          "team": "Hoffenheim",
-          "played": 34,
-          "points": 61,
-          "goalDifference": 13,
-          "form": "LWDWW",
-          "badge": {
-            "label": "H",
-            "logoPath": "/logos/1899-hoffenheim-167.png"
-          }
-        },
-        {
-          "rank": 6,
-          "team": "Leverkusen",
-          "played": 34,
-          "points": 59,
-          "goalDifference": 21,
-          "form": "DLWWL",
-          "badge": {
-            "label": "L",
-            "logoPath": "/logos/bayer-leverkusen-168.png"
-          }
-        }
-      ]
-    },
-    {
-      "key": "conference-league",
-      "label": "Conference League",
-      "accentColor": "#3B85FF",
-      "entries": [
-        {
-          "rank": 7,
-          "team": "SC Freiburg",
-          "played": 34,
-          "points": 47,
-          "goalDifference": -6,
-          "form": "WLDLW",
-          "badge": {
-            "label": "SF",
-            "logoPath": "/logos/sc-freiburg-160.png"
+            "label": "AJ",
+            "logoPath": "/logos/al-ahli-jeddah-2929.png"
           }
         }
       ]
@@ -189,69 +99,69 @@
     "entries": [
       {
         "rank": 16,
-        "team": "Wolfsburg",
+        "team": "Damac",
         "played": 34,
         "points": 29,
-        "goalDifference": -24,
-        "form": "DWLDD",
+        "goalDifference": -23,
+        "form": "LWLLL",
         "badge": {
-          "label": "W",
-          "logoPath": "/logos/vfl-wolfsburg-161.png"
+          "label": "D",
+          "logoPath": "/logos/damac-2956.png"
         }
       },
       {
         "rank": 17,
-        "team": "Heidenheim",
+        "team": "Al Okhdood",
         "played": 34,
-        "points": 26,
-        "goalDifference": -31,
-        "form": "LWDWL",
+        "points": 20,
+        "goalDifference": -43,
+        "form": "LWDLL",
         "badge": {
-          "label": "H",
-          "logoPath": "/logos/1-fc-heidenheim-180.png"
+          "label": "AO",
+          "logoPath": "/logos/al-okhdood-2977.png"
         }
       },
       {
         "rank": 18,
-        "team": "FC St. Pauli",
+        "team": "Al Najma",
         "played": 34,
-        "points": 26,
-        "goalDifference": -31,
-        "form": "LLLLD",
+        "points": 16,
+        "goalDifference": -44,
+        "form": "WLDDL",
         "badge": {
-          "label": "FSP",
-          "logoPath": "/logos/fc-st-pauli-186.png"
+          "label": "AN",
+          "logoPath": "/logos/al-najma-2992.png"
         }
       }
     ]
   },
-  "introTitle": "Bundesliga",
+  "introTitle": "Saudi Pro League",
   "introSubtitle": "Season 2025/26 Decided",
   "hookText": "The season has spoken",
   "coldOpenData": {
     "tableRows": [
       {
         "rank": 1,
-        "club": "BAYERN",
-        "pts": 89
+        "club": "AL-NASSR",
+        "pts": 86
       },
       {
         "rank": 2,
-        "club": "DORTMUND",
-        "pts": 73
+        "club": "AL-HILAL SAUDI FC",
+        "pts": 84
       },
       {
         "rank": 3,
-        "club": "RB LEIPZIG",
-        "pts": 65
+        "club": "AL-AHLI JEDDAH",
+        "pts": 81
       },
       {
-        "rank": 4,
-        "club": "VFB STUTTGART",
-        "pts": 62
+        "rank": 16,
+        "club": "DAMAC",
+        "pts": 29
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "Bundesliga season wrap-up"
+  "voiceoverText": "Saudi Pro League season wrap-up"
 }
