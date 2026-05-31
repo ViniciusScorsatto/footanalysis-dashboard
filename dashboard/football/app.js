@@ -266,6 +266,7 @@ let currentChampionFinalRows = [];
 let currentSeasonVerdictRows = [];
 let lastPreparedJob = null;
 let currentPublishingDraft = null;
+let activePublishingPlatform = 'youtube';
 let allLeaguePresets = [];
 let allChannelProfiles = [];
 let dashboardHookOptions = {};
@@ -1034,6 +1035,39 @@ const copyText = async (value) => {
   textarea.remove();
 };
 
+const stripYouTubeCouponBlock = (description) => {
+  const lines = String(description ?? '').replace(/\r\n/g, '\n').split('\n');
+  const startIndex = lines.findIndex((line) => {
+    const normalizedLine = line
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu, '')
+      .toLowerCase();
+    return (
+      normalizedLine.includes('cupons') ||
+      normalizedLine.includes('esportes da sorte') ||
+      normalizedLine.includes('betmgm') ||
+      normalizedLine.includes('joma brasil')
+    );
+  });
+
+  if (startIndex === -1) {
+    return lines.join('\n').trim();
+  }
+
+  let endIndex = lines.length - 1;
+  for (let index = startIndex + 1; index < lines.length; index += 1) {
+    if (/^\s*-{20,}\s*$/.test(lines[index])) {
+      endIndex = index;
+      break;
+    }
+  }
+
+  return [...lines.slice(0, startIndex), ...lines.slice(endIndex + 1)]
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+};
+
 const updatePublishingMetadata = (job) => {
   if (!publishingMetadataRoot) return;
   if (!job) {
@@ -1107,8 +1141,7 @@ const renderPublishingDraft = (draft) => {
       key: 'tiktok',
       label: 'TikTok',
       fields: [
-        ['Caption', 'caption', platforms.tiktok?.caption, true],
-        ['Hashtags', 'hashtags', platforms.tiktok?.hashtags, true],
+        ['Description + hashtags', 'caption', platforms.tiktok?.caption, true],
         ['Cover text', 'coverText', platforms.tiktok?.coverText, false],
       ],
     },
@@ -1116,8 +1149,7 @@ const renderPublishingDraft = (draft) => {
       key: 'instagram',
       label: 'Instagram',
       fields: [
-        ['Caption', 'caption', platforms.instagram?.caption, true],
-        ['Hashtags', 'hashtags', platforms.instagram?.hashtags, true],
+        ['Description + hashtags', 'caption', platforms.instagram?.caption, true],
         ['Cover text', 'coverText', platforms.instagram?.coverText, false],
       ],
     },
@@ -1130,16 +1162,44 @@ const renderPublishingDraft = (draft) => {
       ],
     },
   ];
+  const activeCard = platformCards.some((card) => card.key === activePublishingPlatform)
+    ? activePublishingPlatform
+    : platformCards[0]?.key ?? 'youtube';
+  activePublishingPlatform = activeCard;
 
   publishingDraftRoot.innerHTML = `
     <div class="publishing-summary">
       <strong>Draft summary</strong>
       <p>${escapeHtml(draft.summary)}</p>
     </div>
+    <div class="publishing-tabs" role="tablist" aria-label="Publishing platforms">
+      ${platformCards
+        .map(
+          (card) => `
+            <button
+              type="button"
+              class="publishing-tab${card.key === activeCard ? ' active' : ''}"
+              role="tab"
+              aria-selected="${card.key === activeCard ? 'true' : 'false'}"
+              aria-controls="publishing-panel-${escapeHtml(card.key)}"
+              data-publishing-tab="${escapeHtml(card.key)}"
+            >
+              ${escapeHtml(card.label)}
+            </button>
+          `
+        )
+        .join('')}
+    </div>
     ${platformCards
       .map(
         (card) => `
-          <section class="publishing-card">
+          <section
+            class="publishing-card publishing-platform-card"
+            id="publishing-panel-${escapeHtml(card.key)}"
+            data-publishing-platform="${escapeHtml(card.key)}"
+            role="tabpanel"
+            ${card.key === activeCard ? '' : 'hidden'}
+          >
             <div class="publishing-card-header">
               <h3>${escapeHtml(card.label)}</h3>
               <span class="chip subtle">draft</span>
@@ -1161,6 +1221,14 @@ const renderPublishingDraft = (draft) => {
                         <option value="public">Public</option>
                       </select>
                     </label>
+                    <label class="toggle-row">
+                      <input type="checkbox" id="youtube-notify-subscribers" />
+                      <span>Publish to subscriptions feed and notify subscribers</span>
+                    </label>
+                    <label class="toggle-row">
+                      <input type="checkbox" id="youtube-paid-product-placement" checked />
+                      <span>My video contains paid promotion</span>
+                    </label>
                     <button type="button" id="upload-youtube-button" class="secondary">Upload to YouTube</button>
                     <p id="youtube-upload-status" class="publishing-status">Upload uses the rendered MP4 and keeps manual review in YouTube Studio.</p>
                   </div>
@@ -1181,6 +1249,18 @@ const renderPublishingDraft = (draft) => {
   `;
   youtubeUploadStatusRoot = document.getElementById('youtube-upload-status');
   tiktokUploadStatusRoot = document.getElementById('tiktok-upload-status');
+};
+
+const setActivePublishingPlatform = (platform) => {
+  activePublishingPlatform = platform;
+  publishingDraftRoot.querySelectorAll('[data-publishing-tab]').forEach((tab) => {
+    const isActive = tab.dataset.publishingTab === platform;
+    tab.classList.toggle('active', isActive);
+    tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
+  publishingDraftRoot.querySelectorAll('[data-publishing-platform]').forEach((card) => {
+    card.hidden = card.dataset.publishingPlatform !== platform;
+  });
 };
 
 const generatePublishingDraft = async () => {
@@ -1232,6 +1312,16 @@ const collectPublishingDraftFromFields = () => {
           .filter(Boolean)
       : rawValue;
   });
+  ['tiktok', 'instagram'].forEach((platform) => {
+    const platformDraft = nextDraft.platforms?.[platform];
+    if (!platformDraft) return;
+    platformDraft.hashtags = [
+      ...new Set(
+        String(platformDraft.caption ?? '')
+          .match(/#[\p{L}\p{N}_]+/gu) ?? []
+      ),
+    ];
+  });
   return nextDraft;
 };
 
@@ -1245,6 +1335,16 @@ const uploadYouTubeDraft = async () => {
 
   const privacyStatus =
     document.getElementById('youtube-privacy-status')?.value ?? 'private';
+  const notifySubscribers =
+    document.getElementById('youtube-notify-subscribers')?.checked ?? false;
+  const hasPaidProductPlacement =
+    document.getElementById('youtube-paid-product-placement')?.checked ?? true;
+  const youtubePayload = hasPaidProductPlacement
+    ? youtube
+    : {
+        ...youtube,
+        description: stripYouTubeCouponBlock(youtube.description),
+      };
 
   try {
     const button = document.getElementById('upload-youtube-button');
@@ -1258,8 +1358,10 @@ const uploadYouTubeDraft = async () => {
       method: 'POST',
       headers: {'content-type': 'application/json'},
       body: JSON.stringify({
-        youtube,
+        youtube: youtubePayload,
         privacyStatus,
+        notifySubscribers,
+        hasPaidProductPlacement,
         outputName: lastPreparedJob?.outputName,
       }),
     });
@@ -2779,6 +2881,12 @@ copyPublishingJsonButton.addEventListener('click', async () => {
   publishingStatus.textContent = 'Edited draft JSON copied.';
 });
 publishingDraftRoot.addEventListener('click', async (event) => {
+  const tab = event.target.closest('[data-publishing-tab]');
+  if (tab) {
+    setActivePublishingPlatform(tab.dataset.publishingTab);
+    return;
+  }
+
   if (event.target.closest('#upload-youtube-button')) {
     await uploadYouTubeDraft();
     return;

@@ -877,6 +877,7 @@ const generatePublishingDraft = async ({job, extraContext, copyModelInstructions
     'Return platform-specific copy only. Do not invent match facts beyond the metadata.',
     'Prioritize native style for each platform and keep the user able to manually approve before posting.',
     'Use tags as comma-friendly keywords without #. Use hashtags with # when the platform field is named hashtags.',
+    'For TikTok and Instagram, write the caption as one ready-to-paste field: description text followed by hashtags. Hashtags must include #.',
     'Respect metadata.contentType and metadata.editorialAngle. For relegation_battle, do not describe the video as a general league table; make the safety line, danger zone, and escape pressure the central story.',
     `Compact master publishing template (${publishingTemplate.name}):\n${compactTemplate}`,
     copyModelInstructions
@@ -929,7 +930,7 @@ const generatePublishingDraft = async ({job, extraContext, copyModelInstructions
     throw new Error('OpenAI returned an empty publishing draft.');
   }
 
-  const draft = JSON.parse(outputText);
+  const draft = normalizePublishingDraft(JSON.parse(outputText));
   const youtubeFooter = await loadYouTubeDescriptionFooter(metadata.languageProfile);
   if (draft.platforms?.youtube) {
     draft.platforms.youtube.description = appendYouTubeDescriptionFooter({
@@ -1070,6 +1071,86 @@ const normalizeTagList = (tags) => {
     .filter(Boolean);
 };
 
+const normalizeHashtagList = (hashtags) => {
+  const rawItems = (Array.isArray(hashtags) ? hashtags : [hashtags])
+    .flatMap((hashtag) => String(hashtag ?? '').split(/[\s,]+/))
+    .filter(Boolean);
+
+  return [
+    ...new Set(
+      rawItems
+        .map((hashtag) => String(hashtag).trim())
+        .filter(Boolean)
+        .map((hashtag) => {
+          const cleaned = hashtag
+            .replace(/^#+/, '')
+            .replace(/[^\p{L}\p{N}_]/gu, '')
+            .trim();
+          return cleaned ? `#${cleaned}` : '';
+        })
+        .filter(Boolean)
+    ),
+  ];
+};
+
+const appendHashtagsToText = ({text, hashtags}) => {
+  const textValue = String(text ?? '').trim();
+  const normalizedHashtags = normalizeHashtagList(hashtags);
+  const missingHashtags = normalizedHashtags.filter((hashtag) => {
+    const escapedHashtag = hashtag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return !new RegExp(`(^|\\s)${escapedHashtag}(?=\\s|$)`, 'i').test(textValue);
+  });
+
+  if (missingHashtags.length === 0) {
+    return textValue;
+  }
+
+  return [textValue, missingHashtags.join(' ')].filter(Boolean).join('\n\n');
+};
+
+const normalizeShortSocialPlatform = (platformDraft) => {
+  if (!platformDraft) return platformDraft;
+  const captionHashtags = String(platformDraft.caption ?? '').match(/#[\p{L}\p{N}_]+/gu) ?? [];
+  const draftHashtags = Array.isArray(platformDraft.hashtags)
+    ? platformDraft.hashtags
+    : [platformDraft.hashtags];
+  const hashtags = normalizeHashtagList([...draftHashtags, ...captionHashtags]);
+
+  return {
+    ...platformDraft,
+    caption: appendHashtagsToText({
+      text: platformDraft.caption,
+      hashtags,
+    }),
+    hashtags,
+  };
+};
+
+const normalizePublishingDraft = (draft) => {
+  if (!draft?.platforms) return draft;
+
+  return {
+    ...draft,
+    platforms: {
+      ...draft.platforms,
+      youtube: draft.platforms.youtube
+        ? {
+            ...draft.platforms.youtube,
+            hashtags: normalizeHashtagList(draft.platforms.youtube.hashtags),
+          }
+        : draft.platforms.youtube,
+      tiktok: normalizeShortSocialPlatform(draft.platforms.tiktok),
+      instagram: normalizeShortSocialPlatform(draft.platforms.instagram),
+      x: draft.platforms.x
+        ? {
+            ...draft.platforms.x,
+            hashtags: normalizeHashtagList(draft.platforms.x.hashtags),
+          }
+        : draft.platforms.x,
+    },
+  };
+};
+
 const hasShortsMarker = (value) => /#shorts\b/i.test(String(value ?? ''));
 
 const appendYouTubeDescriptionFooter = ({description, footer}) => {
@@ -1081,6 +1162,39 @@ const appendYouTubeDescriptionFooter = ({description, footer}) => {
 
   const descriptionWithoutShorts = descriptionText.replace(/(^|\n)\s*#shorts\s*$/i, '').trim();
   return [descriptionWithoutShorts, footerText].filter(Boolean).join('\n\n');
+};
+
+const stripYouTubeCouponBlock = (description) => {
+  const lines = String(description ?? '').replace(/\r\n/g, '\n').split('\n');
+  const startIndex = lines.findIndex((line) => {
+    const normalizedLine = line
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu, '')
+      .toLowerCase();
+    return (
+      normalizedLine.includes('cupons') ||
+      normalizedLine.includes('esportes da sorte') ||
+      normalizedLine.includes('betmgm') ||
+      normalizedLine.includes('joma brasil')
+    );
+  });
+
+  if (startIndex === -1) {
+    return lines.join('\n').trim();
+  }
+
+  let endIndex = lines.length - 1;
+  for (let index = startIndex + 1; index < lines.length; index += 1) {
+    if (/^\s*-{20,}\s*$/.test(lines[index])) {
+      endIndex = index;
+      break;
+    }
+  }
+
+  return [...lines.slice(0, startIndex), ...lines.slice(endIndex + 1)]
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
 };
 
 const ensureShortsMetadata = ({title, description, tags}) => {
@@ -1172,12 +1286,21 @@ const uploadYouTubeVideo = async ({job, body}) => {
     );
   }
   const youtubeFooter = await loadYouTubeDescriptionFooter(job.languageProfile);
+  const notifySubscribers = body.notifySubscribers === true;
+  const hasPaidProductPlacement = body.hasPaidProductPlacement !== false;
   const shortsMetadata = ensureShortsMetadata({
     title: youtube.title ?? body.title,
-    description: appendYouTubeDescriptionFooter({
-      description: youtube.description ?? body.description,
-      footer: youtubeFooter,
-    }),
+    description: hasPaidProductPlacement
+      ? appendYouTubeDescriptionFooter({
+          description: youtube.description ?? body.description,
+          footer: youtubeFooter,
+        })
+      : stripYouTubeCouponBlock(
+          appendYouTubeDescriptionFooter({
+            description: youtube.description ?? body.description,
+            footer: youtubeFooter,
+          })
+        ),
     tags: youtube.tags ?? body.tags,
   });
   const title = compactText(shortsMetadata.title, 100);
@@ -1202,6 +1325,10 @@ const uploadYouTubeVideo = async ({job, body}) => {
     status: {
       privacyStatus: allowedPrivacyStatuses.has(privacyStatus) ? privacyStatus : 'private',
       selfDeclaredMadeForKids: false,
+      containsSyntheticMedia: false,
+    },
+    paidProductPlacementDetails: {
+      hasPaidProductPlacement,
     },
   };
 
@@ -1220,7 +1347,7 @@ const uploadYouTubeVideo = async ({job, body}) => {
   ]);
 
   const response = await fetch(
-    'https://www.googleapis.com/upload/youtube/v3/videos?part=snippet,status&uploadType=multipart',
+    `https://www.googleapis.com/upload/youtube/v3/videos?part=snippet,status,paidProductPlacementDetails&uploadType=multipart&notifySubscribers=${notifySubscribers ? 'true' : 'false'}`,
     {
       method: 'POST',
       headers: {
@@ -1242,6 +1369,8 @@ const uploadYouTubeVideo = async ({job, body}) => {
     url: data.id ? `https://www.youtube.com/watch?v=${data.id}` : '',
     shortsUrl: data.id ? `https://www.youtube.com/shorts/${data.id}` : '',
     privacyStatus: metadata.status.privacyStatus,
+    notifySubscribers,
+    hasPaidProductPlacement,
     title,
     filePath: path.relative(projectRoot, filePath),
     shortsCheck,

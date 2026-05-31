@@ -56,4 +56,4 @@ console.log('[dev] Starting dashboard at http://127.0.0.1:4321');
 console.log('[dev] Starting Remotion Studio');
 
 startProcess('dashboard', process.execPath, ['--env-file=.env', 'scripts/dashboard-server.mjs']);
-startProcess('remotion studio', 'npx', ['remotion', 'studio']);
+startProcess('remotion studio', 'npx', ['remotion', 'studio', 'src/index.ts']);
