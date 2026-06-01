@@ -1,22 +1,22 @@
 {
   "sport": "football",
   "template": "top-scorers",
-  "leagueId": 307,
-  "season": 2025,
-  "leagueName": "Saudi Pro League",
-  "channelProfile": "en",
-  "languageProfile": "en",
+  "leagueId": 71,
+  "season": 2026,
+  "leagueName": "Brasileirão Série A",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Champions - The Anthem plays.mp3",
-  "soundtrackLabel": "Champions - The Anthem Plays",
-  "soundtrackVolume": 0.2,
-  "outputName": "saudi-pro-league-2025-top-scorers-en.mp4",
+  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
+  "soundtrackLabel": "Gol de Arena",
+  "soundtrackVolume": 0.1,
+  "outputName": "brasileirao-serie-a-2026-artilheiros-pt-br.mp4",
   "durationInFrames": 270,
   "compositionId": "FootballTopScorersShort",
   "leagueConfig": {
-    "leagueId": 307,
-    "accentColor": "#0087C7",
+    "leagueId": 71,
+    "accentColor": "#F0A500",
     "standings": {
       "safeArea": {
         "left": 68,
@@ -24,178 +24,206 @@
       },
       "zones": [
         {
-          "key": "champions-league",
-          "label": "AFC Champions League",
+          "key": "libertadores",
+          "label": "Libertadores",
           "start": 1,
-          "end": 3,
-          "fill": "linear-gradient(90deg, rgba(46, 204, 113, 0.84), rgba(46, 204, 113, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(93, 232, 150, 0.58)"
+          "end": 4,
+          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(101, 227, 133, 0.64)"
         },
         {
-          "key": "relegation",
-          "label": "Relegation",
-          "start": 16,
-          "end": 18,
+          "key": "pre-libertadores",
+          "label": "Pré-Libertadores",
+          "start": 5,
+          "end": 5,
+          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 190, 92, 0.58)"
+        },
+        {
+          "key": "sul-americana",
+          "label": "Sul-Americana",
+          "start": 6,
+          "end": 11,
+          "fill": "linear-gradient(90deg, rgba(0, 177, 183, 0.82), rgba(0, 177, 183, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(0, 177, 183, 0.54)"
+        },
+        {
+          "key": "rebaixamento",
+          "label": "Rebaixamento",
+          "start": 17,
+          "end": 20,
           "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
           "accent": "rgba(255, 102, 102, 0.56)"
         }
       ]
     },
-    "leagueName": "Saudi Pro League",
-    "secondaryAccentColor": "#E60028"
+    "leagueName": "Brasileirão Série A",
+    "pace": {
+      "championship": {
+        "benchmarkPercentage": 68,
+        "benchmarkLabel": "Média dos últimos 10 campeões",
+        "entryCount": 10
+      },
+      "relegation": {
+        "benchmarkPercentage": 38,
+        "benchmarkLabel": "Linha de segurança",
+        "safeRowsAbove": 3,
+        "maxRows": 10
+      }
+    }
   },
-  "titleLabel": "Top Scorers",
-  "subtitleLabel": "Top 10 scorers",
-  "ctaText": "Quiñones is de Golden Boot of the Saudi Pro League",
+  "titleLabel": "Artilheiros",
+  "subtitleLabel": "Top 10 do campeonato",
+  "ctaText": "Quem faz mais gols?",
   "entries": [
     {
       "rank": 1,
-      "playerName": "J. Quiñones",
-      "team": "Al-Qadisiyah FC",
-      "teamShort": "AL-Q",
-      "goals": 33,
-      "assists": 4,
+      "playerName": "K. Viveros",
+      "team": "Athletico-PR",
+      "teamShort": "ATHL",
+      "goals": 11,
+      "assists": 1,
       "badge": {
-        "label": "AF",
-        "logoPath": "/logos/al-qadisiyah-fc-2933.png"
+        "label": "A",
+        "logoPath": "/logos/atletico-paranaense-134.png"
       }
     },
     {
       "rank": 2,
-      "playerName": "I. Toney",
-      "team": "Al-Ahli Jeddah",
-      "teamShort": "AJ",
-      "goals": 31,
-      "assists": 7,
+      "playerName": "Pedro",
+      "team": "Flamengo",
+      "teamShort": "FLAM",
+      "goals": 10,
+      "assists": 4,
       "badge": {
-        "label": "AJ",
-        "logoPath": "/logos/al-ahli-jeddah-2929.png"
+        "label": "F",
+        "logoPath": "/logos/flamengo-127.png"
       }
     },
     {
       "rank": 3,
-      "playerName": "Cristiano Ronaldo",
-      "team": "Al-Nassr",
-      "teamShort": "AL-N",
-      "goals": 28,
-      "assists": 2,
+      "playerName": "Carlos Vinícius",
+      "team": "Gremio",
+      "teamShort": "GREM",
+      "goals": 9,
+      "assists": 0,
       "badge": {
-        "label": "A",
-        "logoPath": "/logos/al-nassr-2939.png"
+        "label": "G",
+        "logoPath": "/logos/gremio-130.png"
       }
     },
     {
       "rank": 4,
-      "playerName": "Roger Martínez",
-      "team": "Al Taawon",
-      "teamShort": "AT",
-      "goals": 23,
-      "assists": 2,
+      "playerName": "John Kennedy",
+      "team": "Fluminense",
+      "teamShort": "FLUM",
+      "goals": 8,
+      "assists": 1,
       "badge": {
-        "label": "AT",
-        "logoPath": "/logos/al-taawon-2936.png"
+        "label": "F",
+        "logoPath": "/logos/fluminense-124.png"
       }
     },
     {
       "rank": 5,
-      "playerName": "J. King",
-      "team": "Al Khaleej Saihat",
-      "teamShort": "AKS",
-      "goals": 20,
-      "assists": 2,
+      "playerName": "Breno Lopes",
+      "team": "Coritiba",
+      "teamShort": "CORI",
+      "goals": 8,
+      "assists": 1,
       "badge": {
-        "label": "AKS",
-        "logoPath": "/logos/al-khaleej-saihat-2928.png"
+        "label": "C",
+        "logoPath": "/logos/coritiba-147.png"
       }
     },
     {
       "rank": 6,
-      "playerName": "João Félix",
-      "team": "Al-Nassr",
-      "teamShort": "AL-N",
-      "goals": 20,
-      "assists": 13,
+      "playerName": "Danilo",
+      "team": "Botafogo",
+      "teamShort": "BOTA",
+      "goals": 7,
+      "assists": 2,
       "badge": {
-        "label": "A",
-        "logoPath": "/logos/al-nassr-2939.png"
+        "label": "B",
+        "logoPath": "/logos/botafogo-120.png"
       }
     },
     {
       "rank": 7,
-      "playerName": "Y. Carrasco",
-      "team": "Al Shabab",
-      "teamShort": "AS",
-      "goals": 18,
-      "assists": 8,
+      "playerName": "Arthur Cabral",
+      "team": "Botafogo",
+      "teamShort": "BOTA",
+      "goals": 7,
+      "assists": 1,
       "badge": {
-        "label": "AS",
-        "logoPath": "/logos/al-shabab-2940.png"
+        "label": "B",
+        "logoPath": "/logos/botafogo-120.png"
       }
     },
     {
       "rank": 8,
-      "playerName": "G. Wijnaldum",
-      "team": "Al-Ettifaq",
-      "teamShort": "AL-E",
-      "goals": 16,
-      "assists": 6,
+      "playerName": "Gabriel Barbosa",
+      "team": "Santos",
+      "teamShort": "SANT",
+      "goals": 7,
+      "assists": 2,
       "badge": {
-        "label": "A",
-        "logoPath": "/logos/al-ettifaq-2934.png"
+        "label": "S",
+        "logoPath": "/logos/santos-128.png"
       }
     },
     {
       "rank": 9,
-      "playerName": "M. Retegui",
-      "team": "Al-Qadisiyah FC",
-      "teamShort": "AL-Q",
-      "goals": 16,
+      "playerName": "Luciano Juba",
+      "team": "Bahia",
+      "teamShort": "BAHI",
+      "goals": 7,
       "assists": 1,
       "badge": {
-        "label": "AF",
-        "logoPath": "/logos/al-qadisiyah-fc-2933.png"
+        "label": "B",
+        "logoPath": "/logos/bahia-118.png"
       }
     },
     {
       "rank": 10,
-      "playerName": "R. Enrique",
-      "team": "Al Kholood",
-      "teamShort": "AK",
-      "goals": 15,
-      "assists": 0,
+      "playerName": "J. López",
+      "team": "Palmeiras",
+      "teamShort": "PALM",
+      "goals": 6,
+      "assists": 3,
       "badge": {
-        "label": "AK",
-        "logoPath": "/logos/al-kholood-10509.png"
+        "label": "P",
+        "logoPath": "/logos/palmeiras-121.png"
       }
     }
   ],
-  "introTitle": "Saudi Pro League",
-  "introSubtitle": "Top 10 scorers",
-  "hookText": "Quiñones is de Golden Boot of the Saudi Pro League",
+  "introTitle": "Brasileirão Série A",
+  "introSubtitle": "Top 10 do campeonato",
+  "hookText": "Artilheiro do Athletico-PR ainda na frente!",
   "coldOpenData": {
     "tableRows": [
       {
         "rank": 1,
-        "club": "AL-QADISIYAH FC",
+        "club": "ATHLETICO-PR",
         "pts": 10
       },
       {
         "rank": 2,
-        "club": "AL-AHLI JEDDAH",
+        "club": "FLAMENGO",
         "pts": 8
       },
       {
         "rank": 3,
-        "club": "AL-NASSR",
+        "club": "GREMIO",
         "pts": 6
       },
       {
         "rank": 4,
-        "club": "AL TAAWON",
+        "club": "FLUMINENSE",
         "pts": 4
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "Saudi Pro League top scorers"
+  "voiceoverText": "Fala Galera, pra vocês... os artilheiros do Brasileirão Série A."
 }

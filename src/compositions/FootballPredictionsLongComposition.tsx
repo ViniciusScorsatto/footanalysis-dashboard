@@ -15,6 +15,14 @@ const WHITE = '#f0f4f8';
 const SILVER = '#c0ccd8';
 const STEEL = '#3a5060';
 const DEFAULT_INTRO_AUDIO_PATH = '/audio/football/gol-na-pressao.mp3';
+const LONGFORM_SHELL_BACKGROUND = '/backgrounds/foot-analysis-long-shell-bg.png';
+const GREEN = '#8BEA12';
+const MAIN_FRAME = {
+  left: 535,
+  top: 178,
+  width: 1325,
+  height: 582,
+};
 
 const colorWithAlpha = (color = GOLD, alpha = '33') =>
   /^#[0-9a-f]{6}$/i.test(color) ? `${color}${alpha}` : `${GOLD}${alpha}`;
@@ -48,7 +56,8 @@ export const FootballPredictionsLongComposition = ({job}: FootballPredictionsLon
         fontFamily: '"Poppins", "Avenir Next", "Segoe UI", sans-serif',
       }}
     >
-      <Backdrop />
+      <BroadcastBackdrop />
+      <BroadcastShell brandLogoPath={job.brandLogoPath} />
       <Sequence from={0} durationInFrames={job.introDurationInFrames}>
         <StingAudio
           audioPath={job.soundtrackPath ?? DEFAULT_INTRO_AUDIO_PATH}
@@ -68,7 +77,6 @@ export const FootballPredictionsLongComposition = ({job}: FootballPredictionsLon
             total={job.matches.length}
             leagueName={job.leagueName}
             roundLabel={toPortugueseRoundLabel(job.roundLabel)}
-            brandLogoPath={job.brandLogoPath}
           />
           {match.voiceoverPath ? (
             <Audio src={staticFile(match.voiceoverPath.replace(/^\//, ''))} volume={0.86} />
@@ -97,42 +105,307 @@ const StingAudio = ({audioPath, volume}: {audioPath?: string; volume: number}) =
   return <Audio src={staticFile(audioPath.replace(/^\//, ''))} volume={volume} />;
 };
 
-const Backdrop = () => (
+const BroadcastBackdrop = () => (
   <>
+    <Img
+      src={staticFile(LONGFORM_SHELL_BACKGROUND.replace(/^\//, ''))}
+      style={{
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: 'fill',
+      }}
+    />
     <div
       style={{
         position: 'absolute',
         inset: 0,
         background:
-          'linear-gradient(135deg, rgba(15,19,24,0.98) 0%, rgba(11,13,18,0.96) 56%, rgba(20,28,36,0.98) 100%)',
-      }}
-    />
-    <div
-      style={{
-        position: 'absolute',
-        inset: 0,
-        opacity: 0.16,
-        backgroundImage:
-          'linear-gradient(90deg, rgba(240,165,0,0.22) 1px, transparent 1px), linear-gradient(180deg, rgba(255,255,255,0.12) 1px, transparent 1px)',
-        backgroundSize: '80px 80px',
-      }}
-    />
-    <div
-      style={{
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        height: 10,
-        background: GOLD,
+          'linear-gradient(90deg, rgba(0,0,0,0.14), rgba(0,0,0,0.02) 36%, rgba(0,0,0,0.08))',
       }}
     />
   </>
 );
 
+const BroadcastShell = ({brandLogoPath}: {brandLogoPath?: string}) => (
+  <>
+    <Sidebar brandLogoPath={brandLogoPath} />
+    <SponsorBar />
+  </>
+);
+
+const Sidebar = ({brandLogoPath}: {brandLogoPath?: string}) => (
+  <div
+    style={{
+      position: 'absolute',
+      left: 58,
+      top: 118,
+      width: 360,
+      bottom: 140,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      color: WHITE,
+    }}
+  >
+    {brandLogoPath ? (
+      <Img
+        src={staticFile(brandLogoPath.replace(/^\//, ''))}
+        style={{width: 260, maxHeight: 236, objectFit: 'contain'}}
+      />
+    ) : null}
+    <div
+      style={{
+        marginTop: 28,
+        color: WHITE,
+        fontSize: 18,
+        fontWeight: 800,
+        textTransform: 'uppercase',
+        letterSpacing: 0,
+      }}
+    >
+      Palpites • Análises • Estatísticas
+    </div>
+    <div
+      style={{
+        marginTop: 64,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 18,
+        color: WHITE,
+        fontSize: 28,
+        fontWeight: 800,
+        letterSpacing: 7,
+        textTransform: 'uppercase',
+      }}
+    >
+      <span style={{width: 48, height: 4, background: GREEN}} />
+      <span>Siga nas <span style={{color: GREEN}}>redes</span></span>
+      <span style={{width: 48, height: 4, background: GREEN}} />
+    </div>
+    <div style={{marginTop: 24, width: 340, display: 'grid', gap: 10}}>
+      <SocialRow network="instagram" label="footanalysispt" />
+      <SocialRow network="tiktok" label="foot.analysis.pt" />
+      <SocialRow network="x" label="@FootAnalysisIO" />
+      <SocialRow network="reddit" label="r/FootAnalysisPT" />
+      <SocialRow network="website" label="footanalysis.io" />
+    </div>
+  </div>
+);
+
+type SocialNetwork = 'instagram' | 'tiktok' | 'x' | 'reddit' | 'website';
+
+const SocialRow = ({network, label}: {network: SocialNetwork; label: string}) => (
+  <div
+    style={{
+      height: 40,
+      display: 'grid',
+      gridTemplateColumns: '54px 1fr',
+      alignItems: 'center',
+      color: WHITE,
+      fontSize: 16,
+      fontWeight: 800,
+      letterSpacing: 1.4,
+      background: 'linear-gradient(90deg, rgba(15,19,24,0.96), rgba(20,28,36,0.72))',
+      border: '1px solid rgba(240,244,248,0.15)',
+      clipPath: 'polygon(0 0, 100% 0, 92% 100%, 0 100%)',
+    }}
+  >
+    <div
+      style={{
+        width: 50,
+        height: 40,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: GREEN,
+        color: BG,
+      }}
+    >
+      <SocialIcon network={network} />
+    </div>
+    <div style={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>{label}</div>
+  </div>
+);
+
+const SocialIcon = ({network}: {network: SocialNetwork}) => {
+  const stroke = BG;
+  const common = {
+    width: 25,
+    height: 25,
+    viewBox: '0 0 32 32',
+    fill: 'none',
+  };
+
+  if (network === 'instagram') {
+    return (
+      <svg {...common}>
+        <rect x="7" y="7" width="18" height="18" rx="5" stroke={stroke} strokeWidth="3" />
+        <circle cx="16" cy="16" r="4.5" stroke={stroke} strokeWidth="3" />
+        <circle cx="22" cy="10" r="1.8" fill={stroke} />
+      </svg>
+    );
+  }
+
+  if (network === 'tiktok') {
+    return (
+      <svg {...common}>
+        <path
+          d="M18 6v14.2a5.8 5.8 0 1 1-5.8-5.8"
+          stroke={stroke}
+          strokeWidth="3.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M18 6c1.2 4.1 3.6 6.4 7.2 6.9"
+          stroke={stroke}
+          strokeWidth="3.2"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  }
+
+  if (network === 'x') {
+    return (
+      <svg {...common}>
+        <path d="M8 7l16 18M24 7L8 25" stroke={stroke} strokeWidth="4" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (network === 'reddit') {
+    return (
+      <svg {...common}>
+        <circle cx="16" cy="18" r="9" stroke={stroke} strokeWidth="3" />
+        <circle cx="12.5" cy="17.5" r="1.7" fill={stroke} />
+        <circle cx="19.5" cy="17.5" r="1.7" fill={stroke} />
+        <path d="M12.5 22c2.2 1.5 4.8 1.5 7 0" stroke={stroke} strokeWidth="2.4" strokeLinecap="round" />
+        <path d="M16 9l3-5 5 1.5" stroke={stroke} strokeWidth="2.4" strokeLinecap="round" />
+        <circle cx="25" cy="15" r="2.4" fill={stroke} />
+        <circle cx="7" cy="15" r="2.4" fill={stroke} />
+      </svg>
+    );
+  }
+
+  return (
+    <svg {...common}>
+      <circle cx="16" cy="16" r="10" stroke={stroke} strokeWidth="3" />
+      <path d="M6 16h20M16 6c3 3.4 4.5 6.7 4.5 10S19 22.6 16 26M16 6c-3 3.4-4.5 6.7-4.5 10S13 22.6 16 26" stroke={stroke} strokeWidth="2.4" strokeLinecap="round" />
+    </svg>
+  );
+};
+
+const SponsorBar = () => (
+  <div
+    style={{
+      position: 'absolute',
+      left: MAIN_FRAME.left,
+      top: 804,
+      width: MAIN_FRAME.width,
+      height: 160,
+      display: 'grid',
+      gridTemplateColumns: '360px minmax(0, 1fr) 330px',
+      alignItems: 'center',
+      gap: 20,
+      padding: '0 44px',
+      background: 'linear-gradient(180deg, rgba(12,16,20,0.94), rgba(6,8,10,0.98))',
+      border: `1px solid ${GREEN}`,
+      borderLeft: `16px solid ${GREEN}`,
+      borderRight: `16px solid ${GREEN}`,
+      boxShadow: `0 0 30px ${GREEN}55`,
+      color: WHITE,
+      textAlign: 'center',
+      textTransform: 'uppercase',
+    }}
+  >
+    <SubscribeLikeBadge icon="play" title="Inscreva-se" />
+    <div style={{color: GREEN, fontSize: 16, fontWeight: 900, letterSpacing: 3.2, lineHeight: 1.25}}>
+      Os palpites têm caráter exclusivamente recreativo.
+    </div>
+    <SubscribeLikeBadge icon="like" title="Deixe um Like!" />
+  </div>
+);
+
+const SubscribeLikeBadge = ({icon, title}: {icon: 'play' | 'like'; title: string}) => (
+  <div
+    style={{
+      height: 86,
+      display: 'grid',
+      gridTemplateColumns: '74px 1fr',
+      alignItems: 'center',
+      gap: 16,
+      padding: '0 18px',
+      background: `linear-gradient(135deg, ${GREEN}26, rgba(15,19,24,0.96) 48%)`,
+      border: `1px solid ${GREEN}88`,
+      boxShadow: `0 0 24px ${GREEN}22, inset 0 0 0 1px rgba(255,255,255,0.06)`,
+      clipPath: 'polygon(0 0, 94% 0, 100% 50%, 94% 100%, 0 100%, 6% 50%)',
+    }}
+  >
+    <div
+      style={{
+        width: 62,
+        height: 62,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: GREEN,
+        color: BG,
+        borderRadius: 8,
+        boxShadow: `0 0 20px ${GREEN}66`,
+      }}
+    >
+      {icon === 'play' ? <PlayIcon /> : <LikeIcon />}
+    </div>
+    <div
+      style={{
+        color: WHITE,
+        fontSize: 21,
+        lineHeight: 1,
+        fontWeight: 900,
+        textAlign: 'left',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {title}
+    </div>
+  </div>
+);
+
+const PlayIcon = () => (
+  <svg width="34" height="34" viewBox="0 0 32 32" fill="none">
+    <path d="M11 8l14 8-14 8V8z" fill={BG} />
+  </svg>
+);
+
+const LikeIcon = () => (
+  <svg width="34" height="34" viewBox="0 0 32 32" fill="none">
+    <path
+      d="M11 27H7a2 2 0 0 1-2-2V14a2 2 0 0 1 2-2h4v15zM11 14l5-9c1.7.2 2.8 1.6 2.5 3.2L18 12h6.2c1.8 0 3.1 1.7 2.7 3.4l-2 8.6A4 4 0 0 1 21 27H11V14z"
+      fill={BG}
+    />
+  </svg>
+);
+
+const MainFrameContent = ({children}: {children: ReactNode}) => (
+  <div
+    style={{
+      position: 'absolute',
+      left: MAIN_FRAME.left,
+      top: MAIN_FRAME.top,
+      width: MAIN_FRAME.width,
+      height: MAIN_FRAME.height,
+      overflow: 'hidden',
+    }}
+  >
+    {children}
+  </div>
+);
+
 const IntroScene = ({job}: {job: FootballPredictionsLongVideoJob}) => {
   const frame = useCurrentFrame();
-  const roundLabel = toPortugueseRoundLabel(job.roundLabel);
   const openingLines =
     job.openingLines?.length
       ? job.openingLines
@@ -155,16 +428,16 @@ const IntroScene = ({job}: {job: FootballPredictionsLongVideoJob}) => {
     .slice(0, 4);
 
   return (
-    <div style={{position: 'absolute', inset: 0, padding: '76px 88px 72px'}}>
-      <Header logoPath={job.brandLogoPath} eyebrow="Foot Analysis" />
+    <MainFrameContent>
+      <FrameHeader eyebrow="Foot Analysis" title={job.leagueName} />
       <FlyingInsightCard
         title="Tabela"
         kicker="Classificação"
         delay={12}
-        fromX={680}
+        fromX={700}
         fromY={-60}
-        toX={1140}
-        toY={250}
+        toX={825}
+        toY={128}
         rotation={-3}
         accent={GOLD}
       >
@@ -182,10 +455,10 @@ const IntroScene = ({job}: {job: FootballPredictionsLongVideoJob}) => {
         title="Últimos jogos"
         kicker="Forma recente"
         delay={28}
-        fromX={820}
-        fromY={420}
-        toX={1120}
-        toY={610}
+        fromX={840}
+        fromY={360}
+        toX={820}
+        toY={318}
         rotation={4}
         accent="#27AE60"
       >
@@ -202,10 +475,10 @@ const IntroScene = ({job}: {job: FootballPredictionsLongVideoJob}) => {
         title="Palpites"
         kicker="Placar provável"
         delay={42}
-        fromX={520}
-        fromY={980}
-        toX={710}
-        toY={720}
+        fromX={760}
+        fromY={740}
+        toX={744}
+        toY={412}
         rotation={-2}
         accent="#E74C3C"
         wide
@@ -222,66 +495,42 @@ const IntroScene = ({job}: {job: FootballPredictionsLongVideoJob}) => {
       <div
         style={{
           position: 'absolute',
-          left: 88,
-          top: 246,
-          width: 1020,
+          left: 56,
+          top: 186,
+          width: 670,
           opacity,
           transform: `translateY(${titleY}px) scale(${hookScale})`,
           transformOrigin: 'left center',
         }}
       >
-        <div style={{color: GOLD, fontSize: 28, fontWeight: 800, textTransform: 'uppercase'}}>
-          {job.leagueName}
-        </div>
         <div
           style={{
-            marginTop: 18,
-            maxWidth: 1080,
-            color: WHITE,
-            fontSize: 104,
-            lineHeight: 0.96,
-            fontWeight: 900,
-            textTransform: 'uppercase',
-            letterSpacing: 0,
-          }}
-        >
-          Palpites da rodada com dados na tela
-        </div>
-        <div
-          style={{
-            marginTop: 28,
-            color: SILVER,
-            fontSize: 34,
-            lineHeight: 1,
-            fontWeight: 700,
-            textTransform: 'uppercase',
-          }}
-        >
-          {roundLabel} · tabela · últimos jogos · {job.matches.length} palpites
-        </div>
-        <div
-          style={{
-            width: 560,
-            marginTop: 32,
-            padding: '18px 22px',
+            width: 640,
+            minHeight: 210,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            gap: 16,
+            padding: '30px 34px',
             borderRadius: 8,
-            background: SURFACE,
-            border: `1px solid ${colorWithAlpha(GOLD, '66')}`,
-            borderLeft: `8px solid ${GOLD}`,
+            background: 'linear-gradient(135deg, rgba(15,19,24,0.98), rgba(8,10,12,0.92))',
+            border: `1px solid ${colorWithAlpha(GREEN, '66')}`,
+            borderLeft: `10px solid ${GREEN}`,
+            boxShadow: `0 22px 70px ${colorWithAlpha(GREEN, '18')}`,
             color: WHITE,
-            fontSize: 24,
-            fontWeight: 800,
+            fontSize: 31,
+            fontWeight: 900,
             lineHeight: 1.18,
           }}
         >
           {openingLines.slice(0, 2).map((line) => (
-            <div key={line} style={{marginBottom: 8}}>
+            <div key={line}>
               {line}
             </div>
           ))}
         </div>
       </div>
-    </div>
+    </MainFrameContent>
   );
 };
 
@@ -327,7 +576,7 @@ const FlyingInsightCard = ({
         position: 'absolute',
         left: 0,
         top: 0,
-        width: wide ? 680 : 500,
+        width: wide ? 560 : 500,
         padding: 20,
         borderRadius: 8,
         background: `linear-gradient(135deg, ${colorWithAlpha(accent, '22')}, ${SURFACE} 42%)`,
@@ -462,14 +711,12 @@ const MatchScene = ({
   total,
   leagueName,
   roundLabel,
-  brandLogoPath,
 }: {
   match: LongformPredictionMatch;
   index: number;
   total: number;
   leagueName: string;
   roundLabel: string;
-  brandLogoPath?: string;
 }) => {
   const frame = useCurrentFrame();
   const panelIn = interpolate(frame, [0, 24], [28, 0], {extrapolateRight: 'clamp'});
@@ -484,15 +731,15 @@ const MatchScene = ({
   const awayAccent = accentFor(match.awayBadge);
 
   return (
-    <div style={{position: 'absolute', inset: 0, padding: '58px 80px 54px'}}>
-      <Header logoPath={brandLogoPath} eyebrow={`${leagueName} · ${roundLabel}`} />
+    <MainFrameContent>
+      <FrameHeader eyebrow={`${leagueName} · ${roundLabel}`} title={`Jogo ${index + 1} de ${total}`} />
       <div
         style={{
           position: 'absolute',
           left: 0,
-          top: 10,
+          top: 0,
           bottom: 0,
-          width: 18,
+          width: 12,
           background: `linear-gradient(180deg, ${homeAccent}, ${colorWithAlpha(homeAccent, '22')})`,
         }}
       />
@@ -500,23 +747,23 @@ const MatchScene = ({
         style={{
           position: 'absolute',
           right: 0,
-          top: 10,
+          top: 0,
           bottom: 0,
-          width: 18,
+          width: 12,
           background: `linear-gradient(180deg, ${awayAccent}, ${colorWithAlpha(awayAccent, '22')})`,
         }}
       />
       <div
         style={{
           position: 'absolute',
-          left: 80,
-          right: 80,
-          top: 176,
-          bottom: 124,
+          left: 58,
+          right: 58,
+          top: 104,
+          bottom: 78,
           display: 'grid',
-          gridTemplateColumns: '1fr 360px 1fr',
+          gridTemplateColumns: '1fr 280px 1fr',
           alignItems: 'center',
-          gap: 34,
+          gap: 26,
           opacity: panelOpacity,
           transform: `translateY(${panelIn}px)`,
         }}
@@ -535,7 +782,7 @@ const MatchScene = ({
           <div
             style={{
               color: STEEL,
-              fontSize: 24,
+              fontSize: 20,
               fontWeight: 800,
               textTransform: 'uppercase',
             }}
@@ -544,14 +791,14 @@ const MatchScene = ({
           </div>
           <div
             style={{
-              width: 330,
-              height: 190,
+              width: 264,
+              height: 154,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: 8,
               background: `linear-gradient(90deg, ${colorWithAlpha(homeAccent, '38')}, #1a1600 46%, #1a1600 54%, ${colorWithAlpha(awayAccent, '38')})`,
-              border: `3px solid ${GOLD}`,
+              border: `3px solid ${GREEN}`,
               boxShadow: `0 24px 70px ${colorWithAlpha(homeAccent, '18')}, 0 24px 70px ${colorWithAlpha(awayAccent, '18')}`,
               opacity: scoreOpacity,
               transform: `scale(${scoreScale})`,
@@ -560,7 +807,7 @@ const MatchScene = ({
             <span
               style={{
                 color: GOLD,
-                fontSize: 104,
+                fontSize: 76,
                 lineHeight: 1,
                 fontWeight: 900,
               }}
@@ -572,34 +819,14 @@ const MatchScene = ({
             style={{
               width: `${underlineWidth}%`,
               height: 6,
-              maxWidth: 320,
-              background: `linear-gradient(90deg, ${homeAccent}, ${GOLD}, ${awayAccent})`,
+              maxWidth: 260,
+              background: `linear-gradient(90deg, ${homeAccent}, ${GREEN}, ${awayAccent})`,
             }}
           />
         </div>
         <TeamPanel team={match.awayTeam} badge={match.awayBadge} align="right" />
       </div>
-      <div
-        style={{
-          position: 'absolute',
-          left: 80,
-          right: 80,
-          bottom: 44,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          color: STEEL,
-          fontSize: 22,
-          fontWeight: 700,
-          textTransform: 'uppercase',
-        }}
-      >
-        <span>
-          Jogo {index + 1} de {total}
-        </span>
-        <span>Os palpites têm caráter exclusivamente recreativo.</span>
-      </div>
-    </div>
+    </MainFrameContent>
   );
 };
 
@@ -617,13 +844,13 @@ const TeamPanel = ({
   return (
     <div
       style={{
-        height: 610,
+        height: 370,
         display: 'flex',
         flexDirection: 'column',
         alignItems: align === 'left' ? 'flex-start' : 'flex-end',
         justifyContent: 'center',
-        gap: 26,
-        padding: 38,
+        gap: 18,
+        padding: 28,
         borderRadius: 8,
         background: `linear-gradient(${align === 'left' ? 110 : 250}deg, ${colorWithAlpha(accent, '2d')}, ${SURFACE} 42%)`,
         border: `1px solid ${BORDER}`,
@@ -635,7 +862,7 @@ const TeamPanel = ({
       <div
         style={{
           color: WHITE,
-          fontSize: 70,
+          fontSize: 45,
           lineHeight: 0.94,
           fontWeight: 900,
           textTransform: 'uppercase',
@@ -655,8 +882,8 @@ const Badge = ({badge}: {badge: TeamBadge}) => {
   return (
     <div
       style={{
-        width: 170,
-        height: 170,
+        width: 132,
+        height: 132,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -669,46 +896,37 @@ const Badge = ({badge}: {badge: TeamBadge}) => {
       {logoPath ? (
         <Img
           src={staticFile(logoPath.replace(/^\//, ''))}
-          style={{width: 124, height: 124, objectFit: 'contain'}}
+          style={{width: 96, height: 96, objectFit: 'contain'}}
         />
       ) : (
-        <span style={{color: GOLD, fontSize: 54, fontWeight: 900}}>{badge.label}</span>
+        <span style={{color: GOLD, fontSize: 42, fontWeight: 900}}>{badge.label}</span>
       )}
     </div>
   );
 };
 
-const Header = ({logoPath, eyebrow}: {logoPath?: string; eyebrow?: string}) => (
+const FrameHeader = ({eyebrow, title}: {eyebrow: string; title: string}) => (
   <div
     style={{
       position: 'absolute',
-      left: 80,
-      right: 80,
-      top: 48,
+      left: 56,
+      right: 56,
+      top: 52,
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      gap: 34,
+      gap: 26,
+      textTransform: 'uppercase',
     }}
   >
-    <div
-      style={{
-        color: eyebrow ? SILVER : GOLD,
-        fontSize: 24,
-        fontWeight: 800,
-        textTransform: 'uppercase',
-      }}
-    >
-      {eyebrow ?? 'Foot Analysis'}
+    <div>
+      <div style={{color: GREEN, fontSize: 16, fontWeight: 900, letterSpacing: 4}}>
+        {eyebrow}
+      </div>
+      <div style={{marginTop: 4, color: WHITE, fontSize: 26, fontWeight: 900, lineHeight: 1}}>
+        {title}
+      </div>
     </div>
-    {logoPath ? (
-      <Img
-        src={staticFile(logoPath.replace(/^\//, ''))}
-        style={{width: 184, maxHeight: 88, objectFit: 'contain'}}
-      />
-    ) : (
-      <div style={{color: GOLD, fontSize: 28, fontWeight: 900}}>Foot Analysis</div>
-    )}
   </div>
 );
 
@@ -721,7 +939,9 @@ const OutroScene = ({job}: {job: FootballPredictionsLongVideoJob}) => {
   const scoreFontSize = job.matches.length > 14 ? 26 : job.matches.length > 7 ? 30 : 34;
 
   return (
-    <div
+    <MainFrameContent>
+      <FrameHeader eyebrow="Todos os palpites" title={roundLabel} />
+      <div
       style={{
         position: 'absolute',
         inset: 0,
@@ -729,27 +949,12 @@ const OutroScene = ({job}: {job: FootballPredictionsLongVideoJob}) => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 22,
+        gap: 14,
         opacity,
         textAlign: 'center',
-        padding: '74px 120px 64px',
+        padding: '96px 54px 44px',
       }}
     >
-      <Header logoPath={job.brandLogoPath} eyebrow="" />
-      <div style={{color: GOLD, fontSize: 34, fontWeight: 900, textTransform: 'uppercase'}}>
-        Todos os palpites
-      </div>
-      <div
-        style={{
-          color: WHITE,
-          fontSize: 58,
-          lineHeight: 0.98,
-          fontWeight: 900,
-          textTransform: 'uppercase',
-        }}
-      >
-        {roundLabel}
-      </div>
       <div
         style={{
           width: '100%',
@@ -770,8 +975,8 @@ const OutroScene = ({job}: {job: FootballPredictionsLongVideoJob}) => {
                 gridTemplateColumns: '36px minmax(0, 1fr) 90px minmax(0, 1fr)',
                 alignItems: 'center',
                 gap: 12,
-                minHeight: job.matches.length > 14 ? 48 : 58,
-                padding: '10px 14px',
+                minHeight: job.matches.length > 14 ? 42 : 50,
+                padding: '8px 12px',
                 borderRadius: 8,
                 background: SURFACE,
                 border: `1px solid ${BORDER}`,
@@ -824,9 +1029,10 @@ const OutroScene = ({job}: {job: FootballPredictionsLongVideoJob}) => {
           );
         })}
       </div>
-      <div style={{color: SILVER, fontSize: 30, lineHeight: 1.35, fontWeight: 600}}>
+      <div style={{color: SILVER, fontSize: 20, lineHeight: 1.35, fontWeight: 600}}>
         {job.disclaimer}
       </div>
-    </div>
+      </div>
+    </MainFrameContent>
   );
 };

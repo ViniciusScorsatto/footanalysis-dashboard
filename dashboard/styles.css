@@ -278,6 +278,10 @@ h1 {
   grid-template-columns: minmax(0, 1.25fr) minmax(420px, 520px);
 }
 
+.thumbnail-grid {
+  grid-template-columns: minmax(0, 1.18fr) minmax(460px, 560px);
+}
+
 .panel {
   padding: 22px;
 }
@@ -493,6 +497,145 @@ textarea {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
+}
+
+.thumbnail-context {
+  min-height: 96px;
+}
+
+.thumbnail-team-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.thumbnail-team-grid-four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.thumbnail-team-fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 14px;
+  border: 1px solid rgba(145, 176, 255, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.thumbnail-team-fieldset legend {
+  padding: 0 8px;
+  color: var(--accent-2);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.thumbnail-preview-frame {
+  border-radius: 20px;
+}
+
+.selected-team-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.selected-team-slot {
+  display: grid;
+  grid-template-columns: 30px 46px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  min-height: 64px;
+  padding: 8px;
+  border: 1px dashed rgba(145, 176, 255, 0.18);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.selected-team-slot.filled {
+  border-style: solid;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.selected-team-slot img,
+.available-team-option img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.slot-index {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(255, 209, 92, 0.12);
+  color: var(--accent-2);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.selected-team-slot strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selected-team-slot input {
+  grid-column: 2 / 4;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
+.selected-team-slot button {
+  grid-column: 1 / 4;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.empty-slot {
+  grid-column: 2 / 4;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.available-team-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  max-height: 300px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.available-team-option {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  min-height: 54px;
+  padding: 7px 9px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  text-align: left;
+}
+
+.available-team-option span {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .actions {
@@ -1094,6 +1237,65 @@ button:disabled {
   min-height: 42px;
 }
 
+.tierlist-editor-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.34fr) minmax(0, 1fr);
+  gap: 14px;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(8, 17, 33, 0.68);
+  border: 1px solid rgba(145, 176, 255, 0.1);
+}
+
+.tierlist-manual-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.tierlist-manual-fields label {
+  margin: 0;
+}
+
+.tierlist-editor-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+}
+
+.tierlist-editor-label strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.tierlist-editor-label span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.tierlist-editor-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.tierlist-select-field {
+  gap: 4px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.tierlist-select-field select {
+  min-height: 42px;
+}
+
 .standings-editor-row {
   display: grid;
   grid-template-columns: minmax(260px, 1.2fr) 70px 70px 70px 76px minmax(92px, 0.5fr);
@@ -1285,7 +1487,10 @@ code {
   .settings-grid,
   .two-up,
   .publishing-context-grid,
-  .publishing-draft-grid {
+  .publishing-draft-grid,
+  .thumbnail-team-grid,
+  .selected-team-list,
+  .available-team-list {
     grid-template-columns: 1fr;
   }
 

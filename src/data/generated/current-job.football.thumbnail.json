@@ -1,0 +1,39 @@
+{
+  "sport": "football",
+  "template": "thumbnail",
+  "compositionId": "FootballThumbnailStill",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
+  "preset": "matchup",
+  "thumbnailModel": "model-6",
+  "brandName": "Foot Analysis",
+  "brandLogoPath": "/branding/foot-analysis-logo.png",
+  "leagueName": "Copa do Brasil",
+  "headline": "QUEM PASSA?",
+  "subheadline": "MINHAS PREVISÕES",
+  "extraLabel": "PALPITES · ANÁLISES · ESTATÍSTICAS",
+  "outputName": "football-thumbnail.png",
+  "accentColor": "#A7FF12",
+  "secondaryAccentColor": "#74C900",
+  "backgroundImagePath": "/backgrounds/thumbnails/neon-stadium-copa-bg.png",
+  "teamA": {
+    "label": "Corinthians",
+    "logoPath": "/logos/corinthians.png",
+    "accentColor": "#E51B23"
+  },
+  "teamB": {
+    "label": "Athletico",
+    "logoPath": "/logos/atletico-paranaense.png",
+    "accentColor": "#E3222A"
+  },
+  "teamC": {
+    "label": "Botafogo",
+    "logoPath": "/logos/botafogo.png",
+    "accentColor": "#F0F4F8"
+  },
+  "teamD": {
+    "label": "Fluminense",
+    "logoPath": "/logos/fluminense.png",
+    "accentColor": "#8A1538"
+  }
+}

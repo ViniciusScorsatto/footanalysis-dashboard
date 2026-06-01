@@ -25,6 +25,7 @@ const footballPredictionsLongJobFile = path.join(
 );
 const leagueConfigDir = path.join(projectRoot, 'config', 'leagues');
 const teamNameAliasesFile = path.join(projectRoot, 'config', 'football-team-name-aliases.json');
+const teamAccentColorsFile = path.join(projectRoot, 'config', 'football-team-accent-colors.json');
 const worldCupConfigFile = path.join(projectRoot, 'config', 'world-cup', 'groups.json');
 
 export {footballLanguageProfiles};
@@ -109,8 +110,10 @@ export const templates = [
   {value: 'player-of-round', label: 'Craque da Rodada / Player of the Round'},
   {value: 'championship-pace', label: 'Championship Pace'},
   {value: 'relegation-line', label: 'Relegation Line'},
+  {value: 'tierlist', label: 'Tierlist'},
   {value: 'continental-groups-standings', label: 'Continental Groups Standings'},
   {value: 'predictions', label: 'Predictions'},
+  {value: 'round-summary-long', label: 'Resumo da Rodada Longform'},
   {value: 'world-cup-group-standings', label: 'World Cup Group Standings'},
   {value: 'world-cup-knockout', label: 'World Cup Knockout'},
 ];
@@ -571,6 +574,98 @@ const normalizeGroupName = (value) =>
     .toLowerCase()
     .replace(/\s+/g, ' ');
 
+const worldCupCountryTranslationsPt = {
+  algeria: 'Argélia',
+  argentina: 'Argentina',
+  australia: 'Austrália',
+  austria: 'Áustria',
+  belgium: 'Bélgica',
+  'bosnia herzogovina': 'Bosnia',
+  'bosnia and herzogovina': 'Bosnia',
+  'bosnia herzogovinia': 'Bosnia',
+  'bosnia and herzogovinia': 'Bosnia',
+  'bosnia herzegovina': 'Bosnia',
+  'bosnia and herzegovina': 'Bosnia',
+  'bosnia herzegovinia': 'Bosnia',
+  'bosnia and herzegovinia': 'Bosnia',
+  brazil: 'Brasil',
+  'cabo verde': 'Cabo Verde',
+  'cape verde': 'Cabo Verde',
+  'cape verde islands': 'Cabo Verde',
+  canada: 'Canadá',
+  colombia: 'Colômbia',
+  'congo dr': 'Congo',
+  'cote d ivoire': 'C. do Marfim',
+  "cote d'ivoire": 'C. do Marfim',
+  'ivory coast': 'C. do Marfim',
+  croatia: 'Croácia',
+  curacao: 'Curaçao',
+  'czech republic': 'Rep. Tcheca',
+  czechia: 'Rep. Tcheca',
+  'dr congo': 'Congo',
+  ecuador: 'Equador',
+  egypt: 'Egito',
+  england: 'Inglaterra',
+  france: 'França',
+  germany: 'Alemanha',
+  ghana: 'Gana',
+  haiti: 'Haiti',
+  'ir iran': 'Irã',
+  iran: 'Irã',
+  iraq: 'Iraque',
+  japan: 'Japão',
+  jordan: 'Jordânia',
+  'korea republic': 'Coreia do Sul',
+  'republic of korea': 'Coreia do Sul',
+  'south korea': 'Coreia do Sul',
+  mexico: 'México',
+  morocco: 'Marrocos',
+  netherlands: 'Holanda',
+  'new zealand': 'Nova Zelândia',
+  norway: 'Noruega',
+  panama: 'Panamá',
+  paraguay: 'Paraguai',
+  portugal: 'Portugal',
+  qatar: 'Catar',
+  'saudi arabia': 'Arábia Saudita',
+  scotland: 'Escócia',
+  senegal: 'Senegal',
+  'south africa': 'África do Sul',
+  spain: 'Espanha',
+  switzerland: 'Suíça',
+  sweden: 'Suécia',
+  tunisia: 'Tunísia',
+  turkey: 'Turquia',
+  turkiye: 'Turquia',
+  türkiye: 'Turquia',
+  uruguay: 'Uruguai',
+  usa: 'EUA',
+  'united states': 'EUA',
+  uzbekistan: 'Uzbequistão',
+};
+
+const translateWorldCupCountryName = (teamName, languageProfile = 'pt-br') => {
+  const name = String(teamName ?? '').trim();
+  if (languageProfile === 'en' || !name) {
+    return name;
+  }
+
+  const playoffMatch = name.match(/^winner\s+playoff\s+([a-z])$/i);
+  if (playoffMatch) {
+    return `Vencedor da Repescagem ${playoffMatch[1].toUpperCase()}`;
+  }
+
+  return worldCupCountryTranslationsPt[normalizeTeamAliasKey(name)] ?? name;
+};
+
+const shouldTranslateWorldCupCountryNames = (leagueId, languageProfile = 'pt-br') =>
+  Number(leagueId) === 1 && languageProfile !== 'en';
+
+const resolveFixtureVideoTeamName = (teamName, leagueId, languageProfile = 'pt-br') =>
+  shouldTranslateWorldCupCountryNames(leagueId, languageProfile)
+    ? translateWorldCupCountryName(teamName, languageProfile)
+    : teamName;
+
 const normalizeTeamAliasKey = (value) =>
   String(value ?? '')
     .trim()
@@ -666,12 +761,65 @@ const loadTeamNameAliases = async () => {
   }
 };
 
+const loadTeamAccentColors = async () => {
+  try {
+    const accentConfig = await readJsonFile(teamAccentColorsFile);
+    const normalizeAccentMap = (accents = {}) =>
+      Object.fromEntries(
+        Object.entries(accents)
+          .filter(([, value]) => isHexColor(value))
+          .map(([key, value]) => [normalizeTeamAliasKey(key), String(value).trim()])
+      );
+
+    return {
+      global: normalizeAccentMap(accentConfig.global),
+      leagues: Object.fromEntries(
+        Object.entries(accentConfig.leagues ?? {}).map(([leagueId, accents]) => [
+          leagueId,
+          normalizeAccentMap(accents),
+        ])
+      ),
+    };
+  } catch {
+    return {global: {}, leagues: {}};
+  }
+};
+
+const youthLeagueIds = new Set([740, 1128, 1179]);
+
+const stripYouthTeamSuffix = (teamName) =>
+  String(teamName ?? '')
+    .replace(/\b(?:u|sub[-\s]?)(?:17|20)\b/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
 const resolveDisplayTeamName = (teamName, leagueId, aliasesConfig) => {
   const aliasKey = normalizeTeamAliasKey(teamName);
   const leagueAliases = aliasesConfig?.leagues?.[String(leagueId)] ?? {};
   const globalAliases = aliasesConfig?.global ?? {};
 
   return leagueAliases[aliasKey] ?? globalAliases[aliasKey] ?? teamName;
+};
+
+const resolveVideoTeamName = (teamName, leagueId, aliasesConfig) => {
+  const displayName = resolveDisplayTeamName(teamName, leagueId, aliasesConfig);
+
+  if (!youthLeagueIds.has(Number(leagueId))) {
+    return displayName;
+  }
+
+  return stripYouthTeamSuffix(displayName);
+};
+
+const resolveVideoTeamNames = (apiTeamName, leagueId, aliasesConfig) => {
+  const apiDisplayName = resolveDisplayTeamName(apiTeamName, leagueId, aliasesConfig);
+
+  return {
+    apiDisplayName,
+    videoDisplayName: youthLeagueIds.has(Number(leagueId))
+      ? stripYouthTeamSuffix(apiDisplayName)
+      : apiDisplayName,
+  };
 };
 
 const fetchJson = async (url, apiKey, apiHost) => {
@@ -807,6 +955,90 @@ const resolveDefaultStandingsLabel = async ({
   }
 };
 
+const isYouthLogoFilename = (filename) =>
+  /(?:^|-)(?:u17|u20|sub-?17|sub-?20)(?:-|\.|$)/i.test(filename);
+
+const cachedTeamLogoAliases = {
+  'c do marfim': ['Ivory Coast'],
+  'cote d ivoire': ['Ivory Coast'],
+  'ivory coast': ["Cote d'Ivoire"],
+};
+
+const findCachedTeamLogo = (teamName, {excludeYouth = false} = {}) => {
+  const normalizedName = normalizeTeamAliasKey(teamName);
+  const slugs = [
+    sanitize(teamName),
+    ...(cachedTeamLogoAliases[normalizedName] ?? []).map((alias) => sanitize(alias)),
+  ].filter(Boolean);
+
+  if (!slugs.length || !fsSync.existsSync(logosDir)) {
+    return undefined;
+  }
+
+  const filenames = fsSync
+    .readdirSync(logosDir)
+    .filter((item) => !excludeYouth || !isYouthLogoFilename(item));
+  const filename = slugs
+    .map(
+      (slug) =>
+        filenames.find((item) => item === `${slug}.png`) ??
+        filenames.find((item) => item.startsWith(`${slug}-`) && item.toLowerCase().endsWith('.png'))
+    )
+    .find(Boolean);
+
+  return filename ? `/logos/${filename}` : undefined;
+};
+
+const professionalLogoNameCandidates = (teamName, leagueId, aliasesConfig) => {
+  const baseName = stripYouthTeamSuffix(teamName);
+  if (!baseName) {
+    return [];
+  }
+
+  const aliasName = resolveDisplayTeamName(baseName, leagueId, aliasesConfig);
+  const candidates = [
+    baseName,
+    aliasName,
+    baseName.replace(/\bRJ\b/i, '').trim(),
+    baseName.replace(/\bAthletico\s+PR\b/i, 'Atletico Paranaense'),
+    baseName.replace(/\bAthletico-PR\b/i, 'Atletico Paranaense'),
+    baseName.replace(/\bAtletico\s+Mineiro\b/i, 'Atletico MG'),
+    baseName.replace(/\bAtl[eé]tico\s+Mineiro\b/i, 'Atletico MG'),
+    baseName.replace(/\bAmerica\s+MG\b/i, 'America Mineiro'),
+    baseName.replace(/\bAm[eé]rica\s+MG\b/i, 'America Mineiro'),
+    baseName.replace(/\bFlamengo\s+RJ\b/i, 'Flamengo'),
+  ];
+
+  const normalizedCandidates = candidates.flatMap((name) => [
+    name,
+    name.replace(/\bAthletico[-\s]+PR\b/i, 'Atletico Paranaense'),
+    name.replace(/\bAtl[eé]tico[-\s]+PR\b/i, 'Atletico Paranaense'),
+    name.replace(/\bAtletico[-\s]+PR\b/i, 'Atletico Paranaense'),
+  ]);
+
+  return [...new Set(normalizedCandidates.map((name) => name.trim()).filter(Boolean))];
+};
+
+const findYouthProfessionalLogo = ({apiTeamName, displayTeamName, leagueId, aliasesConfig}) => {
+  if (!youthLeagueIds.has(Number(leagueId))) {
+    return undefined;
+  }
+
+  const candidates = [
+    ...professionalLogoNameCandidates(displayTeamName, leagueId, aliasesConfig),
+    ...professionalLogoNameCandidates(apiTeamName, leagueId, aliasesConfig),
+  ];
+
+  for (const candidate of candidates) {
+    const logoPath = findCachedTeamLogo(candidate, {excludeYouth: true});
+    if (logoPath) {
+      return logoPath;
+    }
+  }
+
+  return undefined;
+};
+
 const downloadLogo = async (url, teamName) => {
   if (!url) {
     return undefined;
@@ -834,6 +1066,32 @@ const downloadLogo = async (url, teamName) => {
   await fs.writeFile(destination, bytes);
   return `/logos/${filename}`;
 };
+
+const resolveTeamLogo = async ({
+  logoUrl,
+  apiTeamName,
+  displayTeamName,
+  leagueId,
+  aliasesConfig,
+}) => {
+  const youthProfessionalLogo = findYouthProfessionalLogo({
+    apiTeamName,
+    displayTeamName,
+    leagueId,
+    aliasesConfig,
+  });
+
+  if (youthProfessionalLogo) {
+    return youthProfessionalLogo;
+  }
+
+  return (
+    (await downloadLogo(logoUrl, apiTeamName)) ??
+    findCachedTeamLogo(displayTeamName) ??
+    findCachedTeamLogo(apiTeamName)
+  );
+};
+
 
 const formatFootballSeasonDisplay = ({season, languageProfile = 'pt-br'}) => {
   const numericSeason = Number(season);
@@ -1028,8 +1286,18 @@ const buildFixtures = async ({
     const apiAwayTeam = fixture.teams?.away?.name;
     if (!apiHomeTeam || !apiAwayTeam) continue;
 
-    const homeTeam = resolveDisplayTeamName(apiHomeTeam, leagueId, aliasesConfig);
-    const awayTeam = resolveDisplayTeamName(apiAwayTeam, leagueId, aliasesConfig);
+    const homeNames = resolveVideoTeamNames(apiHomeTeam, leagueId, aliasesConfig);
+    const awayNames = resolveVideoTeamNames(apiAwayTeam, leagueId, aliasesConfig);
+    const homeTeam = resolveFixtureVideoTeamName(
+      homeNames.videoDisplayName,
+      leagueId,
+      languageProfile
+    );
+    const awayTeam = resolveFixtureVideoTeamName(
+      awayNames.videoDisplayName,
+      leagueId,
+      languageProfile
+    );
     const fixtureId = Number(fixture.fixture?.id);
     let predictedScores = {
       homeScore: null,
@@ -1073,11 +1341,23 @@ const buildFixtures = async ({
       awayPenaltyScore: fixtureEdit?.hasPenalties ? fixtureEdit.awayPenaltyScore : null,
       homeBadge: {
         label: initials(homeTeam),
-        logoPath: await downloadLogo(fixture.teams?.home?.logo, apiHomeTeam),
+        logoPath: await resolveTeamLogo({
+          logoUrl: fixture.teams?.home?.logo,
+          apiTeamName: apiHomeTeam,
+          displayTeamName: homeNames.apiDisplayName,
+          leagueId,
+          aliasesConfig,
+        }),
       },
       awayBadge: {
         label: initials(awayTeam),
-        logoPath: await downloadLogo(fixture.teams?.away?.logo, apiAwayTeam),
+        logoPath: await resolveTeamLogo({
+          logoUrl: fixture.teams?.away?.logo,
+          apiTeamName: apiAwayTeam,
+          displayTeamName: awayNames.apiDisplayName,
+          leagueId,
+          aliasesConfig,
+        }),
       },
     });
   }
@@ -1341,7 +1621,8 @@ const buildStandingsRows = async (standingsResponse, leagueId, aliasesConfig) =>
     const apiTeamName = row.team?.name;
     if (!apiTeamName) continue;
 
-    const teamName = resolveDisplayTeamName(apiTeamName, leagueId, aliasesConfig);
+    const names = resolveVideoTeamNames(apiTeamName, leagueId, aliasesConfig);
+    const teamName = names.videoDisplayName;
 
     rows.push({
       rank: row.rank,
@@ -1352,7 +1633,13 @@ const buildStandingsRows = async (standingsResponse, leagueId, aliasesConfig) =>
       form: row.form ?? '',
       badge: {
         label: initials(teamName),
-        logoPath: await downloadLogo(row.team?.logo, apiTeamName),
+        logoPath: await resolveTeamLogo({
+          logoUrl: row.team?.logo,
+          apiTeamName,
+          displayTeamName: names.apiDisplayName,
+          leagueId,
+          aliasesConfig,
+        }),
       },
     });
   }
@@ -1665,7 +1952,8 @@ const buildTopScorerEntries = async (topScorersResponse, leagueId, aliasesConfig
       continue;
     }
 
-    const teamName = resolveDisplayTeamName(apiTeamName, leagueId, aliasesConfig);
+    const names = resolveVideoTeamNames(apiTeamName, leagueId, aliasesConfig);
+    const teamName = names.videoDisplayName;
     entries.push({
       rank: entries.length + 1,
       playerName,
@@ -1675,7 +1963,13 @@ const buildTopScorerEntries = async (topScorersResponse, leagueId, aliasesConfig
       assists: stat?.goals?.assists ?? null,
       badge: {
         label: initials(teamName),
-        logoPath: await downloadLogo(stat?.team?.logo, apiTeamName),
+        logoPath: await resolveTeamLogo({
+          logoUrl: stat?.team?.logo,
+          apiTeamName,
+          displayTeamName: names.apiDisplayName,
+          leagueId,
+          aliasesConfig,
+        }),
       },
     });
   }
@@ -1778,8 +2072,15 @@ const buildPlayerOfRoundEntries = async ({
         continue;
       }
 
-      const teamName = resolveDisplayTeamName(apiTeamName, leagueId, aliasesConfig);
-      const logoPath = await downloadLogo(teamPayload.team?.logo, apiTeamName);
+      const names = resolveVideoTeamNames(apiTeamName, leagueId, aliasesConfig);
+      const teamName = names.videoDisplayName;
+      const logoPath = await resolveTeamLogo({
+        logoUrl: teamPayload.team?.logo,
+        apiTeamName,
+        displayTeamName: names.apiDisplayName,
+        leagueId,
+        aliasesConfig,
+      });
 
       for (const playerPayload of teamPayload.players) {
         const playerName = playerPayload.player?.name;
@@ -2145,7 +2446,8 @@ const buildContinentalGroups = async (allStandingsGroups, leagueId, aliasesConfi
     const rows = await Promise.all(
       groupRows.slice(0, 4).map(async (row) => {
         const apiTeamName = row.team?.name ?? 'TBC';
-        const teamName = resolveDisplayTeamName(apiTeamName, leagueId, aliasesConfig);
+        const names = resolveVideoTeamNames(apiTeamName, leagueId, aliasesConfig);
+        const teamName = names.videoDisplayName;
 
         return {
           rank: row.rank ?? 0,
@@ -2154,7 +2456,13 @@ const buildContinentalGroups = async (allStandingsGroups, leagueId, aliasesConfi
           points: row.points ?? 0,
           badge: {
             label: initials(teamName),
-            logoPath: await downloadLogo(row.team?.logo, apiTeamName),
+            logoPath: await resolveTeamLogo({
+              logoUrl: row.team?.logo,
+              apiTeamName,
+              displayTeamName: names.apiDisplayName,
+              leagueId,
+              aliasesConfig,
+            }),
           },
         };
       })
@@ -2242,23 +2550,24 @@ const buildWorldCupGroupJob = async ({
 
   let rows = fallbackGroup?.teams?.map((team, index) => ({
     rank: index + 1,
-    team: team.name,
+    team: translateWorldCupCountryName(team.name, languageProfile),
+    played: 0,
     goalDifference: 0,
     points: 0,
     badge: {label: team.flag},
   })) ?? [];
 
   let nextMatches = fallbackGroup?.nextMatches?.map((match) => ({
-    homeTeam: match.homeTeam,
-    awayTeam: match.awayTeam,
+    homeTeam: translateWorldCupCountryName(match.homeTeam, languageProfile),
+    awayTeam: translateWorldCupCountryName(match.awayTeam, languageProfile),
     homeBadge: {label: match.homeFlag},
     awayBadge: {label: match.awayFlag},
     dateLabel: formatWorldCupDateLabel(match.dateTime, languageProfile),
   })) ?? [];
 
   let lastResults = fallbackGroup?.lastResults?.map((match) => ({
-    homeTeam: match.homeTeam,
-    awayTeam: match.awayTeam,
+    homeTeam: translateWorldCupCountryName(match.homeTeam, languageProfile),
+    awayTeam: translateWorldCupCountryName(match.awayTeam, languageProfile),
     homeScore: match.homeScore ?? null,
     awayScore: match.awayScore ?? null,
     homeBadge: {label: match.homeFlag},
@@ -2287,7 +2596,8 @@ const buildWorldCupGroupJob = async ({
       rows = await Promise.all(
         selectedGroupRows.slice(0, 4).map(async (row) => ({
           rank: row.rank,
-          team: row.team?.name ?? 'TBC',
+          team: translateWorldCupCountryName(row.team?.name ?? 'TBC', languageProfile),
+          played: row.all?.played ?? 0,
           goalDifference: row.goalsDiff ?? 0,
           points: row.points ?? 0,
           qualifiesAsBestThird:
@@ -2305,7 +2615,16 @@ const buildWorldCupGroupJob = async ({
       );
     }
 
-    const groupTeams = new Set(rows.map((row) => normalizeGroupName(row.team)));
+    const fallbackGroupTeams = new Set(
+      (fallbackGroup?.teams ?? fallbackGroup?.standings ?? []).map((row) =>
+        normalizeGroupName(row.name ?? row.team)
+      )
+    );
+    const groupTeams = new Set(
+      selectedGroupRows?.length
+        ? selectedGroupRows.map((row) => normalizeGroupName(row.team?.name))
+        : [...fallbackGroupTeams]
+    );
     if (groupTeams.size > 0) {
       const fixturesPayload = await fetchJson(
         `https://${apiHost}/fixtures?league=1&season=${season}`,
@@ -2337,8 +2656,14 @@ const buildWorldCupGroupJob = async ({
       if (finishedFixtures.length > 0) {
         lastResults = await Promise.all(
           finishedFixtures.map(async (fixture) => ({
-            homeTeam: fixture.teams?.home?.name ?? 'TBC',
-            awayTeam: fixture.teams?.away?.name ?? 'TBC',
+            homeTeam: translateWorldCupCountryName(
+              fixture.teams?.home?.name ?? 'TBC',
+              languageProfile
+            ),
+            awayTeam: translateWorldCupCountryName(
+              fixture.teams?.away?.name ?? 'TBC',
+              languageProfile
+            ),
             homeScore: fixture.goals?.home ?? fixture.score?.fulltime?.home ?? null,
             awayScore: fixture.goals?.away ?? fixture.score?.fulltime?.away ?? null,
             homeBadge: {
@@ -2367,8 +2692,14 @@ const buildWorldCupGroupJob = async ({
       if (upcomingFixtures.length > 0) {
         nextMatches = await Promise.all(
           upcomingFixtures.map(async (fixture) => ({
-            homeTeam: fixture.teams?.home?.name ?? 'TBC',
-            awayTeam: fixture.teams?.away?.name ?? 'TBC',
+            homeTeam: translateWorldCupCountryName(
+              fixture.teams?.home?.name ?? 'TBC',
+              languageProfile
+            ),
+            awayTeam: translateWorldCupCountryName(
+              fixture.teams?.away?.name ?? 'TBC',
+              languageProfile
+            ),
             homeBadge: {
               label:
                 fallbackFlags.get(normalizeGroupName(fixture.teams?.home?.name)) ??
@@ -2488,6 +2819,265 @@ const buildWorldCupKnockoutJob = async ({
     phaseLabel: copy.worldCup.knockoutPhase(),
     ctaText: ctaText?.trim() || getFootballDefaultCta('world-cup-knockout', languageProfile),
     matches,
+  };
+};
+
+const tierlistDefinitions = [
+  {
+    key: 'champion',
+    selectionKey: 'champion',
+    label: {en: 'Champion', 'pt-br': 'Campeão'},
+    count: 1,
+    accentColor: '#FEDF00',
+  },
+  {
+    key: 'favorites',
+    selectionKey: 'favorites',
+    label: {en: 'Favorites', 'pt-br': 'Favoritos'},
+    count: 3,
+    accentColor: '#009B3A',
+  },
+  {
+    key: 'deep-run',
+    selectionKey: 'deepRun',
+    label: {en: 'Deep Run', 'pt-br': 'Vão Longe'},
+    count: 5,
+    accentColor: '#0A84FF',
+  },
+  {
+    key: 'dark-horses',
+    selectionKey: 'darkHorses',
+    label: {en: 'Dark Horses', 'pt-br': 'Zebras'},
+    count: 3,
+    accentColor: '#8E44AD',
+  },
+  {
+    key: 'group-stage-exit',
+    selectionKey: 'groupStageExit',
+    label: {en: 'Group Stage Exit', 'pt-br': 'Cai na Fase de Grupos'},
+    count: 4,
+    accentColor: '#C86430',
+  },
+  {
+    key: 'disappointment',
+    selectionKey: 'disappointment',
+    label: {en: 'Disappointment', 'pt-br': 'Decepção'},
+    count: 3,
+    accentColor: '#E74C3C',
+  },
+];
+
+const normalizeTierlistSelections = (tierlistSelections = {}) => {
+  const getValues = (selectionKey) => {
+    const value = tierlistSelections?.[selectionKey];
+    const rawValues = Array.isArray(value) ? value : String(value ?? '').split(',');
+    return rawValues.map((item) => String(item ?? '').trim()).filter(Boolean);
+  };
+
+  return Object.fromEntries(
+    tierlistDefinitions.map((tier) => [
+      tier.selectionKey,
+      getValues(tier.selectionKey).slice(0, tier.count),
+    ])
+  );
+};
+
+const worldCupFallbackTeamNames = (worldCupConfig) => [
+  ...new Set(
+    Object.values(worldCupConfig.groups ?? {})
+      .flatMap((group) => [
+        ...(group.teams ?? []).map((team) => team.name),
+        ...(group.standings ?? []).map((team) => team.team),
+      ])
+      .map((name) => String(name ?? '').trim())
+      .filter(Boolean)
+  ),
+];
+
+export const loadWorldCupTierlistTeams = async ({
+  apiKey,
+  apiHost = 'v3.football.api-sports.io',
+  season = 2026,
+  languageProfile = 'pt-br',
+} = {}) => {
+  const worldCupConfig = await loadWorldCupConfig().catch(() => ({groups: {}}));
+  const teams = new Map();
+  const addTeam = async ({name, logo}) => {
+    const originalName = String(name ?? '').trim();
+    if (!originalName) {
+      return;
+    }
+
+    const key = normalizeTeamAliasKey(originalName);
+    if (teams.has(key)) {
+      return;
+    }
+
+    const displayName = translateWorldCupCountryName(originalName, languageProfile);
+    teams.set(key, {
+      value: originalName,
+      label: displayName,
+      badge: {
+        label: initials(displayName),
+        imagePath:
+          logo && apiKey
+            ? await downloadLogo(logo, originalName)
+            : findCachedTeamLogo(originalName) ?? findCachedTeamLogo(displayName),
+      },
+    });
+  };
+
+  if (apiKey) {
+    try {
+      const standingsPayload = await fetchJson(
+        `https://${apiHost}/standings?league=1&season=${season}`,
+        apiKey,
+        apiHost
+      );
+      const allGroups = standingsPayload.response?.[0]?.league?.standings ?? [];
+      const apiRows = Array.isArray(allGroups) ? allGroups.flat() : [];
+      for (const row of apiRows) {
+        await addTeam({name: row.team?.name, logo: row.team?.logo});
+      }
+    } catch {
+      // Keep the dashboard usable with the local World Cup config.
+    }
+  }
+
+  for (const name of worldCupFallbackTeamNames(worldCupConfig)) {
+    await addTeam({name});
+  }
+
+  return [...teams.values()].sort((left, right) => left.label.localeCompare(right.label));
+};
+
+const buildTierlistJob = async ({
+  apiKey,
+  apiHost,
+  season,
+  brandName,
+  outputName,
+  channelProfile,
+  languageProfile,
+  leagueName,
+  roundLabel,
+  ctaText,
+  soundtrackPath,
+  soundtrackVolume,
+  tierlistSelections,
+  topScorerPrediction,
+  bestPlayerPrediction,
+}) => {
+  await ensureDirectories();
+
+  const normalizedSeason = Number.isFinite(Number(season)) ? Number(season) : 2026;
+  const isEnglish = languageProfile === 'en';
+  const copy = getFootballCopy(languageProfile);
+  const finalLeagueName =
+    leagueName?.trim() || (isEnglish ? `World Cup ${normalizedSeason}` : `Copa do Mundo ${normalizedSeason}`);
+  const selections = normalizeTierlistSelections(tierlistSelections);
+  const teamOptions = await loadWorldCupTierlistTeams({
+    apiKey,
+    apiHost,
+    season: normalizedSeason,
+    languageProfile,
+  });
+  const teamOptionMap = new Map(teamOptions.map((team) => [normalizeTeamAliasKey(team.value), team]));
+
+  const buildEntry = async (teamName) => {
+    const option = teamOptionMap.get(normalizeTeamAliasKey(teamName));
+    const originalName = option?.value ?? teamName;
+    const displayName = option?.label ?? translateWorldCupCountryName(originalName, languageProfile);
+    return {
+      team: displayName,
+      sourceTeam: originalName,
+      badge: {
+        label: initials(displayName),
+        imagePath:
+          option?.badge?.imagePath ??
+          findCachedTeamLogo(originalName) ??
+          findCachedTeamLogo(displayName),
+      },
+    };
+  };
+
+  const tiers = await Promise.all(
+    tierlistDefinitions.map(async (tier) => {
+      const entries = await Promise.all(
+        (selections[tier.selectionKey] ?? []).map((teamName) => buildEntry(teamName))
+      );
+      return {
+        key: tier.key,
+        label: tier.label[languageProfile] ?? tier.label.en,
+        accentColor: tier.accentColor,
+        entries,
+      };
+    })
+  );
+
+  const missingTiers = tierlistDefinitions
+    .filter((tier) => (selections[tier.selectionKey] ?? []).length !== tier.count)
+    .map((tier) => `${tier.label[languageProfile] ?? tier.label.en}: ${tier.count}`);
+  const selectedTeamKeys = tierlistDefinitions.flatMap((tier) =>
+    (selections[tier.selectionKey] ?? []).map((teamName) => normalizeTeamAliasKey(teamName))
+  );
+  const duplicateTeamKeys = selectedTeamKeys.filter(
+    (teamKey, index) => selectedTeamKeys.indexOf(teamKey) !== index
+  );
+
+  if (missingTiers.length || duplicateTeamKeys.length) {
+    const missingMessage = missingTiers.length
+      ? `Tierlist incompleta. Selecione: ${missingTiers.join(', ')}.`
+      : 'Tierlist inválida.';
+    const duplicateMessage = duplicateTeamKeys.length
+      ? ' Não repita o mesmo time em mais de uma tier.'
+      : '';
+    const error = new Error(`${missingMessage}${duplicateMessage}`);
+    error.errorType = 'tierlist_validation_error';
+    error.details = {missingTiers, duplicateTeamKeys};
+    throw error;
+  }
+
+  return {
+    ...makeBaseJob({
+      template: 'tierlist',
+      leagueId: 1,
+      season: normalizedSeason,
+      leagueName: finalLeagueName,
+      brandName,
+      outputName:
+        outputName?.trim() ||
+        `${sanitize(finalLeagueName)}-${isEnglish ? 'tierlist' : 'favoritos'}-${languageProfile}.mp4`,
+      durationInFrames: FOOTBALL_DURATION_IN_FRAMES,
+      channelProfile,
+      languageProfile,
+      soundtrackPath,
+      soundtrackVolume,
+    }),
+    compositionId: 'FootballTierlistShort',
+    leagueConfig: {
+      leagueId: 1,
+      leagueName: finalLeagueName,
+      accentColor: isEnglish ? '#0A84FF' : '#FEDF00',
+      secondaryAccentColor: isEnglish ? '#C8A84B' : '#009B3A',
+    },
+    titleLabel: 'Tierlist',
+    subtitleLabel:
+      roundLabel?.trim() || (isEnglish ? 'World Cup favorites' : 'Favoritos da Copa'),
+    topScorerPrediction: String(topScorerPrediction ?? '').trim(),
+    bestPlayerPrediction: String(bestPlayerPrediction ?? '').trim(),
+    ctaText: ctaText?.trim() || getFootballDefaultCta('tierlist', languageProfile),
+    tiers,
+    dataSource: apiKey ? 'api' : 'sample',
+    coldOpenData: {
+      tableRows: tiers.flatMap((tier) =>
+        tier.entries.slice(0, 3).map((entry) => ({
+          rank: tier.label,
+          club: entry.team,
+          pts: '',
+        }))
+      ).slice(0, 6),
+    },
   };
 };
 
@@ -2640,31 +3230,39 @@ const inferLongformTeamAccent = (teamName) => {
   return longformTeamAccentPalette[hash % longformTeamAccentPalette.length] ?? '#F0A500';
 };
 
-const findCachedTeamLogo = (teamName) => {
-  const slug = sanitize(teamName);
-  if (!slug || !fsSync.existsSync(logosDir)) {
-    return undefined;
-  }
+const resolveTeamAccentColor = (teamName, leagueId, accentConfig) => {
+  const accentKey = normalizeTeamAliasKey(teamName);
+  const leagueAccents = accentConfig?.leagues?.[String(leagueId)] ?? {};
+  const globalAccents = accentConfig?.global ?? {};
 
-  const exact = `${slug}.png`;
-  const filenames = fsSync.readdirSync(logosDir);
-  const filename =
-    filenames.find((item) => item === exact) ??
-    filenames.find((item) => item.startsWith(`${slug}-`) && item.toLowerCase().endsWith('.png'));
-
-  return filename ? `/logos/${filename}` : undefined;
+  return leagueAccents[accentKey] ?? globalAccents[accentKey];
 };
 
-const longformBadgeForTeam = (teamName, leagueId, aliasesConfig, accentColor) => {
-  const displayName = resolveDisplayTeamName(teamName, leagueId, aliasesConfig);
+const longformBadgeForTeam = (teamName, leagueId, aliasesConfig, accentConfig, accentColor) => {
+  const apiDisplayName = resolveDisplayTeamName(teamName, leagueId, aliasesConfig);
+  const displayName = resolveVideoTeamName(teamName, leagueId, aliasesConfig);
+  const configuredAccentColor =
+    resolveTeamAccentColor(displayName, leagueId, accentConfig) ??
+    resolveTeamAccentColor(apiDisplayName, leagueId, accentConfig) ??
+    resolveTeamAccentColor(teamName, leagueId, accentConfig);
+
   return {
     team: displayName,
     badge: {
       label: teamShortLabel(displayName),
-      logoPath: findCachedTeamLogo(displayName) ?? findCachedTeamLogo(teamName),
+      logoPath:
+        findYouthProfessionalLogo({
+          apiTeamName: teamName,
+          displayTeamName: apiDisplayName,
+          leagueId,
+          aliasesConfig,
+        }) ??
+        findCachedTeamLogo(apiDisplayName) ??
+        findCachedTeamLogo(displayName) ??
+        findCachedTeamLogo(teamName),
       accentColor: isHexColor(accentColor)
         ? String(accentColor).trim()
-        : inferLongformTeamAccent(displayName),
+        : configuredAccentColor ?? inferLongformTeamAccent(displayName),
     },
   };
 };
@@ -2747,6 +3345,11 @@ export const loadFootballPredictionsLongJob = async () => {
   return JSON.parse(raw);
 };
 
+export const loadFootballRoundSummaryLongJob = async () => {
+  const raw = await fs.readFile(getTemplateJobFile('round-summary-long'), 'utf8');
+  return JSON.parse(raw);
+};
+
 export const prepareFootballPredictionsLongJob = async ({
   yamlText,
   brandName,
@@ -2766,12 +3369,16 @@ export const prepareFootballPredictionsLongJob = async ({
 
   const data = parsed.data;
   const aliasesConfig = await loadTeamNameAliases();
+  const accentConfig = await loadTeamAccentColors();
   const leagueId = Number(data.leagueId);
   const normalizedLeagueId = Number.isFinite(leagueId) ? leagueId : 0;
-  const outroDurationInFrames = Math.max(210, 120 + Math.ceil(data.matches.length / 2) * 42);
   const transitionDurationInFrames = 18;
   const selectedSoundtrack = soundtrackPath?.trim() || defaultFootballSoundtrack?.value;
   const introDurationInFrames = await getAudioDurationInFrames(selectedSoundtrack, 300);
+  const outroDurationInFrames = await getAudioDurationInFrames(
+    selectedSoundtrack,
+    Math.max(210, 120 + Math.ceil(data.matches.length / 2) * 42)
+  );
 
   const matches = [];
   for (const [index, match] of data.matches.entries()) {
@@ -2780,12 +3387,14 @@ export const prepareFootballPredictionsLongJob = async ({
       match.homeTeam,
       normalizedLeagueId,
       aliasesConfig,
+      accentConfig,
       match.homeAccentColor
     );
     const away = longformBadgeForTeam(
       match.awayTeam,
       normalizedLeagueId,
       aliasesConfig,
+      accentConfig,
       match.awayAccentColor
     );
     const voiceover = String(match.voiceover).trim();
@@ -2863,6 +3472,303 @@ export const prepareFootballPredictionsLongJob = async ({
   return {job, validation: parsed};
 };
 
+const roundSummaryStatLabels = [
+  ['Shots on Goal', 'No alvo'],
+  ['Total Shots', 'Finalizações'],
+  ['Ball Possession', 'Posse'],
+  ['Corner Kicks', 'Escanteios'],
+  ['Fouls', 'Faltas'],
+  ['Yellow Cards', 'Cartões amarelos'],
+  ['Red Cards', 'Cartões vermelhos'],
+  ['Goalkeeper Saves', 'Defesas'],
+  ['Passes %', 'Precisão passe'],
+];
+
+const normalizeApiStatisticValue = (value) => {
+  if (value === null || value === undefined || value === '') return '0';
+  return String(value);
+};
+
+const findStatistic = (teamStats, type) => {
+  const row = teamStats.find(
+    (stat) => normalizeTeamAliasKey(stat?.type) === normalizeTeamAliasKey(type)
+  );
+  return normalizeApiStatisticValue(row?.value);
+};
+
+const buildRoundSummaryStats = (statisticsPayload) => {
+  const teams = Array.isArray(statisticsPayload?.response) ? statisticsPayload.response : [];
+  const homeStats = Array.isArray(teams[0]?.statistics) ? teams[0].statistics : [];
+  const awayStats = Array.isArray(teams[1]?.statistics) ? teams[1].statistics : [];
+
+  return roundSummaryStatLabels
+    .map(([apiType, label]) => ({
+      label,
+      homeValue: findStatistic(homeStats, apiType),
+      awayValue: findStatistic(awayStats, apiType),
+    }))
+    .filter((stat) => stat.homeValue !== '0' || stat.awayValue !== '0')
+    .slice(0, 7);
+};
+
+const mapRoundSummaryEventType = (event) => {
+  const type = String(event?.type ?? '').toLowerCase();
+  const detail = String(event?.detail ?? '').toLowerCase();
+
+  if (type.includes('goal')) {
+    return detail.includes('penalty') ? 'penalty' : 'goal';
+  }
+  if (type.includes('card')) return 'card';
+  if (type.includes('subst')) return 'subst';
+  if (type.includes('var')) return 'var';
+  return 'other';
+};
+
+const buildRoundSummaryEvents = (eventsPayload, homeTeamName, awayTeamName) => {
+  const events = Array.isArray(eventsPayload?.response) ? eventsPayload.response : [];
+
+  return events
+    .map((event) => {
+      const teamName = String(event?.team?.name ?? '').trim();
+      const side =
+        normalizeTeamAliasKey(teamName) === normalizeTeamAliasKey(homeTeamName) ? 'home' : 'away';
+      return {
+        minute: Number(event?.time?.elapsed ?? 0),
+        extraMinute: Number.isFinite(Number(event?.time?.extra)) ? Number(event.time.extra) : null,
+        team: teamName,
+        player: String(event?.player?.name ?? '').trim(),
+        assist: String(event?.assist?.name ?? '').trim() || null,
+        type: mapRoundSummaryEventType(event),
+        detail: String(event?.detail ?? event?.type ?? '').trim(),
+        side,
+      };
+    })
+    .filter((event) => event.minute > 0 && ['goal', 'penalty', 'card', 'var'].includes(event.type))
+    .sort((left, right) => left.minute - right.minute);
+};
+
+const buildRoundSummaryHighlights = ({fixture, stats, events, homeTeam, awayTeam}) => {
+  const highlights = [];
+  const goals = events.filter((event) => event.type === 'goal' || event.type === 'penalty');
+  const redCards = events.filter((event) => event.type === 'card' && /red|vermelho/i.test(event.detail));
+  const possession = stats.find((stat) => stat.label === 'Posse');
+  const shots = stats.find((stat) => stat.label === 'Finalizações');
+  const homeScore = Number(fixture?.goals?.home ?? 0);
+  const awayScore = Number(fixture?.goals?.away ?? 0);
+
+  if (homeScore !== awayScore) {
+    highlights.push(`${homeScore > awayScore ? homeTeam : awayTeam} venceu pelo placar de ${homeScore} a ${awayScore}.`);
+  } else {
+    highlights.push(`Empate em ${homeScore} a ${awayScore}, com equilíbrio no placar final.`);
+  }
+  if (goals.length) {
+    highlights.push(`Gols de ${goals.map((event) => event.player || event.team).join(', ')}.`);
+  }
+  if (redCards.length) {
+    highlights.push(`Expulsão para ${redCards.map((event) => event.player || event.team).join(', ')}.`);
+  }
+  if (shots && shots.homeValue !== '0' && shots.awayValue !== '0') {
+    highlights.push(`Finalizações: ${homeTeam} ${shots.homeValue}, ${awayTeam} ${shots.awayValue}.`);
+  }
+  if (possession && possession.homeValue !== '0' && possession.awayValue !== '0') {
+    highlights.push(`Posse de bola: ${homeTeam} ${possession.homeValue}, ${awayTeam} ${possession.awayValue}.`);
+  }
+
+  return highlights.slice(0, 4);
+};
+
+export const parseFootballRoundSummaryLongYaml = (yamlText) => {
+  const data = parseSimpleYaml(yamlText);
+  const errors = [];
+  const matches = Array.isArray(data.matches) ? data.matches : [];
+
+  if (!matches.length) errors.push('Missing required field: matches.');
+
+  const seen = new Set();
+  matches.forEach((match, index) => {
+    const label = `Match ${index + 1}`;
+    const fixtureId = Number(match.fixtureId);
+    const voiceover = String(match.voiceover ?? '').trim();
+
+    if (!Number.isFinite(fixtureId)) errors.push(`${label}: fixtureId is required.`);
+    if (!voiceover) errors.push(`${label}: voiceover is required.`);
+    if (seen.has(fixtureId)) errors.push(`${label}: duplicate fixtureId ${fixtureId}.`);
+    seen.add(fixtureId);
+  });
+
+  return {
+    ok: errors.length === 0,
+    errors,
+    data,
+  };
+};
+
+export const prepareFootballRoundSummaryLongJob = async ({
+  yamlText,
+  apiKey,
+  apiHost,
+  brandName,
+  soundtrackPath,
+  soundtrackVolume,
+  voiceoverEnabled = true,
+}) => {
+  await ensureDirectories();
+
+  const parsed = parseFootballRoundSummaryLongYaml(yamlText);
+  if (!parsed.ok) {
+    const error = new Error(parsed.errors.join('\n'));
+    error.errorType = 'yaml_validation_error';
+    error.details = {errors: parsed.errors};
+    throw error;
+  }
+
+  const data = parsed.data;
+  const aliasesConfig = await loadTeamNameAliases();
+  const accentConfig = await loadTeamAccentColors();
+  const selectedSoundtrack = soundtrackPath?.trim() || defaultFootballSoundtrack?.value;
+  const introDurationInFrames = await getAudioDurationInFrames(selectedSoundtrack, 300);
+  const outroDurationInFrames = await getAudioDurationInFrames(selectedSoundtrack, 300);
+  const transitionDurationInFrames = 18;
+
+  const matches = [];
+  let leagueId = Number(data.leagueId);
+  let season = Number(data.season);
+  let leagueName = String(data.league ?? '').trim();
+  let roundLabel = String(data.round ?? '').trim();
+
+  for (const [index, match] of data.matches.entries()) {
+    const fixtureId = Number(match.fixtureId);
+    const fixturePayload = await fetchJson(
+      `https://${apiHost}/fixtures?id=${fixtureId}`,
+      apiKey,
+      apiHost
+    );
+    const fixture = fixturePayload.response?.[0];
+    if (!fixture) {
+      throw new Error(`No fixture found for fixtureId ${fixtureId}.`);
+    }
+
+    leagueId = Number.isFinite(leagueId) ? leagueId : Number(fixture.league?.id);
+    season = Number.isFinite(season) ? season : Number(fixture.league?.season);
+    leagueName =
+      leagueName ||
+      getLeagueNameWithSeason(fixture.league?.name ?? `League ${leagueId}`, season, 'pt-br');
+    roundLabel = roundLabel || deriveFootballRoundLabel('results', fixture.league?.round ?? '', 'pt-br');
+
+    const apiHomeTeam = fixture.teams?.home?.name;
+    const apiAwayTeam = fixture.teams?.away?.name;
+    const home = longformBadgeForTeam(apiHomeTeam, leagueId, aliasesConfig, accentConfig);
+    const away = longformBadgeForTeam(apiAwayTeam, leagueId, aliasesConfig, accentConfig);
+    const eventsPayload = await fetchJson(
+      `https://${apiHost}/fixtures/events?fixture=${fixtureId}`,
+      apiKey,
+      apiHost
+    );
+    const statisticsPayload = await fetchJson(
+      `https://${apiHost}/fixtures/statistics?fixture=${fixtureId}`,
+      apiKey,
+      apiHost
+    );
+    const events = buildRoundSummaryEvents(eventsPayload, apiHomeTeam, apiAwayTeam);
+    const keyStats = buildRoundSummaryStats(statisticsPayload);
+    const voiceover = String(match.voiceover).trim();
+    const voiceoverPath =
+      voiceoverEnabled !== false
+        ? await generateGoogleVoiceover({text: voiceover, languageProfile: 'pt-br'})
+        : undefined;
+
+    matches.push({
+      id: `${sanitize(home.team)}-${sanitize(away.team)}-${index + 1}`,
+      fixtureId,
+      homeTeam: home.team,
+      awayTeam: away.team,
+      homeScore: Number(fixture.goals?.home ?? fixture.score?.fulltime?.home ?? 0),
+      awayScore: Number(fixture.goals?.away ?? fixture.score?.fulltime?.away ?? 0),
+      fixtureDateLabel: getFixtureDateKey(fixture, 'pt-br') ?? undefined,
+      venueLabel: fixture.fixture?.venue?.name ?? undefined,
+      statusLabel: fixture.fixture?.status?.short ?? 'FT',
+      voiceover,
+      voiceoverPath,
+      durationInFrames: estimateVoiceoverFrames(voiceover),
+      homeBadge: {
+        ...home.badge,
+        logoPath:
+          (await resolveTeamLogo({
+            logoUrl: fixture.teams?.home?.logo,
+            apiTeamName: apiHomeTeam,
+            displayTeamName: home.team,
+            leagueId,
+            aliasesConfig,
+          })) ?? home.badge.logoPath,
+      },
+      awayBadge: {
+        ...away.badge,
+        logoPath:
+          (await resolveTeamLogo({
+            logoUrl: fixture.teams?.away?.logo,
+            apiTeamName: apiAwayTeam,
+            displayTeamName: away.team,
+            leagueId,
+            aliasesConfig,
+          })) ?? away.badge.logoPath,
+      },
+      events,
+      keyStats,
+      highlights: buildRoundSummaryHighlights({fixture, stats: keyStats, events, homeTeam: home.team, awayTeam: away.team}),
+    });
+  }
+
+  const matchDurationTotal = matches.reduce(
+    (total, match) => total + match.durationInFrames + transitionDurationInFrames,
+    0
+  );
+  const title = String(data.title ?? '').trim() || 'Resumo da Rodada';
+  const outputName = String(data.outputName ?? '').trim() || `${sanitize(title)}.mp4`;
+  const normalizedOutputName = outputName.toLowerCase().endsWith('.mp4')
+    ? outputName
+    : `${outputName}.mp4`;
+  const openingLines = [data.openingLine1, data.openingLine2]
+    .map((line) => String(line ?? '').trim())
+    .filter(Boolean);
+
+  const job = {
+    sport: 'football',
+    template: 'round-summary-long',
+    compositionId: 'FootballRoundSummaryLong',
+    leagueId: Number.isFinite(leagueId) ? leagueId : 0,
+    season: Number.isFinite(season) ? season : new Date().getFullYear(),
+    leagueName: leagueName || 'Football',
+    channelProfile: 'pt',
+    languageProfile: 'pt-br',
+    brandName: brandName?.trim() || 'Foot Analysis',
+    brandLogoPath: '/branding/foot-analysis-logo.png',
+    soundtrackPath: selectedSoundtrack,
+    soundtrackLabel:
+      footballSoundtrackPresets.find((preset) => preset.value === selectedSoundtrack)?.label ??
+      defaultFootballSoundtrack?.label,
+    soundtrackVolume: Number.isFinite(Number(soundtrackVolume))
+      ? Math.max(0, Math.min(1, Number(soundtrackVolume)))
+      : 0.92,
+    outputName: normalizedOutputName,
+    durationInFrames:
+      introDurationInFrames + matchDurationTotal + outroDurationInFrames,
+    dataSource: 'api',
+    title,
+    roundLabel: roundLabel || title,
+    openingLines,
+    introDurationInFrames,
+    outroDurationInFrames,
+    transitionDurationInFrames,
+    disclaimer: 'Os dados são baseados nas informações disponíveis da partida.',
+    voiceoverEnabled: voiceoverEnabled !== false,
+    matches,
+  };
+
+  await writeFootballJobFiles(job);
+
+  return {job, validation: parsed};
+};
+
 export const loadCurrentJob = async () => {
   const raw = await fs.readFile(currentJobFile, 'utf8');
   return JSON.parse(raw);
@@ -2900,6 +3806,9 @@ export const prepareJob = async ({
   fixtureEdits,
   standingEdits,
   seasonFinalVerdictEdits,
+  tierlistSelections,
+  topScorerPrediction,
+  bestPlayerPrediction,
 }) => {
   await ensureDirectories();
 
@@ -2919,6 +3828,36 @@ export const prepareJob = async ({
       soundtrackPath,
       soundtrackVolume,
       leagueName,
+    });
+    const job = await addFootballIntroAndVoiceover(baseJob, {
+      introTitle,
+      introSubtitle,
+      hookText,
+      voiceoverText,
+      voiceoverEnabled,
+    });
+
+    await writeFootballJobFiles(job);
+    return {job, files: {currentJobFile, logosDir}};
+  }
+
+  if (template === 'tierlist') {
+    const baseJob = await buildTierlistJob({
+      apiKey,
+      apiHost,
+      season,
+      brandName,
+      outputName,
+      channelProfile,
+      languageProfile,
+      leagueName,
+      roundLabel,
+      ctaText,
+      soundtrackPath,
+      soundtrackVolume,
+      tierlistSelections,
+      topScorerPrediction,
+      bestPlayerPrediction,
     });
     const job = await addFootballIntroAndVoiceover(baseJob, {
       introTitle,

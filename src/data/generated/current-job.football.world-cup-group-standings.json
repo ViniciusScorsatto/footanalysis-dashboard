@@ -8,9 +8,9 @@
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/gridiron-surge-1.mp3",
-  "soundtrackLabel": "Gridiron Surge (1)",
-  "soundtrackVolume": 0.15,
+  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
+  "soundtrackLabel": "Gol de Arena",
+  "soundtrackVolume": 0.1,
   "outputName": "copa-do-mundo-2026-grupo-a-pt-br.mp4",
   "durationInFrames": 270,
   "compositionId": "FootballWorldCupGroupShort",
@@ -24,16 +24,22 @@
     "gd": "SG",
     "pts": "Pts"
   },
+  "qualificationLegend": {
+    "direct": "1º e 2º avançam",
+    "bestThird": "8 melhores terceiros"
+  },
   "lastResultsLabel": "Últimos Resultados - Grupo A",
   "nextMatchesLabel": "Próximos Jogos - Grupo A",
   "groupMatchSectionMode": "next-only",
-  "ctaText": "Lens wins the Coupe de France for the first time in their history.",
+  "ctaText": "Quem faz mais gols?",
   "rows": [
     {
       "rank": 1,
-      "team": "Mexico",
+      "team": "México",
+      "played": 0,
       "goalDifference": 0,
       "points": 0,
+      "qualifiesAsBestThird": false,
       "badge": {
         "label": "🇲🇽",
         "imagePath": "/logos/mexico-16.png"
@@ -41,9 +47,11 @@
     },
     {
       "rank": 2,
-      "team": "South Africa",
+      "team": "África do Sul",
+      "played": 0,
       "goalDifference": 0,
       "points": 0,
+      "qualifiesAsBestThird": false,
       "badge": {
         "label": "🇿🇦",
         "imagePath": "/logos/south-africa-1531.png"
@@ -51,9 +59,11 @@
     },
     {
       "rank": 3,
-      "team": "South Korea",
+      "team": "Coreia do Sul",
+      "played": 0,
       "goalDifference": 0,
       "points": 0,
+      "qualifiesAsBestThird": false,
       "badge": {
         "label": "SK",
         "imagePath": "/logos/south-korea-17.png"
@@ -61,9 +71,11 @@
     },
     {
       "rank": 4,
-      "team": "Czech Republic",
+      "team": "Rep. Tcheca",
+      "played": 0,
       "goalDifference": 0,
       "points": 0,
+      "qualifiesAsBestThird": false,
       "badge": {
         "label": "CR",
         "imagePath": "/logos/czech-republic-770.png"
@@ -73,8 +85,8 @@
   "lastResults": [],
   "nextMatches": [
     {
-      "homeTeam": "Mexico",
-      "awayTeam": "South Africa",
+      "homeTeam": "México",
+      "awayTeam": "África do Sul",
       "homeBadge": {
         "label": "🇲🇽",
         "imagePath": "/logos/mexico-16.png"
@@ -86,8 +98,8 @@
       "dateLabel": "11 de jun • 16:00 (BRT)"
     },
     {
-      "homeTeam": "South Korea",
-      "awayTeam": "Czech Republic",
+      "homeTeam": "Coreia do Sul",
+      "awayTeam": "Rep. Tcheca",
       "homeBadge": {
         "label": "SK",
         "imagePath": "/logos/south-korea-17.png"
@@ -102,6 +114,30 @@
   "introTitle": "Copa do Mundo 2026",
   "introSubtitle": "Grupo A",
   "hookText": "Quem sai desse grupo?",
+  "coldOpenData": {
+    "tableRows": [
+      {
+        "rank": 1,
+        "club": "MÉXICO",
+        "pts": 0
+      },
+      {
+        "rank": 2,
+        "club": "ÁFRICA DO SUL",
+        "pts": 0
+      },
+      {
+        "rank": 3,
+        "club": "COREIA DO SUL",
+        "pts": 0
+      },
+      {
+        "rank": 4,
+        "club": "REP. TCHECA",
+        "pts": 0
+      }
+    ]
+  },
   "voiceoverEnabled": false,
   "voiceoverText": "Fala Galera, pra vocês... Grupo A da Copa do Mundo 2026."
 }

@@ -8,8 +8,8 @@
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/gol-de-hoje.mp3",
-  "soundtrackLabel": "Gol de Hoje",
+  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
+  "soundtrackLabel": "Gol de Arena",
   "soundtrackVolume": 0.1,
   "outputName": "brasileirao-serie-a-2026-ritmo-de-campeao-pt-br.mp4",
   "durationInFrames": 270,
@@ -73,7 +73,7 @@
     }
   },
   "titleLabel": "Ritmo de Campeão",
-  "subtitleLabel": "Aproveitamento na Rodada 17",
+  "subtitleLabel": "Aproveitamento na Rodada 18",
   "benchmarkPercentage": 68,
   "benchmarkLabel": "Média dos últimos 10 campeões",
   "noteLabel": "*times com jogos a menos",
@@ -82,9 +82,9 @@
     {
       "rank": 1,
       "team": "Palmeiras",
-      "played": 17,
-      "points": 38,
-      "percentage": 75,
+      "played": 18,
+      "points": 41,
+      "percentage": 76,
       "hasGameInHand": false,
       "badge": {
         "label": "P",
@@ -94,9 +94,9 @@
     {
       "rank": 2,
       "team": "Flamengo",
-      "played": 16,
-      "points": 31,
-      "percentage": 65,
+      "played": 17,
+      "points": 34,
+      "percentage": 67,
       "hasGameInHand": true,
       "badge": {
         "label": "F",
@@ -106,9 +106,9 @@
     {
       "rank": 3,
       "team": "Fluminense",
-      "played": 17,
-      "points": 30,
-      "percentage": 59,
+      "played": 18,
+      "points": 31,
+      "percentage": 57,
       "hasGameInHand": false,
       "badge": {
         "label": "F",
@@ -118,9 +118,9 @@
     {
       "rank": 4,
       "team": "Athletico-PR",
-      "played": 17,
-      "points": 27,
-      "percentage": 53,
+      "played": 18,
+      "points": 30,
+      "percentage": 56,
       "hasGameInHand": false,
       "badge": {
         "label": "A",
@@ -130,9 +130,9 @@
     {
       "rank": 5,
       "team": "RB Bragantino",
-      "played": 17,
-      "points": 26,
-      "percentage": 51,
+      "played": 18,
+      "points": 29,
+      "percentage": 54,
       "hasGameInHand": false,
       "badge": {
         "label": "RB",
@@ -141,34 +141,10 @@
     },
     {
       "rank": 6,
-      "team": "Coritiba",
+      "team": "Bahia",
       "played": 17,
       "points": 26,
       "percentage": 51,
-      "hasGameInHand": false,
-      "badge": {
-        "label": "C",
-        "logoPath": "/logos/coritiba-147.png"
-      }
-    },
-    {
-      "rank": 7,
-      "team": "Sao Paulo",
-      "played": 17,
-      "points": 25,
-      "percentage": 49,
-      "hasGameInHand": false,
-      "badge": {
-        "label": "SP",
-        "logoPath": "/logos/sao-paulo-126.png"
-      }
-    },
-    {
-      "rank": 8,
-      "team": "Bahia",
-      "played": 16,
-      "points": 23,
-      "percentage": 48,
       "hasGameInHand": true,
       "badge": {
         "label": "B",
@@ -176,33 +152,57 @@
       }
     },
     {
-      "rank": 10,
-      "team": "Botafogo",
-      "played": 16,
-      "points": 22,
-      "percentage": 46,
-      "hasGameInHand": true,
+      "rank": 7,
+      "team": "Coritiba",
+      "played": 18,
+      "points": 26,
+      "percentage": 48,
+      "hasGameInHand": false,
       "badge": {
-        "label": "B",
-        "logoPath": "/logos/botafogo-120.png"
+        "label": "C",
+        "logoPath": "/logos/coritiba-147.png"
       }
     },
     {
-      "rank": 11,
-      "team": "Vitoria",
-      "played": 16,
-      "points": 22,
+      "rank": 8,
+      "team": "Sao Paulo",
+      "played": 18,
+      "points": 25,
       "percentage": 46,
-      "hasGameInHand": true,
+      "hasGameInHand": false,
       "badge": {
-        "label": "V",
-        "logoPath": "/logos/vitoria-136.png"
+        "label": "SP",
+        "logoPath": "/logos/sao-paulo-126.png"
+      }
+    },
+    {
+      "rank": 9,
+      "team": "Atletico-MG",
+      "played": 18,
+      "points": 24,
+      "percentage": 44,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "A",
+        "logoPath": "/logos/atletico-mg-1062.png"
+      }
+    },
+    {
+      "rank": 10,
+      "team": "Corinthians",
+      "played": 18,
+      "points": 24,
+      "percentage": 44,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/corinthians-131.png"
       }
     }
   ],
   "introTitle": "Brasileirão Série A",
-  "introSubtitle": "Aproveitamento na Rodada 17",
-  "hookText": "Quem tem aproveitamento de campeão?",
+  "introSubtitle": "Aproveitamento na Rodada 18",
+  "hookText": "Só o Palmeiras está acima dessa linha",
   "coldOpenData": {
     "tableRows": [
       {
@@ -227,8 +227,6 @@
       }
     ]
   },
-  "voiceoverEnabled": true,
-  "voiceoverText": "Fala galera.. agora só o palmeiras está com aproveitamento de campeão... será que o Verdão leva a taça?",
-  "voiceoverPath": "/voiceovers/football/pt-br-23fad9e44c0ac716.mp3",
-  "voiceoverLabel": "Fala galera.. agora só o palmeiras está com aproveitamento de campeão... será que o Verdão leva a taça?"
+  "voiceoverEnabled": false,
+  "voiceoverText": "Fala Galera, pra vocês... o ritmo de campeão do Brasileirão Série A."
 }

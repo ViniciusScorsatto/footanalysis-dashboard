@@ -15,6 +15,7 @@ const copyByLanguage = {
       'player-of-round': ['Quem brilhou na rodada?', 'O craque saiu daqui', 'Essa nota te convence?'],
       'championship-pace': ['Quem tem ritmo de taça?', 'Esse ritmo segura o título?', 'A corrida pelo topo apertou'],
       'relegation-line': ['A linha está chegando', 'Quem escapa agora?', 'A briga contra a queda apertou'],
+      tierlist: ['Minha tierlist da Copa', 'Quem chega como favorito?', 'A Copa já tem favoritos'],
       'continental-groups-standings': ['Os grupos mudaram', 'Quem está passando agora?', 'Essa chave está viva'],
       predictions: ['Você crava esses placares?', 'Vai ter zebra aqui?', 'Seus palpites batem?'],
       'world-cup-group-standings': ['Quem sai desse grupo?', 'A vaga está aberta', 'Olho na tabela da Copa'],
@@ -75,6 +76,12 @@ const copyByLanguage = {
         'Quem reage a tempo?',
         'Quem está mais ameaçado?',
       ],
+      tierlist: [
+        'Concorda com essa lista?',
+        'Quem ficou alto demais?',
+        'Quem faltou nessa tierlist?',
+        'Quem é o campeão pra você?',
+      ],
       'continental-groups-standings': [
         'Quem avança?',
         'Quem passa em primeiro?',
@@ -110,6 +117,7 @@ const copyByLanguage = {
       'player-of-round': 'Craque da Rodada',
       'championship-pace': 'Ritmo de Campeão',
       'relegation-line': 'Linha do Rebaixamento',
+      tierlist: 'Tierlist',
       'continental-groups-standings': 'Grupos Continentais',
       predictions: 'Palpites',
       'world-cup-group-standings': 'Grupos da Copa',
@@ -147,6 +155,7 @@ const copyByLanguage = {
       'player-of-round': ['Who owned the round?', 'Your MVP is here', 'Does this rating hold up?'],
       'championship-pace': ['Who has title pace?', 'Can this pace win it?', 'The title race tightened'],
       'relegation-line': ['The drop zone is moving', 'Who escapes now?', 'Survival mode is on'],
+      tierlist: ['My World Cup tierlist', 'Who are the real favorites?', 'The favorites are set'],
       'continental-groups-standings': ['The groups just shifted', 'Who goes through now?', 'This group is alive'],
       predictions: ['Can you call these scores?', 'Where is the upset?', 'Lock in your picks'],
       'world-cup-group-standings': ['Who gets out of this group?', 'The spots are open', 'World Cup table check'],
@@ -207,6 +216,12 @@ const copyByLanguage = {
         'Who turns it around?',
         'Who is in the most danger?',
       ],
+      tierlist: [
+        'Do you agree with this list?',
+        'Who is too high?',
+        'Who is missing here?',
+        'Who wins it for you?',
+      ],
       'continental-groups-standings': [
         'Who goes through?',
         'Who tops the group?',
@@ -242,6 +257,7 @@ const copyByLanguage = {
       'player-of-round': 'Player of the Round',
       'championship-pace': 'Title Pace',
       'relegation-line': 'Relegation Line',
+      tierlist: 'Tierlist',
       'continental-groups-standings': 'Continental Groups',
       predictions: 'Predictions',
       'world-cup-group-standings': 'World Cup Groups',
@@ -459,6 +475,9 @@ export const getFootballIntroDefaults = ({
     'relegation-line': pt
       ? withPtIntro(`a linha do rebaixamento ${ptCompetition}`)
       : `Relegation line in the ${leagueWithoutSeason}`,
+    tierlist: pt
+      ? withPtIntro(`a tierlist de favoritos da ${worldCupTitle}`)
+      : `${worldCupTitle} favorites tierlist`,
     'continental-groups-standings': pt
       ? withPtIntro(`a tabela dos grupos ${ptCompetition}`)
       : `${leagueWithoutSeason} group standings`,
@@ -471,7 +490,7 @@ export const getFootballIntroDefaults = ({
   };
 
   return {
-    introTitle: template === 'world-cup-group-standings' || template === 'world-cup-knockout'
+    introTitle: template === 'world-cup-group-standings' || template === 'world-cup-knockout' || template === 'tierlist'
       ? worldCupTitle
       : title,
     introSubtitle: template === 'world-cup-group-standings'

@@ -1,22 +1,22 @@
 {
   "sport": "football",
   "template": "champion-final",
-  "leagueId": 40,
+  "leagueId": 2,
   "season": 2025,
-  "leagueName": "Championship",
+  "leagueName": "Champions League",
   "channelProfile": "en",
   "languageProfile": "en",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/gridiron-surge-1.mp3",
-  "soundtrackLabel": "Gridiron Surge (1)",
-  "soundtrackVolume": 0.15,
-  "outputName": "championship-2025-champions-en.mp4",
+  "soundtrackPath": "/audio/football/Champions - European Nights.mp3",
+  "soundtrackLabel": "Champions - European Nights",
+  "soundtrackVolume": 0.2,
+  "outputName": "champions-league-2025-champions-en.mp4",
   "durationInFrames": 270,
   "compositionId": "FootballChampionFinalShort",
   "leagueConfig": {
-    "leagueId": 40,
-    "accentColor": "#8CA0B4",
+    "leagueId": 2,
+    "accentColor": "#C8A84B",
     "standings": {
       "safeArea": {
         "left": 64,
@@ -41,41 +41,50 @@
         }
       ]
     },
-    "leagueName": "Championship"
+    "leagueName": "Champions League"
   },
-  "championTeam": "Hull City",
+  "championTeam": "PSG",
   "championBadge": {
-    "label": "HC",
-    "logoPath": "/logos/hull-city-64.png"
+    "label": "P",
+    "logoPath": "/logos/paris-saint-germain-85.png"
   },
   "titleLabel": "Champions",
-  "subtitleLabel": "Championship",
+  "subtitleLabel": "Champions League",
   "seasonLabel": "Season 2025/26",
-  "ctaText": "Lens wins the Coupe de France for the first time in their history.",
+  "ctaText": "Paris Saint-Germain secured consecutive Champions League titles.",
   "finalFixture": {
-    "fixtureId": 1545715,
-    "fixtureDateKey": "2026-05-24",
-    "homeTeam": "Hull City",
-    "awayTeam": "Middlesbrough",
+    "fixtureId": 1544371,
+    "fixtureDateKey": "2026-05-31",
+    "homeTeam": "PSG",
+    "awayTeam": "Arsenal",
     "homeScore": 1,
-    "awayScore": 0,
+    "awayScore": 1,
     "homeEliminated": false,
     "awayEliminated": false,
-    "hasPenalties": false,
-    "homePenaltyScore": null,
-    "awayPenaltyScore": null,
+    "hasPenalties": true,
+    "homePenaltyScore": 4,
+    "awayPenaltyScore": 3,
     "homeBadge": {
-      "label": "HC",
-      "logoPath": "/logos/hull-city-64.png"
+      "label": "P",
+      "logoPath": "/logos/paris-saint-germain-85.png"
     },
     "awayBadge": {
-      "label": "M",
-      "logoPath": "/logos/middlesbrough-70.png"
+      "label": "A",
+      "logoPath": "/logos/arsenal-42.png"
     }
   },
-  "introTitle": "Championship",
-  "introSubtitle": "Championship",
-  "hookText": "The trophy has a home",
+  "introTitle": "Champions League",
+  "introSubtitle": "Champions League",
+  "hookText": "Paris Saint-Germain secured consecutive Champions League titles.",
+  "coldOpenData": {
+    "tableRows": [
+      {
+        "rank": 1,
+        "club": "PSG",
+        "pts": 1
+      }
+    ]
+  },
   "voiceoverEnabled": false,
-  "voiceoverText": "Championship champions"
+  "voiceoverText": "Champions League champions"
 }

@@ -8,6 +8,7 @@ export type FootballVideoTemplate =
   | 'next-games'
   | 'predictions'
   | 'predictions-long'
+  | 'round-summary-long'
   | 'standings'
   | 'top-scorers'
   | 'player-of-round'
@@ -15,11 +16,23 @@ export type FootballVideoTemplate =
   | 'champion-final'
   | 'championship-pace'
   | 'relegation-line'
+  | 'tierlist'
   | 'continental-groups-standings'
   | 'world-cup-group-standings'
   | 'world-cup-knockout';
 
 export type VideoTemplate = FootballVideoTemplate;
+
+export type FootballThumbnailPreset = 'matchup' | 'result' | 'table-story' | 'champion';
+export type FootballThumbnailModel =
+  | 'model-1'
+  | 'model-2'
+  | 'model-3'
+  | 'model-4'
+  | 'model-5'
+  | 'model-6'
+  | 'model-7'
+  | 'model-8';
 
 export type TeamBadge = {
   label: string;
@@ -186,6 +199,56 @@ export type FootballPredictionsLongVideoJob = FootballBaseVideoJob & {
   disclaimer: string;
 };
 
+export type RoundSummaryEvent = {
+  minute: number;
+  extraMinute?: number | null;
+  team: string;
+  player: string;
+  assist?: string | null;
+  type: 'goal' | 'card' | 'subst' | 'var' | 'penalty' | 'other';
+  detail: string;
+  side: 'home' | 'away';
+};
+
+export type RoundSummaryStatistic = {
+  label: string;
+  homeValue: string;
+  awayValue: string;
+};
+
+export type RoundSummaryMatch = {
+  id: string;
+  fixtureId: number;
+  homeTeam: string;
+  awayTeam: string;
+  homeScore: number;
+  awayScore: number;
+  fixtureDateLabel?: string;
+  venueLabel?: string;
+  statusLabel?: string;
+  voiceover: string;
+  voiceoverPath?: string;
+  durationInFrames: number;
+  homeBadge: TeamBadge;
+  awayBadge: TeamBadge;
+  events: RoundSummaryEvent[];
+  keyStats: RoundSummaryStatistic[];
+  highlights: string[];
+};
+
+export type FootballRoundSummaryLongVideoJob = FootballBaseVideoJob & {
+  template: 'round-summary-long';
+  compositionId: 'FootballRoundSummaryLong';
+  title: string;
+  roundLabel: string;
+  openingLines?: string[];
+  matches: RoundSummaryMatch[];
+  introDurationInFrames: number;
+  outroDurationInFrames: number;
+  transitionDurationInFrames: number;
+  disclaimer: string;
+};
+
 export type StandingsVideoJob = FootballBaseVideoJob & {
   template: 'standings';
   compositionId: 'FootballStandingsShort';
@@ -314,6 +377,35 @@ export type ContinentalGroupsStandingsVideoJob = FootballBaseVideoJob & {
   groups: ContinentalGroupStandingsGroup[];
 };
 
+export type TierlistEntry = {
+  team: string;
+  sourceTeam?: string;
+  badge: TeamBadge;
+};
+
+export type TierlistGroup = {
+  key:
+    | 'champion'
+    | 'favorites'
+    | 'deep-run'
+    | 'dark-horses'
+    | 'group-stage-exit'
+    | 'disappointment';
+  label: string;
+  accentColor: string;
+  entries: TierlistEntry[];
+};
+
+export type TierlistVideoJob = FootballBaseVideoJob & {
+  template: 'tierlist';
+  compositionId: 'FootballTierlistShort';
+  titleLabel: string;
+  subtitleLabel: string;
+  topScorerPrediction?: string;
+  bestPlayerPrediction?: string;
+  tiers: TierlistGroup[];
+};
+
 export type WorldCupGroupRow = {
   rank: number;
   team: string;
@@ -387,15 +479,43 @@ export type WorldCupKnockoutVideoJob = FootballBaseVideoJob & {
   matches: WorldCupKnockoutMatch[];
 };
 
+export type FootballThumbnailJob = {
+  sport: 'football';
+  template: 'thumbnail';
+  compositionId: 'FootballThumbnailStill';
+  channelProfile?: FootballChannelProfile;
+  languageProfile?: FootballLanguageProfile;
+  preset: FootballThumbnailPreset;
+  thumbnailModel?: FootballThumbnailModel;
+  brandName: string;
+  brandLogoPath?: string;
+  leagueName: string;
+  headline: string;
+  subheadline?: string;
+  extraLabel?: string;
+  outputName: string;
+  accentColor?: string;
+  secondaryAccentColor?: string;
+  backgroundImagePath?: string;
+  teamA: TeamBadge;
+  teamB?: TeamBadge;
+  teamC?: TeamBadge;
+  teamD?: TeamBadge;
+  teamE?: TeamBadge;
+  teamF?: TeamBadge;
+};
+
 export type FootballVideoJob =
   | ResultsVideoJob
   | FootballPredictionsLongVideoJob
+  | FootballRoundSummaryLongVideoJob
   | StandingsVideoJob
   | SeasonFinalVerdictVideoJob
   | ChampionFinalVideoJob
   | TopScorersVideoJob
   | PlayerOfRoundVideoJob
   | PaceVideoJob
+  | TierlistVideoJob
   | ContinentalGroupsStandingsVideoJob
   | WorldCupGroupVideoJob
   | WorldCupKnockoutVideoJob;

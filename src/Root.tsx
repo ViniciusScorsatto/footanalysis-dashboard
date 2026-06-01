@@ -5,15 +5,21 @@ import {FootballFixturesComposition} from './compositions/FootballFixturesCompos
 import {FootballPaceComposition} from './compositions/FootballPaceComposition';
 import {FootballPlayerOfRoundComposition} from './compositions/FootballPlayerOfRoundComposition';
 import {FootballPredictionsLongComposition} from './compositions/FootballPredictionsLongComposition';
+import {FootballRoundSummaryLongComposition} from './compositions/FootballRoundSummaryLongComposition';
 import {FootballSeasonFinalVerdictComposition} from './compositions/FootballSeasonFinalVerdictComposition';
 import {FootballStandingsComposition} from './compositions/FootballStandingsComposition';
+import {FootballThumbnailComposition} from './compositions/FootballThumbnailComposition';
+import {FootballTierlistComposition} from './compositions/FootballTierlistComposition';
 import {FootballTopScorersComposition} from './compositions/FootballTopScorersComposition';
 import {FootballWorldCupGroupComposition} from './compositions/FootballWorldCupGroupComposition';
 import {FootballWorldCupKnockoutComposition} from './compositions/FootballWorldCupKnockoutComposition';
 import footballResultsJobJson from './data/generated/current-job.football.results.json';
+import footballCurrentJobJson from './data/generated/current-job.football.json';
 import footballNextGamesJobJson from './data/generated/current-job.football.next-games.json';
 import footballPredictionsJobJson from './data/generated/current-job.football.predictions.json';
 import footballPredictionsLongJobJson from './data/generated/current-job.football.predictions-long.json';
+import footballRoundSummaryLongJobJson from './data/generated/current-job.football.round-summary-long.json';
+import footballThumbnailJobJson from './data/generated/current-job.football.thumbnail.json';
 import footballStandingsJobJson from './data/generated/current-job.football.standings.json';
 import footballSeasonFinalVerdictJobJson from './data/generated/current-job.football.season-final-verdict.json';
 import footballChampionFinalJobJson from './data/generated/current-job.football.champion-final.json';
@@ -21,6 +27,7 @@ import footballTopScorersJobJson from './data/generated/current-job.football.top
 import footballPlayerOfRoundJobJson from './data/generated/current-job.football.player-of-round.json';
 import footballChampionshipPaceJobJson from './data/generated/current-job.football.championship-pace.json';
 import footballRelegationLineJobJson from './data/generated/current-job.football.relegation-line.json';
+import footballTierlistJobJson from './data/generated/current-job.football.tierlist.json';
 import footballContinentalGroupsJobJson from './data/generated/current-job.football.continental-groups-standings.json';
 import footballWorldCupGroupJobJson from './data/generated/current-job.football.world-cup-group-standings.json';
 import footballWorldCupKnockoutJobJson from './data/generated/current-job.football.world-cup-knockout.json';
@@ -33,13 +40,23 @@ import {sampleFixtures} from './data/results';
 import {sampleStandingsRows} from './data/standings';
 import {sampleTopScorersJob} from './data/topScorers';
 import {sampleWorldCupGroupJob, sampleWorldCupKnockoutJob} from './data/worldCup';
-import type {FootballPredictionsLongVideoJob, FootballVideoJob} from './lib/types';
+import type {
+  FootballPredictionsLongVideoJob,
+  FootballRoundSummaryLongVideoJob,
+  TierlistVideoJob,
+  FootballVideoJob,
+} from './lib/types';
+import type {FootballThumbnailJob} from './lib/types';
 
 const footballResultsJob = footballResultsJobJson as Partial<FootballVideoJob>;
+const footballCurrentJob = footballCurrentJobJson as Partial<FootballVideoJob>;
 const footballNextGamesJob = footballNextGamesJobJson as Partial<FootballVideoJob>;
 const footballPredictionsJob = footballPredictionsJobJson as Partial<FootballVideoJob>;
 const footballPredictionsLongJob =
   footballPredictionsLongJobJson as Partial<FootballVideoJob>;
+const footballRoundSummaryLongJob =
+  footballRoundSummaryLongJobJson as Partial<FootballVideoJob>;
+const footballThumbnailJob = footballThumbnailJobJson as Partial<FootballThumbnailJob>;
 const footballStandingsJob = footballStandingsJobJson as Partial<FootballVideoJob>;
 const footballSeasonFinalVerdictJob =
   footballSeasonFinalVerdictJobJson as Partial<FootballVideoJob>;
@@ -48,11 +65,50 @@ const footballTopScorersJob = footballTopScorersJobJson as Partial<FootballVideo
 const footballPlayerOfRoundJob = footballPlayerOfRoundJobJson as Partial<FootballVideoJob>;
 const footballChampionshipPaceJob = footballChampionshipPaceJobJson as Partial<FootballVideoJob>;
 const footballRelegationLineJob = footballRelegationLineJobJson as Partial<FootballVideoJob>;
+const footballTierlistJob =
+  footballCurrentJob.template === 'tierlist'
+    ? footballCurrentJob
+    : (footballTierlistJobJson as Partial<FootballVideoJob>);
 const footballContinentalGroupsJob = footballContinentalGroupsJobJson as Partial<FootballVideoJob>;
 const footballWorldCupGroupJob = footballWorldCupGroupJobJson as Partial<FootballVideoJob>;
 const footballWorldCupKnockoutJob = footballWorldCupKnockoutJobJson as Partial<FootballVideoJob>;
 const defaultFootballSoundtrack = '/audio/football/fun-vibe-dyalla.mp3';
 const defaultFootballBrandLogo = '/branding/foot-analysis-logo.png';
+
+const thumbnailJob: FootballThumbnailJob = {
+  sport: 'football',
+  template: 'thumbnail',
+  compositionId: 'FootballThumbnailStill',
+  channelProfile: footballThumbnailJob.channelProfile ?? 'pt',
+  languageProfile: footballThumbnailJob.languageProfile ?? 'pt-br',
+  preset: footballThumbnailJob.preset ?? 'matchup',
+  thumbnailModel: footballThumbnailJob.thumbnailModel ?? 'model-4',
+  brandName: footballThumbnailJob.brandName ?? 'Foot Analysis',
+  brandLogoPath: footballThumbnailJob.brandLogoPath ?? defaultFootballBrandLogo,
+  leagueName: footballThumbnailJob.leagueName ?? 'Brasileirão Série A',
+  headline: footballThumbnailJob.headline ?? 'QUEM PASSA?',
+  subheadline: footballThumbnailJob.subheadline ?? 'MINHAS PREVISÕES',
+  extraLabel: footballThumbnailJob.extraLabel ?? 'PALPITES · ANÁLISES · ESTATÍSTICAS',
+  outputName: footballThumbnailJob.outputName ?? 'football-thumbnail.png',
+  accentColor: footballThumbnailJob.accentColor ?? '#A7FF12',
+  secondaryAccentColor: footballThumbnailJob.secondaryAccentColor,
+  backgroundImagePath:
+    footballThumbnailJob.backgroundImagePath ?? '/backgrounds/thumbnails/neon-stadium-copa-bg.png',
+  teamA: footballThumbnailJob.teamA ?? {
+    label: 'Corinthians',
+    logoPath: '/logos/corinthians.png',
+    accentColor: '#E51B23',
+  },
+  teamB: footballThumbnailJob.teamB ?? {
+    label: 'Athletico',
+    logoPath: '/logos/atletico-paranaense.png',
+    accentColor: '#E3222A',
+  },
+  teamC: footballThumbnailJob.teamC,
+  teamD: footballThumbnailJob.teamD,
+  teamE: footballThumbnailJob.teamE,
+  teamF: footballThumbnailJob.teamF,
+};
 
 const resultsProps = {
   channelProfile:
@@ -227,6 +283,15 @@ const predictionsLongProps = {
     footballPredictionsLongJob.template === 'predictions-long'
       ? (footballPredictionsLongJob as FootballPredictionsLongVideoJob)
       : predictionsLongFallback,
+};
+
+const roundSummaryLongFallback =
+  footballRoundSummaryLongJobJson as FootballRoundSummaryLongVideoJob;
+const roundSummaryLongProps = {
+  job:
+    footballRoundSummaryLongJob.template === 'round-summary-long'
+      ? (footballRoundSummaryLongJob as FootballRoundSummaryLongVideoJob)
+      : roundSummaryLongFallback,
 };
 
 const standingsProps = {
@@ -814,6 +879,79 @@ const continentalGroupsProps = {
 
 const isWorldCupGroupJob = footballWorldCupGroupJob.template === 'world-cup-group-standings';
 
+const tierlistFallback = footballTierlistJobJson as TierlistVideoJob;
+const tierlistProps = {
+  channelProfile:
+    footballTierlistJob.template === 'tierlist' && footballTierlistJob.channelProfile
+      ? footballTierlistJob.channelProfile
+      : tierlistFallback.channelProfile,
+  leagueName:
+    footballTierlistJob.template === 'tierlist' && footballTierlistJob.leagueName
+      ? footballTierlistJob.leagueName
+      : tierlistFallback.leagueName,
+  titleLabel:
+    footballTierlistJob.template === 'tierlist' && footballTierlistJob.titleLabel
+      ? footballTierlistJob.titleLabel
+      : tierlistFallback.titleLabel,
+  subtitleLabel:
+    footballTierlistJob.template === 'tierlist' && footballTierlistJob.subtitleLabel
+      ? footballTierlistJob.subtitleLabel
+      : tierlistFallback.subtitleLabel,
+  topScorerPrediction:
+    footballTierlistJob.template === 'tierlist'
+      ? footballTierlistJob.topScorerPrediction
+      : tierlistFallback.topScorerPrediction,
+  bestPlayerPrediction:
+    footballTierlistJob.template === 'tierlist'
+      ? footballTierlistJob.bestPlayerPrediction
+      : tierlistFallback.bestPlayerPrediction,
+  tiers:
+    footballTierlistJob.template === 'tierlist' && Array.isArray(footballTierlistJob.tiers)
+      ? footballTierlistJob.tiers
+      : tierlistFallback.tiers,
+  leagueConfig:
+    footballTierlistJob.template === 'tierlist'
+      ? footballTierlistJob.leagueConfig
+      : tierlistFallback.leagueConfig,
+  brandName: footballTierlistJob.brandName ?? tierlistFallback.brandName,
+  brandLogoPath:
+    footballTierlistJob.template === 'tierlist'
+      ? footballTierlistJob.brandLogoPath ?? defaultFootballBrandLogo
+      : tierlistFallback.brandLogoPath ?? defaultFootballBrandLogo,
+  soundtrackPath:
+    footballTierlistJob.template === 'tierlist'
+      ? footballTierlistJob.soundtrackPath ?? defaultFootballSoundtrack
+      : tierlistFallback.soundtrackPath ?? defaultFootballSoundtrack,
+  soundtrackVolume:
+    footballTierlistJob.template === 'tierlist'
+      ? footballTierlistJob.soundtrackVolume ?? 0.2
+      : tierlistFallback.soundtrackVolume ?? 0.2,
+  voiceoverPath:
+    footballTierlistJob.template === 'tierlist'
+      ? footballTierlistJob.voiceoverPath
+      : tierlistFallback.voiceoverPath,
+  introTitle:
+    footballTierlistJob.template === 'tierlist'
+      ? footballTierlistJob.introTitle
+      : tierlistFallback.introTitle,
+  introSubtitle:
+    footballTierlistJob.template === 'tierlist'
+      ? footballTierlistJob.introSubtitle
+      : tierlistFallback.introSubtitle,
+  hookText:
+    footballTierlistJob.template === 'tierlist'
+      ? footballTierlistJob.hookText
+      : tierlistFallback.hookText,
+  coldOpenData:
+    footballTierlistJob.template === 'tierlist'
+      ? footballTierlistJob.coldOpenData
+      : tierlistFallback.coldOpenData,
+  ctaText:
+    footballTierlistJob.template === 'tierlist'
+      ? footballTierlistJob.ctaText
+      : tierlistFallback.ctaText,
+};
+
 const worldCupProps = {
   titleLabel:
     isWorldCupGroupJob && footballWorldCupGroupJob.titleLabel
@@ -956,6 +1094,11 @@ const FOOTBALL_LONG_DURATION_IN_FRAMES =
   typeof footballPredictionsLongJob.durationInFrames === 'number'
     ? Math.max(300, footballPredictionsLongJob.durationInFrames)
     : 900;
+const FOOTBALL_ROUND_SUMMARY_LONG_DURATION_IN_FRAMES =
+  footballRoundSummaryLongJob.template === 'round-summary-long' &&
+  typeof footballRoundSummaryLongJob.durationInFrames === 'number'
+    ? Math.max(300, footballRoundSummaryLongJob.durationInFrames)
+    : 900;
 
 export const RemotionRoot = () => {
   return (
@@ -995,6 +1138,24 @@ export const RemotionRoot = () => {
         width={1920}
         height={1080}
         defaultProps={predictionsLongProps}
+      />
+      <Composition
+        id="FootballRoundSummaryLong"
+        component={FootballRoundSummaryLongComposition}
+        durationInFrames={FOOTBALL_ROUND_SUMMARY_LONG_DURATION_IN_FRAMES}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={roundSummaryLongProps}
+      />
+      <Composition
+        id="FootballThumbnailStill"
+        component={FootballThumbnailComposition}
+        durationInFrames={1}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{job: thumbnailJob}}
       />
       <Composition
         id="FootballStandingsShort"
@@ -1073,6 +1234,15 @@ export const RemotionRoot = () => {
         width={1080}
         height={1920}
         defaultProps={continentalGroupsProps}
+      />
+      <Composition
+        id="FootballTierlistShort"
+        component={FootballTierlistComposition}
+        durationInFrames={FOOTBALL_DURATION_IN_FRAMES}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={tierlistProps}
       />
       <Composition
         id="FootballWorldCupGroupShort"

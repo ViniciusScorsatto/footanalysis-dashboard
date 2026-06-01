@@ -46,6 +46,10 @@ const seasonVerdictEditorField = document.getElementById('season-verdict-editor-
 const seasonVerdictEditorStatus = document.getElementById('season-verdict-editor-status');
 const seasonVerdictEditorList = document.getElementById('season-verdict-editor-list');
 const reloadSeasonVerdictButton = document.getElementById('reload-season-verdict-button');
+const tierlistEditorField = document.getElementById('tierlist-editor-field');
+const tierlistEditorStatus = document.getElementById('tierlist-editor-status');
+const tierlistEditorList = document.getElementById('tierlist-editor-list');
+const reloadTierlistButton = document.getElementById('reload-tierlist-button');
 const leagueOverrideFields = document.getElementById('league-override-fields');
 const worldCupFields = document.getElementById('world-cup-fields');
 const ctaField = document.getElementById('cta-field');
@@ -72,6 +76,7 @@ const apiBase = '/api/football';
 const NEXT_GAMES_TEMPLATE = 'next-games';
 const CHAMPIONSHIP_PACE_TEMPLATE = 'championship-pace';
 const RELEGATION_LINE_TEMPLATE = 'relegation-line';
+const TIERLIST_TEMPLATE = 'tierlist';
 const CONTINENTAL_GROUPS_TEMPLATE = 'continental-groups-standings';
 const TOP_SCORERS_TEMPLATE = 'top-scorers';
 const PLAYER_OF_ROUND_TEMPLATE = 'player-of-round';
@@ -99,6 +104,7 @@ const templateCompositionMap = {
   [PLAYER_OF_ROUND_TEMPLATE]: 'FootballPlayerOfRoundShort',
   [CHAMPIONSHIP_PACE_TEMPLATE]: 'FootballChampionshipPaceShort',
   [RELEGATION_LINE_TEMPLATE]: 'FootballRelegationLineShort',
+  [TIERLIST_TEMPLATE]: 'FootballTierlistShort',
   [CONTINENTAL_GROUPS_TEMPLATE]: 'FootballContinentalGroupsShort',
   [WORLD_CUP_TEMPLATE]: 'FootballWorldCupGroupShort',
   [WORLD_CUP_KNOCKOUT_TEMPLATE]: 'FootballWorldCupKnockoutShort',
@@ -212,6 +218,15 @@ const templateFieldVisibility = {
     worldCupFields: false,
     cta: true,
   },
+  [TIERLIST_TEMPLATE]: {
+    leaguePreset: false,
+    leagueCore: false,
+    round: false,
+    matchDate: false,
+    leagueOverrides: true,
+    worldCupFields: false,
+    cta: true,
+  },
   [CONTINENTAL_GROUPS_TEMPLATE]: {
     leaguePreset: true,
     leagueCore: true,
@@ -264,6 +279,7 @@ let currentResultFixtures = [];
 let currentStandingRows = [];
 let currentChampionFinalRows = [];
 let currentSeasonVerdictRows = [];
+let currentTierlistTeams = [];
 let lastPreparedJob = null;
 let currentPublishingDraft = null;
 let activePublishingPlatform = 'youtube';
@@ -355,6 +371,12 @@ const dashboardCopy = {
         'Quem reage a tempo?',
         'Quem está mais ameaçado?',
       ],
+      [TIERLIST_TEMPLATE]: [
+        'Concorda com essa lista?',
+        'Quem ficou alto demais?',
+        'Quem faltou nessa tierlist?',
+        'Quem é o campeão pra você?',
+      ],
       [CONTINENTAL_GROUPS_TEMPLATE]: [
         'Quem avança?',
         'Quem passa em primeiro?',
@@ -438,6 +460,12 @@ const dashboardCopy = {
         'Who turns it around?',
         'Who is most in danger?',
       ],
+      [TIERLIST_TEMPLATE]: [
+        'Do you agree with this list?',
+        'Who is too high?',
+        'Who is missing here?',
+        'Who wins it for you?',
+      ],
       [CONTINENTAL_GROUPS_TEMPLATE]: [
         'Who goes through?',
         'Who tops the group?',
@@ -487,7 +515,11 @@ const getDefaultSeasonForContext = ({
   leagueId = form.elements.leagueId.value,
   template = templateSelect.value,
 } = {}) => {
-  if (template === WORLD_CUP_TEMPLATE || template === WORLD_CUP_KNOCKOUT_TEMPLATE) {
+  if (
+    template === WORLD_CUP_TEMPLATE ||
+    template === WORLD_CUP_KNOCKOUT_TEMPLATE ||
+    template === TIERLIST_TEMPLATE
+  ) {
     return '2026';
   }
 
@@ -722,6 +754,7 @@ const getTemplateOutputSlug = () => {
         [PLAYER_OF_ROUND_TEMPLATE]: 'player-of-round',
         [CHAMPIONSHIP_PACE_TEMPLATE]: 'championship-pace',
         [RELEGATION_LINE_TEMPLATE]: 'relegation-line',
+        [TIERLIST_TEMPLATE]: 'tierlist',
         [CONTINENTAL_GROUPS_TEMPLATE]: 'continental-groups',
         [WORLD_CUP_TEMPLATE]: 'world-cup-group',
         [WORLD_CUP_KNOCKOUT_TEMPLATE]: 'world-cup-knockout',
@@ -741,6 +774,7 @@ const getTemplateOutputSlug = () => {
         [PLAYER_OF_ROUND_TEMPLATE]: 'craque-da-rodada',
         [CHAMPIONSHIP_PACE_TEMPLATE]: 'ritmo-de-campeao',
         [RELEGATION_LINE_TEMPLATE]: 'linha-do-rebaixamento',
+        [TIERLIST_TEMPLATE]: 'tierlist',
         [CONTINENTAL_GROUPS_TEMPLATE]: 'grupos',
         [WORLD_CUP_TEMPLATE]: 'grupo-da-copa',
         [WORLD_CUP_KNOCKOUT_TEMPLATE]: 'mata-mata-da-copa',
@@ -792,7 +826,8 @@ const buildAutoOutputName = () => {
     template === CHAMPION_FINAL_TEMPLATE ||
     template === TOP_SCORERS_TEMPLATE ||
     template === CHAMPIONSHIP_PACE_TEMPLATE ||
-    template === RELEGATION_LINE_TEMPLATE
+    template === RELEGATION_LINE_TEMPLATE ||
+    template === TIERLIST_TEMPLATE
   ) {
     const leagueName =
       form.elements.leagueName.value.trim() ||
@@ -960,6 +995,9 @@ const getAutoIntroCopy = () => {
     [RELEGATION_LINE_TEMPLATE]: isEnglish
       ? `Relegation line in the ${leagueWithoutSeason}`
       : withPtIntro(`a linha do rebaixamento ${ptCompetition}`),
+    [TIERLIST_TEMPLATE]: isEnglish
+      ? `${worldCupTitle} favorites tierlist`
+      : withPtIntro(`a tierlist de favoritos da ${worldCupTitle}`),
     [CONTINENTAL_GROUPS_TEMPLATE]: isEnglish
       ? `${leagueWithoutSeason} group standings`
       : withPtIntro(`a tabela dos grupos ${ptCompetition}`),
@@ -974,6 +1012,7 @@ const getAutoIntroCopy = () => {
   return {
     introTitle:
       template === WORLD_CUP_TEMPLATE || template === WORLD_CUP_KNOCKOUT_TEMPLATE
+        || template === TIERLIST_TEMPLATE
         ? worldCupTitle
         : leagueTitle,
     voiceoverText: voiceoverByTemplate[template] ?? leagueTitle,
@@ -1966,6 +2005,162 @@ const loadSeasonFinalVerdictEditor = async () => {
   }
 };
 
+const tierlistGroups = [
+  {key: 'champion', label: 'Campeão / Champion', count: 1},
+  {key: 'favorites', label: 'Favoritos / Favorites', count: 3},
+  {key: 'deepRun', label: 'Vão Longe / Deep Run', count: 5},
+  {key: 'darkHorses', label: 'Zebras / Dark Horses', count: 3},
+  {key: 'groupStageExit', label: 'Cai na Fase de Grupos / Group Stage Exit', count: 4},
+  {key: 'disappointment', label: 'Decepção / Disappointment', count: 3},
+];
+
+const renderTierlistEditor = (teams = []) => {
+  currentTierlistTeams = teams;
+
+  if (!teams.length) {
+    tierlistEditorList.innerHTML = '';
+    return;
+  }
+
+  const optionHtml = (selectedValue = '') =>
+    [
+      '<option value="">Select team</option>',
+      ...teams.map((team) => {
+        const selected = team.value === selectedValue ? ' selected' : '';
+        return `<option value="${escapeHtml(team.value)}"${selected}>${escapeHtml(team.label)}</option>`;
+      }),
+    ].join('');
+
+  const defaults = [
+    'Brazil',
+    'Argentina',
+    'France',
+    'England',
+    'Spain',
+    'Portugal',
+    'Germany',
+    'Netherlands',
+    'Uruguay',
+    'Morocco',
+    'Japan',
+    'USA',
+    'Qatar',
+    'Saudi Arabia',
+    'Tunisia',
+    'Scotland',
+    'Belgium',
+    'Croatia',
+    'Mexico',
+  ];
+  const preparedTierSelections = Object.fromEntries(
+    (lastPreparedJob?.template === TIERLIST_TEMPLATE ? lastPreparedJob.tiers ?? [] : []).map((tier) => [
+      (
+        {
+          'deep-run': 'deepRun',
+          'dark-horses': 'darkHorses',
+          'group-stage-exit': 'groupStageExit',
+        }[tier.key] ?? tier.key
+      ),
+      (tier.entries ?? []).map((entry) => entry.sourceTeam ?? entry.team),
+    ])
+  );
+  let defaultIndex = 0;
+
+  tierlistEditorList.innerHTML = tierlistGroups
+    .map((group) => {
+      const preparedTeams = preparedTierSelections[group.key] ?? [];
+      const controls = Array.from({length: group.count}, (_, controlIndex) => {
+        const preparedTeam = preparedTeams[controlIndex];
+        const selectedValue =
+          teams.find(
+            (team) =>
+              preparedTeam &&
+              (team.label === preparedTeam ||
+                team.value === preparedTeam ||
+                slugifyOutputPart(team.label) === slugifyOutputPart(preparedTeam) ||
+                slugifyOutputPart(team.value) === slugifyOutputPart(preparedTeam))
+          )?.value ??
+          teams.find((team) => team.value === defaults[defaultIndex])?.value ??
+          '';
+        defaultIndex += 1;
+        return `
+          <label class="tierlist-select-field">
+            <span>Team ${defaultIndex}</span>
+            <select data-tier="${group.key}">
+              ${optionHtml(selectedValue)}
+            </select>
+          </label>
+        `;
+      }).join('');
+
+      return `
+        <div class="tierlist-editor-row">
+          <div class="tierlist-editor-label">
+            <strong>${escapeHtml(group.label)}</strong>
+            <span>${group.count} team${group.count === 1 ? '' : 's'}</span>
+          </div>
+          <div class="tierlist-editor-controls">${controls}</div>
+        </div>
+      `;
+    })
+    .join('');
+};
+
+const getTierlistSelections = () =>
+  Object.fromEntries(
+    tierlistGroups.map((group) => [
+      group.key,
+      [...tierlistEditorList.querySelectorAll(`select[data-tier="${group.key}"]`)]
+        .map((select) => select.value)
+        .filter(Boolean),
+    ])
+  );
+
+const loadTierlistTeams = async () => {
+  const template = templateSelect.value;
+  const seasonValue = form.elements.season.value.trim();
+  const season = Number(seasonValue);
+  const languageProfile = languageProfileSelect.value || 'pt-br';
+
+  if (template !== TIERLIST_TEMPLATE) {
+    tierlistEditorStatus.textContent = 'Select Tierlist to load teams.';
+    renderTierlistEditor([]);
+    return;
+  }
+
+  if (!seasonValue || !Number.isFinite(season)) {
+    tierlistEditorStatus.textContent = 'Choose a season to load World Cup teams.';
+    renderTierlistEditor([]);
+    return;
+  }
+
+  try {
+    reloadTierlistButton.disabled = true;
+    tierlistEditorStatus.textContent = 'Loading World Cup teams…';
+    const params = new URLSearchParams({
+      season: String(season),
+      languageProfile,
+    });
+    const response = await fetch(`${apiBase}/tierlist-teams?${params.toString()}`);
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not load teams.');
+    }
+
+    renderTierlistEditor(data.teams ?? []);
+    tierlistEditorStatus.textContent = data.teams?.length
+      ? `Loaded ${data.teams.length} teams. Fill all tiers before preparing.`
+      : 'No World Cup teams found.';
+  } catch (error) {
+    renderTierlistEditor([]);
+    tierlistEditorStatus.textContent = 'Could not load Tierlist teams.';
+    log(error instanceof Error ? error.message : String(error));
+  } finally {
+    reloadTierlistButton.disabled = false;
+  }
+};
+
 const loadResultFixturesForEditor = async () => {
   const template = templateSelect.value;
   const leagueIdValue = form.elements.leagueId.value.trim();
@@ -2048,7 +2243,10 @@ const updatePreview = () => {
   studioUrlInput.value = studioUrl;
   localStorage.setItem(STUDIO_URL_KEY, studioUrl);
   const previewUrl = buildStudioPreviewUrl();
-  previewFrame.src = previewUrl;
+  previewFrame.src = 'about:blank';
+  window.setTimeout(() => {
+    previewFrame.src = previewUrl;
+  }, 25);
   openPreviewLink.href = previewUrl;
 };
 
@@ -2171,6 +2369,10 @@ const renderCurrentJob = (job) => {
           } relegated`
       : job.template === CHAMPIONSHIP_PACE_TEMPLATE || job.template === RELEGATION_LINE_TEMPLATE
         ? `${job.entries.length} teams • ${job.benchmarkPercentage}% reference`
+      : job.template === TIERLIST_TEMPLATE
+        ? `${job.tiers?.reduce((total, tier) => total + (tier.entries?.length ?? 0), 0) ?? 0} teams • ${
+            job.tiers?.[0]?.entries?.[0]?.team ? `campeão: ${job.tiers[0].entries[0].team}` : '6 tiers'
+          }`
       : job.template === CONTINENTAL_GROUPS_TEMPLATE
         ? `${job.groups.length} groups • 2 per page`
       : job.template === WORLD_CUP_TEMPLATE
@@ -2189,6 +2391,8 @@ const renderCurrentJob = (job) => {
       : job.template === SEASON_FINAL_VERDICT_TEMPLATE
         ? `${job.titleLabel} • ${job.subtitleLabel}`
       : job.template === CHAMPIONSHIP_PACE_TEMPLATE || job.template === RELEGATION_LINE_TEMPLATE
+        ? `${job.titleLabel} • ${job.subtitleLabel}`
+      : job.template === TIERLIST_TEMPLATE
         ? `${job.titleLabel} • ${job.subtitleLabel}`
       : job.template === CONTINENTAL_GROUPS_TEMPLATE
         ? `${job.titleLabel} • ${job.subtitleLabel}`
@@ -2214,6 +2418,13 @@ const renderCurrentJob = (job) => {
       </div>
     </div>
   `;
+
+  if (job.template === TIERLIST_TEMPLATE && tierlistEditorStatus) {
+    const champion = job.tiers?.find((tier) => tier.key === 'champion')?.entries?.[0]?.team;
+    tierlistEditorStatus.textContent = champion
+      ? `Prepared preview with champion: ${champion}.`
+      : 'Prepared preview.';
+  }
 };
 
 const updateLocalizedDefaults = () => {
@@ -2290,7 +2501,9 @@ const updateLocalizedDefaults = () => {
 const applyTemplateHints = () => {
   const template = templateSelect.value;
   const isWorldCupTemplate =
-    template === WORLD_CUP_TEMPLATE || template === WORLD_CUP_KNOCKOUT_TEMPLATE;
+    template === WORLD_CUP_TEMPLATE ||
+    template === WORLD_CUP_KNOCKOUT_TEMPLATE ||
+    template === TIERLIST_TEMPLATE;
   const shouldUseRounds = ROUND_TEMPLATES.has(template);
   const visibleFields = templateFieldVisibility[template] ?? templateFieldVisibility.results;
 
@@ -2302,13 +2515,15 @@ const applyTemplateHints = () => {
   resultEditorField.hidden = template !== 'results' && template !== CHAMPION_FINAL_TEMPLATE;
   standingsEditorField.hidden = template !== 'standings';
   seasonVerdictEditorField.hidden = template !== SEASON_FINAL_VERDICT_TEMPLATE;
+  tierlistEditorField.hidden = template !== TIERLIST_TEMPLATE;
   dataSection.hidden = !visibleFields.round && !visibleFields.matchDate;
   editorSection.hidden =
     template !== 'predictions' &&
     template !== 'results' &&
     template !== CHAMPION_FINAL_TEMPLATE &&
     template !== 'standings' &&
-    template !== SEASON_FINAL_VERDICT_TEMPLATE;
+    template !== SEASON_FINAL_VERDICT_TEMPLATE &&
+    template !== TIERLIST_TEMPLATE;
   leagueOverrideFields.hidden = !visibleFields.leagueOverrides;
   worldCupFields.hidden = !visibleFields.worldCupFields;
   ctaField.hidden = !visibleFields.cta;
@@ -2318,7 +2533,17 @@ const applyTemplateHints = () => {
   form.elements.season.required = true;
 
   if (isWorldCupTemplate) {
+    form.elements.leagueId.value = WORLD_CUP_LEAGUE_ID;
     form.elements.groupLetter.value = (form.elements.groupLetter.value || 'A').toUpperCase();
+    if (template === TIERLIST_TEMPLATE && (!hasCustomLeagueTitle || !form.elements.leagueName.value.trim())) {
+      const worldCupLeagueName =
+        languageProfileSelect.value === 'en'
+          ? `World Cup ${form.elements.season.value || '2026'}`
+          : `Copa do Mundo ${form.elements.season.value || '2026'}`;
+      form.elements.leagueName.value = worldCupLeagueName;
+      lastAutoLeagueTitle = worldCupLeagueName;
+      hasCustomLeagueTitle = false;
+    }
     updateLocalizedDefaults();
   } else if (shouldUseRounds) {
     const hint =
@@ -2560,6 +2785,8 @@ const loadOptions = async () => {
     form.elements.introTitle.value = currentJob.introTitle ?? '';
     form.elements.hookText.value = currentJob.hookText ?? '';
     form.elements.voiceoverText.value = currentJob.voiceoverText ?? '';
+    form.elements.topScorerPrediction.value = currentJob.topScorerPrediction ?? '';
+    form.elements.bestPlayerPrediction.value = currentJob.bestPlayerPrediction ?? '';
     voiceoverEnabledCheckbox.checked = currentJob.voiceoverEnabled !== false;
     form.elements.soundtrackPath.value = currentJob.soundtrackPath ?? '';
     setSoundtrackVolume(currentJob.soundtrackVolume ?? 0.2);
@@ -2591,6 +2818,8 @@ const loadOptions = async () => {
     form.elements.introTitle.value = '';
     form.elements.hookText.value = '';
     form.elements.voiceoverText.value = '';
+    form.elements.topScorerPrediction.value = '';
+    form.elements.bestPlayerPrediction.value = '';
     voiceoverEnabledCheckbox.checked = true;
     form.elements.soundtrackPath.value = data.soundtrackPresets?.[0]?.value ?? '';
     setSoundtrackVolume(0.2);
@@ -2628,6 +2857,8 @@ const loadOptions = async () => {
     await loadStandingsEditor();
   } else if (form.elements.template.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     await loadSeasonFinalVerdictEditor();
+  } else if (form.elements.template.value === TIERLIST_TEMPLATE) {
+    await loadTierlistTeams();
   }
   log('Football dashboard ready.', true);
 };
@@ -2648,6 +2879,9 @@ presetSelect.addEventListener('change', async () => {
   }
   if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     await loadSeasonFinalVerdictEditor();
+  }
+  if (templateSelect.value === TIERLIST_TEMPLATE) {
+    await loadTierlistTeams();
   }
   if (templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
     await loadChampionFinalOptions();
@@ -2679,6 +2913,8 @@ channelProfileSelect.addEventListener('change', async () => {
     await loadStandingsEditor();
   } else if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     await loadSeasonFinalVerdictEditor();
+  } else if (templateSelect.value === TIERLIST_TEMPLATE) {
+    await loadTierlistTeams();
   }
 });
 
@@ -2698,6 +2934,7 @@ templateSelect.addEventListener('change', async () => {
     renderResultEditor([]);
     renderStandingsEditor([]);
     renderSeasonVerdictEditor([]);
+    renderTierlistEditor([]);
   } else if (templateSelect.value === 'results' || templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
     await loadResultFixturesForEditor();
     if (templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
@@ -2706,21 +2943,31 @@ templateSelect.addEventListener('change', async () => {
     renderPredictionEditor([]);
     renderStandingsEditor([]);
     renderSeasonVerdictEditor([]);
+    renderTierlistEditor([]);
   } else if (templateSelect.value === 'standings') {
     await loadStandingsEditor();
     renderPredictionEditor([]);
     renderResultEditor([]);
     renderSeasonVerdictEditor([]);
+    renderTierlistEditor([]);
   } else if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     await loadSeasonFinalVerdictEditor();
     renderPredictionEditor([]);
     renderResultEditor([]);
     renderStandingsEditor([]);
+    renderTierlistEditor([]);
+  } else if (templateSelect.value === TIERLIST_TEMPLATE) {
+    await loadTierlistTeams();
+    renderPredictionEditor([]);
+    renderResultEditor([]);
+    renderStandingsEditor([]);
+    renderSeasonVerdictEditor([]);
   } else {
     renderPredictionEditor([]);
     renderResultEditor([]);
     renderStandingsEditor([]);
     renderSeasonVerdictEditor([]);
+    renderTierlistEditor([]);
   }
 });
 languageProfileSelect.addEventListener('change', () => {
@@ -2740,6 +2987,8 @@ languageProfileSelect.addEventListener('change', () => {
     loadStandingsEditor();
   } else if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     loadSeasonFinalVerdictEditor();
+  } else if (templateSelect.value === TIERLIST_TEMPLATE) {
+    loadTierlistTeams();
   }
 });
 ctaPresetSelect.addEventListener('change', syncCtaFromPreset);
@@ -2795,6 +3044,9 @@ form.elements.leagueId.addEventListener('change', async () => {
   if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     await loadSeasonFinalVerdictEditor();
   }
+  if (templateSelect.value === TIERLIST_TEMPLATE) {
+    await loadTierlistTeams();
+  }
 });
 form.elements.leagueName.addEventListener('input', () => {
   const currentValue = form.elements.leagueName.value.trim();
@@ -2815,6 +3067,9 @@ form.elements.season.addEventListener('change', async () => {
   if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     await loadSeasonFinalVerdictEditor();
   }
+  if (templateSelect.value === TIERLIST_TEMPLATE) {
+    await loadTierlistTeams();
+  }
 });
 form.elements.season.addEventListener('input', () => {
   updateLocalizedDefaults();
@@ -2829,6 +3084,7 @@ form.elements.matchDate.addEventListener('change', () => {
   else if (templateSelect.value === 'results' || templateSelect.value === CHAMPION_FINAL_TEMPLATE)
     loadResultFixturesForEditor();
   else if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) loadSeasonFinalVerdictEditor();
+  else if (templateSelect.value === TIERLIST_TEMPLATE) loadTierlistTeams();
 });
 form.elements.soundtrackPath.addEventListener('change', syncOutputNameFromSelections);
 soundtrackVolumeRange?.addEventListener('input', () => {
@@ -2863,6 +3119,7 @@ reloadPredictionsButton.addEventListener('click', loadPredictionFixtures);
 reloadResultsButton.addEventListener('click', loadResultFixturesForEditor);
 reloadStandingsButton.addEventListener('click', loadStandingsEditor);
 reloadSeasonVerdictButton.addEventListener('click', loadSeasonFinalVerdictEditor);
+reloadTierlistButton.addEventListener('click', loadTierlistTeams);
 reloadChampionFinalButton.addEventListener('click', loadChampionFinalOptions);
 settingsToggleButton.addEventListener('click', () => {
   settingsPanel.hidden = !settingsPanel.hidden;
@@ -2904,10 +3161,13 @@ publishingDraftRoot.addEventListener('click', async (event) => {
   publishingStatus.textContent = 'Field copied.';
 });
 
-const submitJob = async (endpoint, actionLabel) => {
+const submitJob = async (endpoint, actionLabel, options = {}) => {
+  const silent = Boolean(options.silent);
   try {
-    setBusy(true);
-    log(`${actionLabel}…`);
+    if (!silent) {
+      setBusy(true);
+      log(`${actionLabel}…`);
+    }
     const payload = formDataToObject();
     // languageProfile select is disabled in UI, so inject it explicitly.
     payload.languageProfile = languageProfileSelect.value || getChannelLanguageProfile();
@@ -2933,6 +3193,10 @@ const submitJob = async (endpoint, actionLabel) => {
     if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
       payload.seasonFinalVerdictEdits = getSeasonFinalVerdictEdits();
     }
+    if (templateSelect.value === TIERLIST_TEMPLATE) {
+      payload.tierlistSelections = getTierlistSelections();
+    }
+    Object.assign(payload, options.payloadOverrides ?? {});
     const response = await fetch(`${apiBase}${endpoint}`, {
       method: 'POST',
       headers: {'content-type': 'application/json'},
@@ -2947,14 +3211,25 @@ const submitJob = async (endpoint, actionLabel) => {
     renderCurrentJob(data.job);
     setRenderDownload(data.job, data.render);
     updatePreview();
-    log(data.message || `${actionLabel} finished.`);
+    if (silent && templateSelect.value === TIERLIST_TEMPLATE) {
+      tierlistEditorStatus.textContent = 'Preview updated.';
+    } else {
+      log(data.message || `${actionLabel} finished.`);
+    }
     if (data.render?.outputPath) {
       log(`Rendered file: ${data.render.outputPath}`);
     }
   } catch (error) {
-    log(error instanceof Error ? error.message : String(error));
+    const message = error instanceof Error ? error.message : String(error);
+    if (silent && templateSelect.value === TIERLIST_TEMPLATE) {
+      tierlistEditorStatus.textContent = message;
+    } else {
+      log(message);
+    }
   } finally {
-    setBusy(false);
+    if (!silent) {
+      setBusy(false);
+    }
   }
 };
 

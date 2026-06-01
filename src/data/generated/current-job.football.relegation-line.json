@@ -8,9 +8,9 @@
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Serie A - Ninety Minutes.mp3",
-  "soundtrackLabel": "Serie A - Ninety Minutes",
-  "soundtrackVolume": 0.2,
+  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
+  "soundtrackLabel": "Gol de Arena",
+  "soundtrackVolume": 0.1,
   "outputName": "brasileirao-serie-a-2026-linha-do-rebaixamento-pt-br.mp4",
   "durationInFrames": 270,
   "compositionId": "FootballRelegationLineShort",
@@ -73,18 +73,18 @@
     }
   },
   "titleLabel": "Linha do Rebaixamento",
-  "subtitleLabel": "Aproveitamento na Rodada 17",
+  "subtitleLabel": "Aproveitamento na Rodada 18",
   "benchmarkPercentage": 38,
   "benchmarkLabel": "Linha de segurança",
   "noteLabel": "*times com jogos a menos",
-  "ctaText": "Quem escapa da degola?",
+  "ctaText": "Quem fica com a taça?",
   "entries": [
     {
-      "rank": 9,
+      "rank": 11,
       "team": "Cruzeiro",
-      "played": 17,
-      "points": 23,
-      "percentage": 45,
+      "played": 18,
+      "points": 24,
+      "percentage": 44,
       "hasGameInHand": false,
       "badge": {
         "label": "C",
@@ -93,22 +93,34 @@
     },
     {
       "rank": 12,
-      "team": "Atletico-MG",
+      "team": "Botafogo",
       "played": 17,
-      "points": 21,
-      "percentage": 41,
-      "hasGameInHand": false,
+      "points": 22,
+      "percentage": 43,
+      "hasGameInHand": true,
       "badge": {
-        "label": "A",
-        "logoPath": "/logos/atletico-mg-1062.png"
+        "label": "B",
+        "logoPath": "/logos/botafogo-120.png"
       }
     },
     {
       "rank": 13,
-      "team": "Internacional",
+      "team": "Vitoria",
       "played": 17,
+      "points": 22,
+      "percentage": 43,
+      "hasGameInHand": true,
+      "badge": {
+        "label": "V",
+        "logoPath": "/logos/vitoria-136.png"
+      }
+    },
+    {
+      "rank": 14,
+      "team": "Internacional",
+      "played": 18,
       "points": 21,
-      "percentage": 41,
+      "percentage": 39,
       "hasGameInHand": false,
       "badge": {
         "label": "I",
@@ -116,47 +128,11 @@
       }
     },
     {
-      "rank": 14,
-      "team": "Gremio",
-      "played": 17,
-      "points": 21,
-      "percentage": 41,
-      "hasGameInHand": false,
-      "badge": {
-        "label": "G",
-        "logoPath": "/logos/gremio-130.png"
-      }
-    },
-    {
       "rank": 15,
-      "team": "Corinthians",
-      "played": 17,
-      "points": 21,
-      "percentage": 41,
-      "hasGameInHand": false,
-      "badge": {
-        "label": "C",
-        "logoPath": "/logos/corinthians-131.png"
-      }
-    },
-    {
-      "rank": 16,
-      "team": "Vasco DA Gama",
-      "played": 17,
-      "points": 20,
-      "percentage": 39,
-      "hasGameInHand": false,
-      "badge": {
-        "label": "VDG",
-        "logoPath": "/logos/vasco-da-gama-133.png"
-      }
-    },
-    {
-      "rank": 17,
       "team": "Santos",
-      "played": 17,
-      "points": 18,
-      "percentage": 35,
+      "played": 18,
+      "points": 21,
+      "percentage": 39,
       "hasGameInHand": false,
       "badge": {
         "label": "S",
@@ -164,23 +140,35 @@
       }
     },
     {
-      "rank": 18,
-      "team": "Mirassol",
-      "played": 16,
-      "points": 16,
-      "percentage": 33,
-      "hasGameInHand": true,
+      "rank": 16,
+      "team": "Gremio",
+      "played": 18,
+      "points": 21,
+      "percentage": 39,
+      "hasGameInHand": false,
       "badge": {
-        "label": "M",
-        "logoPath": "/logos/mirassol-7848.png"
+        "label": "G",
+        "logoPath": "/logos/gremio-130.png"
       }
     },
     {
-      "rank": 19,
+      "rank": 17,
+      "team": "Vasco DA Gama",
+      "played": 18,
+      "points": 20,
+      "percentage": 37,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "VDG",
+        "logoPath": "/logos/vasco-da-gama-133.png"
+      }
+    },
+    {
+      "rank": 18,
       "team": "Remo",
-      "played": 17,
-      "points": 15,
-      "percentage": 29,
+      "played": 18,
+      "points": 18,
+      "percentage": 33,
       "hasGameInHand": false,
       "badge": {
         "label": "R",
@@ -188,11 +176,23 @@
       }
     },
     {
+      "rank": 19,
+      "team": "Mirassol",
+      "played": 17,
+      "points": 16,
+      "percentage": 31,
+      "hasGameInHand": true,
+      "badge": {
+        "label": "M",
+        "logoPath": "/logos/mirassol-7848.png"
+      }
+    },
+    {
       "rank": 20,
       "team": "Chapecoense",
-      "played": 16,
+      "played": 17,
       "points": 9,
-      "percentage": 19,
+      "percentage": 18,
       "hasGameInHand": true,
       "badge": {
         "label": "C",
@@ -201,7 +201,7 @@
     }
   ],
   "introTitle": "Brasileirão Série A",
-  "introSubtitle": "Aproveitamento na Rodada 17",
+  "introSubtitle": "Aproveitamento na Rodada 18",
   "hookText": "A linha está chegando",
   "coldOpenData": {
     "tableRows": [
@@ -212,17 +212,17 @@
       },
       {
         "rank": 2,
-        "club": "ATLETICO-MG",
+        "club": "BOTAFOGO",
         "pts": 8
       },
       {
         "rank": 3,
-        "club": "INTERNACIONAL",
+        "club": "VITORIA",
         "pts": 6
       },
       {
         "rank": 4,
-        "club": "GREMIO",
+        "club": "INTERNACIONAL",
         "pts": 4
       }
     ]

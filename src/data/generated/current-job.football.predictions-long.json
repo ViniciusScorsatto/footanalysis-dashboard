@@ -2,7 +2,7 @@
   "sport": "football",
   "template": "predictions-long",
   "compositionId": "FootballPredictionsLong",
-  "leagueId": 71,
+  "leagueId": 0,
   "season": 2026,
   "leagueName": "Brasileirão Série A",
   "channelProfile": "pt",
@@ -12,20 +12,20 @@
   "soundtrackPath": "/audio/football/gol-na-pressao.mp3",
   "soundtrackLabel": "Gol na Pressão",
   "soundtrackVolume": 0.92,
-  "outputName": "palpites-longform-sample.mp4",
-  "durationInFrames": 934,
+  "outputName": "palpites-rodada-12.mp4",
+  "durationInFrames": 1352,
   "dataSource": "sample",
-  "title": "Palpites da Rodada",
-  "roundLabel": "Rodada",
+  "title": "Palpites da Rodada 12",
+  "roundLabel": "Rodada 12",
   "openingLines": [
     "Hoje tem rodada cheia e eu separei os jogos que podem mexer na tabela.",
     "Agora vamos para os palpites, jogo por jogo, com o placar que eu apostaria."
   ],
   "introDurationInFrames": 298,
-  "outroDurationInFrames": 210,
+  "outroDurationInFrames": 298,
   "transitionDurationInFrames": 18,
   "disclaimer": "Os palpites têm caráter exclusivamente recreativo.",
-  "voiceoverEnabled": false,
+  "voiceoverEnabled": true,
   "matches": [
     {
       "id": "palmeiras-flamengo-1",
@@ -34,15 +34,16 @@
       "predictedScore": "2-1",
       "homeScore": 2,
       "awayScore": 1,
-      "voiceover": "Palmeiras chega forte em casa, mas o Flamengo tem qualidade para incomodar. Meu palpite é vitória apertada do Palmeiras, dois a um.",
-      "durationInFrames": 210,
+      "voiceover": "Palmeiras chega forte em casa, mas o Flamengo tem qualidade para incomodar.\nMeu palpite é vitória apertada do Palmeiras, dois a um.",
+      "voiceoverPath": "/voiceovers/football/pt-br-7bb9353da74de88e.mp3",
+      "durationInFrames": 360,
       "homeBadge": {
-        "label": "PAL",
+        "label": "PALM",
         "logoPath": "/logos/palmeiras.png",
         "accentColor": "#27AE60"
       },
       "awayBadge": {
-        "label": "FLA",
+        "label": "FLAM",
         "logoPath": "/logos/flamengo.png",
         "accentColor": "#C0392B"
       }
@@ -54,16 +55,17 @@
       "predictedScore": "1-1",
       "homeScore": 1,
       "awayScore": 1,
-      "voiceover": "Jogo com cara de equilíbrio. O Grêmio deve pressionar, mas o Santos pode achar espaço. Para mim, empate em um a um.",
-      "durationInFrames": 180,
+      "voiceover": "Jogo com cara de equilíbrio. O Grêmio deve pressionar, mas o Santos pode achar espaço.\nPara mim, empate em um a um.",
+      "voiceoverPath": "/voiceovers/football/pt-br-eb547d7993ef5cd2.mp3",
+      "durationInFrames": 360,
       "homeBadge": {
-        "label": "GRE",
+        "label": "GRÊM",
         "logoPath": "/logos/gremio.png",
         "accentColor": "#2E86DE"
       },
       "awayBadge": {
-        "label": "SAN",
-        "logoPath": "/logos/santos-u20.png",
+        "label": "SANT",
+        "logoPath": "/logos/santos.png",
         "accentColor": "#f0f4f8"
       }
     }

@@ -1,315 +1,350 @@
 {
   "sport": "football",
   "template": "standings",
-  "leagueId": 740,
+  "leagueId": 71,
   "season": 2026,
-  "leagueName": "Brasileirão Sub-20",
+  "leagueName": "Brasileirão Série A",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Estádio Vai Ferver.mp3",
-  "soundtrackLabel": "Estádio Vai Ferver",
-  "soundtrackVolume": 0.2,
-  "outputName": "brasileirao-sub-20-2026-classificacao-pt-br.mp4",
+  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
+  "soundtrackLabel": "Gol de Arena",
+  "soundtrackVolume": 0.1,
+  "outputName": "brasileirao-serie-a-2026-classificacao-pt-br.mp4",
   "durationInFrames": 270,
   "compositionId": "FootballStandingsShort",
   "leagueConfig": {
-    "leagueId": 740,
-    "accentColor": "#E67E22",
+    "leagueId": 71,
+    "accentColor": "#F0A500",
     "standings": {
       "safeArea": {
-        "left": 40,
-        "right": 120
+        "left": 68,
+        "right": 104
       },
       "zones": [
         {
-          "key": "champion",
-          "label": "Campeão",
+          "key": "libertadores",
+          "label": "Libertadores",
           "start": 1,
-          "end": 1
+          "end": 4,
+          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(101, 227, 133, 0.64)"
         },
         {
-          "key": "relegation",
+          "key": "pre-libertadores",
+          "label": "Pré-Libertadores",
+          "start": 5,
+          "end": 5,
+          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 190, 92, 0.58)"
+        },
+        {
+          "key": "sul-americana",
+          "label": "Sul-Americana",
+          "start": 6,
+          "end": 11,
+          "fill": "linear-gradient(90deg, rgba(0, 177, 183, 0.82), rgba(0, 177, 183, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(0, 177, 183, 0.54)"
+        },
+        {
+          "key": "rebaixamento",
           "label": "Rebaixamento",
-          "start": 18,
-          "end": 20
+          "start": 17,
+          "end": 20,
+          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 102, 102, 0.56)"
         }
       ]
     },
-    "leagueName": "Brasileirão Sub-20"
+    "leagueName": "Brasileirão Série A",
+    "pace": {
+      "championship": {
+        "benchmarkPercentage": 68,
+        "benchmarkLabel": "Média dos últimos 10 campeões",
+        "entryCount": 10
+      },
+      "relegation": {
+        "benchmarkPercentage": 38,
+        "benchmarkLabel": "Linha de segurança",
+        "safeRowsAbove": 3,
+        "maxRows": 10
+      }
+    }
   },
-  "standingsLabel": "Rodada 14",
-  "ctaText": "Qual placar mais te chamou atenção?",
+  "standingsLabel": "Rodada 18",
+  "ctaText": "Quem fica com a taça?",
   "rows": [
     {
       "rank": 1,
-      "team": "Palmeiras U20",
-      "played": 14,
-      "points": 34,
-      "goalDifference": 18,
-      "form": "WWDWW",
+      "team": "Palmeiras",
+      "played": 18,
+      "points": 41,
+      "goalDifference": 17,
+      "form": "WWDDD",
       "badge": {
-        "label": "PU",
-        "logoPath": "/logos/palmeiras-u20-12968.png"
+        "label": "P",
+        "logoPath": "/logos/palmeiras-121.png"
       }
     },
     {
       "rank": 2,
-      "team": "Vasco da Gama U20",
-      "played": 14,
-      "points": 31,
-      "goalDifference": 18,
-      "form": "LWWWW",
+      "team": "Flamengo",
+      "played": 17,
+      "points": 34,
+      "goalDifference": 15,
+      "form": "WLDWD",
       "badge": {
-        "label": "VDGU",
-        "logoPath": "/logos/vasco-da-gama-u20-12979.png"
+        "label": "F",
+        "logoPath": "/logos/flamengo-127.png"
       }
     },
     {
       "rank": 3,
-      "team": "Cruzeiro U20",
-      "played": 14,
-      "points": 25,
-      "goalDifference": 13,
-      "form": "WDLDW",
+      "team": "Fluminense",
+      "played": 18,
+      "points": 31,
+      "goalDifference": 5,
+      "form": "DLWDL",
       "badge": {
-        "label": "CU",
-        "logoPath": "/logos/cruzeiro-u20-13000.png"
+        "label": "F",
+        "logoPath": "/logos/fluminense-124.png"
       }
     },
     {
       "rank": 4,
-      "team": "Santos U20",
-      "played": 14,
-      "points": 24,
-      "goalDifference": 7,
-      "form": "DLWWL",
+      "team": "Athletico-PR",
+      "played": 18,
+      "points": 30,
+      "goalDifference": 6,
+      "form": "WWDLD",
       "badge": {
-        "label": "SU",
-        "logoPath": "/logos/santos-u20-13055.png"
+        "label": "A",
+        "logoPath": "/logos/atletico-paranaense-134.png"
       }
     },
     {
       "rank": 5,
-      "team": "Botafogo U20",
-      "played": 14,
-      "points": 24,
-      "goalDifference": 7,
-      "form": "DWWWW",
+      "team": "RB Bragantino",
+      "played": 18,
+      "points": 29,
+      "goalDifference": 6,
+      "form": "WWWLW",
       "badge": {
-        "label": "BU",
-        "logoPath": "/logos/botafogo-u20-22875.png"
+        "label": "RB",
+        "logoPath": "/logos/rb-bragantino-794.png"
       }
     },
     {
       "rank": 6,
-      "team": "Athletico PR U20",
-      "played": 14,
-      "points": 22,
-      "goalDifference": 8,
-      "form": "WLWWD",
+      "team": "Bahia",
+      "played": 17,
+      "points": 26,
+      "goalDifference": 2,
+      "form": "WLDLD",
       "badge": {
-        "label": "APU",
-        "logoPath": "/logos/athletico-pr-u20-12984.png"
+        "label": "B",
+        "logoPath": "/logos/bahia-118.png"
       }
     },
     {
       "rank": 7,
-      "team": "RB Bragantino U20",
-      "played": 14,
-      "points": 22,
-      "goalDifference": 6,
-      "form": "DWWLW",
+      "team": "Coritiba",
+      "played": 18,
+      "points": 26,
+      "goalDifference": 0,
+      "form": "LWWDL",
       "badge": {
-        "label": "RBU",
-        "logoPath": "/logos/rb-bragantino-u20-18345.png"
+        "label": "C",
+        "logoPath": "/logos/coritiba-147.png"
       }
     },
     {
       "rank": 8,
-      "team": "Bahia U20",
-      "played": 14,
-      "points": 22,
-      "goalDifference": 4,
-      "form": "DWLDW",
+      "team": "Sao Paulo",
+      "played": 18,
+      "points": 25,
+      "goalDifference": 3,
+      "form": "LDLLD",
       "badge": {
-        "label": "BU",
-        "logoPath": "/logos/bahia-u20-12954.png"
+        "label": "SP",
+        "logoPath": "/logos/sao-paulo-126.png"
       }
     },
     {
       "rank": 9,
-      "team": "América Mineiro U20",
-      "played": 14,
-      "points": 21,
-      "goalDifference": 0,
-      "form": "DLDDW",
+      "team": "Atletico-MG",
+      "played": 18,
+      "points": 24,
+      "goalDifference": -1,
+      "form": "WLWDW",
       "badge": {
-        "label": "AMU",
-        "logoPath": "/logos/america-mineiro-u20-12981.png"
+        "label": "A",
+        "logoPath": "/logos/atletico-mg-1062.png"
       }
     },
     {
       "rank": 10,
-      "team": "Flamengo U20",
-      "played": 14,
-      "points": 21,
-      "goalDifference": -2,
-      "form": "DWWLL",
+      "team": "Corinthians",
+      "played": 18,
+      "points": 24,
+      "goalDifference": -1,
+      "form": "WWLWL",
       "badge": {
-        "label": "FU",
-        "logoPath": "/logos/flamengo-u20-11054.png"
+        "label": "C",
+        "logoPath": "/logos/corinthians-131.png"
       }
     },
     {
       "rank": 11,
-      "team": "Corinthians U20",
-      "played": 14,
-      "points": 19,
-      "goalDifference": 1,
-      "form": "DLLWL",
+      "team": "Cruzeiro",
+      "played": 18,
+      "points": 24,
+      "goalDifference": -4,
+      "form": "DWDWL",
       "badge": {
-        "label": "CU",
-        "logoPath": "/logos/corinthians-u20-12998.png"
+        "label": "C",
+        "logoPath": "/logos/cruzeiro-135.png"
       }
     },
     {
       "rank": 12,
-      "team": "São Paulo U20",
-      "played": 14,
-      "points": 18,
+      "team": "Botafogo",
+      "played": 17,
+      "points": 22,
       "goalDifference": 0,
-      "form": "WWDDL",
+      "form": "LDWDL",
       "badge": {
-        "label": "SPU",
-        "logoPath": "/logos/sao-paulo-u20-12973.png"
+        "label": "B",
+        "logoPath": "/logos/botafogo-120.png"
       }
     },
     {
       "rank": 13,
-      "team": "Vitória U20",
-      "played": 14,
-      "points": 17,
-      "goalDifference": -8,
-      "form": "LDDWW",
+      "team": "Vitoria",
+      "played": 17,
+      "points": 22,
+      "goalDifference": -4,
+      "form": "LWLDW",
       "badge": {
-        "label": "VU",
-        "logoPath": "/logos/vitoria-u20-13072.png"
+        "label": "V",
+        "logoPath": "/logos/vitoria-136.png"
       }
     },
     {
       "rank": 14,
-      "team": "Fluminense U20",
-      "played": 14,
-      "points": 15,
-      "goalDifference": -2,
-      "form": "LWLLW",
+      "team": "Internacional",
+      "played": 18,
+      "points": 21,
+      "goalDifference": -1,
+      "form": "LLWDW",
       "badge": {
-        "label": "FU",
-        "logoPath": "/logos/fluminense-u20-13008.png"
+        "label": "I",
+        "logoPath": "/logos/internacional-119.png"
       }
     },
     {
       "rank": 15,
-      "team": "Avaí U20",
-      "played": 14,
-      "points": 14,
-      "goalDifference": -11,
-      "form": "WWDLL",
+      "team": "Santos",
+      "played": 18,
+      "points": 21,
+      "goalDifference": -3,
+      "form": "WLLWD",
       "badge": {
-        "label": "AU",
-        "logoPath": "/logos/avai-u20-12953.png"
+        "label": "S",
+        "logoPath": "/logos/santos-128.png"
       }
     },
     {
       "rank": 16,
-      "team": "Fortaleza U20",
-      "played": 14,
-      "points": 13,
-      "goalDifference": -4,
-      "form": "LLLWL",
+      "team": "Gremio",
+      "played": 18,
+      "points": 21,
+      "goalDifference": -3,
+      "form": "LWDLD",
       "badge": {
-        "label": "FU",
-        "logoPath": "/logos/fortaleza-u20-13009.png"
+        "label": "G",
+        "logoPath": "/logos/gremio-130.png"
       }
     },
     {
       "rank": 17,
-      "team": "Grêmio U20",
-      "played": 14,
-      "points": 13,
-      "goalDifference": -11,
-      "form": "LLDLL",
+      "team": "Vasco DA Gama",
+      "played": 18,
+      "points": 20,
+      "goalDifference": -7,
+      "form": "LLLWD",
       "badge": {
-        "label": "GU",
-        "logoPath": "/logos/gremio-u20-13011.png"
+        "label": "VDG",
+        "logoPath": "/logos/vasco-da-gama-133.png"
       }
     },
     {
       "rank": 18,
-      "team": "Criciuma U20",
-      "played": 14,
-      "points": 11,
-      "goalDifference": -9,
-      "form": "DLWLD",
+      "team": "Remo",
+      "played": 18,
+      "points": 18,
+      "goalDifference": -8,
+      "form": "WLWDW",
       "badge": {
-        "label": "CU",
-        "logoPath": "/logos/criciuma-u20-12999.png"
+        "label": "R",
+        "logoPath": "/logos/remo-1198.png"
       }
     },
     {
       "rank": 19,
-      "team": "Cuiabá U20",
-      "played": 14,
-      "points": 11,
-      "goalDifference": -12,
-      "form": "WLLLL",
+      "team": "Mirassol",
+      "played": 17,
+      "points": 16,
+      "goalDifference": -6,
+      "form": "LWLDW",
       "badge": {
-        "label": "CU",
-        "logoPath": "/logos/cuiaba-u20-13001.png"
+        "label": "M",
+        "logoPath": "/logos/mirassol-7848.png"
       }
     },
     {
       "rank": 20,
-      "team": "Juventude U20",
-      "played": 14,
-      "points": 6,
-      "goalDifference": -23,
-      "form": "LLLLL",
+      "team": "Chapecoense",
+      "played": 17,
+      "points": 9,
+      "goalDifference": -16,
+      "form": "LLLDL",
       "badge": {
-        "label": "JU",
-        "logoPath": "/logos/juventude-u20-13020.png"
+        "label": "C",
+        "logoPath": "/logos/chapecoense-sc-132.png"
       }
     }
   ],
-  "introTitle": "Brasileirão Sub-20",
-  "introSubtitle": "Rodada 14",
-  "hookText": "Palmeiras Liderando, Vasco Tropeça",
+  "introTitle": "Brasileirão Série A",
+  "introSubtitle": "Rodada 18",
+  "hookText": "Vasco vai passar a parada no Z4, Palmeiras e Flamengo se distanciam",
   "coldOpenData": {
     "tableRows": [
       {
         "rank": 1,
-        "club": "PALMEIRAS U20",
-        "pts": 34
+        "club": "PALMEIRAS",
+        "pts": 41
       },
       {
         "rank": 2,
-        "club": "VASCO DA GAMA U20",
-        "pts": 31
+        "club": "FLAMENGO",
+        "pts": 34
       },
       {
         "rank": 3,
-        "club": "CRUZEIRO U20",
-        "pts": 25
+        "club": "FLUMINENSE",
+        "pts": 31
       },
       {
         "rank": 4,
-        "club": "SANTOS U20",
-        "pts": 24
+        "club": "ATHLETICO-PR",
+        "pts": 30
       }
     ]
   },
-  "voiceoverEnabled": false,
-  "voiceoverText": "Fala Galera, pra vocês... a classificação do Brasileirão Sub-20."
+  "voiceoverEnabled": true,
+  "voiceoverText": "Classificação Atualizada do Brasileirão... Vasco vai passar a parada no Z4, Palmeiras e Flamengo se distanciam..",
+  "voiceoverPath": "/voiceovers/football/pt-br-de18075bff3fc80a.mp3",
+  "voiceoverLabel": "Classificação Atualizada do Brasileirão... Vasco vai passar a parada no Z4, Palmeiras e Flamengo se distanciam.."
 }

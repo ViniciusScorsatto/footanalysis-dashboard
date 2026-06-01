@@ -17,9 +17,13 @@ import {
   loadLeagueRounds,
   loadRoundDates,
   loadFootballPredictionsLongJob,
+  loadFootballRoundSummaryLongJob,
+  loadWorldCupTierlistTeams,
   prepareJob,
   prepareFootballPredictionsLongJob,
   parseFootballPredictionsLongYaml,
+  prepareFootballRoundSummaryLongJob,
+  parseFootballRoundSummaryLongYaml,
   projectRoot,
   templates,
 } from './lib/video-system.mjs';
@@ -28,6 +32,14 @@ import {getFootballHookOptions} from './lib/football-copy.mjs';
 const dashboardDir = path.join(projectRoot, 'dashboard');
 const outDir = path.join(projectRoot, 'out');
 const publishingTemplateDir = path.join(projectRoot, 'config', 'publishing');
+const footballThumbnailJobFile = path.join(
+  projectRoot,
+  'src',
+  'data',
+  'generated',
+  'current-job.football.thumbnail.json'
+);
+const logosDir = path.join(projectRoot, 'public', 'logos');
 const port = Number(process.env.DASHBOARD_PORT ?? '4321');
 const host = process.env.DASHBOARD_HOST ?? '127.0.0.1';
 const execFileAsync = promisify(execFile);
@@ -38,6 +50,9 @@ const contentTypes = {
   '.css': 'text/css; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
   '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
   '.mp4': 'video/mp4',
 };
 
@@ -71,6 +86,164 @@ const parseBooleanField = (value, defaultValue = true) => {
   }
 
   return !['false', '0', 'off', 'no'].includes(String(value).toLowerCase());
+};
+
+const slugifyOutputPart = (value) =>
+  String(value ?? '')
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+const normalizePngOutputName = (value, fallback = 'football-thumbnail.png') => {
+  const rawValue = String(value ?? '').trim();
+  const basename = path.basename(rawValue || fallback);
+  const withoutExtension = basename.replace(/\.(png|jpg|jpeg|webp)$/i, '');
+  const slug = slugifyOutputPart(withoutExtension) || fallback.replace(/\.png$/i, '');
+  return `${slug}.png`;
+};
+
+const normalizePublicPath = (value) => {
+  const normalized = String(value ?? '').trim();
+  if (!normalized) return undefined;
+  return normalized.startsWith('/') ? normalized : `/${normalized}`;
+};
+
+const normalizeThumbnailTeam = ({label, logoPath, accentColor, fallbackLabel}) => ({
+  label: String(label || fallbackLabel || 'Time').trim(),
+  logoPath: normalizePublicPath(logoPath),
+  accentColor: String(accentColor || '').trim() || undefined,
+});
+
+const prepareFootballThumbnailJob = async (body) => {
+  const channelProfile = body.channelProfile === 'en' ? 'en' : 'pt';
+  const languageProfile = channelProfile === 'en' ? 'en' : 'pt-br';
+  const allowedPresets = new Set(['matchup', 'result', 'table-story', 'champion']);
+  const allowedThumbnailModels = new Set([
+    'model-1',
+    'model-2',
+    'model-3',
+    'model-4',
+    'model-5',
+    'model-6',
+    'model-7',
+    'model-8',
+  ]);
+  const preset = allowedPresets.has(body.preset) ? body.preset : 'matchup';
+  const thumbnailModel = allowedThumbnailModels.has(body.thumbnailModel)
+    ? body.thumbnailModel
+    : 'model-4';
+  const teamA = normalizeThumbnailTeam({
+    label: body.teamAName,
+    logoPath: body.teamALogoPath,
+    accentColor: body.teamAAccentColor,
+    fallbackLabel: channelProfile === 'en' ? 'Team A' : 'Time A',
+  });
+  const teamBName = String(body.teamBName || '').trim();
+  const teamBLogoPath = String(body.teamBLogoPath || '').trim();
+  const teamBAccentColor = String(body.teamBAccentColor || '').trim();
+  const teamB =
+    teamBName || teamBLogoPath || teamBAccentColor
+      ? normalizeThumbnailTeam({
+          label: teamBName || (channelProfile === 'en' ? 'Team B' : 'Time B'),
+          logoPath: teamBLogoPath,
+          accentColor: teamBAccentColor,
+        })
+      : undefined;
+  const teamCName = String(body.teamCName || '').trim();
+  const teamCLogoPath = String(body.teamCLogoPath || '').trim();
+  const teamCAccentColor = String(body.teamCAccentColor || '').trim();
+  const teamC =
+    teamCName || teamCLogoPath || teamCAccentColor
+      ? normalizeThumbnailTeam({
+          label: teamCName || (channelProfile === 'en' ? 'Team C' : 'Time C'),
+          logoPath: teamCLogoPath,
+          accentColor: teamCAccentColor,
+        })
+      : undefined;
+  const teamDName = String(body.teamDName || '').trim();
+  const teamDLogoPath = String(body.teamDLogoPath || '').trim();
+  const teamDAccentColor = String(body.teamDAccentColor || '').trim();
+  const teamD =
+    teamDName || teamDLogoPath || teamDAccentColor
+      ? normalizeThumbnailTeam({
+          label: teamDName || (channelProfile === 'en' ? 'Team D' : 'Time D'),
+          logoPath: teamDLogoPath,
+          accentColor: teamDAccentColor,
+        })
+      : undefined;
+  const teamEName = String(body.teamEName || '').trim();
+  const teamELogoPath = String(body.teamELogoPath || '').trim();
+  const teamEAccentColor = String(body.teamEAccentColor || '').trim();
+  const teamE =
+    teamEName || teamELogoPath || teamEAccentColor
+      ? normalizeThumbnailTeam({
+          label: teamEName || (channelProfile === 'en' ? 'Team E' : 'Time E'),
+          logoPath: teamELogoPath,
+          accentColor: teamEAccentColor,
+        })
+      : undefined;
+  const teamFName = String(body.teamFName || '').trim();
+  const teamFLogoPath = String(body.teamFLogoPath || '').trim();
+  const teamFAccentColor = String(body.teamFAccentColor || '').trim();
+  const teamF =
+    teamFName || teamFLogoPath || teamFAccentColor
+      ? normalizeThumbnailTeam({
+          label: teamFName || (channelProfile === 'en' ? 'Team F' : 'Time F'),
+          logoPath: teamFLogoPath,
+          accentColor: teamFAccentColor,
+        })
+      : undefined;
+  const leagueName = String(body.leagueName || '').trim() || 'Copa do Brasil';
+  const headline = String(body.headline || '').trim() || (channelProfile === 'en' ? 'WHO ADVANCES?' : 'QUEM PASSA?');
+  const outputName =
+    normalizePngOutputName(body.outputName, `${slugifyOutputPart(`${leagueName}-${headline}`)}.png`);
+  const job = {
+    sport: 'football',
+    template: 'thumbnail',
+    compositionId: 'FootballThumbnailStill',
+    channelProfile,
+    languageProfile,
+    preset,
+    thumbnailModel,
+    brandName: String(body.brandName || '').trim() || 'Foot Analysis',
+    brandLogoPath: normalizePublicPath(body.brandLogoPath) || '/branding/foot-analysis-logo.png',
+    leagueName,
+    headline,
+    subheadline: String(body.subheadline || '').trim() || undefined,
+    extraLabel: String(body.extraLabel || '').trim() || undefined,
+    outputName,
+    accentColor: String(body.accentColor || '').trim() || (channelProfile === 'en' ? '#0A84FF' : '#F0A500'),
+    secondaryAccentColor: String(body.secondaryAccentColor || '').trim() || undefined,
+    backgroundImagePath:
+      normalizePublicPath(body.backgroundImagePath) ||
+      '/backgrounds/thumbnails/neon-stadium-copa-bg.png',
+    teamA,
+    teamB,
+    teamC,
+    teamD,
+    teamE,
+    teamF,
+  };
+
+  await fs.writeFile(footballThumbnailJobFile, `${JSON.stringify(job, null, 2)}\n`, 'utf8');
+
+  return {job};
+};
+
+const listFootballLogos = async (query) => {
+  const normalizedQuery = slugifyOutputPart(query);
+  const filenames = await fs.readdir(logosDir).catch(() => []);
+  return filenames
+    .filter((filename) => /\.(png|jpg|jpeg|webp)$/i.test(filename))
+    .filter((filename) => !normalizedQuery || slugifyOutputPart(filename).includes(normalizedQuery))
+    .sort((a, b) => a.localeCompare(b))
+    .map((filename) => ({
+      label: filename.replace(/\.(png|jpg|jpeg|webp)$/i, '').replace(/-\d+$/g, '').replace(/-/g, ' '),
+      path: `/logos/${filename}`,
+    }));
 };
 
 const parseMatchDates = (value, values = []) => {
@@ -125,6 +298,15 @@ const sendFootballOptions = async (response) => {
 
 const sendFootballLongformOptions = async (response) => {
   const currentJob = await loadFootballPredictionsLongJob().catch(() => null);
+  sendJson(response, 200, {
+    leaguePresets: leaguePresets.filter((preset) => preset.channels?.includes('pt')),
+    soundtrackPresets: footballSoundtrackPresets,
+    currentJob,
+  });
+};
+
+const sendFootballRoundSummaryLongformOptions = async (response) => {
+  const currentJob = await loadFootballRoundSummaryLongJob().catch(() => null);
   sendJson(response, 200, {
     leaguePresets: leaguePresets.filter((preset) => preset.channels?.includes('pt')),
     soundtrackPresets: footballSoundtrackPresets,
@@ -331,6 +513,30 @@ const sendFootballSeasonFinalVerdictEditor = async (response, url) => {
   }
 };
 
+const sendFootballTierlistTeams = async (response, url) => {
+  try {
+    const season = Number(url.searchParams.get('season'));
+    const languageProfile = url.searchParams.get('languageProfile') ?? 'pt-br';
+    const teams = await loadWorldCupTierlistTeams({
+      apiKey: process.env.FOOTBALL_API_KEY,
+      apiHost: process.env.FOOTBALL_API_HOST,
+      season: Number.isFinite(season) ? season : 2026,
+      languageProfile,
+    });
+
+    sendJson(response, 200, {
+      ok: true,
+      teams,
+    });
+  } catch (error) {
+    sendJson(response, 500, {
+      ok: false,
+      error: error instanceof Error ? error.message : String(error),
+      teams: [],
+    });
+  }
+};
+
 const prepareFootballJob = async (body) =>
   prepareJob({
     template: body.template,
@@ -364,6 +570,9 @@ const prepareFootballJob = async (body) =>
     fixtureEdits: body.fixtureEdits,
     standingEdits: body.standingEdits,
     seasonFinalVerdictEdits: body.seasonFinalVerdictEdits,
+    tierlistSelections: body.tierlistSelections,
+    topScorerPrediction: body.topScorerPrediction,
+    bestPlayerPrediction: body.bestPlayerPrediction,
   });
 
 const compactText = (value, maxLength = 900) => {
@@ -456,6 +665,10 @@ const publishingTemplateContext = {
     contentType: 'predictions',
     editorialAngle: 'match predictions; focus on favorites, balanced fixtures, upset potential, and score discussion.',
   },
+  tierlist: {
+    contentType: 'favorite_tierlist',
+    editorialAngle: 'tournament favorites tierlist; focus on champion pick, favorites, dark horses, teams that can go deep, and disappointments.',
+  },
   'world-cup-knockout': {
     contentType: 'knockout_bracket',
     editorialAngle: 'knockout stage bracket; focus on who advances, elimination pressure, decisive ties, and tournament drama.',
@@ -517,6 +730,25 @@ const buildTemplateSpecificMetadata = (job) => {
       tightGames: tightGames.map(formatFixtureStory),
       upsetCandidates,
       mostCommentableFixtures: fixtures.slice(0, 5).map(formatFixtureStory),
+    };
+  }
+
+  if (job.template === 'tierlist') {
+    const tiers = job.tiers ?? [];
+    return {
+      tiers: tiers.map((tier) => ({
+        label: tier.label,
+        teams: (tier.entries ?? []).map((entry) => entry.team),
+      })),
+      championPick: tiers.find((tier) => tier.key === 'champion')?.entries?.[0]?.team ?? '',
+      favorites: tiers.find((tier) => tier.key === 'favorites')?.entries?.map((entry) => entry.team) ?? [],
+      darkHorses: tiers.find((tier) => tier.key === 'dark-horses')?.entries?.map((entry) => entry.team) ?? [],
+      groupStageExit:
+        tiers.find((tier) => tier.key === 'group-stage-exit')?.entries?.map((entry) => entry.team) ?? [],
+      disappointment:
+        tiers.find((tier) => tier.key === 'disappointment')?.entries?.map((entry) => entry.team) ?? [],
+      topScorerPrediction: job.topScorerPrediction ?? '',
+      bestPlayerPrediction: job.bestPlayerPrediction ?? '',
     };
   }
 
@@ -738,6 +970,7 @@ const templateSectionMap = {
   results: /^# B\) ÚLTIMOS JOGOS/m,
   'next-games': /^# F\) JOGOS DO DIA/m,
   predictions: /^# C\) PALPITES/m,
+  tierlist: /^# C\) PALPITES/m,
   'world-cup-knockout': /^# D\) MATA-MATA/m,
   'champion-final': /^# D\) MATA-MATA/m,
   'top-scorers': /^# E\) ARTILHARIA/m,
@@ -844,6 +1077,17 @@ const publishingDraftSchema = {
   },
 };
 
+const thumbnailSuggestionSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['headline', 'subheadline', 'extraLabel'],
+  properties: {
+    headline: {type: 'string'},
+    subheadline: {type: 'string'},
+    extraLabel: {type: 'string'},
+  },
+};
+
 const extractResponseText = (data) => {
   if (typeof data.output_text === 'string') {
     return data.output_text;
@@ -945,6 +1189,76 @@ const generatePublishingDraft = async ({job, extraContext, copyModelInstructions
     model,
     templateName: publishingTemplate.name,
   };
+};
+
+const generateThumbnailSuggestion = async (body) => {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    const error = new Error('Missing OPENAI_API_KEY. Add it to .env to generate thumbnail suggestions.');
+    error.errorType = 'missing_openai_key';
+    throw error;
+  }
+
+  const channelProfile = body.channelProfile === 'en' ? 'en' : 'pt';
+  const language = channelProfile === 'en' ? 'English' : 'Brazilian Portuguese';
+  const model = process.env.OPENAI_THUMBNAIL_MODEL ?? process.env.OPENAI_MODEL ?? 'gpt-4.1-mini';
+  const prompt = [
+    `Create YouTube thumbnail copy in ${language} for a football channel.`,
+    'Return only JSON matching the schema.',
+    'Keep headline extremely short: 2 to 5 words, uppercase-ready, no hashtags.',
+    'Keep subheadline punchy and factual. Do not invent facts not provided.',
+    'The final visual is deterministic in Remotion, so suggest text only.',
+    `Preset: ${body.preset || 'matchup'}`,
+    `Competition: ${body.leagueName || ''}`,
+    `Team A: ${body.teamAName || ''}`,
+    `Team B: ${body.teamBName || ''}`,
+    `Current headline: ${body.headline || ''}`,
+    `Current subheadline: ${body.subheadline || ''}`,
+    `Extra context: ${body.extraContext || ''}`,
+  ].join('\n');
+
+  const openaiResponse = await fetch('https://api.openai.com/v1/responses', {
+    method: 'POST',
+    headers: {
+      authorization: `Bearer ${apiKey}`,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      model,
+      input: [
+        {
+          role: 'system',
+          content:
+            'You write concise football YouTube thumbnail copy. You never invent scores, transfers, injuries, or standings.',
+        },
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+      text: {
+        format: {
+          type: 'json_schema',
+          name: 'football_thumbnail_suggestion',
+          strict: true,
+          schema: thumbnailSuggestionSchema,
+        },
+      },
+    }),
+  });
+
+  const data = await openaiResponse.json().catch(() => ({}));
+  if (!openaiResponse.ok) {
+    const message = data?.error?.message ?? `OpenAI request failed with ${openaiResponse.status}`;
+    throw new Error(message);
+  }
+
+  const outputText = extractResponseText(data);
+  if (!outputText) {
+    throw new Error('OpenAI returned an empty thumbnail suggestion.');
+  }
+
+  return JSON.parse(outputText);
 };
 
 const getYouTubeCredential = (channelProfile, key) => {
@@ -1747,6 +2061,22 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
+  if (request.method === 'GET' && url.pathname === '/api/football/thumbnails/logos') {
+    try {
+      const logos = await listFootballLogos(url.searchParams.get('q'));
+      sendJson(response, 200, {
+        ok: true,
+        logos,
+      });
+    } catch (error) {
+      sendJson(response, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+    return;
+  }
+
   if (request.method === 'GET' && url.pathname === '/api/football/settings/youtube/oauth-url') {
     try {
       const channelProfile = url.searchParams.get('channel') === 'en' ? 'en' : 'pt';
@@ -1799,10 +2129,29 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
+  if (request.method === 'GET' && url.pathname === '/api/football/round-summary-longform/options') {
+    await sendFootballRoundSummaryLongformOptions(response);
+    return;
+  }
+
   if (request.method === 'POST' && url.pathname === '/api/football/longform/validate') {
     try {
       const body = await readBody(request);
       const validation = parseFootballPredictionsLongYaml(body.yamlText ?? '');
+      sendJson(response, validation.ok ? 200 : 400, validation);
+    } catch (error) {
+      sendJson(response, 400, {
+        ok: false,
+        errors: [error instanceof Error ? error.message : String(error)],
+      });
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/round-summary-longform/validate') {
+    try {
+      const body = await readBody(request);
+      const validation = parseFootballRoundSummaryLongYaml(body.yamlText ?? '');
       sendJson(response, validation.ok ? 200 : 400, validation);
     } catch (error) {
       sendJson(response, 400, {
@@ -1845,6 +2194,11 @@ const server = http.createServer(async (request, response) => {
 
   if (request.method === 'GET' && url.pathname === '/api/football/season-final-verdict-editor') {
     await sendFootballSeasonFinalVerdictEditor(response, url);
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/football/tierlist-teams') {
+    await sendFootballTierlistTeams(response, url);
     return;
   }
 
@@ -1894,6 +2248,70 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
+  if (request.method === 'POST' && url.pathname === '/api/football/thumbnails/prepare') {
+    try {
+      const body = await readBody(request);
+      const {job} = await prepareFootballThumbnailJob(body);
+
+      sendJson(response, 200, {
+        ok: true,
+        message: 'Thumbnail job prepared. Preview or render the still when ready.',
+        job,
+      });
+    } catch (error) {
+      sendJson(response, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        errorType: error?.errorType ?? undefined,
+        errorDetails: error?.details ?? undefined,
+      });
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/thumbnails/render') {
+    try {
+      const body = await readBody(request);
+      const {job} = await prepareFootballThumbnailJob(body);
+      const renderResult = await runStill(job.compositionId, job.outputName);
+
+      sendJson(response, 200, {
+        ok: true,
+        message: 'Thumbnail rendered successfully.',
+        job,
+        render: renderResult,
+      });
+    } catch (error) {
+      sendJson(response, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        errorType: error?.errorType ?? undefined,
+        errorDetails: error?.details ?? undefined,
+      });
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/thumbnails/suggest') {
+    try {
+      const body = await readBody(request);
+      const suggestion = await generateThumbnailSuggestion(body);
+
+      sendJson(response, 200, {
+        ok: true,
+        message: 'Thumbnail suggestion ready.',
+        suggestion,
+      });
+    } catch (error) {
+      sendJson(response, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        errorType: error?.errorType ?? undefined,
+      });
+    }
+    return;
+  }
+
   if (request.method === 'POST' && url.pathname === '/api/football/longform/prepare') {
     try {
       const body = await readBody(request);
@@ -1937,6 +2355,68 @@ const server = http.createServer(async (request, response) => {
       sendJson(response, 200, {
         ok: true,
         message: 'Longform predictions render completed successfully.',
+        job,
+        validation,
+        render: renderResult,
+      });
+    } catch (error) {
+      sendJson(response, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        errorType: error?.errorType ?? undefined,
+        errorDetails: error?.details ?? undefined,
+      });
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/round-summary-longform/prepare') {
+    try {
+      const body = await readBody(request);
+      const {job, validation} = await prepareFootballRoundSummaryLongJob({
+        yamlText: body.yamlText,
+        apiKey: process.env.FOOTBALL_API_KEY,
+        apiHost: process.env.FOOTBALL_API_HOST,
+        brandName: body.brandName,
+        soundtrackPath: body.soundtrackPath,
+        soundtrackVolume: body.soundtrackVolume,
+        voiceoverEnabled: parseBooleanField(body.voiceoverEnabled, true),
+      });
+
+      sendJson(response, 200, {
+        ok: true,
+        message: 'Round summary longform job prepared.',
+        job,
+        validation,
+      });
+    } catch (error) {
+      sendJson(response, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        errorType: error?.errorType ?? undefined,
+        errorDetails: error?.details ?? undefined,
+      });
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/round-summary-longform/render') {
+    try {
+      const body = await readBody(request);
+      const {job, validation} = await prepareFootballRoundSummaryLongJob({
+        yamlText: body.yamlText,
+        apiKey: process.env.FOOTBALL_API_KEY,
+        apiHost: process.env.FOOTBALL_API_HOST,
+        brandName: body.brandName,
+        soundtrackPath: body.soundtrackPath,
+        soundtrackVolume: body.soundtrackVolume,
+        voiceoverEnabled: parseBooleanField(body.voiceoverEnabled, true),
+      });
+      const renderResult = await runRender('FootballRoundSummaryLong', job.outputName);
+
+      sendJson(response, 200, {
+        ok: true,
+        message: 'Round summary longform render completed successfully.',
         job,
         validation,
         render: renderResult,
@@ -2054,6 +2534,16 @@ const server = http.createServer(async (request, response) => {
     url.pathname === '/football-longform/'
   ) {
     filePath = path.join(dashboardDir, 'football-longform', 'index.html');
+  } else if (
+    url.pathname === '/football-round-summary-longform' ||
+    url.pathname === '/football-round-summary-longform/'
+  ) {
+    filePath = path.join(dashboardDir, 'football-round-summary-longform', 'index.html');
+  } else if (
+    url.pathname === '/football-thumbnails' ||
+    url.pathname === '/football-thumbnails/'
+  ) {
+    filePath = path.join(dashboardDir, 'football-thumbnails', 'index.html');
   } else {
     filePath = path.join(dashboardDir, url.pathname);
   }

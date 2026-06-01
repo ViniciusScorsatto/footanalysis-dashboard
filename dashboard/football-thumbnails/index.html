@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Football Thumbnails</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <nav class="top-nav dashboard-top-nav">
+        <a class="back-link" href="/">All dashboards</a>
+        <div class="dashboard-status">
+          <span class="chip subtle">Football</span>
+          <span class="chip subtle">Thumbnails</span>
+          <span class="chip">1920x1080 PNG</span>
+        </div>
+      </nav>
+
+      <section class="dashboard-header">
+        <div>
+          <p class="eyebrow">Production Console</p>
+          <h1>Football Thumbnails</h1>
+        </div>
+        <p id="dashboard-quick-status" class="quick-status">
+          Build a standalone YouTube thumbnail. This workspace does not use the current video job.
+        </p>
+      </section>
+
+      <section class="production-grid thumbnail-grid">
+        <form id="thumbnail-form" class="panel form-panel compact-form-panel">
+          <div class="panel-header">
+            <h2>Thumbnail Setup</h2>
+            <span class="chip">Still</span>
+          </div>
+
+          <section class="form-section">
+            <div class="section-title">
+              <span>Template</span>
+            </div>
+            <div class="two-up">
+              <label>
+                Channel
+                <select name="channelProfile" id="channel-profile">
+                  <option value="pt">Portuguese Channel</option>
+                  <option value="en">English Channel</option>
+                </select>
+              </label>
+              <input type="hidden" name="preset" id="preset-select" value="matchup" />
+              <label>
+                Composition model
+                <select name="thumbnailModel" id="thumbnail-model-select">
+                  <option value="model-1">Modelo 1 · Top 3 / titulo</option>
+                  <option value="model-2">Modelo 2 · Quem entra no G4</option>
+                  <option value="model-3">Modelo 3 · Zona de queda</option>
+                  <option value="model-4" selected>Modelo 4 · Rodada decisiva</option>
+                  <option value="model-5">Modelo 5 · Simulacao</option>
+                  <option value="model-6">Modelo 6 · Zebra a vista</option>
+                  <option value="model-7">Modelo 7 · Todos os jogos</option>
+                  <option value="model-8">Modelo 8 · G4 e Z4</option>
+                </select>
+              </label>
+            </div>
+            <div class="two-up">
+              <label>
+                Competition
+                <input type="text" name="leagueName" value="Copa do Brasil" />
+              </label>
+              <label>
+                Extra label
+                <input type="text" name="extraLabel" value="PALPITES · ANÁLISES · ESTATÍSTICAS" />
+              </label>
+            </div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-title">
+              <span>Copy</span>
+            </div>
+            <label>
+              Headline
+              <input type="text" name="headline" value="QUEM PASSA?" />
+            </label>
+            <label>
+              Subheadline
+              <input type="text" name="subheadline" value="MINHAS PREVISÕES" />
+            </label>
+            <label>
+              Extra OpenAI context
+              <textarea
+                class="thumbnail-context"
+                name="extraContext"
+                rows="4"
+                placeholder="Optional: angle, table situation, rivalry note, prediction tone..."
+              ></textarea>
+            </label>
+            <button type="button" id="suggest-button" class="secondary">Suggest Copy</button>
+          </section>
+
+          <section class="form-section">
+            <div class="section-title">
+              <span>Teams</span>
+            </div>
+            <div class="two-up">
+              <label>
+                Team slots
+                <select id="team-count-select">
+                  <option value="1">1 team</option>
+                  <option value="2">2 teams</option>
+                  <option value="3">3 teams</option>
+                  <option value="4" selected>4 teams</option>
+                  <option value="5">5 teams</option>
+                  <option value="6">6 teams</option>
+                </select>
+              </label>
+              <label>
+                Available teams
+                <input type="search" id="team-search-input" placeholder="Filter by team name or logo file..." />
+              </label>
+            </div>
+            <div id="selected-team-list" class="selected-team-list"></div>
+            <div id="available-team-list" class="available-team-list"></div>
+            <datalist id="logo-options"></datalist>
+            <div class="thumbnail-hidden-team-fields">
+              <input type="hidden" name="teamAName" />
+              <input type="hidden" name="teamALogoPath" />
+              <input type="hidden" name="teamAAccentColor" />
+              <input type="hidden" name="teamBName" />
+              <input type="hidden" name="teamBLogoPath" />
+              <input type="hidden" name="teamBAccentColor" />
+              <input type="hidden" name="teamCName" />
+              <input type="hidden" name="teamCLogoPath" />
+              <input type="hidden" name="teamCAccentColor" />
+              <input type="hidden" name="teamDName" />
+              <input type="hidden" name="teamDLogoPath" />
+              <input type="hidden" name="teamDAccentColor" />
+              <input type="hidden" name="teamEName" />
+              <input type="hidden" name="teamELogoPath" />
+              <input type="hidden" name="teamEAccentColor" />
+              <input type="hidden" name="teamFName" />
+              <input type="hidden" name="teamFLogoPath" />
+              <input type="hidden" name="teamFAccentColor" />
+            </div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-title">
+              <span>Brand + Output</span>
+            </div>
+            <div class="two-up">
+              <label>
+                Brand name
+                <input type="text" name="brandName" value="Foot Analysis" />
+              </label>
+              <label>
+                Brand logo path
+                <input type="text" name="brandLogoPath" value="/branding/foot-analysis-logo.png" />
+              </label>
+            </div>
+            <div class="two-up">
+              <label>
+                Main accent
+                <input type="text" name="accentColor" value="#A7FF12" />
+              </label>
+              <label>
+                Secondary accent
+                <input type="text" name="secondaryAccentColor" value="#74C900" />
+              </label>
+            </div>
+            <label>
+              Background preset
+              <select id="background-preset-select">
+                <option value="/backgrounds/thumbnails/neon-stadium-copa-bg.png" data-accent="#A7FF12" data-secondary="#74C900">Neon green stadium</option>
+                <option value="/backgrounds/thumbnails/orange-stadium-copa-bg.png" data-accent="#FF9F1C" data-secondary="#C66A00">Orange stadium</option>
+                <option value="/backgrounds/thumbnails/purple-stadium-copa-bg.png" data-accent="#B64CFF" data-secondary="#6F1DBD">Purple stadium</option>
+                <option value="/backgrounds/thumbnails/mono-stadium-copa-bg.png" data-accent="#F0F4F8" data-secondary="#8A949E">Mono stadium</option>
+              </select>
+            </label>
+            <label>
+              Background image path
+              <input type="text" name="backgroundImagePath" value="/backgrounds/thumbnails/neon-stadium-copa-bg.png" />
+            </label>
+            <label>
+              Output filename
+              <input type="text" name="outputName" value="football-thumbnail.png" />
+            </label>
+          </section>
+
+          <section class="job-status-strip">
+            <div id="current-job" class="job-summary"></div>
+            <div id="render-download" class="job-summary"></div>
+          </section>
+
+          <div class="actions sticky-actions">
+            <button type="button" id="prepare-button" class="secondary">Prepare Preview</button>
+            <button type="button" id="render-button">Render PNG</button>
+          </div>
+        </form>
+
+        <aside class="preview-rail">
+          <section class="panel preview-panel">
+            <div class="panel-header">
+              <h2>Thumbnail Preview</h2>
+              <span class="chip subtle">16:9</span>
+            </div>
+            <div class="still-preview-frame thumbnail-preview-frame">
+              <img id="thumbnail-preview-image" alt="Rendered thumbnail preview" hidden />
+              <div id="thumbnail-preview-empty" class="still-preview-empty">
+                Render a PNG to preview the final 1920x1080 thumbnail.
+              </div>
+            </div>
+          </section>
+
+          <details class="panel log-panel compact-details" open>
+            <summary>Activity</summary>
+            <pre id="log-output">Thumbnail workspace ready.</pre>
+          </details>
+        </aside>
+      </section>
+    </main>
+
+    <script type="module" src="/football-thumbnails/app.js"></script>
+  </body>
+</html>

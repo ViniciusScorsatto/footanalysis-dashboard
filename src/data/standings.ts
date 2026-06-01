@@ -10,5 +10,5 @@ const fallbackStandings: StandingRow[] = [
 
 export const sampleStandingsRows: StandingRow[] =
   'rows' in currentJob && Array.isArray(currentJob.rows)
-    ? (currentJob.rows as StandingRow[])
+    ? (currentJob.rows as unknown as StandingRow[])
     : fallbackStandings;

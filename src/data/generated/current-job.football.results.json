@@ -1,22 +1,22 @@
 {
   "sport": "football",
   "template": "results",
-  "leagueId": 61,
-  "season": 2025,
-  "leagueName": "Ligue 1",
-  "channelProfile": "en",
-  "languageProfile": "en",
+  "leagueId": 71,
+  "season": 2026,
+  "leagueName": "Brasileirão Série A",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/final-whistle-fever-latin-leagues.mp3",
-  "soundtrackLabel": "Final Whistle Fever - Latin Leagues",
-  "soundtrackVolume": 0.2,
-  "outputName": "ligue-1-2025-results-en.mp4",
+  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
+  "soundtrackLabel": "Gol de Arena",
+  "soundtrackVolume": 0.1,
+  "outputName": "brasileirao-serie-a-2026-resultados-regular-season-18-2026-05-31-pt-br.mp4",
   "durationInFrames": 270,
   "compositionId": "FootballResultsShort",
   "leagueConfig": {
-    "leagueId": 61,
-    "accentColor": "#0A84FF",
+    "leagueId": 71,
+    "accentColor": "#F0A500",
     "standings": {
       "safeArea": {
         "left": 68,
@@ -24,140 +24,219 @@
       },
       "zones": [
         {
-          "key": "champions-league",
-          "label": "Champions League",
+          "key": "libertadores",
+          "label": "Libertadores",
           "start": 1,
-          "end": 3,
-          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(101, 227, 133, 0.64)",
-          "textColor": "#27AE60"
-        },
-        {
-          "key": "champions-league-qualifying",
-          "label": "Champions League Qualifying",
-          "start": 4,
           "end": 4,
-          "fill": "linear-gradient(90deg, rgba(10, 132, 255, 0.82), rgba(10, 132, 255, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(90, 170, 255, 0.58)",
-          "textColor": "#0A84FF"
+          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(101, 227, 133, 0.64)"
         },
         {
-          "key": "europa-league",
-          "label": "Europa League",
+          "key": "pre-libertadores",
+          "label": "Pré-Libertadores",
           "start": 5,
           "end": 5,
           "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 190, 92, 0.58)",
-          "textColor": "#F5A134"
+          "accent": "rgba(255, 190, 92, 0.58)"
         },
         {
-          "key": "conference-league-qualifying",
-          "label": "Conference League Qualifying",
+          "key": "sul-americana",
+          "label": "Sul-Americana",
           "start": 6,
-          "end": 6,
-          "fill": "linear-gradient(90deg, rgba(59, 133, 255, 0.82), rgba(59, 133, 255, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(107, 166, 255, 0.54)",
-          "textColor": "#3B85FF"
+          "end": 11,
+          "fill": "linear-gradient(90deg, rgba(0, 177, 183, 0.82), rgba(0, 177, 183, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(0, 177, 183, 0.54)"
         },
         {
-          "key": "relegation-playoff",
-          "label": "Relegation Playoff",
-          "start": 16,
-          "end": 16,
-          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 190, 92, 0.58)",
-          "textColor": "#F5A134"
-        },
-        {
-          "key": "relegation",
-          "label": "Relegation",
+          "key": "rebaixamento",
+          "label": "Rebaixamento",
           "start": 17,
-          "end": 18,
+          "end": 20,
           "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 102, 102, 0.56)",
-          "textColor": "#E74C3C"
+          "accent": "rgba(255, 102, 102, 0.56)"
         }
       ]
     },
-    "leagueName": "Ligue 1",
-    "secondaryAccentColor": "#FF4FD8"
+    "leagueName": "Brasileirão Série A",
+    "pace": {
+      "championship": {
+        "benchmarkPercentage": 68,
+        "benchmarkLabel": "Média dos últimos 10 campeões",
+        "entryCount": 10
+      },
+      "relegation": {
+        "benchmarkPercentage": 38,
+        "benchmarkLabel": "Linha de segurança",
+        "safeRowsAbove": 3,
+        "maxRows": 10
+      }
+    }
   },
-  "round": "Final",
-  "roundLabel": "Relegation Playoff",
-  "ctaText": "Nice stays at Ligue 1",
+  "round": "Regular Season - 18",
+  "matchDate": "2026-05-31",
+  "matchDates": [
+    "2026-05-31"
+  ],
+  "roundLabel": "Rodada 18",
+  "ctaText": "Qual foi o melhor jogo?",
   "fixtures": [
     {
-      "fixtureId": 1545408,
-      "fixtureDateKey": "2026-05-27",
-      "homeTeam": "Saint Etienne",
-      "awayTeam": "Nice",
-      "homeScore": 0,
-      "awayScore": 0,
-      "homeEliminated": true,
+      "fixtureId": 1492282,
+      "fixtureDateKey": "2026-05-31",
+      "homeTeam": "RB Bragantino",
+      "awayTeam": "Internacional",
+      "homeScore": 3,
+      "awayScore": 1,
+      "homeEliminated": false,
       "awayEliminated": false,
       "hasPenalties": false,
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "SE",
-        "logoPath": "/logos/saint-etienne-1063.png"
+        "label": "RB",
+        "logoPath": "/logos/rb-bragantino-794.png"
       },
       "awayBadge": {
-        "label": "N",
-        "logoPath": "/logos/nice-84.png"
+        "label": "I",
+        "logoPath": "/logos/internacional-119.png"
       }
     },
     {
-      "fixtureId": 1545409,
-      "fixtureDateKey": "2026-05-30",
-      "homeTeam": "Nice",
-      "awayTeam": "Saint Etienne",
-      "homeScore": 4,
-      "awayScore": 1,
+      "fixtureId": 1492286,
+      "fixtureDateKey": "2026-05-31",
+      "homeTeam": "Palmeiras",
+      "awayTeam": "Chapecoense",
+      "homeScore": 1,
+      "awayScore": 0,
       "homeEliminated": false,
-      "awayEliminated": true,
+      "awayEliminated": false,
       "hasPenalties": false,
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "N",
-        "logoPath": "/logos/nice-84.png"
+        "label": "P",
+        "logoPath": "/logos/palmeiras-121.png"
       },
       "awayBadge": {
-        "label": "SE",
-        "logoPath": "/logos/saint-etienne-1063.png"
+        "label": "C",
+        "logoPath": "/logos/chapecoense-sc-132.png"
+      }
+    },
+    {
+      "fixtureId": 1492289,
+      "fixtureDateKey": "2026-05-31",
+      "homeTeam": "Vasco DA Gama",
+      "awayTeam": "Atletico-MG",
+      "homeScore": 0,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "VDG",
+        "logoPath": "/logos/vasco-da-gama-133.png"
+      },
+      "awayBadge": {
+        "label": "A",
+        "logoPath": "/logos/atletico-mg-1062.png"
+      }
+    },
+    {
+      "fixtureId": 1492283,
+      "fixtureDateKey": "2026-05-31",
+      "homeTeam": "Cruzeiro",
+      "awayTeam": "Fluminense",
+      "homeScore": 1,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "C",
+        "logoPath": "/logos/cruzeiro-135.png"
+      },
+      "awayBadge": {
+        "label": "F",
+        "logoPath": "/logos/fluminense-124.png"
+      }
+    },
+    {
+      "fixtureId": 1492287,
+      "fixtureDateKey": "2026-05-31",
+      "homeTeam": "Remo",
+      "awayTeam": "Sao Paulo",
+      "homeScore": 1,
+      "awayScore": 0,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "R",
+        "logoPath": "/logos/remo-1198.png"
+      },
+      "awayBadge": {
+        "label": "SP",
+        "logoPath": "/logos/sao-paulo-126.png"
       }
     }
   ],
-  "introTitle": "Ligue 1",
-  "introSubtitle": "Relegation Playoff",
-  "hookText": "Nice stays at Ligue 1",
+  "introTitle": "Brasileirão Série A",
+  "introSubtitle": "Rodada 18",
+  "hookText": "Última Rodada antes da parada mexe na tabela",
   "coldOpenData": {
     "matchRows": [
       {
-        "left": "SAINT ETIENNE",
-        "center": "0 - 0",
-        "right": "NICE"
+        "left": "RB BRAGANTINO",
+        "center": "3 - 1",
+        "right": "INTERNACIONAL"
       },
       {
-        "left": "NICE",
-        "center": "4 - 1",
-        "right": "SAINT ETIENNE"
+        "left": "PALMEIRAS",
+        "center": "1 - 0",
+        "right": "CHAPECOENSE"
+      },
+      {
+        "left": "VASCO DA GAMA",
+        "center": "0 - 1",
+        "right": "ATLETICO-MG"
+      },
+      {
+        "left": "CRUZEIRO",
+        "center": "1 - 1",
+        "right": "FLUMINENSE"
       }
     ],
     "tableRows": [
       {
         "rank": 1,
-        "club": "SAINT ETIENNE",
+        "club": "RB BRAGANTINO",
         "pts": 22
       },
       {
         "rank": 2,
-        "club": "NICE",
+        "club": "INTERNACIONAL",
         "pts": 20
+      },
+      {
+        "rank": 3,
+        "club": "PALMEIRAS",
+        "pts": 18
+      },
+      {
+        "rank": 4,
+        "club": "CHAPECOENSE",
+        "pts": 16
       }
     ]
   },
-  "voiceoverEnabled": false,
-  "voiceoverText": "Latest Ligue 1 results"
+  "voiceoverEnabled": true,
+  "voiceoverText": "Fechamento da Rodada 18 do Brasileirão.. Vasco no Z4, Palmeiras e Flamengo venceram e Remo ganha do São Paulo",
+  "voiceoverPath": "/voiceovers/football/pt-br-bab9cb2e01bc9f04.mp3",
+  "voiceoverLabel": "Fechamento da Rodada 18 do Brasileirão.. Vasco no Z4, Palmeiras e Flamengo venceram e Remo ganha do São Paulo"
 }
