@@ -44,6 +44,7 @@ const soundtrackLabelOverrides = {
   'gol-de-hoje.mp3': 'Gol de Hoje',
   'gol-de-impacto.mp3': 'Gol de Impacto',
   'gol-na-pressao.mp3': 'Gol na Pressão',
+  'foot-analysis-whistle.mp3': 'Foot Analysis Whistle',
   'gridiron-clash-1.mp3': 'Gridiron Clash (1)',
   'gridiron-surge-1.mp3': 'Gridiron Surge (1)',
   'Champions - The Anthem plays.mp3': 'Champions - The Anthem Plays',
@@ -53,6 +54,7 @@ const soundtrackLabelOverrides = {
 
 const preferredFootballSoundtracks = [
   'gol-na-pressao.mp3',
+  'foot-analysis-whistle.mp3',
   'fun-vibe-dyalla.mp3',
   'get-tough-tracktribe.mp3',
   'final-whistle-rise-premier-league.mp3',
@@ -97,6 +99,15 @@ export const footballSoundtrackPresets = listSoundtrackPresets(
 );
 
 const defaultFootballSoundtrack = footballSoundtrackPresets[0];
+const englishLongformSoundtrackPath = '/audio/football/foot-analysis-whistle.mp3';
+const portugueseLongformSoundtrackPath = '/audio/football/gol-na-pressao.mp3';
+const getLongformSoundtrackPath = ({soundtrackPath, channelProfile}) => {
+  const requested = String(soundtrackPath ?? '').trim();
+  if (channelProfile === 'en' && (!requested || requested === portugueseLongformSoundtrackPath)) {
+    return englishLongformSoundtrackPath;
+  }
+  return requested || defaultFootballSoundtrack?.value;
+};
 const FOOTBALL_DURATION_IN_FRAMES = 270;
 const execFileAsync = promisify(execFile);
 
@@ -3315,10 +3326,12 @@ const longformBadgeForTeam = (teamName, leagueId, aliasesConfig, accentConfig, a
   };
 };
 
-const estimateVoiceoverFrames = (text) => {
+const estimateVoiceoverFrames = (text, playbackRate = 1) => {
   const words = String(text ?? '').trim().split(/\s+/).filter(Boolean).length;
   const seconds = Math.max(8, Math.ceil((words / 150) * 60) + 3);
-  return seconds * 30;
+  const normalizedPlaybackRate =
+    Number.isFinite(Number(playbackRate)) && Number(playbackRate) > 0 ? Number(playbackRate) : 1;
+  return Math.ceil((seconds * 30) / normalizedPlaybackRate);
 };
 
 const publicAssetPathToFile = (publicPath) =>
@@ -3403,6 +3416,8 @@ export const prepareFootballPredictionsLongJob = async ({
   brandName,
   soundtrackPath,
   soundtrackVolume,
+  channelProfile,
+  languageProfile,
   voiceoverEnabled = true,
 }) => {
   await ensureDirectories();
@@ -3416,12 +3431,17 @@ export const prepareFootballPredictionsLongJob = async ({
   }
 
   const data = parsed.data;
+  const normalizedLanguageProfile = languageProfile === 'en' ? 'en' : 'pt-br';
+  const normalizedChannelProfile = channelProfile === 'en' || normalizedLanguageProfile === 'en' ? 'en' : 'pt';
   const aliasesConfig = await loadTeamNameAliases();
   const accentConfig = await loadTeamAccentColors();
   const leagueId = Number(data.leagueId);
   const normalizedLeagueId = Number.isFinite(leagueId) ? leagueId : 0;
   const transitionDurationInFrames = 18;
-  const selectedSoundtrack = soundtrackPath?.trim() || defaultFootballSoundtrack?.value;
+  const selectedSoundtrack = getLongformSoundtrackPath({
+    soundtrackPath,
+    channelProfile: normalizedChannelProfile,
+  });
   const introDurationInFrames = await getAudioDurationInFrames(selectedSoundtrack, 300);
   const outroDurationInFrames = await getAudioDurationInFrames(
     selectedSoundtrack,
@@ -3448,7 +3468,7 @@ export const prepareFootballPredictionsLongJob = async ({
     const voiceover = String(match.voiceover).trim();
     const voiceoverPath =
       voiceoverEnabled !== false
-        ? await generateGoogleVoiceover({text: voiceover, languageProfile: 'pt-br'})
+        ? await generateGoogleVoiceover({text: voiceover, languageProfile: normalizedLanguageProfile})
         : undefined;
 
     matches.push({
@@ -3488,8 +3508,8 @@ export const prepareFootballPredictionsLongJob = async ({
     leagueId: normalizedLeagueId,
     season: Number.isFinite(season) ? season : new Date().getFullYear(),
     leagueName,
-    channelProfile: 'pt',
-    languageProfile: 'pt-br',
+    channelProfile: normalizedChannelProfile,
+    languageProfile: normalizedLanguageProfile,
     brandName: brandName?.trim() || 'Foot Analysis',
     brandLogoPath: '/branding/foot-analysis-logo.png',
     soundtrackPath: selectedSoundtrack,
@@ -3509,7 +3529,10 @@ export const prepareFootballPredictionsLongJob = async ({
     introDurationInFrames,
     outroDurationInFrames,
     transitionDurationInFrames,
-    disclaimer: 'Os palpites têm caráter exclusivamente recreativo.',
+    disclaimer:
+      normalizedLanguageProfile === 'en'
+        ? 'Predictions are for entertainment purposes only.'
+        : 'Os palpites têm caráter exclusivamente recreativo.',
     voiceoverEnabled: voiceoverEnabled !== false,
     matches,
   };
@@ -3520,17 +3543,32 @@ export const prepareFootballPredictionsLongJob = async ({
   return {job, validation: parsed};
 };
 
-const roundSummaryStatLabels = [
-  ['Shots on Goal', 'No alvo'],
-  ['Total Shots', 'Finalizações'],
-  ['Ball Possession', 'Posse'],
-  ['Corner Kicks', 'Escanteios'],
-  ['Fouls', 'Faltas'],
-  ['Yellow Cards', 'Cartões amarelos'],
-  ['Red Cards', 'Cartões vermelhos'],
-  ['Goalkeeper Saves', 'Defesas'],
-  ['Passes %', 'Precisão passe'],
-];
+const roundSummaryStatLabels = {
+  'pt-br': [
+    ['Shots on Goal', 'No alvo'],
+    ['Total Shots', 'Finalizações'],
+    ['Ball Possession', 'Posse'],
+    ['Corner Kicks', 'Escanteios'],
+    ['Fouls', 'Faltas'],
+    ['Yellow Cards', 'Cartões amarelos'],
+    ['Red Cards', 'Cartões vermelhos'],
+    ['Goalkeeper Saves', 'Defesas'],
+    ['Passes %', 'Precisão passe'],
+  ],
+  en: [
+    ['Shots on Goal', 'On target'],
+    ['Total Shots', 'Shots'],
+    ['Ball Possession', 'Possession'],
+    ['Corner Kicks', 'Corners'],
+    ['Fouls', 'Fouls'],
+    ['Yellow Cards', 'Yellow cards'],
+    ['Red Cards', 'Red cards'],
+    ['Goalkeeper Saves', 'Saves'],
+    ['Passes %', 'Pass accuracy'],
+  ],
+};
+
+const roundSummaryVoiceoverPlaybackRate = 1.15;
 
 const normalizeApiStatisticValue = (value) => {
   if (value === null || value === undefined || value === '') return '0';
@@ -3544,12 +3582,12 @@ const findStatistic = (teamStats, type) => {
   return normalizeApiStatisticValue(row?.value);
 };
 
-const buildRoundSummaryStats = (statisticsPayload) => {
+const buildRoundSummaryStats = (statisticsPayload, languageProfile = 'pt-br') => {
   const teams = Array.isArray(statisticsPayload?.response) ? statisticsPayload.response : [];
   const homeStats = Array.isArray(teams[0]?.statistics) ? teams[0].statistics : [];
   const awayStats = Array.isArray(teams[1]?.statistics) ? teams[1].statistics : [];
 
-  return roundSummaryStatLabels
+  return (roundSummaryStatLabels[languageProfile] ?? roundSummaryStatLabels['pt-br'])
     .map(([apiType, label]) => ({
       label,
       homeValue: findStatistic(homeStats, apiType),
@@ -3637,9 +3675,17 @@ export const parseFootballRoundSummaryLongYaml = (yamlText) => {
     const label = `Match ${index + 1}`;
     const fixtureId = Number(match.fixtureId);
     const voiceover = String(match.voiceover ?? '').trim();
+    const homeAccentColor = String(match.homeAccentColor ?? '').trim();
+    const awayAccentColor = String(match.awayAccentColor ?? '').trim();
 
     if (!Number.isFinite(fixtureId)) errors.push(`${label}: fixtureId is required.`);
     if (!voiceover) errors.push(`${label}: voiceover is required.`);
+    if (homeAccentColor && !isHexColor(homeAccentColor)) {
+      errors.push(`${label}: homeAccentColor must be a hex color like "#27AE60".`);
+    }
+    if (awayAccentColor && !isHexColor(awayAccentColor)) {
+      errors.push(`${label}: awayAccentColor must be a hex color like "#C0392B".`);
+    }
     if (seen.has(fixtureId)) errors.push(`${label}: duplicate fixtureId ${fixtureId}.`);
     seen.add(fixtureId);
   });
@@ -3658,6 +3704,8 @@ export const prepareFootballRoundSummaryLongJob = async ({
   brandName,
   soundtrackPath,
   soundtrackVolume,
+  channelProfile,
+  languageProfile,
   voiceoverEnabled = true,
 }) => {
   await ensureDirectories();
@@ -3671,9 +3719,14 @@ export const prepareFootballRoundSummaryLongJob = async ({
   }
 
   const data = parsed.data;
+  const normalizedLanguageProfile = languageProfile === 'en' ? 'en' : 'pt-br';
+  const normalizedChannelProfile = channelProfile === 'en' || normalizedLanguageProfile === 'en' ? 'en' : 'pt';
   const aliasesConfig = await loadTeamNameAliases();
   const accentConfig = await loadTeamAccentColors();
-  const selectedSoundtrack = soundtrackPath?.trim() || defaultFootballSoundtrack?.value;
+  const selectedSoundtrack = getLongformSoundtrackPath({
+    soundtrackPath,
+    channelProfile: normalizedChannelProfile,
+  });
   const introDurationInFrames = await getAudioDurationInFrames(selectedSoundtrack, 300);
   const outroDurationInFrames = await getAudioDurationInFrames(selectedSoundtrack, 300);
   const transitionDurationInFrames = 18;
@@ -3700,13 +3753,27 @@ export const prepareFootballRoundSummaryLongJob = async ({
     season = Number.isFinite(season) ? season : Number(fixture.league?.season);
     leagueName =
       leagueName ||
-      getLeagueNameWithSeason(fixture.league?.name ?? `League ${leagueId}`, season, 'pt-br');
-    roundLabel = roundLabel || deriveFootballRoundLabel('results', fixture.league?.round ?? '', 'pt-br');
+      getLeagueNameWithSeason(fixture.league?.name ?? `League ${leagueId}`, season, normalizedLanguageProfile);
+    roundLabel =
+      roundLabel ||
+      deriveFootballRoundLabel('results', fixture.league?.round ?? '', normalizedLanguageProfile);
 
     const apiHomeTeam = fixture.teams?.home?.name;
     const apiAwayTeam = fixture.teams?.away?.name;
-    const home = longformBadgeForTeam(apiHomeTeam, leagueId, aliasesConfig, accentConfig);
-    const away = longformBadgeForTeam(apiAwayTeam, leagueId, aliasesConfig, accentConfig);
+    const home = longformBadgeForTeam(
+      apiHomeTeam,
+      leagueId,
+      aliasesConfig,
+      accentConfig,
+      match.homeAccentColor
+    );
+    const away = longformBadgeForTeam(
+      apiAwayTeam,
+      leagueId,
+      aliasesConfig,
+      accentConfig,
+      match.awayAccentColor
+    );
     const eventsPayload = await fetchJson(
       `https://${apiHost}/fixtures/events?fixture=${fixtureId}`,
       apiKey,
@@ -3718,11 +3785,11 @@ export const prepareFootballRoundSummaryLongJob = async ({
       apiHost
     );
     const events = buildRoundSummaryEvents(eventsPayload, apiHomeTeam, apiAwayTeam);
-    const keyStats = buildRoundSummaryStats(statisticsPayload);
+    const keyStats = buildRoundSummaryStats(statisticsPayload, normalizedLanguageProfile);
     const voiceover = String(match.voiceover).trim();
     const voiceoverPath =
       voiceoverEnabled !== false
-        ? await generateGoogleVoiceover({text: voiceover, languageProfile: 'pt-br'})
+        ? await generateGoogleVoiceover({text: voiceover, languageProfile: normalizedLanguageProfile})
         : undefined;
 
     matches.push({
@@ -3732,12 +3799,12 @@ export const prepareFootballRoundSummaryLongJob = async ({
       awayTeam: away.team,
       homeScore: Number(fixture.goals?.home ?? fixture.score?.fulltime?.home ?? 0),
       awayScore: Number(fixture.goals?.away ?? fixture.score?.fulltime?.away ?? 0),
-      fixtureDateLabel: getFixtureDateKey(fixture, 'pt-br') ?? undefined,
+      fixtureDateLabel: getFixtureDateKey(fixture, normalizedLanguageProfile) ?? undefined,
       venueLabel: fixture.fixture?.venue?.name ?? undefined,
       statusLabel: fixture.fixture?.status?.short ?? 'FT',
       voiceover,
       voiceoverPath,
-      durationInFrames: estimateVoiceoverFrames(voiceover),
+      durationInFrames: estimateVoiceoverFrames(voiceover, roundSummaryVoiceoverPlaybackRate),
       homeBadge: {
         ...home.badge,
         logoPath:
@@ -3786,8 +3853,8 @@ export const prepareFootballRoundSummaryLongJob = async ({
     leagueId: Number.isFinite(leagueId) ? leagueId : 0,
     season: Number.isFinite(season) ? season : new Date().getFullYear(),
     leagueName: leagueName || 'Football',
-    channelProfile: 'pt',
-    languageProfile: 'pt-br',
+    channelProfile: normalizedChannelProfile,
+    languageProfile: normalizedLanguageProfile,
     brandName: brandName?.trim() || 'Foot Analysis',
     brandLogoPath: '/branding/foot-analysis-logo.png',
     soundtrackPath: selectedSoundtrack,
@@ -3807,7 +3874,10 @@ export const prepareFootballRoundSummaryLongJob = async ({
     introDurationInFrames,
     outroDurationInFrames,
     transitionDurationInFrames,
-    disclaimer: 'Os dados são baseados nas informações disponíveis da partida.',
+    disclaimer:
+      normalizedLanguageProfile === 'en'
+        ? 'Data is based on the available match information.'
+        : 'Os dados são baseados nas informações disponíveis da partida.',
     voiceoverEnabled: voiceoverEnabled !== false,
     matches,
   };

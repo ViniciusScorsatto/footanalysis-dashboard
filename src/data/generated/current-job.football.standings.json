@@ -1,22 +1,22 @@
 {
   "sport": "football",
   "template": "standings",
-  "leagueId": 72,
+  "leagueId": 75,
   "season": 2026,
-  "leagueName": "Brasileirão Série B",
+  "leagueName": "Brasileirão Série C",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Estádio Vai Ferver.mp3",
-  "soundtrackLabel": "Estádio Vai Ferver",
-  "soundtrackVolume": 0.2,
-  "outputName": "brasileirao-serie-b-2026-classificacao-pt-br.mp4",
+  "soundtrackPath": "/audio/football/gol-na-pressao.mp3",
+  "soundtrackLabel": "Gol na Pressão",
+  "soundtrackVolume": 0.35,
+  "outputName": "brasileirao-serie-c-2026-classificacao-pt-br.mp4",
   "durationInFrames": 270,
   "compositionId": "FootballStandingsShort",
   "leagueConfig": {
-    "leagueId": 72,
-    "accentColor": "#2E86DE",
+    "leagueId": 75,
+    "accentColor": "#27AE60",
     "standings": {
       "safeArea": {
         "left": 68,
@@ -24,304 +24,298 @@
       },
       "zones": [
         {
-          "key": "acesso-direto",
-          "label": "Acesso direto",
+          "key": "quadrangular",
+          "label": "Quadrangular",
           "start": 1,
-          "end": 2,
-          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(101, 227, 133, 0.64)"
-        },
-        {
-          "key": "playoffs-acesso",
-          "label": "Playoffs de acesso",
-          "start": 3,
-          "end": 6,
-          "fill": "linear-gradient(90deg, rgba(240, 165, 0, 0.88), rgba(240, 165, 0, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(240, 165, 0, 0.52)"
+          "end": 8,
+          "fill": "linear-gradient(90deg, rgba(39, 174, 96, 0.88), rgba(39, 174, 96, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(86, 214, 120, 0.62)"
         },
         {
           "key": "rebaixamento",
           "label": "Rebaixamento",
-          "start": 17,
+          "start": 19,
           "end": 20,
           "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
           "accent": "rgba(255, 102, 102, 0.56)"
         }
       ]
     },
-    "leagueName": "Brasileirão Série B"
+    "leagueName": "Brasileirão Série C"
   },
-  "standingsLabel": "Rodada 11",
-  "ctaText": "Quem sobe e quem cai?",
+  "standingsLabel": "Rodada 9",
+  "ctaText": "Qual foi o melhor jogo?",
   "rows": [
     {
       "rank": 1,
-      "team": "Sport",
-      "played": 11,
-      "points": 22,
-      "goalDifference": 8,
+      "team": "Guarani",
+      "played": 9,
+      "points": 18,
+      "goalDifference": 13,
       "form": "WWLWW",
       "badge": {
-        "label": "S",
-        "logoPath": "/logos/sport-recife-123.png"
+        "label": "G",
+        "logoPath": "/logos/guarani-campinas-138.png"
       }
     },
     {
       "rank": 2,
-      "team": "Vila Nova",
-      "played": 11,
-      "points": 22,
+      "team": "Brusque",
+      "played": 8,
+      "points": 17,
       "goalDifference": 6,
-      "form": "WWWLD",
+      "form": "WLWDW",
       "badge": {
-        "label": "VN",
-        "logoPath": "/logos/vila-nova-142.png"
+        "label": "B",
+        "logoPath": "/logos/brusque-1211.png"
       }
     },
     {
       "rank": 3,
-      "team": "São Bernardo",
-      "played": 11,
-      "points": 21,
-      "goalDifference": 9,
-      "form": "DWDWW",
+      "team": "Paysandu",
+      "played": 9,
+      "points": 17,
+      "goalDifference": 5,
+      "form": "LWLWW",
       "badge": {
-        "label": "SB",
-        "logoPath": "/logos/sao-bernardo-7865.png"
+        "label": "P",
+        "logoPath": "/logos/paysandu-149.png"
       }
     },
     {
       "rank": 4,
-      "team": "Náutico",
-      "played": 11,
-      "points": 19,
-      "goalDifference": 5,
-      "form": "LWWWD",
+      "team": "Ituano",
+      "played": 9,
+      "points": 16,
+      "goalDifference": 3,
+      "form": "LWWWL",
       "badge": {
-        "label": "N",
-        "logoPath": "/logos/nautico-recife-755.png"
+        "label": "I",
+        "logoPath": "/logos/ituano-7779.png"
       }
     },
     {
       "rank": 5,
-      "team": "Fortaleza",
-      "played": 11,
-      "points": 18,
+      "team": "Caxias",
+      "played": 9,
+      "points": 15,
       "goalDifference": 3,
-      "form": "LWLDW",
+      "form": "WDWDD",
       "badge": {
-        "label": "F",
-        "logoPath": "/logos/fortaleza-ec-154.png"
+        "label": "C",
+        "logoPath": "/logos/caxias-7770.png"
       }
     },
     {
       "rank": 6,
-      "team": "Goias",
-      "played": 11,
-      "points": 17,
-      "goalDifference": -1,
-      "form": "DWWWL",
+      "team": "Int. Limeira",
+      "played": 9,
+      "points": 15,
+      "goalDifference": 2,
+      "form": "WDWLW",
       "badge": {
-        "label": "G",
-        "logoPath": "/logos/goias-151.png"
+        "label": "IL",
+        "logoPath": "/logos/inter-de-limeira-1201.png"
       }
     },
     {
       "rank": 7,
-      "team": "Novorizontino",
-      "played": 11,
-      "points": 17,
-      "goalDifference": 3,
-      "form": "DWDWD",
+      "team": "Floresta",
+      "played": 9,
+      "points": 15,
+      "goalDifference": 2,
+      "form": "WLWDL",
       "badge": {
-        "label": "N",
-        "logoPath": "/logos/novorizontino-7834.png"
+        "label": "F",
+        "logoPath": "/logos/floresta-7774.png"
       }
     },
     {
       "rank": 8,
-      "team": "Criciuma",
-      "played": 11,
-      "points": 17,
-      "goalDifference": 3,
-      "form": "WDDDD",
+      "team": "Amazonas",
+      "played": 9,
+      "points": 13,
+      "goalDifference": -1,
+      "form": "LLLLD",
       "badge": {
-        "label": "C",
-        "logoPath": "/logos/criciuma-140.png"
+        "label": "A",
+        "logoPath": "/logos/amazonas-10862.png"
       }
     },
     {
       "rank": 9,
-      "team": "Athletic Club",
-      "played": 11,
-      "points": 17,
-      "goalDifference": 2,
-      "form": "WWDDD",
+      "team": "Maringá",
+      "played": 9,
+      "points": 13,
+      "goalDifference": -2,
+      "form": "LDWLW",
       "badge": {
-        "label": "AC",
-        "logoPath": "/logos/athletic-club-13975.png"
+        "label": "M",
+        "logoPath": "/logos/maringa-7833.png"
       }
     },
     {
       "rank": 10,
-      "team": "Juventude",
-      "played": 11,
-      "points": 16,
-      "goalDifference": 3,
-      "form": "WLDDD",
+      "team": "Ferroviária",
+      "played": 9,
+      "points": 13,
+      "goalDifference": 0,
+      "form": "DWWDW",
       "badge": {
-        "label": "J",
-        "logoPath": "/logos/juventude-152.png"
+        "label": "F",
+        "logoPath": "/logos/ferroviaria-7826.png"
       }
     },
     {
       "rank": 11,
-      "team": "Operario-PR",
-      "played": 11,
-      "points": 16,
-      "goalDifference": -2,
-      "form": "WDLLW",
+      "team": "Santa Cruz",
+      "played": 9,
+      "points": 12,
+      "goalDifference": 1,
+      "form": "DDWWL",
       "badge": {
-        "label": "O",
-        "logoPath": "/logos/operario-pr-1223.png"
+        "label": "SC",
+        "logoPath": "/logos/santa-cruz-753.png"
       }
     },
     {
       "rank": 12,
-      "team": "CRB",
-      "played": 11,
-      "points": 14,
-      "goalDifference": 0,
-      "form": "LWWWW",
+      "team": "Maranhão",
+      "played": 9,
+      "points": 12,
+      "goalDifference": -2,
+      "form": "DDLWW",
       "badge": {
-        "label": "C",
-        "logoPath": "/logos/crb-146.png"
+        "label": "M",
+        "logoPath": "/logos/maranhao-7832.png"
       }
     },
     {
       "rank": 13,
-      "team": "Ceara",
-      "played": 11,
-      "points": 13,
-      "goalDifference": -1,
-      "form": "LLWLL",
+      "team": "Volta Redonda",
+      "played": 9,
+      "points": 11,
+      "goalDifference": -3,
+      "form": "WWLDD",
       "badge": {
-        "label": "C",
-        "logoPath": "/logos/ceara-129.png"
+        "label": "VR",
+        "logoPath": "/logos/volta-redonda-7814.png"
       }
     },
     {
       "rank": 14,
-      "team": "Atlético-GO",
-      "played": 11,
-      "points": 13,
-      "goalDifference": -1,
-      "form": "DLDWD",
+      "team": "Figueirense",
+      "played": 9,
+      "points": 11,
+      "goalDifference": -5,
+      "form": "WDLWL",
       "badge": {
-        "label": "A",
-        "logoPath": "/logos/atletico-goianiense-144.png"
+        "label": "F",
+        "logoPath": "/logos/figueirense-137.png"
       }
     },
     {
       "rank": 15,
-      "team": "Cuiaba",
-      "played": 11,
-      "points": 13,
-      "goalDifference": 1,
-      "form": "WLDDD",
+      "team": "Ypiranga-RS",
+      "played": 9,
+      "points": 10,
+      "goalDifference": -3,
+      "form": "LLLLW",
       "badge": {
-        "label": "C",
-        "logoPath": "/logos/cuiaba-1193.png"
+        "label": "Y",
+        "logoPath": "/logos/ypiranga-rs-1221.png"
       }
     },
     {
       "rank": 16,
-      "team": "Botafogo SP",
-      "played": 11,
+      "team": "Barra",
+      "played": 8,
       "points": 10,
-      "goalDifference": 0,
-      "form": "LLLDD",
+      "goalDifference": 3,
+      "form": "LDDWD",
       "badge": {
-        "label": "BS",
-        "logoPath": "/logos/botafogo-sp-2618.png"
+        "label": "B",
+        "logoPath": "/logos/barra-18271.png"
       }
     },
     {
       "rank": 17,
-      "team": "Avai",
-      "played": 11,
-      "points": 10,
+      "team": "Botafogo PB",
+      "played": 9,
+      "points": 9,
       "goalDifference": -4,
-      "form": "LLLDD",
+      "form": "WLLLL",
       "badge": {
-        "label": "A",
-        "logoPath": "/logos/avai-145.png"
+        "label": "BP",
+        "logoPath": "/logos/botafogo-pb-1197.png"
       }
     },
     {
       "rank": 18,
-      "team": "Londrina",
-      "played": 11,
-      "points": 8,
-      "goalDifference": -7,
-      "form": "LLWLL",
+      "team": "Confiança",
+      "played": 9,
+      "points": 7,
+      "goalDifference": -4,
+      "form": "LDWLL",
       "badge": {
-        "label": "L",
-        "logoPath": "/logos/londrina-148.png"
+        "label": "C",
+        "logoPath": "/logos/confianca-7772.png"
       }
     },
     {
       "rank": 19,
-      "team": "Ponte Preta",
-      "played": 11,
-      "points": 8,
-      "goalDifference": -11,
-      "form": "LLLLW",
+      "team": "AO Itabaiana",
+      "played": 9,
+      "points": 6,
+      "goalDifference": -7,
+      "form": "LDWDL",
       "badge": {
-        "label": "PP",
-        "logoPath": "/logos/ponte-preta-139.png"
+        "label": "AI",
+        "logoPath": "/logos/ao-itabaiana-2204.png"
       }
     },
     {
       "rank": 20,
-      "team": "América-MG",
-      "played": 11,
-      "points": 3,
-      "goalDifference": -16,
-      "form": "LLDLL",
+      "team": "Anápolis",
+      "played": 9,
+      "points": 5,
+      "goalDifference": -7,
+      "form": "DLDLL",
       "badge": {
         "label": "A",
-        "logoPath": "/logos/america-mineiro-125.png"
+        "logoPath": "/logos/anapolis-7852.png"
       }
     }
   ],
-  "introTitle": "Brasileirão Série B",
-  "introSubtitle": "Rodada 11",
-  "hookText": "Spot e Vila Nova dividindo a liderança da Série B",
+  "introTitle": "Brasileirão Série C",
+  "introSubtitle": "Rodada 9",
+  "hookText": "A tabela virou?",
   "coldOpenData": {
     "tableRows": [
       {
         "rank": 1,
-        "club": "SPORT",
-        "pts": 22
+        "club": "GUARANI",
+        "pts": 18
       },
       {
         "rank": 2,
-        "club": "VILA NOVA",
-        "pts": 22
+        "club": "BRUSQUE",
+        "pts": 17
       },
       {
         "rank": 3,
-        "club": "SÃO BERNARDO",
-        "pts": 21
+        "club": "PAYSANDU",
+        "pts": 17
       },
       {
         "rank": 4,
-        "club": "NÁUTICO",
-        "pts": 19
+        "club": "ITUANO",
+        "pts": 16
       }
     ]
   },
-  "voiceoverEnabled": false,
-  "voiceoverText": "Fala Galera, pra vocês... a classificação do Brasileirão Série B."
+  "voiceoverEnabled": true,
+  "voiceoverText": "Fala Galera, pra vocês... a classificação do Brasileirão Série C.",
+  "voiceoverPath": "/voiceovers/football/pt-br-562aa04009879bcd.mp3",
+  "voiceoverLabel": "Fala Galera, pra vocês... a classificação do Brasileirão Série C."
 }

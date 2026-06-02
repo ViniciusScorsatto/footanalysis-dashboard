@@ -1,4 +1,5 @@
 const form = document.getElementById('longform-form');
+const channelProfileSelect = document.getElementById('channel-profile');
 const presetSelect = document.getElementById('preset-select');
 const seasonInput = document.getElementById('season-input');
 const roundSelect = document.getElementById('round-select');
@@ -22,9 +23,12 @@ const dashboardQuickStatus = document.getElementById('dashboard-quick-status');
 
 const apiBase = '/api/football/longform';
 const footballApiBase = '/api/football';
+const englishLongformSoundtrackPath = '/audio/football/foot-analysis-whistle.mp3';
+const portugueseLongformSoundtrackPath = '/audio/football/gol-na-pressao.mp3';
 let teamAccentColors = {global: {}, leagues: {}};
+let allLeaguePresets = [];
 
-const sampleYaml = `title: "Palpites da Rodada 1"
+const sampleYamlPt = `title: "Palpites da Rodada 1"
 league: "Copa do Mundo"
 leagueId: 1
 season: 2026
@@ -51,6 +55,35 @@ matches:
     voiceover: |
       Argentina e França têm qualidade para controlar momentos diferentes do jogo.
       Para mim, empate em dois a dois, com chances claras para os dois lados.
+`;
+
+const sampleYamlEn = `title: "Matchday 1 Predictions"
+league: "Premier League"
+leagueId: 39
+season: 2026
+round: "Regular Season - 1"
+outputName: "premier-league-matchday-1-predictions-longform.mp4"
+openingLine1: "The new matchday brings tight games, pressure points, and a few spots where the table can shift."
+openingLine2: "Let's go game by game with the scorelines I would call before kick-off."
+
+matches:
+  - homeTeam: "Arsenal"
+    awayTeam: "Chelsea"
+    predictedScore: "2-1"
+    homeAccentColor: "#EF0107"
+    awayAccentColor: "#034694"
+    voiceover: |
+      Arsenal should control more of the territory at home, but Chelsea have enough pace to make this uncomfortable.
+      My call is a narrow Arsenal win, two one.
+
+  - homeTeam: "Liverpool"
+    awayTeam: "Manchester City"
+    predictedScore: "1-1"
+    homeAccentColor: "#C8102E"
+    awayAccentColor: "#6CABDD"
+    voiceover: |
+      Liverpool against Manchester City usually comes down to control, transition moments, and small defensive details.
+      I would lean toward a one one draw here.
 `;
 
 const escapeHtml = (value) =>
@@ -82,6 +115,7 @@ const setBusy = (busy) => {
   yamlFileInput.disabled = busy;
   yamlTextInput.disabled = busy;
   soundtrackSelect.disabled = busy;
+  channelProfileSelect.disabled = busy;
 };
 
 const setErrorBanner = (message) => {
@@ -93,6 +127,7 @@ const setErrorBanner = (message) => {
 const formDataToPayload = () => {
   const payload = Object.fromEntries(new FormData(form).entries());
   payload.yamlText = yamlTextInput.value;
+  payload.languageProfile = getLanguageProfile();
   return payload;
 };
 
@@ -106,19 +141,60 @@ const toTitleCaseSlug = (value) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 
-const toPortugueseRoundLabel = (value) => {
+const getChannelProfile = () => channelProfileSelect.value === 'en' ? 'en' : 'pt';
+const getLanguageProfile = () => getChannelProfile() === 'en' ? 'en' : 'pt-br';
+const isEnglish = () => getLanguageProfile() === 'en';
+const getSampleYaml = () => (isEnglish() ? sampleYamlEn : sampleYamlPt);
+const getDefaultSoundtrackPath = () =>
+  isEnglish() ? englishLongformSoundtrackPath : portugueseLongformSoundtrackPath;
+
+const applyDefaultSoundtrackForChannel = () => {
+  if ([...soundtrackSelect.options].some((option) => option.value === getDefaultSoundtrackPath())) {
+    soundtrackSelect.value = getDefaultSoundtrackPath();
+  }
+};
+
+const presetBelongsToChannel = (preset) =>
+  preset?.leagueId && (!Array.isArray(preset.channels) || preset.channels.includes(getChannelProfile()));
+
+const getDefaultLeagueId = () => (isEnglish() ? 39 : 1);
+
+const sortPresetsForChannel = (presets) =>
+  [...presets].sort((a, b) => {
+    const preferred = getDefaultLeagueId();
+    if (Number(a.leagueId) === preferred) return -1;
+    if (Number(b.leagueId) === preferred) return 1;
+    return String(a.label).localeCompare(String(b.label));
+  });
+
+const renderPresetOptions = (preferredLeagueId = getDefaultLeagueId()) => {
+  const presets = sortPresetsForChannel(allLeaguePresets.filter(presetBelongsToChannel));
+  presetSelect.innerHTML = presets
+    .map(
+      (preset) =>
+        `<option value="${escapeHtml(String(preset.leagueId))}">${escapeHtml(preset.label)}</option>`
+    )
+    .join('');
+  if (presets.some((preset) => String(preset.leagueId) === String(preferredLeagueId))) {
+    presetSelect.value = String(preferredLeagueId);
+  } else if (presets[0]) {
+    presetSelect.value = String(presets[0].leagueId);
+  }
+};
+
+const translateRoundLabel = (value) => {
   const label = String(value ?? '').trim();
   const regularSeasonMatch = label.match(/^regular season\s*-\s*(\d+)$/i);
-  if (regularSeasonMatch) return `Rodada ${regularSeasonMatch[1]}`;
-  return label.replace(/\bregular season\b/gi, 'Temporada regular');
+  if (regularSeasonMatch) return isEnglish() ? `Matchday ${regularSeasonMatch[1]}` : `Rodada ${regularSeasonMatch[1]}`;
+  return isEnglish() ? label : label.replace(/\bregular season\b/gi, 'Temporada regular');
 };
 
 const formatDateLabel = (dateKey) => {
-  if (!dateKey) return 'Todas as datas';
+  if (!dateKey) return isEnglish() ? 'All dates' : 'Todas as datas';
   const [year, month, day] = String(dateKey).split('-').map(Number);
   if (!year || !month || !day) return dateKey;
 
-  return new Intl.DateTimeFormat('pt-BR', {
+  return new Intl.DateTimeFormat(isEnglish() ? 'en-US' : 'pt-BR', {
     weekday: 'short',
     day: '2-digit',
     month: '2-digit',
@@ -164,11 +240,11 @@ const getSelectedPreset = () => {
   const option = presetSelect.selectedOptions?.[0];
   return {
     leagueId: Number(presetSelect.value),
-    label: option?.textContent?.trim() || 'Campeonato',
+    label: option?.textContent?.trim() || (isEnglish() ? 'League' : 'Campeonato'),
   };
 };
 
-const resetMatchDateSelect = (label = 'Todas as datas') => {
+const resetMatchDateSelect = (label = isEnglish() ? 'All dates' : 'Todas as datas') => {
   matchDateSelect.innerHTML = `<option value="">${escapeHtml(label)}</option>`;
 };
 
@@ -180,12 +256,12 @@ const getSelectedMatchDates = () =>
 const formatDateSelectionLabel = (dates) => {
   if (!dates.length) return '';
   if (dates.length === 1) return formatDateLabel(dates[0]);
-  return `${dates.length} datas`;
+  return isEnglish() ? `${dates.length} dates` : `${dates.length} datas`;
 };
 
 const formatDateSelectionSlug = (dates) => {
   if (!dates.length) return '';
-  return dates.length <= 2 ? dates.join('-') : `${dates.length}-datas`;
+  return dates.length <= 2 ? dates.join('-') : `${dates.length}-${isEnglish() ? 'dates' : 'datas'}`;
 };
 
 const getScoreForYaml = (fixture) => {
@@ -195,7 +271,7 @@ const getScoreForYaml = (fixture) => {
 };
 
 const buildYamlFromFixtures = ({fixtures, leagueName, season, round, matchDates = []}) => {
-  const roundLabel = toPortugueseRoundLabel(round || 'Rodada');
+  const roundLabel = translateRoundLabel(round || (isEnglish() ? 'Matchday' : 'Rodada'));
   const dateSelectionLabel = formatDateSelectionLabel(matchDates);
   const dateTitle = dateSelectionLabel ? ` - ${dateSelectionLabel}` : '';
   const dateSlug = formatDateSelectionSlug(matchDates);
@@ -204,14 +280,14 @@ const buildYamlFromFixtures = ({fixtures, leagueName, season, round, matchDates 
     `${leagueName}-${roundLabel}${dateSlug ? `-${dateSlug}` : ''}-palpites-longform`
   );
   const lines = [
-    `title: ${yamlQuote(`Palpites da ${roundLabel}${dateTitle}`)}`,
+    `title: ${yamlQuote(`${isEnglish() ? 'Predictions for' : 'Palpites da'} ${roundLabel}${dateTitle}`)}`,
     `league: ${yamlQuote(leagueName)}`,
     `leagueId: ${String(leagueId)}`,
     `season: ${String(season)}`,
     `round: ${yamlQuote(roundLabel)}`,
     `outputName: ${yamlQuote(`${outputSlug || 'palpites-longform'}.mp4`)}`,
-    `openingLine1: ${yamlQuote('Hoje tem rodada cheia e eu separei os jogos que podem mexer na tabela.')}`,
-    `openingLine2: ${yamlQuote('Agora vamos para os palpites, jogo por jogo, com o placar que eu apostaria.')}`,
+    `openingLine1: ${yamlQuote(isEnglish() ? 'This matchday has a few games that can shift the table.' : 'Hoje tem rodada cheia e eu separei os jogos que podem mexer na tabela.')}`,
+    `openingLine2: ${yamlQuote(isEnglish() ? 'Now let us go game by game with the scorelines I would call.' : 'Agora vamos para os palpites, jogo por jogo, com o placar que eu apostaria.')}`,
     '',
     'matches:',
   ];
@@ -224,8 +300,8 @@ const buildYamlFromFixtures = ({fixtures, leagueName, season, round, matchDates 
       `    homeAccentColor: ${yamlQuote(resolveAccentColor(fixture.homeTeam, leagueId))}`,
       `    awayAccentColor: ${yamlQuote(resolveAccentColor(fixture.awayTeam, leagueId))}`,
       '    voiceover: |',
-      `      ${fixture.homeTeam} contra ${fixture.awayTeam}.`,
-      `      Meu palpite para esse jogo é ${getScoreForYaml(fixture).replace('-', ' a ')}.`
+      `      ${fixture.homeTeam} ${isEnglish() ? 'against' : 'contra'} ${fixture.awayTeam}.`,
+      `      ${isEnglish() ? 'My prediction for this game is' : 'Meu palpite para esse jogo é'} ${getScoreForYaml(fixture).replace('-', isEnglish() ? ' to ' : ' a ')}.`
     );
     lines.push('');
   }
@@ -393,7 +469,7 @@ const loadRoundDates = async () => {
       leagueId: String(leagueId),
       season: String(season),
       round,
-      languageProfile: 'pt-br',
+      languageProfile: getLanguageProfile(),
     });
     const response = await fetch(`${footballApiBase}/round-dates?${params.toString()}`);
     const data = await response.json();
@@ -404,7 +480,7 @@ const loadRoundDates = async () => {
 
     const dates = data.dates ?? [];
     matchDateSelect.innerHTML = [
-      `<option value="">Todas as datas (${dates.length || 'rodada inteira'})</option>`,
+      `<option value="">${isEnglish() ? 'All dates' : 'Todas as datas'} (${dates.length || (isEnglish() ? 'full round' : 'rodada inteira')})</option>`,
       ...dates.map(
         (date, index) =>
           `<option value="${escapeHtml(date)}" ${index === 0 ? 'selected' : ''}>${escapeHtml(
@@ -419,7 +495,7 @@ const loadRoundDates = async () => {
     );
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    resetMatchDateSelect('Todas as datas');
+    resetMatchDateSelect();
     setErrorBanner(message);
     log(message);
   } finally {
@@ -446,7 +522,7 @@ const generateYamlFromApi = async () => {
       leagueId: String(leagueId),
       season: String(season),
       round,
-      languageProfile: 'pt-br',
+      languageProfile: getLanguageProfile(),
     });
     matchDates.forEach((matchDate) => params.append('matchDates', matchDate));
     const response = await fetch(`${footballApiBase}/prediction-fixtures?${params.toString()}`);
@@ -546,28 +622,25 @@ const loadOptions = async () => {
   const response = await fetch(`${apiBase}/options`);
   const data = await response.json();
   teamAccentColors = data.teamAccentColors ?? {global: {}, leagues: {}};
-  presetSelect.innerHTML = (data.leaguePresets ?? [])
-    .filter((preset) => preset.leagueId)
-    .map(
-      (preset) =>
-        `<option value="${escapeHtml(String(preset.leagueId))}">${escapeHtml(preset.label)}</option>`
-    )
-    .join('');
+  allLeaguePresets = data.leaguePresets ?? [];
   soundtrackSelect.innerHTML = (data.soundtrackPresets ?? [])
     .map((preset) => `<option value="${escapeHtml(preset.value)}">${escapeHtml(preset.label)}</option>`)
     .join('');
 
   const currentJob = data.currentJob;
-  yamlTextInput.value = sampleYaml;
+  channelProfileSelect.value =
+    currentJob?.channelProfile === 'en' || currentJob?.languageProfile === 'en' ? 'en' : 'pt';
+  renderPresetOptions(currentJob?.leagueId ?? getDefaultLeagueId());
+  yamlTextInput.value = getSampleYaml();
   seasonInput.value = currentJob?.season ?? new Date().getFullYear();
-  presetSelect.value = '1';
-  if (currentJob?.leagueId && String(currentJob.leagueId) === '1') {
-    presetSelect.value = String(currentJob.leagueId);
-  }
   form.elements.brandName.value = currentJob?.brandName ?? 'Foot Analysis';
   form.elements.soundtrackVolume.value = currentJob?.soundtrackVolume ?? '0.92';
   soundtrackVolumeRange.value = form.elements.soundtrackVolume.value;
-  if (currentJob?.soundtrackPath) soundtrackSelect.value = currentJob.soundtrackPath;
+  if (currentJob?.soundtrackPath) {
+    soundtrackSelect.value = currentJob.soundtrackPath;
+  } else {
+    applyDefaultSoundtrackForChannel();
+  }
   renderCurrentJob(currentJob);
   renderValidation(null);
   setErrorBanner('');
@@ -594,6 +667,14 @@ prepareButton.addEventListener('click', prepareJob);
 renderButton.addEventListener('click', renderVideo);
 loadRoundsButton.addEventListener('click', loadRounds);
 generateYamlButton.addEventListener('click', generateYamlFromApi);
+channelProfileSelect.addEventListener('change', () => {
+  renderPresetOptions();
+  yamlTextInput.value = getSampleYaml();
+  applyDefaultSoundtrackForChannel();
+  roundSelect.innerHTML = '<option value="">Carregue as rodadas</option>';
+  resetMatchDateSelect();
+  void loadRounds();
+});
 presetSelect.addEventListener('change', () => {
   roundSelect.innerHTML = '<option value="">Carregue as rodadas</option>';
   resetMatchDateSelect();

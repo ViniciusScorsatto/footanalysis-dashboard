@@ -19,8 +19,14 @@ const SILVER = '#c0ccd8';
 const STEEL = '#3a5060';
 const GOLD = '#F0A500';
 const GREEN = '#8BEA12';
+const EN_BLUE = '#0A84FF';
 const DEFAULT_INTRO_AUDIO_PATH = '/audio/football/gol-na-pressao.mp3';
+const ROUND_SUMMARY_BED_AUDIO_PATH = '/audio/football/touchline-pulse.mp3';
+const ROUND_SUMMARY_BED_VOLUME = 0.05;
+const ROUND_SUMMARY_BED_FADE_FRAMES = 6;
+const ROUND_SUMMARY_VOICEOVER_PLAYBACK_RATE = 1.15;
 const ROUND_SUMMARY_BACKGROUND = '/backgrounds/foot-analysis-round-summary-bg.png';
+const ROUND_SUMMARY_BACKGROUND_EN = '/backgrounds/foot-analysis-round-summary-bg-en.png';
 const MAIN_FRAME = {
   left: 535,
   top: 178,
@@ -33,15 +39,25 @@ const colorWithAlpha = (color = GREEN, alpha = '33') =>
 
 const accentFor = (badge: TeamBadge) => badge.accentColor ?? GREEN;
 
+const isEnglishJob = (job: {channelProfile?: string; languageProfile?: string}) =>
+  job.channelProfile === 'en' || job.languageProfile === 'en';
+
+const channelAccent = (isEnglish: boolean) => (isEnglish ? EN_BLUE : GREEN);
+
 export const FootballRoundSummaryLongComposition = ({
   job,
 }: FootballRoundSummaryLongCompositionProps) => {
+  const isEnglish = isEnglishJob(job);
+  const accent = channelAccent(isEnglish);
   const matchStarts = job.matches.reduce<number[]>((starts, match, index) => {
     const previousStart = starts[index - 1] ?? job.introDurationInFrames;
     const previousDuration =
       index === 0 ? 0 : job.matches[index - 1].durationInFrames + job.transitionDurationInFrames;
     return [...starts, previousStart + previousDuration];
   }, []);
+  const summaryStart = job.introDurationInFrames;
+  const outroStart = Math.max(0, job.durationInFrames - job.outroDurationInFrames);
+  const summaryDuration = Math.max(0, outroStart - summaryStart);
 
   return (
     <AbsoluteFill
@@ -52,14 +68,26 @@ export const FootballRoundSummaryLongComposition = ({
         fontFamily: '"Poppins", "Avenir Next", "Segoe UI", sans-serif',
       }}
     >
-      <BroadcastBackdrop />
-      <BroadcastShell brandLogoPath={job.brandLogoPath} disclaimer={job.disclaimer} />
+      <BroadcastBackdrop backgroundPath={isEnglish ? ROUND_SUMMARY_BACKGROUND_EN : ROUND_SUMMARY_BACKGROUND} />
+      <BroadcastShell
+        brandLogoPath={job.brandLogoPath}
+        disclaimer={job.disclaimer}
+        isEnglish={isEnglish}
+        accent={accent}
+      />
       <Sequence from={0} durationInFrames={job.introDurationInFrames}>
         <StingAudio
           audioPath={job.soundtrackPath ?? DEFAULT_INTRO_AUDIO_PATH}
           volume={job.soundtrackVolume ?? 0.92}
         />
-        <IntroScene job={job} />
+        <IntroScene job={job} isEnglish={isEnglish} accent={accent} />
+      </Sequence>
+      <Sequence from={summaryStart} durationInFrames={summaryDuration}>
+        <Audio
+          src={staticFile(ROUND_SUMMARY_BED_AUDIO_PATH.replace(/^\//, ''))}
+          volume={(frame) => roundSummaryBedVolume(frame, summaryDuration)}
+          loop
+        />
       </Sequence>
       {job.matches.map((match, index) => (
         <Sequence
@@ -73,9 +101,15 @@ export const FootballRoundSummaryLongComposition = ({
             total={job.matches.length}
             leagueName={job.leagueName}
             roundLabel={job.roundLabel}
+            isEnglish={isEnglish}
+            accent={accent}
           />
           {match.voiceoverPath ? (
-            <Audio src={staticFile(match.voiceoverPath.replace(/^\//, ''))} volume={0.86} />
+            <Audio
+              src={staticFile(match.voiceoverPath.replace(/^\//, ''))}
+              volume={0.86}
+              playbackRate={ROUND_SUMMARY_VOICEOVER_PLAYBACK_RATE}
+            />
           ) : null}
         </Sequence>
       ))}
@@ -87,7 +121,7 @@ export const FootballRoundSummaryLongComposition = ({
           audioPath={job.soundtrackPath ?? DEFAULT_INTRO_AUDIO_PATH}
           volume={job.soundtrackVolume ?? 0.92}
         />
-        <OutroScene job={job} />
+        <OutroScene job={job} isEnglish={isEnglish} accent={accent} />
       </Sequence>
     </AbsoluteFill>
   );
@@ -99,10 +133,33 @@ const StingAudio = ({audioPath, volume}: {audioPath?: string; volume: number}) =
   return <Audio src={staticFile(audioPath.replace(/^\//, ''))} volume={volume} />;
 };
 
-const BroadcastBackdrop = () => (
+const roundSummaryBedVolume = (frame: number, durationInFrames: number) => {
+  const fadeFrames = Math.min(ROUND_SUMMARY_BED_FADE_FRAMES, Math.floor(durationInFrames / 2));
+  if (fadeFrames <= 0) {
+    return ROUND_SUMMARY_BED_VOLUME;
+  }
+
+  const fadeIn = interpolate(frame, [0, fadeFrames], [0, ROUND_SUMMARY_BED_VOLUME], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  const fadeOut = interpolate(
+    frame,
+    [Math.max(0, durationInFrames - fadeFrames), durationInFrames],
+    [ROUND_SUMMARY_BED_VOLUME, 0],
+    {
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'clamp',
+    }
+  );
+
+  return Math.min(fadeIn, fadeOut);
+};
+
+const BroadcastBackdrop = ({backgroundPath}: {backgroundPath: string}) => (
   <>
     <Img
-      src={staticFile(ROUND_SUMMARY_BACKGROUND.replace(/^\//, ''))}
+      src={staticFile(backgroundPath.replace(/^\//, ''))}
       style={{
         position: 'absolute',
         inset: 0,
@@ -125,17 +182,29 @@ const BroadcastBackdrop = () => (
 const BroadcastShell = ({
   brandLogoPath,
   disclaimer,
+  isEnglish,
+  accent,
 }: {
   brandLogoPath?: string;
   disclaimer: string;
+  isEnglish: boolean;
+  accent: string;
 }) => (
   <>
-    <Sidebar brandLogoPath={brandLogoPath} />
-    <BottomBar disclaimer={disclaimer} />
+    <Sidebar brandLogoPath={brandLogoPath} isEnglish={isEnglish} accent={accent} />
+    <BottomBar disclaimer={disclaimer} isEnglish={isEnglish} accent={accent} />
   </>
 );
 
-const Sidebar = ({brandLogoPath}: {brandLogoPath?: string}) => (
+const Sidebar = ({
+  brandLogoPath,
+  isEnglish,
+  accent,
+}: {
+  brandLogoPath?: string;
+  isEnglish: boolean;
+  accent: string;
+}) => (
   <div
     style={{
       position: 'absolute',
@@ -165,7 +234,7 @@ const Sidebar = ({brandLogoPath}: {brandLogoPath?: string}) => (
         letterSpacing: 0,
       }}
     >
-      Palpites • Análises • Estatísticas
+      {isEnglish ? 'Predictions • Analysis • Stats' : 'Palpites • Análises • Estatísticas'}
     </div>
     <div
       style={{
@@ -180,25 +249,25 @@ const Sidebar = ({brandLogoPath}: {brandLogoPath?: string}) => (
         textTransform: 'uppercase',
       }}
     >
-      <span style={{width: 48, height: 4, background: GREEN}} />
+      <span style={{width: 48, height: 4, background: accent}} />
       <span>
-        Siga nas <span style={{color: GREEN}}>redes</span>
+        {isEnglish ? 'Follow' : 'Siga nas'} <span style={{color: accent}}>{isEnglish ? 'us' : 'redes'}</span>
       </span>
-      <span style={{width: 48, height: 4, background: GREEN}} />
+      <span style={{width: 48, height: 4, background: accent}} />
     </div>
     <div style={{marginTop: 24, width: 340, display: 'grid', gap: 10}}>
-      <SocialRow network="instagram" label="footanalysispt" />
-      <SocialRow network="tiktok" label="foot.analysis.pt" />
-      <SocialRow network="x" label="@FootAnalysisIO" />
-      <SocialRow network="reddit" label="r/FootAnalysisPT" />
-      <SocialRow network="website" label="footanalysis.io" />
+      <SocialRow network="instagram" label={isEnglish ? 'footanalysisen' : 'footanalysispt'} accent={accent} />
+      <SocialRow network="tiktok" label={isEnglish ? 'foot.analysis.en' : 'foot.analysis.pt'} accent={accent} />
+      <SocialRow network="x" label="@FootAnalysisIO" accent={accent} />
+      <SocialRow network="reddit" label={isEnglish ? 'r/FootballAnalysisEN' : 'r/FootAnalysisPT'} accent={accent} />
+      <SocialRow network="website" label="footanalysis.io" accent={accent} />
     </div>
   </div>
 );
 
 type SocialNetwork = 'instagram' | 'tiktok' | 'x' | 'reddit' | 'website';
 
-const SocialRow = ({network, label}: {network: SocialNetwork; label: string}) => (
+const SocialRow = ({network, label, accent}: {network: SocialNetwork; label: string; accent: string}) => (
   <div
     style={{
       height: 40,
@@ -221,7 +290,7 @@ const SocialRow = ({network, label}: {network: SocialNetwork; label: string}) =>
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: GREEN,
+        background: accent,
         color: BG,
       }}
     >
@@ -295,7 +364,15 @@ const SocialIcon = ({network}: {network: SocialNetwork}) => {
   );
 };
 
-const BottomBar = ({disclaimer}: {disclaimer: string}) => (
+const BottomBar = ({
+  disclaimer,
+  isEnglish,
+  accent,
+}: {
+  disclaimer: string;
+  isEnglish: boolean;
+  accent: string;
+}) => (
   <div
     style={{
       position: 'absolute',
@@ -309,24 +386,24 @@ const BottomBar = ({disclaimer}: {disclaimer: string}) => (
       gap: 20,
       padding: '0 44px',
       background: 'linear-gradient(180deg, rgba(12,16,20,0.94), rgba(6,8,10,0.98))',
-      border: `1px solid ${GREEN}`,
-      borderLeft: `16px solid ${GREEN}`,
-      borderRight: `16px solid ${GREEN}`,
-      boxShadow: `0 0 30px ${GREEN}55`,
+      border: `1px solid ${accent}`,
+      borderLeft: `16px solid ${accent}`,
+      borderRight: `16px solid ${accent}`,
+      boxShadow: `0 0 30px ${accent}55`,
       color: WHITE,
       textAlign: 'center',
       textTransform: 'uppercase',
     }}
   >
-    <SubscribeLikeBadge icon="play" title="Inscreva-se" />
-    <div style={{color: GREEN, fontSize: 16, fontWeight: 900, letterSpacing: 3.2, lineHeight: 1.25}}>
+    <SubscribeLikeBadge icon="play" title={isEnglish ? 'Subscribe' : 'Inscreva-se'} accent={accent} />
+    <div style={{color: accent, fontSize: 16, fontWeight: 900, letterSpacing: 3.2, lineHeight: 1.25}}>
       {disclaimer}
     </div>
-    <SubscribeLikeBadge icon="like" title="Deixe um Like!" />
+    <SubscribeLikeBadge icon="like" title={isEnglish ? 'Leave a Like!' : 'Deixe um Like!'} accent={accent} />
   </div>
 );
 
-const SubscribeLikeBadge = ({icon, title}: {icon: 'play' | 'like'; title: string}) => (
+const SubscribeLikeBadge = ({icon, title, accent}: {icon: 'play' | 'like'; title: string; accent: string}) => (
   <div
     style={{
       height: 86,
@@ -335,9 +412,9 @@ const SubscribeLikeBadge = ({icon, title}: {icon: 'play' | 'like'; title: string
       alignItems: 'center',
       gap: 16,
       padding: '0 18px',
-      background: `linear-gradient(135deg, ${GREEN}26, rgba(15,19,24,0.96) 48%)`,
-      border: `1px solid ${GREEN}88`,
-      boxShadow: `0 0 24px ${GREEN}22, inset 0 0 0 1px rgba(255,255,255,0.06)`,
+      background: `linear-gradient(135deg, ${accent}26, rgba(15,19,24,0.96) 48%)`,
+      border: `1px solid ${accent}88`,
+      boxShadow: `0 0 24px ${accent}22, inset 0 0 0 1px rgba(255,255,255,0.06)`,
       clipPath: 'polygon(0 0, 94% 0, 100% 50%, 94% 100%, 0 100%, 6% 50%)',
     }}
   >
@@ -348,10 +425,10 @@ const SubscribeLikeBadge = ({icon, title}: {icon: 'play' | 'like'; title: string
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: GREEN,
+        background: accent,
         color: BG,
         borderRadius: 8,
-        boxShadow: `0 0 20px ${GREEN}66`,
+        boxShadow: `0 0 20px ${accent}66`,
       }}
     >
       {icon === 'play' ? <PlayIcon /> : <LikeIcon />}
@@ -392,7 +469,7 @@ const MainFrameContent = ({children}: {children: ReactNode}) => (
   </div>
 );
 
-const FrameHeader = ({eyebrow, title}: {eyebrow: string; title: string}) => (
+const FrameHeader = ({eyebrow, title, accent = GREEN}: {eyebrow: string; title: string; accent?: string}) => (
   <div
     style={{
       position: 'absolute',
@@ -407,7 +484,7 @@ const FrameHeader = ({eyebrow, title}: {eyebrow: string; title: string}) => (
     }}
   >
     <div>
-      <div style={{color: GREEN, fontSize: 16, fontWeight: 900, letterSpacing: 4}}>
+      <div style={{color: accent, fontSize: 16, fontWeight: 900, letterSpacing: 4}}>
         {eyebrow}
       </div>
       <div style={{marginTop: 4, color: WHITE, fontSize: 26, fontWeight: 900, lineHeight: 1}}>
@@ -417,14 +494,26 @@ const FrameHeader = ({eyebrow, title}: {eyebrow: string; title: string}) => (
   </div>
 );
 
-const IntroScene = ({job}: {job: FootballRoundSummaryLongVideoJob}) => {
+const IntroScene = ({
+  job,
+  isEnglish,
+  accent,
+}: {
+  job: FootballRoundSummaryLongVideoJob;
+  isEnglish: boolean;
+  accent: string;
+}) => {
   const frame = useCurrentFrame();
   const openingLines =
     job.openingLines?.length
       ? job.openingLines
       : [
-          'A rodada terminou com jogos cheios de detalhes.',
-          'Vamos olhar os gols, os números e os lances que explicam cada partida.',
+          isEnglish
+            ? 'The matchday is complete, with details beyond the scorelines.'
+            : 'A rodada terminou com jogos cheios de detalhes.',
+          isEnglish
+            ? 'Let us look at the goals, numbers, and moments that explain each match.'
+            : 'Vamos olhar os gols, os números e os lances que explicam cada partida.',
         ];
   const opacity = interpolate(frame, [4, 26], [0, 1], {extrapolateRight: 'clamp'});
   const titleY = interpolate(frame, [8, 34], [46, 0], {
@@ -435,7 +524,7 @@ const IntroScene = ({job}: {job: FootballRoundSummaryLongVideoJob}) => {
 
   return (
     <MainFrameContent>
-      <FrameHeader eyebrow="Foot Analysis" title={job.leagueName} />
+      <FrameHeader eyebrow="Foot Analysis" title={job.leagueName} accent={accent} />
       <div
         style={{
           position: 'absolute',
@@ -457,9 +546,9 @@ const IntroScene = ({job}: {job: FootballRoundSummaryLongVideoJob}) => {
             padding: '30px 34px',
             borderRadius: 8,
             background: 'linear-gradient(135deg, rgba(15,19,24,0.98), rgba(8,10,12,0.92))',
-            border: `1px solid ${colorWithAlpha(GREEN, '66')}`,
-            borderLeft: `10px solid ${GREEN}`,
-            boxShadow: `0 22px 70px ${colorWithAlpha(GREEN, '18')}`,
+            border: `1px solid ${colorWithAlpha(accent, '66')}`,
+            borderLeft: `10px solid ${accent}`,
+            boxShadow: `0 22px 70px ${colorWithAlpha(accent, '18')}`,
             color: WHITE,
             fontSize: 31,
             fontWeight: 900,
@@ -485,8 +574,8 @@ const IntroScene = ({job}: {job: FootballRoundSummaryLongVideoJob}) => {
           })}px) rotate(-2deg)`,
         }}
       >
-        <div style={{color: GREEN, fontSize: 18, fontWeight: 900, textTransform: 'uppercase'}}>
-          Jogos no resumo
+        <div style={{color: accent, fontSize: 18, fontWeight: 900, textTransform: 'uppercase'}}>
+          {isEnglish ? 'Matches in this recap' : 'Jogos no resumo'}
         </div>
         {matches.map((match, index) => (
           <ScoreStrip key={match.id} index={index + 1} match={match} />
@@ -496,27 +585,37 @@ const IntroScene = ({job}: {job: FootballRoundSummaryLongVideoJob}) => {
   );
 };
 
-const ScoreStrip = ({index, match}: {index: number; match: RoundSummaryMatch}) => (
+const ScoreStrip = ({
+  index,
+  match,
+  rowHeight = 52,
+  compact = false,
+}: {
+  index: number;
+  match: RoundSummaryMatch;
+  rowHeight?: number;
+  compact?: boolean;
+}) => (
   <div
     style={{
       display: 'grid',
-      gridTemplateColumns: '34px minmax(0, 1fr) 86px minmax(0, 1fr)',
+      gridTemplateColumns: compact ? '24px minmax(0, 1fr) 58px minmax(0, 1fr)' : '34px minmax(0, 1fr) 86px minmax(0, 1fr)',
       alignItems: 'center',
-      gap: 12,
-      minHeight: 52,
-      padding: '9px 14px',
+      gap: compact ? 7 : 12,
+      height: rowHeight,
+      padding: compact ? '6px 9px' : '9px 14px',
       borderRadius: 8,
       background: SURFACE,
-      borderLeft: `6px solid ${accentFor(match.homeBadge)}`,
-      borderRight: `6px solid ${accentFor(match.awayBadge)}`,
+      borderLeft: `${compact ? 4 : 6}px solid ${accentFor(match.homeBadge)}`,
+      borderRight: `${compact ? 4 : 6}px solid ${accentFor(match.awayBadge)}`,
     }}
   >
-    <span style={{color: GREEN, fontSize: 18, fontWeight: 900}}>{index}</span>
-    <TeamText>{match.homeTeam}</TeamText>
-    <span style={{color: GOLD, fontSize: 28, fontWeight: 900, textAlign: 'center'}}>
+    <span style={{color: GREEN, fontSize: compact ? 12 : 18, fontWeight: 900}}>{index}</span>
+    <TeamText fontSize={compact ? 13 : 19}>{match.homeTeam}</TeamText>
+    <span style={{color: GOLD, fontSize: compact ? 17 : 28, fontWeight: 900, textAlign: 'center'}}>
       {match.homeScore} - {match.awayScore}
     </span>
-    <TeamText align="right">{match.awayTeam}</TeamText>
+    <TeamText align="right" fontSize={compact ? 13 : 19}>{match.awayTeam}</TeamText>
   </div>
 );
 
@@ -526,12 +625,16 @@ const MatchSummaryScene = ({
   total,
   leagueName,
   roundLabel,
+  isEnglish,
+  accent,
 }: {
   match: RoundSummaryMatch;
   index: number;
   total: number;
   leagueName: string;
   roundLabel: string;
+  isEnglish: boolean;
+  accent: string;
 }) => {
   const frame = useCurrentFrame();
   const panelOpacity = interpolate(frame, [0, 22], [0, 1], {extrapolateRight: 'clamp'});
@@ -542,7 +645,8 @@ const MatchSummaryScene = ({
       <MatchHeader
         match={match}
         eyebrow={`${leagueName} • ${roundLabel}`}
-        title={`Jogo ${index + 1} de ${total}`}
+        title={`${isEnglish ? 'Game' : 'Jogo'} ${index + 1} ${isEnglish ? 'of' : 'de'} ${total}`}
+        accent={accent}
       />
       <div
         style={{
@@ -561,9 +665,9 @@ const MatchSummaryScene = ({
             gap: 18,
           }}
         >
-          <EventsPanel match={match} />
-          <StatsPanel stats={match.keyStats} homeTeam={match.homeTeam} awayTeam={match.awayTeam} />
-          <CardsPanel match={match} />
+          <EventsPanel match={match} isEnglish={isEnglish} />
+          <StatsPanel stats={match.keyStats} homeTeam={match.homeTeam} awayTeam={match.awayTeam} isEnglish={isEnglish} />
+          <CardsPanel match={match} isEnglish={isEnglish} />
         </div>
       </div>
     </MainFrameContent>
@@ -574,10 +678,12 @@ const MatchHeader = ({
   match,
   eyebrow,
   title,
+  accent = GREEN,
 }: {
   match: RoundSummaryMatch;
   eyebrow: string;
   title: string;
+  accent?: string;
 }) => (
   <div
     style={{
@@ -593,7 +699,7 @@ const MatchHeader = ({
     }}
   >
     <div>
-      <div style={{color: GREEN, fontSize: 16, fontWeight: 900, letterSpacing: 4}}>
+      <div style={{color: accent, fontSize: 16, fontWeight: 900, letterSpacing: 4}}>
         {eyebrow}
       </div>
       <div style={{marginTop: 4, color: WHITE, fontSize: 26, fontWeight: 900, lineHeight: 1}}>
@@ -686,11 +792,11 @@ const isGoalEvent = (event: RoundSummaryEvent) =>
 
 const isCardEvent = (event: RoundSummaryEvent) => event.type === 'card';
 
-const EventsPanel = ({match}: {match: RoundSummaryMatch}) => {
+const EventsPanel = ({match, isEnglish}: {match: RoundSummaryMatch; isEnglish: boolean}) => {
   const events = match.events.filter(isGoalEvent);
   const compact = events.length > 6;
   return (
-    <Panel title="Gols e VAR de gol">
+    <Panel title={isEnglish ? 'Goals & goal VAR' : 'Gols e VAR de gol'}>
       <div style={{display: 'grid', gap: compact ? 6 : 9}}>
         {events.map((event, index) => (
           <EventRow
@@ -698,19 +804,22 @@ const EventsPanel = ({match}: {match: RoundSummaryMatch}) => {
             event={event}
             match={match}
             compact={compact}
+            isEnglish={isEnglish}
           />
         ))}
-        {events.length === 0 ? <EmptyText>Nenhum gol ou VAR de gol registrado.</EmptyText> : null}
+        {events.length === 0 ? (
+          <EmptyText>{isEnglish ? 'No goals or goal VAR recorded.' : 'Nenhum gol ou VAR de gol registrado.'}</EmptyText>
+        ) : null}
       </div>
     </Panel>
   );
 };
 
-const CardsPanel = ({match}: {match: RoundSummaryMatch}) => {
+const CardsPanel = ({match, isEnglish}: {match: RoundSummaryMatch; isEnglish: boolean}) => {
   const cards = match.events.filter(isCardEvent);
   const compact = cards.length > 6;
   return (
-    <Panel title="Cartões">
+    <Panel title={isEnglish ? 'Cards' : 'Cartões'}>
       <div style={{display: 'grid', gap: compact ? 6 : 9}}>
         {cards.map((event, index) => (
           <EventRow
@@ -718,9 +827,10 @@ const CardsPanel = ({match}: {match: RoundSummaryMatch}) => {
             event={event}
             match={match}
             compact={compact}
+            isEnglish={isEnglish}
           />
         ))}
-        {cards.length === 0 ? <EmptyText>Nenhum cartão registrado.</EmptyText> : null}
+        {cards.length === 0 ? <EmptyText>{isEnglish ? 'No cards recorded.' : 'Nenhum cartão registrado.'}</EmptyText> : null}
       </div>
     </Panel>
   );
@@ -730,74 +840,96 @@ const EventRow = ({
   event,
   match,
   compact = false,
+  isEnglish,
 }: {
   event: RoundSummaryEvent;
   match: RoundSummaryMatch;
   compact?: boolean;
-}) => (
-  <div
-    style={{
-      display: 'grid',
-      gridTemplateColumns: compact ? '48px 31px 31px minmax(0, 1fr)' : '52px 34px 34px minmax(0, 1fr)',
-      alignItems: 'center',
-      gap: compact ? 8 : 10,
-      minHeight: compact ? 32 : 38,
-      padding: compact ? '5px 8px' : '7px 10px',
-      borderRadius: 8,
-      background: CARD,
-    }}
-  >
-    <span style={{color: GREEN, fontSize: compact ? 15 : 17, fontWeight: 900}}>
-      {event.minute}
-      {event.extraMinute ? `+${event.extraMinute}'` : "'"}
-    </span>
-    <span
+  isEnglish: boolean;
+}) => {
+  const eventLabel = getEventLabel(event, isEnglish);
+  const showDetail = eventLabel && eventLabel !== event.player;
+
+  return (
+    <div
       style={{
-        width: compact ? 25 : 28,
-        height: compact ? 25 : 28,
-        display: 'flex',
+        display: 'grid',
+        gridTemplateColumns: compact ? '48px 31px 31px minmax(0, 1fr)' : '52px 34px 34px minmax(0, 1fr)',
         alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 6,
-        background: eventIconBackground(event),
-        color: event.type === 'card' ? BG : WHITE,
-        fontSize: compact ? 10 : 12,
-        fontWeight: 900,
+        gap: compact ? 8 : 10,
+        minHeight: compact ? 32 : 38,
+        padding: compact ? '5px 8px' : '7px 10px',
+        borderRadius: 8,
+        background: CARD,
       }}
     >
-      {eventIcon(event)}
-    </span>
-    <EventTeamBadge event={event} match={match} compact={compact} />
-    <div style={{overflow: 'hidden'}}>
-      <div
+      <span style={{color: GREEN, fontSize: compact ? 15 : 17, fontWeight: 900}}>
+        {event.minute}
+        {event.extraMinute ? `+${event.extraMinute}'` : "'"}
+      </span>
+      <span
         style={{
-          overflow: 'hidden',
-          color: WHITE,
-          fontSize: compact ? 15 : 17,
+          width: compact ? 25 : 28,
+          height: compact ? 25 : 28,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: 6,
+          background: eventIconBackground(event),
+          color: event.type === 'card' ? BG : WHITE,
+          fontSize: compact ? 10 : 12,
           fontWeight: 900,
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
         }}
       >
-        {event.player || event.detail}
-      </div>
-      <div
-        style={{
-          overflow: 'hidden',
-          color: STEEL,
-          fontSize: compact ? 11 : 13,
-          fontWeight: 800,
-          textOverflow: 'ellipsis',
-          textTransform: 'uppercase',
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {event.detail}
-        {event.assist ? ` • Assist: ${event.assist}` : ''}
+        {eventIcon(event, isEnglish)}
+      </span>
+      <EventTeamBadge event={event} match={match} compact={compact} />
+      <div style={{overflow: 'hidden'}}>
+        <div
+          style={{
+            overflow: 'hidden',
+            color: WHITE,
+            fontSize: compact ? 15 : 17,
+            fontWeight: 900,
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {event.player || eventLabel || event.detail}
+        </div>
+        {event.assist ? (
+          <div
+            style={{
+              overflow: 'hidden',
+              color: '#9EC7FF',
+              fontSize: compact ? 11 : 13,
+              fontWeight: 900,
+              textOverflow: 'ellipsis',
+              textTransform: 'uppercase',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {isEnglish ? 'Assist' : 'Assistência'}: {event.assist}
+          </div>
+        ) : showDetail ? (
+          <div
+            style={{
+              overflow: 'hidden',
+              color: STEEL,
+              fontSize: compact ? 11 : 13,
+              fontWeight: 800,
+              textOverflow: 'ellipsis',
+              textTransform: 'uppercase',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {eventLabel}
+          </div>
+        ) : null}
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const EventTeamBadge = ({
   event,
@@ -842,14 +974,43 @@ const EventTeamBadge = ({
   );
 };
 
-const eventIcon = (event: RoundSummaryEvent) => {
-  if (event.type === 'goal') return 'GOL';
+const eventIcon = (event: RoundSummaryEvent, isEnglish: boolean) => {
+  if (event.type === 'goal') return isEnglish ? 'GOAL' : 'GOL';
   if (event.type === 'penalty') return 'PEN';
-  if (event.type === 'card' && /red|vermelho/i.test(event.detail)) return 'RED';
-  if (event.type === 'card') return 'YEL';
+  if (event.type === 'card') return '';
   if (event.type === 'var') return 'VAR';
   if (event.type === 'subst') return 'SUB';
   return '•';
+};
+
+const getEventLabel = (event: RoundSummaryEvent, isEnglish: boolean) => {
+  const detail = String(event.detail ?? '').trim();
+  const lowerDetail = detail.toLowerCase();
+
+  if (event.type === 'goal') {
+    if (lowerDetail.includes('own')) return isEnglish ? 'Own goal' : 'Gol contra';
+    return '';
+  }
+  if (event.type === 'penalty') return isEnglish ? 'Penalty' : 'Pênalti';
+  if (event.type === 'var') {
+    if (lowerDetail.includes('cancel')) return isEnglish ? 'Goal ruled out by VAR' : 'Gol anulado pelo VAR';
+    if (lowerDetail.includes('confirm')) return isEnglish ? 'Goal confirmed by VAR' : 'Gol confirmado pelo VAR';
+    return isEnglish ? 'Goal VAR' : 'VAR de gol';
+  }
+  if (event.type === 'card' && /red|vermelho/i.test(detail)) return isEnglish ? 'Red card' : 'Cartão vermelho';
+  if (event.type === 'card') return isEnglish ? 'Yellow card' : 'Cartão amarelo';
+  if (event.type === 'subst') return isEnglish ? 'Substitution' : 'Substituição';
+
+  if (isEnglish) {
+    return detail.replace(/\bnormal goal\b/gi, '').trim();
+  }
+
+  return detail
+    .replace(/\bnormal goal\b/gi, '')
+    .replace(/\byellow card\b/gi, 'Cartão amarelo')
+    .replace(/\bred card\b/gi, 'Cartão vermelho')
+    .replace(/\bgoal\b/gi, 'Gol')
+    .trim();
 };
 
 const eventIconBackground = (event: RoundSummaryEvent) => {
@@ -864,17 +1025,19 @@ const StatsPanel = ({
   stats,
   homeTeam,
   awayTeam,
+  isEnglish,
 }: {
   stats: RoundSummaryMatch['keyStats'];
   homeTeam: string;
   awayTeam: string;
+  isEnglish: boolean;
 }) => (
-  <Panel title="Estatísticas">
+  <Panel title={isEnglish ? 'Stats' : 'Estatísticas'}>
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: '84px minmax(0, 1fr) 84px',
-        gap: 10,
+        gridTemplateColumns: '64px minmax(190px, 1fr) 64px',
+        gap: 8,
         color: STEEL,
         fontSize: 12,
         fontWeight: 900,
@@ -897,9 +1060,9 @@ const StatRow = ({stat}: {stat: RoundSummaryMatch['keyStats'][number]}) => (
   <div
     style={{
       display: 'grid',
-      gridTemplateColumns: '84px minmax(0, 1fr) 84px',
+      gridTemplateColumns: '64px minmax(190px, 1fr) 64px',
       alignItems: 'center',
-      gap: 10,
+      gap: 8,
       minHeight: 34,
       color: WHITE,
     }}
@@ -907,12 +1070,10 @@ const StatRow = ({stat}: {stat: RoundSummaryMatch['keyStats'][number]}) => (
     <span style={{color: GREEN, fontSize: 18, fontWeight: 900}}>{stat.homeValue}</span>
     <span
       style={{
-        overflow: 'hidden',
         color: SILVER,
-        fontSize: 15,
+        fontSize: /cartões/i.test(stat.label) ? 13 : 15,
         fontWeight: 900,
         textAlign: 'center',
-        textOverflow: 'ellipsis',
         textTransform: 'uppercase',
         whiteSpace: 'nowrap',
       }}
@@ -944,12 +1105,20 @@ const EmptyText = ({children}: {children: ReactNode}) => (
   <div style={{color: STEEL, fontSize: 15, fontWeight: 800}}>{children}</div>
 );
 
-const TeamText = ({children, align = 'left'}: {children: ReactNode; align?: 'left' | 'right'}) => (
+const TeamText = ({
+  children,
+  align = 'left',
+  fontSize = 19,
+}: {
+  children: ReactNode;
+  align?: 'left' | 'right';
+  fontSize?: number;
+}) => (
   <span
     style={{
       overflow: 'hidden',
       color: WHITE,
-      fontSize: 19,
+      fontSize,
       fontWeight: 900,
       textAlign: align,
       textOverflow: 'ellipsis',
@@ -969,26 +1138,48 @@ const teamShort = (team: string) =>
     .map((part) => part[0]?.toUpperCase() ?? '')
     .join('');
 
-const OutroScene = ({job}: {job: FootballRoundSummaryLongVideoJob}) => {
+const OutroScene = ({
+  job,
+  isEnglish,
+  accent,
+}: {
+  job: FootballRoundSummaryLongVideoJob;
+  isEnglish: boolean;
+  accent: string;
+}) => {
   const frame = useCurrentFrame();
   const opacity = interpolate(frame, [0, 24], [0, 1], {extrapolateRight: 'clamp'});
+  const matchCount = job.matches.length;
+  const columns = matchCount <= 7 ? 1 : matchCount <= 16 ? 2 : 3;
+  const rows = Math.ceil(matchCount / columns);
+  const gap = rows > 8 ? 6 : 8;
+  const availableHeight = 430;
+  const rowHeight = Math.max(32, Math.min(52, Math.floor((availableHeight - gap * (rows - 1)) / rows)));
+  const compact = columns > 1 || rowHeight < 46;
 
   return (
     <MainFrameContent>
-      <FrameHeader eyebrow="Todos os resultados" title={job.roundLabel} />
+      <FrameHeader eyebrow={isEnglish ? 'All results' : 'Todos os resultados'} title={job.roundLabel} accent={accent} />
       <div
         style={{
           position: 'absolute',
           left: 54,
           right: 54,
-          top: 170,
+          top: 140,
           display: 'grid',
-          gap: 12,
+          gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+          gap,
           opacity,
         }}
       >
         {job.matches.map((match, index) => (
-          <ScoreStrip key={match.id} index={index + 1} match={match} />
+          <ScoreStrip
+            key={match.id}
+            index={index + 1}
+            match={match}
+            rowHeight={rowHeight}
+            compact={compact}
+          />
         ))}
       </div>
     </MainFrameContent>

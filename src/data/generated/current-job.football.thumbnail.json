@@ -5,35 +5,45 @@
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "preset": "matchup",
-  "thumbnailModel": "model-6",
+  "thumbnailModel": "model-4",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
   "leagueName": "Copa do Brasil",
-  "headline": "QUEM PASSA?",
-  "subheadline": "MINHAS PREVISÕES",
+  "headline": "RESUMO DA RODADA 18",
+  "subheadline": "BRASILEIRÃO",
   "extraLabel": "PALPITES · ANÁLISES · ESTATÍSTICAS",
   "outputName": "football-thumbnail.png",
   "accentColor": "#A7FF12",
   "secondaryAccentColor": "#74C900",
   "backgroundImagePath": "/backgrounds/thumbnails/neon-stadium-copa-bg.png",
   "teamA": {
-    "label": "Corinthians",
-    "logoPath": "/logos/corinthians.png",
-    "accentColor": "#E51B23"
+    "label": "Palmeiras",
+    "logoPath": "/logos/palmeiras.png",
+    "accentColor": "#27AE60"
   },
   "teamB": {
+    "label": "Flamengo",
+    "logoPath": "/logos/flamengo.png",
+    "accentColor": "#E3222A"
+  },
+  "teamC": {
     "label": "Athletico",
     "logoPath": "/logos/atletico-paranaense.png",
     "accentColor": "#E3222A"
   },
-  "teamC": {
+  "teamD": {
+    "label": "Santos",
+    "logoPath": "/logos/santos.png",
+    "accentColor": "#F0F4F8"
+  },
+  "teamE": {
+    "label": "Remo",
+    "logoPath": "/logos/remo.png",
+    "accentColor": "#1E5AA8"
+  },
+  "teamF": {
     "label": "Botafogo",
     "logoPath": "/logos/botafogo.png",
     "accentColor": "#F0F4F8"
-  },
-  "teamD": {
-    "label": "Fluminense",
-    "logoPath": "/logos/fluminense.png",
-    "accentColor": "#8A1538"
   }
 }

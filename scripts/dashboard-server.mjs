@@ -300,16 +300,10 @@ const sendFootballOptions = async (response) => {
 const sendFootballLongformOptions = async (response) => {
   const currentJob = await loadFootballPredictionsLongJob().catch(() => null);
   const teamAccentColors = await loadTeamAccentColors();
-  const longformLeaguePresets = leaguePresets
-    .filter((preset) => preset.channels?.includes('pt'))
-    .sort((left, right) => {
-      if (left.leagueId === 1) return -1;
-      if (right.leagueId === 1) return 1;
-      return 0;
-    });
 
   sendJson(response, 200, {
-    leaguePresets: longformLeaguePresets,
+    leaguePresets,
+    channelProfiles: footballChannelProfiles,
     soundtrackPresets: footballSoundtrackPresets,
     teamAccentColors,
     currentJob,
@@ -318,9 +312,12 @@ const sendFootballLongformOptions = async (response) => {
 
 const sendFootballRoundSummaryLongformOptions = async (response) => {
   const currentJob = await loadFootballRoundSummaryLongJob().catch(() => null);
+  const teamAccentColors = await loadTeamAccentColors();
   sendJson(response, 200, {
-    leaguePresets: leaguePresets.filter((preset) => preset.channels?.includes('pt')),
+    leaguePresets,
+    channelProfiles: footballChannelProfiles,
     soundtrackPresets: footballSoundtrackPresets,
+    teamAccentColors,
     currentJob,
   });
 };
@@ -2331,6 +2328,8 @@ const server = http.createServer(async (request, response) => {
         brandName: body.brandName,
         soundtrackPath: body.soundtrackPath,
         soundtrackVolume: body.soundtrackVolume,
+        channelProfile: body.channelProfile,
+        languageProfile: body.languageProfile,
         voiceoverEnabled: parseBooleanField(body.voiceoverEnabled, true),
       });
 
@@ -2359,6 +2358,8 @@ const server = http.createServer(async (request, response) => {
         brandName: body.brandName,
         soundtrackPath: body.soundtrackPath,
         soundtrackVolume: body.soundtrackVolume,
+        channelProfile: body.channelProfile,
+        languageProfile: body.languageProfile,
         voiceoverEnabled: parseBooleanField(body.voiceoverEnabled, true),
       });
       const renderResult = await runRender('FootballPredictionsLong', job.outputName);
@@ -2391,6 +2392,8 @@ const server = http.createServer(async (request, response) => {
         brandName: body.brandName,
         soundtrackPath: body.soundtrackPath,
         soundtrackVolume: body.soundtrackVolume,
+        channelProfile: body.channelProfile,
+        languageProfile: body.languageProfile,
         voiceoverEnabled: parseBooleanField(body.voiceoverEnabled, true),
       });
 
@@ -2421,6 +2424,8 @@ const server = http.createServer(async (request, response) => {
         brandName: body.brandName,
         soundtrackPath: body.soundtrackPath,
         soundtrackVolume: body.soundtrackVolume,
+        channelProfile: body.channelProfile,
+        languageProfile: body.languageProfile,
         voiceoverEnabled: parseBooleanField(body.voiceoverEnabled, true),
       });
       const renderResult = await runRender('FootballRoundSummaryLong', job.outputName);

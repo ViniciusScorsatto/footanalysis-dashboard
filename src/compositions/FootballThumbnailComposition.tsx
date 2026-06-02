@@ -101,7 +101,7 @@ const modelTitles: Record<FootballThumbnailModel, {headline: string; subheadline
   'model-1': {headline: 'PALPITES RODADA 18', subheadline: 'CORRIDA PELO TITULO'},
   'model-2': {headline: 'PALPITES RODADA 18', subheadline: 'QUEM ENTRA NO G4?'},
   'model-3': {headline: 'PALPITES RODADA 18', subheadline: 'ALGUEM CAI HOJE?'},
-  'model-4': {headline: 'PALPITES RODADA 18', subheadline: 'RODADA DECISIVA'},
+  'model-4': {headline: 'RESUMO DA RODADA 18', subheadline: 'BRASILEIRAO'},
   'model-5': {headline: 'SIMULACAO RODADA 18', subheadline: 'PROBABILIDADE DE VITORIA'},
   'model-6': {headline: 'PALPITES RODADA 18', subheadline: 'ZEBRA A VISTA?'},
   'model-7': {headline: 'PALPITES TODOS OS JOGOS', subheadline: 'DA RODADA 18'},
@@ -327,6 +327,213 @@ const SmallBrand = ({accentColor, left = 805, top = 970}: {accentColor: string; 
   </div>
 );
 
+const PosterTitle = ({
+  headline,
+  subheadline,
+  accentColor,
+  leagueName,
+}: {
+  headline: string;
+  subheadline: string;
+  accentColor: string;
+  leagueName: string;
+}) => {
+  const normalized = headline.replace(/\s+/g, ' ').trim();
+  const roundMatch = normalized.match(/^(.*?)(\d+)$/);
+  const withoutNumber = roundMatch ? roundMatch[1].trim() : normalized;
+  const number = roundMatch ? roundMatch[2] : '';
+  const words = withoutNumber.split(' ').filter(Boolean);
+  const topLine = words.slice(0, Math.max(1, words.length - 2)).join(' ');
+  const middleLine = words.slice(Math.max(1, words.length - 2)).join(' ');
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: 330,
+        top: 168,
+        width: 1260,
+        textAlign: 'center',
+        transform: 'skewX(-9deg) rotate(-2deg)',
+      }}
+    >
+      <div
+        style={{
+          color: colors.white,
+          fontSize: fitText(topLine, 12, 168, 104),
+          fontWeight: 950,
+          lineHeight: 0.82,
+          textTransform: 'uppercase',
+          textShadow: '11px 13px 0 rgba(0,0,0,0.94), 0 0 18px rgba(255,255,255,0.45)',
+          WebkitTextStroke: '4px rgba(0,0,0,0.45)',
+        }}
+      >
+        {topLine}
+      </div>
+      <div
+        style={{
+          display: 'inline-grid',
+          placeItems: 'center',
+          marginTop: -12,
+          padding: '0 56px',
+          height: 86,
+          color: colors.white,
+          fontSize: 82,
+          fontWeight: 950,
+          lineHeight: 1,
+          textTransform: 'uppercase',
+          background: 'linear-gradient(90deg, transparent, rgba(0,0,0,0.92), transparent)',
+          textShadow: '9px 10px 0 rgba(0,0,0,0.92), 0 0 14px rgba(255,255,255,0.28)',
+          WebkitTextStroke: '2px rgba(0,0,0,0.36)',
+        }}
+      >
+        {middleLine || subheadline}
+      </div>
+      <div
+        style={{
+          color: '#F8EA11',
+          fontSize: number ? 224 : 160,
+          fontWeight: 950,
+          lineHeight: 0.74,
+          textTransform: 'uppercase',
+          textShadow: '13px 16px 0 rgba(0,0,0,0.94), 0 0 34px rgba(248,234,17,0.8)',
+          WebkitTextStroke: '3px rgba(0,0,0,0.34)',
+        }}
+      >
+        {number || subheadline}
+      </div>
+      <div
+        style={{
+          position: 'absolute',
+          left: 130,
+          right: 130,
+          bottom: -4,
+          height: 12,
+          background: `linear-gradient(90deg, transparent, ${accentColor}, #F8EA11, ${accentColor}, transparent)`,
+          boxShadow: `0 0 22px ${accentColor}`,
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          left: 330,
+          right: 330,
+          bottom: -72,
+          height: 56,
+          display: 'grid',
+          placeItems: 'center',
+          color: colors.black,
+          background: `linear-gradient(90deg, transparent, ${accentColor}, #F8EA11, ${accentColor}, transparent)`,
+          fontSize: 34,
+          fontWeight: 950,
+          lineHeight: 1,
+          textTransform: 'uppercase',
+          textShadow: '0 1px 0 rgba(255,255,255,0.35)',
+          boxShadow: `0 0 24px ${accentColor}88`,
+        }}
+      >
+        {leagueName}
+      </div>
+    </div>
+  );
+};
+
+const OrbTeamLogo = ({
+  team,
+  left,
+  top,
+  size,
+  rotate,
+}: {
+  team?: TeamBadge;
+  left: number;
+  top: number;
+  size: number;
+  rotate: number;
+}) => (
+  <div
+    style={{
+      position: 'absolute',
+      left,
+      top,
+      width: size,
+      height: size,
+      borderRadius: 999,
+      display: 'grid',
+      placeItems: 'center',
+      background: `radial-gradient(circle, ${team?.accentColor ?? colors.neon}55, transparent 64%)`,
+      boxShadow: `0 0 54px ${team?.accentColor ?? colors.neon}99`,
+    }}
+  >
+    <TeamLogo team={team} size={size * 0.86} rotate={rotate} />
+  </div>
+);
+
+const RoundPosterLayout = ({
+  job,
+  headline,
+  subheadline,
+  accentColor,
+}: {
+  job: FootballThumbnailJob;
+  headline: string;
+  subheadline: string;
+  accentColor: string;
+}) => {
+  const teams = teamsFromJob(job);
+  const fallbackTeams = [
+    job.teamA,
+    job.teamB,
+    {label: 'Athletico', logoPath: '/logos/atletico-paranaense.png', accentColor: '#E3222A'},
+    {label: 'Santos', logoPath: '/logos/santos.png', accentColor: '#F0F4F8'},
+    {label: 'Remo', logoPath: '/logos/remo.png', accentColor: '#1E5AA8'},
+    {label: 'Cruzeiro', logoPath: '/logos/cruzeiro.png', accentColor: '#1E5AA8'},
+  ].filter(Boolean) as TeamBadge[];
+  const selected = teams.length >= 4 ? teams : fallbackTeams;
+  const slots = [
+    {left: 76, top: 72, size: 398, rotate: -4},
+    {left: 1404, top: 86, size: 370, rotate: 6},
+    {left: 96, top: 612, size: 306, rotate: -9},
+    {left: 1180, top: 664, size: 258, rotate: -4},
+    {left: 1536, top: 612, size: 300, rotate: 8},
+    {left: 980, top: 722, size: 224, rotate: 4},
+  ];
+
+  return (
+    <>
+      <div
+        style={{
+          position: 'absolute',
+          left: 800,
+          top: 0,
+          width: 320,
+          height: 154,
+          opacity: 0.58,
+          clipPath: 'polygon(8% 0, 31% 0, 50% 70%, 69% 0, 92% 0, 76% 100%, 24% 100%)',
+          background: 'linear-gradient(180deg, #FFF323, #7EA900)',
+          filter: 'drop-shadow(0 0 34px rgba(248,234,17,0.62))',
+        }}
+      />
+      {slots.map((slot, index) => (
+        <OrbTeamLogo
+          key={`${selected[index]?.label ?? index}-${index}`}
+          team={selected[index]}
+          left={slot.left}
+          top={slot.top}
+          size={slot.size}
+          rotate={slot.rotate}
+        />
+      ))}
+      <PosterTitle
+        headline={headline}
+        subheadline={subheadline}
+        accentColor={accentColor}
+        leagueName={job.leagueName}
+      />
+    </>
+  );
+};
+
 const ModelContent = ({
   job,
   model,
@@ -413,26 +620,12 @@ const ModelContent = ({
 
   if (model === 'model-4') {
     return (
-      <>
-        <TitleBlock headline={headline} subheadline={subheadline} accentColor={accentColor} left={390} top={54} width={1120} />
-        {selectedTeams.length >= 4 ? (
-          <>
-            <TeamPair leftTeam={selectedTeams[0]} rightTeam={selectedTeams[1]} left={90} top={500} size={300} />
-            <TeamPair leftTeam={selectedTeams[2]} rightTeam={selectedTeams[3]} left={1210} top={500} size={288} />
-          </>
-        ) : (
-          <>
-            <div style={{position: 'absolute', left: 190, top: 500}}>
-              <TeamLogo team={job.teamA} size={360} rotate={-5} />
-            </div>
-            <VsMark left={910} top={670} rotate={-4} />
-            <div style={{position: 'absolute', right: 190, top: 500}}>
-              <TeamLogo team={job.teamB} size={360} rotate={5} />
-            </div>
-          </>
-        )}
-        <SmallBrand accentColor={accentColor} />
-      </>
+      <RoundPosterLayout
+        job={job}
+        headline={headline}
+        subheadline={subheadline}
+        accentColor={accentColor}
+      />
     );
   }
 

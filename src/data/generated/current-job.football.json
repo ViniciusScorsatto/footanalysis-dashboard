@@ -1,327 +1,224 @@
 {
   "sport": "football",
-  "template": "standings",
-  "leagueId": 72,
-  "season": 2026,
-  "leagueName": "Brasileirão Série B",
-  "channelProfile": "pt",
-  "languageProfile": "pt-br",
+  "template": "round-summary-long",
+  "compositionId": "FootballRoundSummaryLong",
+  "leagueId": 39,
+  "season": 2025,
+  "leagueName": "Premier League",
+  "channelProfile": "en",
+  "languageProfile": "en",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Estádio Vai Ferver.mp3",
-  "soundtrackLabel": "Estádio Vai Ferver",
-  "soundtrackVolume": 0.2,
-  "outputName": "brasileirao-serie-b-2026-classificacao-pt-br.mp4",
-  "durationInFrames": 270,
-  "compositionId": "FootballStandingsShort",
-  "leagueConfig": {
-    "leagueId": 72,
-    "accentColor": "#2E86DE",
-    "standings": {
-      "safeArea": {
-        "left": 68,
-        "right": 104
+  "soundtrackPath": "/audio/football/foot-analysis-whistle.mp3",
+  "soundtrackLabel": "Foot Analysis Whistle",
+  "soundtrackVolume": 0.35,
+  "outputName": "premier-league-matchday-30-resumo-longform.mp4",
+  "durationInFrames": 1312,
+  "dataSource": "api",
+  "title": "Matchday 30 Round Summary",
+  "roundLabel": "Matchday 30",
+  "openingLines": [
+    "The matchday is complete, and the scorelines only tell part of the story.",
+    "Let us go match by match through the goals, cards, numbers, and decisive moments."
+  ],
+  "introDurationInFrames": 298,
+  "outroDurationInFrames": 298,
+  "transitionDurationInFrames": 18,
+  "disclaimer": "Data is based on the available match information.",
+  "voiceoverEnabled": true,
+  "matches": [
+    {
+      "id": "burnley-bournemouth-1",
+      "fixtureId": 1379261,
+      "homeTeam": "Burnley",
+      "awayTeam": "Bournemouth",
+      "homeScore": 0,
+      "awayScore": 0,
+      "fixtureDateLabel": "2026-03-15",
+      "venueLabel": "Turf Moor",
+      "statusLabel": "FT",
+      "voiceover": "Burnley and Bournemouth finished 0 to 0.\nUse this space to narrate the match overview: context, turning point, and what the numbers say.",
+      "voiceoverPath": "/voiceovers/football/en-94d05bed0003b543.mp3",
+      "durationInFrames": 340,
+      "homeBadge": {
+        "label": "BURN",
+        "logoPath": "/logos/burnley-44.png",
+        "accentColor": "#6C1D45"
       },
-      "zones": [
+      "awayBadge": {
+        "label": "BOUR",
+        "logoPath": "/logos/bournemouth-35.png",
+        "accentColor": "#3498DB"
+      },
+      "events": [
         {
-          "key": "acesso-direto",
-          "label": "Acesso direto",
-          "start": 1,
-          "end": 2,
-          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(101, 227, 133, 0.64)"
-        },
-        {
-          "key": "playoffs-acesso",
-          "label": "Playoffs de acesso",
-          "start": 3,
-          "end": 6,
-          "fill": "linear-gradient(90deg, rgba(240, 165, 0, 0.88), rgba(240, 165, 0, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(240, 165, 0, 0.52)"
-        },
-        {
-          "key": "rebaixamento",
-          "label": "Rebaixamento",
-          "start": 17,
-          "end": 20,
-          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 102, 102, 0.56)"
+          "minute": 75,
+          "extraMinute": 0,
+          "team": "Burnley",
+          "player": "Hannibal Mejbri",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
         }
+      ],
+      "keyStats": [
+        {
+          "label": "On target",
+          "homeValue": "2",
+          "awayValue": "3"
+        },
+        {
+          "label": "Shots",
+          "homeValue": "15",
+          "awayValue": "22"
+        },
+        {
+          "label": "Possession",
+          "homeValue": "38%",
+          "awayValue": "62%"
+        },
+        {
+          "label": "Corners",
+          "homeValue": "5",
+          "awayValue": "8"
+        },
+        {
+          "label": "Fouls",
+          "homeValue": "11",
+          "awayValue": "5"
+        },
+        {
+          "label": "Yellow cards",
+          "homeValue": "1",
+          "awayValue": "0"
+        },
+        {
+          "label": "Saves",
+          "homeValue": "2",
+          "awayValue": "2"
+        }
+      ],
+      "highlights": [
+        "Empate em 0 a 0, com equilíbrio no placar final."
       ]
     },
-    "leagueName": "Brasileirão Série B"
-  },
-  "standingsLabel": "Rodada 11",
-  "ctaText": "Quem sobe e quem cai?",
-  "rows": [
     {
-      "rank": 1,
-      "team": "Sport",
-      "played": 11,
-      "points": 22,
-      "goalDifference": 8,
-      "form": "WWLWW",
-      "badge": {
-        "label": "S",
-        "logoPath": "/logos/sport-recife-123.png"
-      }
-    },
-    {
-      "rank": 2,
-      "team": "Vila Nova",
-      "played": 11,
-      "points": 22,
-      "goalDifference": 6,
-      "form": "WWWLD",
-      "badge": {
-        "label": "VN",
-        "logoPath": "/logos/vila-nova-142.png"
-      }
-    },
-    {
-      "rank": 3,
-      "team": "São Bernardo",
-      "played": 11,
-      "points": 21,
-      "goalDifference": 9,
-      "form": "DWDWW",
-      "badge": {
-        "label": "SB",
-        "logoPath": "/logos/sao-bernardo-7865.png"
-      }
-    },
-    {
-      "rank": 4,
-      "team": "Náutico",
-      "played": 11,
-      "points": 19,
-      "goalDifference": 5,
-      "form": "LWWWD",
-      "badge": {
-        "label": "N",
-        "logoPath": "/logos/nautico-recife-755.png"
-      }
-    },
-    {
-      "rank": 5,
-      "team": "Fortaleza",
-      "played": 11,
-      "points": 18,
-      "goalDifference": 3,
-      "form": "LWLDW",
-      "badge": {
-        "label": "F",
-        "logoPath": "/logos/fortaleza-ec-154.png"
-      }
-    },
-    {
-      "rank": 6,
-      "team": "Goias",
-      "played": 11,
-      "points": 17,
-      "goalDifference": -1,
-      "form": "DWWWL",
-      "badge": {
-        "label": "G",
-        "logoPath": "/logos/goias-151.png"
-      }
-    },
-    {
-      "rank": 7,
-      "team": "Novorizontino",
-      "played": 11,
-      "points": 17,
-      "goalDifference": 3,
-      "form": "DWDWD",
-      "badge": {
-        "label": "N",
-        "logoPath": "/logos/novorizontino-7834.png"
-      }
-    },
-    {
-      "rank": 8,
-      "team": "Criciuma",
-      "played": 11,
-      "points": 17,
-      "goalDifference": 3,
-      "form": "WDDDD",
-      "badge": {
-        "label": "C",
-        "logoPath": "/logos/criciuma-140.png"
-      }
-    },
-    {
-      "rank": 9,
-      "team": "Athletic Club",
-      "played": 11,
-      "points": 17,
-      "goalDifference": 2,
-      "form": "WWDDD",
-      "badge": {
-        "label": "AC",
-        "logoPath": "/logos/athletic-club-13975.png"
-      }
-    },
-    {
-      "rank": 10,
-      "team": "Juventude",
-      "played": 11,
-      "points": 16,
-      "goalDifference": 3,
-      "form": "WLDDD",
-      "badge": {
-        "label": "J",
-        "logoPath": "/logos/juventude-152.png"
-      }
-    },
-    {
-      "rank": 11,
-      "team": "Operario-PR",
-      "played": 11,
-      "points": 16,
-      "goalDifference": -2,
-      "form": "WDLLW",
-      "badge": {
-        "label": "O",
-        "logoPath": "/logos/operario-pr-1223.png"
-      }
-    },
-    {
-      "rank": 12,
-      "team": "CRB",
-      "played": 11,
-      "points": 14,
-      "goalDifference": 0,
-      "form": "LWWWW",
-      "badge": {
-        "label": "C",
-        "logoPath": "/logos/crb-146.png"
-      }
-    },
-    {
-      "rank": 13,
-      "team": "Ceara",
-      "played": 11,
-      "points": 13,
-      "goalDifference": -1,
-      "form": "LLWLL",
-      "badge": {
-        "label": "C",
-        "logoPath": "/logos/ceara-129.png"
-      }
-    },
-    {
-      "rank": 14,
-      "team": "Atlético-GO",
-      "played": 11,
-      "points": 13,
-      "goalDifference": -1,
-      "form": "DLDWD",
-      "badge": {
-        "label": "A",
-        "logoPath": "/logos/atletico-goianiense-144.png"
-      }
-    },
-    {
-      "rank": 15,
-      "team": "Cuiaba",
-      "played": 11,
-      "points": 13,
-      "goalDifference": 1,
-      "form": "WLDDD",
-      "badge": {
-        "label": "C",
-        "logoPath": "/logos/cuiaba-1193.png"
-      }
-    },
-    {
-      "rank": 16,
-      "team": "Botafogo SP",
-      "played": 11,
-      "points": 10,
-      "goalDifference": 0,
-      "form": "LLLDD",
-      "badge": {
-        "label": "BS",
-        "logoPath": "/logos/botafogo-sp-2618.png"
-      }
-    },
-    {
-      "rank": 17,
-      "team": "Avai",
-      "played": 11,
-      "points": 10,
-      "goalDifference": -4,
-      "form": "LLLDD",
-      "badge": {
-        "label": "A",
-        "logoPath": "/logos/avai-145.png"
-      }
-    },
-    {
-      "rank": 18,
-      "team": "Londrina",
-      "played": 11,
-      "points": 8,
-      "goalDifference": -7,
-      "form": "LLWLL",
-      "badge": {
-        "label": "L",
-        "logoPath": "/logos/londrina-148.png"
-      }
-    },
-    {
-      "rank": 19,
-      "team": "Ponte Preta",
-      "played": 11,
-      "points": 8,
-      "goalDifference": -11,
-      "form": "LLLLW",
-      "badge": {
-        "label": "PP",
-        "logoPath": "/logos/ponte-preta-139.png"
-      }
-    },
-    {
-      "rank": 20,
-      "team": "América-MG",
-      "played": 11,
-      "points": 3,
-      "goalDifference": -16,
-      "form": "LLDLL",
-      "badge": {
-        "label": "A",
-        "logoPath": "/logos/america-mineiro-125.png"
-      }
+      "id": "sunderland-brighton-2",
+      "fixtureId": 1379267,
+      "homeTeam": "Sunderland",
+      "awayTeam": "Brighton",
+      "homeScore": 0,
+      "awayScore": 1,
+      "fixtureDateLabel": "2026-03-15",
+      "venueLabel": "Stadium of Light",
+      "statusLabel": "FT",
+      "voiceover": "Sunderland and Brighton finished 0 to 1.\nUse this space to narrate the match overview: context, turning point, and what the numbers say.",
+      "voiceoverPath": "/voiceovers/football/en-06c38ab6da2ae09b.mp3",
+      "durationInFrames": 340,
+      "homeBadge": {
+        "label": "SUND",
+        "logoPath": "/logos/sunderland-746.png",
+        "accentColor": "#2E86DE"
+      },
+      "awayBadge": {
+        "label": "BRIG",
+        "logoPath": "/logos/brighton-51.png",
+        "accentColor": "#0057B8"
+      },
+      "events": [
+        {
+          "minute": 50,
+          "extraMinute": 0,
+          "team": "Sunderland",
+          "player": "Chris Rigg",
+          "assist": null,
+          "type": "var",
+          "detail": "Goal cancelled",
+          "side": "home"
+        },
+        {
+          "minute": 51,
+          "extraMinute": 0,
+          "team": "Brighton",
+          "player": "Diego Gómez",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 58,
+          "extraMinute": 0,
+          "team": "Brighton",
+          "player": "Y. Minteh",
+          "assist": null,
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "away"
+        },
+        {
+          "minute": 74,
+          "extraMinute": 0,
+          "team": "Brighton",
+          "player": "Yankuba Minteh",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 75,
+          "extraMinute": 0,
+          "team": "Sunderland",
+          "player": "Granit Xhaka",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        }
+      ],
+      "keyStats": [
+        {
+          "label": "On target",
+          "homeValue": "4",
+          "awayValue": "4"
+        },
+        {
+          "label": "Shots",
+          "homeValue": "14",
+          "awayValue": "12"
+        },
+        {
+          "label": "Possession",
+          "homeValue": "48%",
+          "awayValue": "52%"
+        },
+        {
+          "label": "Corners",
+          "homeValue": "7",
+          "awayValue": "3"
+        },
+        {
+          "label": "Fouls",
+          "homeValue": "7",
+          "awayValue": "12"
+        },
+        {
+          "label": "Yellow cards",
+          "homeValue": "1",
+          "awayValue": "2"
+        },
+        {
+          "label": "Saves",
+          "homeValue": "3",
+          "awayValue": "3"
+        }
+      ],
+      "highlights": [
+        "Brighton venceu pelo placar de 0 a 1.",
+        "Gols de Y. Minteh."
+      ]
     }
-  ],
-  "introTitle": "Brasileirão Série B",
-  "introSubtitle": "Rodada 11",
-  "hookText": "Spot e Vila Nova dividindo a liderança da Série B",
-  "coldOpenData": {
-    "tableRows": [
-      {
-        "rank": 1,
-        "club": "SPORT",
-        "pts": 22
-      },
-      {
-        "rank": 2,
-        "club": "VILA NOVA",
-        "pts": 22
-      },
-      {
-        "rank": 3,
-        "club": "SÃO BERNARDO",
-        "pts": 21
-      },
-      {
-        "rank": 4,
-        "club": "NÁUTICO",
-        "pts": 19
-      }
-    ]
-  },
-  "voiceoverEnabled": false,
-  "voiceoverText": "Fala Galera, pra vocês... a classificação do Brasileirão Série B."
+  ]
 }

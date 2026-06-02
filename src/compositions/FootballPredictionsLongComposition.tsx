@@ -19,7 +19,9 @@ const PREDICTION_BED_AUDIO_PATH = '/audio/football/touchline-pulse.mp3';
 const PREDICTION_BED_VOLUME = 0.05;
 const PREDICTION_BED_FADE_FRAMES = 6;
 const LONGFORM_SHELL_BACKGROUND = '/backgrounds/foot-analysis-long-shell-bg.png';
+const LONGFORM_SHELL_BACKGROUND_EN = '/backgrounds/foot-analysis-long-shell-bg-en.png';
 const GREEN = '#8BEA12';
+const EN_BLUE = '#0A84FF';
 const MAIN_FRAME = {
   left: 535,
   top: 178,
@@ -32,17 +34,24 @@ const colorWithAlpha = (color = GOLD, alpha = '33') =>
 
 const accentFor = (badge: TeamBadge) => badge.accentColor ?? GOLD;
 
-const toPortugueseRoundLabel = (value?: string) => {
+const isEnglishJob = (job: {channelProfile?: string; languageProfile?: string}) =>
+  job.channelProfile === 'en' || job.languageProfile === 'en';
+
+const channelAccent = (isEnglish: boolean) => (isEnglish ? EN_BLUE : GREEN);
+
+const toDisplayRoundLabel = (value: string | undefined, isEnglish: boolean) => {
   const label = String(value ?? '').trim();
   const regularSeasonMatch = label.match(/^regular season\s*-\s*(\d+)$/i);
   if (regularSeasonMatch) {
-    return `Rodada ${regularSeasonMatch[1]}`;
+    return isEnglish ? `Matchday ${regularSeasonMatch[1]}` : `Rodada ${regularSeasonMatch[1]}`;
   }
 
-  return label.replace(/\bregular season\b/gi, 'Temporada regular');
+  return isEnglish ? label : label.replace(/\bregular season\b/gi, 'Temporada regular');
 };
 
 export const FootballPredictionsLongComposition = ({job}: FootballPredictionsLongCompositionProps) => {
+  const isEnglish = isEnglishJob(job);
+  const accent = channelAccent(isEnglish);
   const matchStarts = job.matches.reduce<number[]>((starts, match, index) => {
     const previousStart = starts[index - 1] ?? job.introDurationInFrames;
     const previousDuration =
@@ -62,14 +71,14 @@ export const FootballPredictionsLongComposition = ({job}: FootballPredictionsLon
         fontFamily: '"Poppins", "Avenir Next", "Segoe UI", sans-serif',
       }}
     >
-      <BroadcastBackdrop />
-      <BroadcastShell brandLogoPath={job.brandLogoPath} />
+      <BroadcastBackdrop backgroundPath={isEnglish ? LONGFORM_SHELL_BACKGROUND_EN : LONGFORM_SHELL_BACKGROUND} />
+      <BroadcastShell brandLogoPath={job.brandLogoPath} isEnglish={isEnglish} accent={accent} disclaimer={job.disclaimer} />
       <Sequence from={0} durationInFrames={job.introDurationInFrames}>
         <StingAudio
           audioPath={job.soundtrackPath ?? DEFAULT_INTRO_AUDIO_PATH}
           volume={job.soundtrackVolume ?? 0.92}
         />
-        <IntroScene job={job} />
+        <IntroScene job={job} isEnglish={isEnglish} accent={accent} />
       </Sequence>
       <Sequence from={predictionsStart} durationInFrames={predictionsDuration}>
         <Audio
@@ -89,7 +98,9 @@ export const FootballPredictionsLongComposition = ({job}: FootballPredictionsLon
             index={index}
             total={job.matches.length}
             leagueName={job.leagueName}
-            roundLabel={toPortugueseRoundLabel(job.roundLabel)}
+            roundLabel={toDisplayRoundLabel(job.roundLabel, isEnglish)}
+            isEnglish={isEnglish}
+            accent={accent}
           />
           {match.voiceoverPath ? (
             <Audio src={staticFile(match.voiceoverPath.replace(/^\//, ''))} volume={0.86} />
@@ -104,7 +115,7 @@ export const FootballPredictionsLongComposition = ({job}: FootballPredictionsLon
           audioPath={job.soundtrackPath ?? DEFAULT_INTRO_AUDIO_PATH}
           volume={job.soundtrackVolume ?? 0.92}
         />
-        <OutroScene job={job} />
+        <OutroScene job={job} isEnglish={isEnglish} accent={accent} />
       </Sequence>
     </AbsoluteFill>
   );
@@ -141,10 +152,10 @@ const predictionBedVolume = (frame: number, durationInFrames: number) => {
   return Math.min(fadeIn, fadeOut);
 };
 
-const BroadcastBackdrop = () => (
+const BroadcastBackdrop = ({backgroundPath}: {backgroundPath: string}) => (
   <>
     <Img
-      src={staticFile(LONGFORM_SHELL_BACKGROUND.replace(/^\//, ''))}
+      src={staticFile(backgroundPath.replace(/^\//, ''))}
       style={{
         position: 'absolute',
         inset: 0,
@@ -164,14 +175,32 @@ const BroadcastBackdrop = () => (
   </>
 );
 
-const BroadcastShell = ({brandLogoPath}: {brandLogoPath?: string}) => (
+const BroadcastShell = ({
+  brandLogoPath,
+  isEnglish,
+  accent,
+  disclaimer,
+}: {
+  brandLogoPath?: string;
+  isEnglish: boolean;
+  accent: string;
+  disclaimer: string;
+}) => (
   <>
-    <Sidebar brandLogoPath={brandLogoPath} />
-    <SponsorBar />
+    <Sidebar brandLogoPath={brandLogoPath} isEnglish={isEnglish} accent={accent} />
+    <SponsorBar isEnglish={isEnglish} accent={accent} disclaimer={disclaimer} />
   </>
 );
 
-const Sidebar = ({brandLogoPath}: {brandLogoPath?: string}) => (
+const Sidebar = ({
+  brandLogoPath,
+  isEnglish,
+  accent,
+}: {
+  brandLogoPath?: string;
+  isEnglish: boolean;
+  accent: string;
+}) => (
   <div
     style={{
       position: 'absolute',
@@ -201,7 +230,7 @@ const Sidebar = ({brandLogoPath}: {brandLogoPath?: string}) => (
         letterSpacing: 0,
       }}
     >
-      Palpites • Análises • Estatísticas
+      {isEnglish ? 'Predictions • Analysis • Stats' : 'Palpites • Análises • Estatísticas'}
     </div>
     <div
       style={{
@@ -216,23 +245,23 @@ const Sidebar = ({brandLogoPath}: {brandLogoPath?: string}) => (
         textTransform: 'uppercase',
       }}
     >
-      <span style={{width: 48, height: 4, background: GREEN}} />
-      <span>Siga nas <span style={{color: GREEN}}>redes</span></span>
-      <span style={{width: 48, height: 4, background: GREEN}} />
+      <span style={{width: 48, height: 4, background: accent}} />
+      <span>{isEnglish ? 'Follow' : 'Siga nas'} <span style={{color: accent}}>{isEnglish ? 'us' : 'redes'}</span></span>
+      <span style={{width: 48, height: 4, background: accent}} />
     </div>
     <div style={{marginTop: 24, width: 340, display: 'grid', gap: 10}}>
-      <SocialRow network="instagram" label="footanalysispt" />
-      <SocialRow network="tiktok" label="foot.analysis.pt" />
-      <SocialRow network="x" label="@FootAnalysisIO" />
-      <SocialRow network="reddit" label="r/FootAnalysisPT" />
-      <SocialRow network="website" label="footanalysis.io" />
+      <SocialRow network="instagram" label={isEnglish ? 'footanalysisen' : 'footanalysispt'} accent={accent} />
+      <SocialRow network="tiktok" label={isEnglish ? 'foot.analysis.en' : 'foot.analysis.pt'} accent={accent} />
+      <SocialRow network="x" label="@FootAnalysisIO" accent={accent} />
+      <SocialRow network="reddit" label={isEnglish ? 'r/FootballAnalysisEN' : 'r/FootAnalysisPT'} accent={accent} />
+      <SocialRow network="website" label="footanalysis.io" accent={accent} />
     </div>
   </div>
 );
 
 type SocialNetwork = 'instagram' | 'tiktok' | 'x' | 'reddit' | 'website';
 
-const SocialRow = ({network, label}: {network: SocialNetwork; label: string}) => (
+const SocialRow = ({network, label, accent}: {network: SocialNetwork; label: string; accent: string}) => (
   <div
     style={{
       height: 40,
@@ -255,7 +284,7 @@ const SocialRow = ({network, label}: {network: SocialNetwork; label: string}) =>
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: GREEN,
+        background: accent,
         color: BG,
       }}
     >
@@ -334,7 +363,15 @@ const SocialIcon = ({network}: {network: SocialNetwork}) => {
   );
 };
 
-const SponsorBar = () => (
+const SponsorBar = ({
+  isEnglish,
+  accent,
+  disclaimer,
+}: {
+  isEnglish: boolean;
+  accent: string;
+  disclaimer: string;
+}) => (
   <div
     style={{
       position: 'absolute',
@@ -348,24 +385,24 @@ const SponsorBar = () => (
       gap: 20,
       padding: '0 44px',
       background: 'linear-gradient(180deg, rgba(12,16,20,0.94), rgba(6,8,10,0.98))',
-      border: `1px solid ${GREEN}`,
-      borderLeft: `16px solid ${GREEN}`,
-      borderRight: `16px solid ${GREEN}`,
-      boxShadow: `0 0 30px ${GREEN}55`,
+      border: `1px solid ${accent}`,
+      borderLeft: `16px solid ${accent}`,
+      borderRight: `16px solid ${accent}`,
+      boxShadow: `0 0 30px ${accent}55`,
       color: WHITE,
       textAlign: 'center',
       textTransform: 'uppercase',
     }}
   >
-    <SubscribeLikeBadge icon="play" title="Inscreva-se" />
-    <div style={{color: GREEN, fontSize: 16, fontWeight: 900, letterSpacing: 3.2, lineHeight: 1.25}}>
-      Os palpites têm caráter exclusivamente recreativo.
+    <SubscribeLikeBadge icon="play" title={isEnglish ? 'Subscribe' : 'Inscreva-se'} accent={accent} />
+    <div style={{color: accent, fontSize: 16, fontWeight: 900, letterSpacing: 3.2, lineHeight: 1.25}}>
+      {disclaimer}
     </div>
-    <SubscribeLikeBadge icon="like" title="Deixe um Like!" />
+    <SubscribeLikeBadge icon="like" title={isEnglish ? 'Leave a Like!' : 'Deixe um Like!'} accent={accent} />
   </div>
 );
 
-const SubscribeLikeBadge = ({icon, title}: {icon: 'play' | 'like'; title: string}) => (
+const SubscribeLikeBadge = ({icon, title, accent}: {icon: 'play' | 'like'; title: string; accent: string}) => (
   <div
     style={{
       height: 86,
@@ -374,9 +411,9 @@ const SubscribeLikeBadge = ({icon, title}: {icon: 'play' | 'like'; title: string
       alignItems: 'center',
       gap: 16,
       padding: '0 18px',
-      background: `linear-gradient(135deg, ${GREEN}26, rgba(15,19,24,0.96) 48%)`,
-      border: `1px solid ${GREEN}88`,
-      boxShadow: `0 0 24px ${GREEN}22, inset 0 0 0 1px rgba(255,255,255,0.06)`,
+      background: `linear-gradient(135deg, ${accent}26, rgba(15,19,24,0.96) 48%)`,
+      border: `1px solid ${accent}88`,
+      boxShadow: `0 0 24px ${accent}22, inset 0 0 0 1px rgba(255,255,255,0.06)`,
       clipPath: 'polygon(0 0, 94% 0, 100% 50%, 94% 100%, 0 100%, 6% 50%)',
     }}
   >
@@ -387,10 +424,10 @@ const SubscribeLikeBadge = ({icon, title}: {icon: 'play' | 'like'; title: string
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: GREEN,
+        background: accent,
         color: BG,
         borderRadius: 8,
-        boxShadow: `0 0 20px ${GREEN}66`,
+        boxShadow: `0 0 20px ${accent}66`,
       }}
     >
       {icon === 'play' ? <PlayIcon /> : <LikeIcon />}
@@ -440,14 +477,26 @@ const MainFrameContent = ({children}: {children: ReactNode}) => (
   </div>
 );
 
-const IntroScene = ({job}: {job: FootballPredictionsLongVideoJob}) => {
+const IntroScene = ({
+  job,
+  isEnglish,
+  accent,
+}: {
+  job: FootballPredictionsLongVideoJob;
+  isEnglish: boolean;
+  accent: string;
+}) => {
   const frame = useCurrentFrame();
   const openingLines =
     job.openingLines?.length
       ? job.openingLines
       : [
-          'Hoje tem rodada cheia e eu separei os jogos que podem mexer na tabela.',
-          'Agora vamos para os palpites, jogo por jogo, com o placar que eu apostaria.',
+          isEnglish
+            ? 'This matchday has a few games that can shift the table.'
+            : 'Hoje tem rodada cheia e eu separei os jogos que podem mexer na tabela.',
+          isEnglish
+            ? 'Now let us go game by game with the scorelines I would call.'
+            : 'Agora vamos para os palpites, jogo por jogo, com o placar que eu apostaria.',
         ];
   const titleY = interpolate(frame, [8, 34], [46, 0], {
     extrapolateLeft: 'clamp',
@@ -465,10 +514,10 @@ const IntroScene = ({job}: {job: FootballPredictionsLongVideoJob}) => {
 
   return (
     <MainFrameContent>
-      <FrameHeader eyebrow="Foot Analysis" title={job.leagueName} />
+      <FrameHeader eyebrow="Foot Analysis" title={job.leagueName} accent={accent} />
       <FlyingInsightCard
-        title="Tabela"
-        kicker="Classificação"
+        title={isEnglish ? 'Table' : 'Tabela'}
+        kicker={isEnglish ? 'Standings' : 'Classificação'}
         delay={12}
         fromX={700}
         fromY={-60}
@@ -488,15 +537,15 @@ const IntroScene = ({job}: {job: FootballPredictionsLongVideoJob}) => {
         ))}
       </FlyingInsightCard>
       <FlyingInsightCard
-        title="Últimos jogos"
-        kicker="Forma recente"
+        title={isEnglish ? 'Recent games' : 'Últimos jogos'}
+        kicker={isEnglish ? 'Form guide' : 'Forma recente'}
         delay={28}
         fromX={840}
         fromY={360}
         toX={820}
         toY={318}
         rotation={4}
-        accent="#27AE60"
+        accent={isEnglish ? EN_BLUE : '#27AE60'}
       >
         {matches.slice(0, 3).map((match) => (
           <MiniMatchRow
@@ -508,8 +557,8 @@ const IntroScene = ({job}: {job: FootballPredictionsLongVideoJob}) => {
         ))}
       </FlyingInsightCard>
       <FlyingInsightCard
-        title="Palpites"
-        kicker="Placar provável"
+        title={isEnglish ? 'Predictions' : 'Palpites'}
+        kicker={isEnglish ? 'Score call' : 'Placar provável'}
         delay={42}
         fromX={760}
         fromY={740}
@@ -550,9 +599,9 @@ const IntroScene = ({job}: {job: FootballPredictionsLongVideoJob}) => {
             padding: '30px 34px',
             borderRadius: 8,
             background: 'linear-gradient(135deg, rgba(15,19,24,0.98), rgba(8,10,12,0.92))',
-            border: `1px solid ${colorWithAlpha(GREEN, '66')}`,
-            borderLeft: `10px solid ${GREEN}`,
-            boxShadow: `0 22px 70px ${colorWithAlpha(GREEN, '18')}`,
+            border: `1px solid ${colorWithAlpha(accent, '66')}`,
+            borderLeft: `10px solid ${accent}`,
+            boxShadow: `0 22px 70px ${colorWithAlpha(accent, '18')}`,
             color: WHITE,
             fontSize: 31,
             fontWeight: 900,
@@ -747,12 +796,16 @@ const MatchScene = ({
   total,
   leagueName,
   roundLabel,
+  isEnglish,
+  accent,
 }: {
   match: LongformPredictionMatch;
   index: number;
   total: number;
   leagueName: string;
   roundLabel: string;
+  isEnglish: boolean;
+  accent: string;
 }) => {
   const frame = useCurrentFrame();
   const panelIn = interpolate(frame, [0, 24], [28, 0], {extrapolateRight: 'clamp'});
@@ -768,7 +821,11 @@ const MatchScene = ({
 
   return (
     <MainFrameContent>
-      <FrameHeader eyebrow={`${leagueName} · ${roundLabel}`} title={`Jogo ${index + 1} de ${total}`} />
+      <FrameHeader
+        eyebrow={`${leagueName} · ${roundLabel}`}
+        title={`${isEnglish ? 'Game' : 'Jogo'} ${index + 1} ${isEnglish ? 'of' : 'de'} ${total}`}
+        accent={accent}
+      />
       <div
         style={{
           position: 'absolute',
@@ -823,7 +880,7 @@ const MatchScene = ({
               textTransform: 'uppercase',
             }}
           >
-            Palpite
+            {isEnglish ? 'Prediction' : 'Palpite'}
           </div>
           <div
             style={{
@@ -834,7 +891,7 @@ const MatchScene = ({
               justifyContent: 'center',
               borderRadius: 8,
               background: `linear-gradient(90deg, ${colorWithAlpha(homeAccent, '38')}, #1a1600 46%, #1a1600 54%, ${colorWithAlpha(awayAccent, '38')})`,
-              border: `3px solid ${GREEN}`,
+              border: `3px solid ${accent}`,
               boxShadow: `0 24px 70px ${colorWithAlpha(homeAccent, '18')}, 0 24px 70px ${colorWithAlpha(awayAccent, '18')}`,
               opacity: scoreOpacity,
               transform: `scale(${scoreScale})`,
@@ -856,7 +913,7 @@ const MatchScene = ({
               width: `${underlineWidth}%`,
               height: 6,
               maxWidth: 260,
-              background: `linear-gradient(90deg, ${homeAccent}, ${GREEN}, ${awayAccent})`,
+              background: `linear-gradient(90deg, ${homeAccent}, ${accent}, ${awayAccent})`,
             }}
           />
         </div>
@@ -941,7 +998,7 @@ const Badge = ({badge}: {badge: TeamBadge}) => {
   );
 };
 
-const FrameHeader = ({eyebrow, title}: {eyebrow: string; title: string}) => (
+const FrameHeader = ({eyebrow, title, accent = GREEN}: {eyebrow: string; title: string; accent?: string}) => (
   <div
     style={{
       position: 'absolute',
@@ -956,7 +1013,7 @@ const FrameHeader = ({eyebrow, title}: {eyebrow: string; title: string}) => (
     }}
   >
     <div>
-      <div style={{color: GREEN, fontSize: 16, fontWeight: 900, letterSpacing: 4}}>
+      <div style={{color: accent, fontSize: 16, fontWeight: 900, letterSpacing: 4}}>
         {eyebrow}
       </div>
       <div style={{marginTop: 4, color: WHITE, fontSize: 26, fontWeight: 900, lineHeight: 1}}>
@@ -966,17 +1023,25 @@ const FrameHeader = ({eyebrow, title}: {eyebrow: string; title: string}) => (
   </div>
 );
 
-const OutroScene = ({job}: {job: FootballPredictionsLongVideoJob}) => {
+const OutroScene = ({
+  job,
+  isEnglish,
+  accent,
+}: {
+  job: FootballPredictionsLongVideoJob;
+  isEnglish: boolean;
+  accent: string;
+}) => {
   const frame = useCurrentFrame();
   const opacity = interpolate(frame, [0, 24], [0, 1], {extrapolateRight: 'clamp'});
-  const roundLabel = toPortugueseRoundLabel(job.roundLabel);
+  const roundLabel = toDisplayRoundLabel(job.roundLabel, isEnglish);
   const columnCount = job.matches.length > 14 ? 3 : job.matches.length > 7 ? 2 : 1;
   const rowFontSize = job.matches.length > 14 ? 18 : job.matches.length > 7 ? 21 : 25;
   const scoreFontSize = job.matches.length > 14 ? 26 : job.matches.length > 7 ? 30 : 34;
 
   return (
     <MainFrameContent>
-      <FrameHeader eyebrow="Todos os palpites" title={roundLabel} />
+      <FrameHeader eyebrow={isEnglish ? 'All predictions' : 'Todos os palpites'} title={roundLabel} accent={accent} />
       <div
       style={{
         position: 'absolute',

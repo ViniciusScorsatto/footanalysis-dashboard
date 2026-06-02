@@ -22,10 +22,12 @@ const apiBase = '/api/football/thumbnails';
 const teamFieldPrefixes = ['A', 'B', 'C', 'D', 'E', 'F'];
 let availableTeams = [];
 let selectedTeams = [
-  {label: 'Corinthians', path: '/logos/corinthians.png', accentColor: '#E51B23'},
+  {label: 'Palmeiras', path: '/logos/palmeiras.png', accentColor: '#27AE60'},
+  {label: 'Flamengo', path: '/logos/flamengo.png', accentColor: '#E3222A'},
   {label: 'Athletico', path: '/logos/atletico-paranaense.png', accentColor: '#E3222A'},
+  {label: 'Santos', path: '/logos/santos.png', accentColor: '#F0F4F8'},
+  {label: 'Remo', path: '/logos/remo.png', accentColor: '#1E5AA8'},
   {label: 'Botafogo', path: '/logos/botafogo.png', accentColor: '#F0F4F8'},
-  {label: 'Fluminense', path: '/logos/fluminense.png', accentColor: '#8A1538'},
 ];
 
 const escapeHtml = (value) =>
