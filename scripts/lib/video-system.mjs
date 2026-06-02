@@ -761,7 +761,7 @@ const loadTeamNameAliases = async () => {
   }
 };
 
-const loadTeamAccentColors = async () => {
+export const loadTeamAccentColors = async () => {
   try {
     const accentConfig = await readJsonFile(teamAccentColorsFile);
     const normalizeAccentMap = (accents = {}) =>
@@ -958,17 +958,64 @@ const resolveDefaultStandingsLabel = async ({
 const isYouthLogoFilename = (filename) =>
   /(?:^|-)(?:u17|u20|sub-?17|sub-?20)(?:-|\.|$)/i.test(filename);
 
+const isSupportedLogoFilename = (filename) => /\.(?:png|svg)$/i.test(filename);
+
 const cachedTeamLogoAliases = {
+  alemanha: ['Germany'],
+  argentina: ['Argentina'],
+  argelia: ['Algeria'],
+  australia: ['Australia'],
+  austria: ['Austria'],
+  'africa do sul': ['South Africa'],
+  'arabia saudita': ['Saudi Arabia'],
+  belgica: ['Belgium'],
+  brasil: ['Brazil'],
+  canada: ['Canada'],
+  'cabo verde': ['Cape Verde Islands'],
+  catar: ['Qatar'],
   'c do marfim': ['Ivory Coast'],
+  'coreia do sul': ['South Korea'],
+  croacia: ['Croatia'],
+  curacao: ['Curacao'],
   'cote d ivoire': ['Ivory Coast'],
+  egito: ['Egypt'],
+  equador: ['Ecuador'],
+  escocia: ['Scotland'],
+  espanha: ['Spain'],
+  eua: ['United States'],
+  franca: ['France'],
+  gana: ['Ghana'],
+  haiti: ['Haiti'],
+  holanda: ['Netherlands'],
+  inglaterra: ['England'],
+  ira: ['Iran'],
+  iraque: ['Iraq'],
   'ivory coast': ["Cote d'Ivoire"],
+  japao: ['Japan'],
+  jordania: ['Jordan'],
+  marrocos: ['Morocco'],
+  mexico: ['Mexico'],
+  'nova zelandia': ['New Zealand'],
+  noruega: ['Norway'],
+  panama: ['Panama'],
+  paraguai: ['Paraguay'],
+  portugal: ['Portugal'],
+  'rep tcheca': ['Czech Republic'],
+  'republica tcheca': ['Czech Republic'],
+  senegal: ['Senegal'],
+  suecia: ['Sweden'],
+  suica: ['Switzerland'],
+  tunisia: ['Tunisia'],
+  turquia: ['Turkey'],
+  uruguai: ['Uruguay'],
+  uzbequistao: ['Uzbekistan'],
 };
 
 const findCachedTeamLogo = (teamName, {excludeYouth = false} = {}) => {
   const normalizedName = normalizeTeamAliasKey(teamName);
   const slugs = [
-    sanitize(teamName),
     ...(cachedTeamLogoAliases[normalizedName] ?? []).map((alias) => sanitize(alias)),
+    sanitize(teamName),
   ].filter(Boolean);
 
   if (!slugs.length || !fsSync.existsSync(logosDir)) {
@@ -982,7 +1029,8 @@ const findCachedTeamLogo = (teamName, {excludeYouth = false} = {}) => {
     .map(
       (slug) =>
         filenames.find((item) => item === `${slug}.png`) ??
-        filenames.find((item) => item.startsWith(`${slug}-`) && item.toLowerCase().endsWith('.png'))
+        filenames.find((item) => item === `${slug}.svg`) ??
+        filenames.find((item) => item.startsWith(`${slug}-`) && isSupportedLogoFilename(item))
     )
     .find(Boolean);
 

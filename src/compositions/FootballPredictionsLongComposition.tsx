@@ -15,6 +15,9 @@ const WHITE = '#f0f4f8';
 const SILVER = '#c0ccd8';
 const STEEL = '#3a5060';
 const DEFAULT_INTRO_AUDIO_PATH = '/audio/football/gol-na-pressao.mp3';
+const PREDICTION_BED_AUDIO_PATH = '/audio/football/touchline-pulse.mp3';
+const PREDICTION_BED_VOLUME = 0.05;
+const PREDICTION_BED_FADE_FRAMES = 6;
 const LONGFORM_SHELL_BACKGROUND = '/backgrounds/foot-analysis-long-shell-bg.png';
 const GREEN = '#8BEA12';
 const MAIN_FRAME = {
@@ -46,6 +49,9 @@ export const FootballPredictionsLongComposition = ({job}: FootballPredictionsLon
       index === 0 ? 0 : job.matches[index - 1].durationInFrames + job.transitionDurationInFrames;
     return [...starts, previousStart + previousDuration];
   }, []);
+  const predictionsStart = job.introDurationInFrames;
+  const outroStart = Math.max(0, job.durationInFrames - job.outroDurationInFrames);
+  const predictionsDuration = Math.max(0, outroStart - predictionsStart);
 
   return (
     <AbsoluteFill
@@ -64,6 +70,13 @@ export const FootballPredictionsLongComposition = ({job}: FootballPredictionsLon
           volume={job.soundtrackVolume ?? 0.92}
         />
         <IntroScene job={job} />
+      </Sequence>
+      <Sequence from={predictionsStart} durationInFrames={predictionsDuration}>
+        <Audio
+          src={staticFile(PREDICTION_BED_AUDIO_PATH.replace(/^\//, ''))}
+          volume={(frame) => predictionBedVolume(frame, predictionsDuration)}
+          loop
+        />
       </Sequence>
       {job.matches.map((match, index) => (
         <Sequence
@@ -103,6 +116,29 @@ const StingAudio = ({audioPath, volume}: {audioPath?: string; volume: number}) =
   }
 
   return <Audio src={staticFile(audioPath.replace(/^\//, ''))} volume={volume} />;
+};
+
+const predictionBedVolume = (frame: number, durationInFrames: number) => {
+  const fadeFrames = Math.min(PREDICTION_BED_FADE_FRAMES, Math.floor(durationInFrames / 2));
+  if (fadeFrames <= 0) {
+    return PREDICTION_BED_VOLUME;
+  }
+
+  const fadeIn = interpolate(frame, [0, fadeFrames], [0, PREDICTION_BED_VOLUME], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  const fadeOut = interpolate(
+    frame,
+    [Math.max(0, durationInFrames - fadeFrames), durationInFrames],
+    [PREDICTION_BED_VOLUME, 0],
+    {
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'clamp',
+    }
+  );
+
+  return Math.min(fadeIn, fadeOut);
 };
 
 const BroadcastBackdrop = () => (

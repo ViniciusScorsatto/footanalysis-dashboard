@@ -1,22 +1,22 @@
 {
   "sport": "football",
   "template": "results",
-  "leagueId": 71,
+  "leagueId": 75,
   "season": 2026,
-  "leagueName": "Brasileirão Série A",
+  "leagueName": "Brasileirão Série C",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
-  "soundtrackLabel": "Gol de Arena",
-  "soundtrackVolume": 0.1,
-  "outputName": "brasileirao-serie-a-2026-resultados-regular-season-18-2026-05-31-pt-br.mp4",
+  "soundtrackPath": "/audio/football/É Gol, É Gol.mp3",
+  "soundtrackLabel": "É Gol, É Gol",
+  "soundtrackVolume": 0.2,
+  "outputName": "brasileirao-serie-c-2026-resultados-pt-br.mp4",
   "durationInFrames": 270,
   "compositionId": "FootballResultsShort",
   "leagueConfig": {
-    "leagueId": 71,
-    "accentColor": "#F0A500",
+    "leagueId": 75,
+    "accentColor": "#27AE60",
     "standings": {
       "safeArea": {
         "left": 68,
@@ -24,109 +24,34 @@
       },
       "zones": [
         {
-          "key": "libertadores",
-          "label": "Libertadores",
+          "key": "quadrangular",
+          "label": "Quadrangular",
           "start": 1,
-          "end": 4,
-          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(101, 227, 133, 0.64)"
-        },
-        {
-          "key": "pre-libertadores",
-          "label": "Pré-Libertadores",
-          "start": 5,
-          "end": 5,
-          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 190, 92, 0.58)"
-        },
-        {
-          "key": "sul-americana",
-          "label": "Sul-Americana",
-          "start": 6,
-          "end": 11,
-          "fill": "linear-gradient(90deg, rgba(0, 177, 183, 0.82), rgba(0, 177, 183, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(0, 177, 183, 0.54)"
+          "end": 8,
+          "fill": "linear-gradient(90deg, rgba(39, 174, 96, 0.88), rgba(39, 174, 96, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(86, 214, 120, 0.62)"
         },
         {
           "key": "rebaixamento",
           "label": "Rebaixamento",
-          "start": 17,
+          "start": 19,
           "end": 20,
           "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
           "accent": "rgba(255, 102, 102, 0.56)"
         }
       ]
     },
-    "leagueName": "Brasileirão Série A",
-    "pace": {
-      "championship": {
-        "benchmarkPercentage": 68,
-        "benchmarkLabel": "Média dos últimos 10 campeões",
-        "entryCount": 10
-      },
-      "relegation": {
-        "benchmarkPercentage": 38,
-        "benchmarkLabel": "Linha de segurança",
-        "safeRowsAbove": 3,
-        "maxRows": 10
-      }
-    }
+    "leagueName": "Brasileirão Série C"
   },
-  "round": "Regular Season - 18",
-  "matchDate": "2026-05-31",
-  "matchDates": [
-    "2026-05-31"
-  ],
-  "roundLabel": "Rodada 18",
-  "ctaText": "Qual foi o melhor jogo?",
+  "round": "Regular Season - 9",
+  "roundLabel": "Rodada 9",
+  "ctaText": "Seu time foi bem ou mal?",
   "fixtures": [
     {
-      "fixtureId": 1492282,
-      "fixtureDateKey": "2026-05-31",
-      "homeTeam": "RB Bragantino",
-      "awayTeam": "Internacional",
-      "homeScore": 3,
-      "awayScore": 1,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "RB",
-        "logoPath": "/logos/rb-bragantino-794.png"
-      },
-      "awayBadge": {
-        "label": "I",
-        "logoPath": "/logos/internacional-119.png"
-      }
-    },
-    {
-      "fixtureId": 1492286,
-      "fixtureDateKey": "2026-05-31",
-      "homeTeam": "Palmeiras",
-      "awayTeam": "Chapecoense",
-      "homeScore": 1,
-      "awayScore": 0,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "P",
-        "logoPath": "/logos/palmeiras-121.png"
-      },
-      "awayBadge": {
-        "label": "C",
-        "logoPath": "/logos/chapecoense-sc-132.png"
-      }
-    },
-    {
-      "fixtureId": 1492289,
-      "fixtureDateKey": "2026-05-31",
-      "homeTeam": "Vasco DA Gama",
-      "awayTeam": "Atletico-MG",
+      "fixtureId": 1526842,
+      "fixtureDateKey": "2026-05-30",
+      "homeTeam": "AO Itabaiana",
+      "awayTeam": "Volta Redonda",
       "homeScore": 0,
       "awayScore": 1,
       "homeEliminated": false,
@@ -135,40 +60,19 @@
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "VDG",
-        "logoPath": "/logos/vasco-da-gama-133.png"
+        "label": "AI",
+        "logoPath": "/logos/ao-itabaiana-2204.png"
       },
       "awayBadge": {
-        "label": "A",
-        "logoPath": "/logos/atletico-mg-1062.png"
+        "label": "VR",
+        "logoPath": "/logos/volta-redonda-7814.png"
       }
     },
     {
-      "fixtureId": 1492283,
-      "fixtureDateKey": "2026-05-31",
-      "homeTeam": "Cruzeiro",
-      "awayTeam": "Fluminense",
-      "homeScore": 1,
-      "awayScore": 1,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "C",
-        "logoPath": "/logos/cruzeiro-135.png"
-      },
-      "awayBadge": {
-        "label": "F",
-        "logoPath": "/logos/fluminense-124.png"
-      }
-    },
-    {
-      "fixtureId": 1492287,
-      "fixtureDateKey": "2026-05-31",
-      "homeTeam": "Remo",
-      "awayTeam": "Sao Paulo",
+      "fixtureId": 1526839,
+      "fixtureDateKey": "2026-05-30",
+      "homeTeam": "Floresta",
+      "awayTeam": "Confiança",
       "homeScore": 1,
       "awayScore": 0,
       "homeEliminated": false,
@@ -177,66 +81,232 @@
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "R",
-        "logoPath": "/logos/remo-1198.png"
+        "label": "F",
+        "logoPath": "/logos/floresta-7774.png"
       },
       "awayBadge": {
-        "label": "SP",
-        "logoPath": "/logos/sao-paulo-126.png"
+        "label": "C",
+        "logoPath": "/logos/confianca-7772.png"
+      }
+    },
+    {
+      "fixtureId": 1526837,
+      "fixtureDateKey": "2026-05-30",
+      "homeTeam": "Botafogo PB",
+      "awayTeam": "Maringá",
+      "homeScore": 2,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "BP",
+        "logoPath": "/logos/botafogo-pb-1197.png"
+      },
+      "awayBadge": {
+        "label": "M",
+        "logoPath": "/logos/maringa-7833.png"
+      }
+    },
+    {
+      "fixtureId": 1526844,
+      "fixtureDateKey": "2026-05-30",
+      "homeTeam": "Caxias",
+      "awayTeam": "Ituano",
+      "homeScore": 2,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "C",
+        "logoPath": "/logos/caxias-7770.png"
+      },
+      "awayBadge": {
+        "label": "I",
+        "logoPath": "/logos/ituano-7779.png"
+      }
+    },
+    {
+      "fixtureId": 1526840,
+      "fixtureDateKey": "2026-05-31",
+      "homeTeam": "Guarani",
+      "awayTeam": "Amazonas",
+      "homeScore": 5,
+      "awayScore": 0,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "G",
+        "logoPath": "/logos/guarani-campinas-138.png"
+      },
+      "awayBadge": {
+        "label": "A",
+        "logoPath": "/logos/amazonas-10862.png"
+      }
+    },
+    {
+      "fixtureId": 1526843,
+      "fixtureDateKey": "2026-05-31",
+      "homeTeam": "Santa Cruz",
+      "awayTeam": "Ferroviária",
+      "homeScore": 1,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "SC",
+        "logoPath": "/logos/santa-cruz-753.png"
+      },
+      "awayBadge": {
+        "label": "F",
+        "logoPath": "/logos/ferroviaria-7826.png"
+      }
+    },
+    {
+      "fixtureId": 1526841,
+      "fixtureDateKey": "2026-05-31",
+      "homeTeam": "Int. Limeira",
+      "awayTeam": "Ypiranga-RS",
+      "homeScore": 2,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "IL",
+        "logoPath": "/logos/inter-de-limeira-1201.png"
+      },
+      "awayBadge": {
+        "label": "Y",
+        "logoPath": "/logos/ypiranga-rs-1221.png"
+      }
+    },
+    {
+      "fixtureId": 1526835,
+      "fixtureDateKey": "2026-05-31",
+      "homeTeam": "Anápolis",
+      "awayTeam": "Maranhão",
+      "homeScore": 0,
+      "awayScore": 0,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "A",
+        "logoPath": "/logos/anapolis-7852.png"
+      },
+      "awayBadge": {
+        "label": "M",
+        "logoPath": "/logos/maranhao-7832.png"
+      }
+    },
+    {
+      "fixtureId": 1526838,
+      "fixtureDateKey": "2026-05-31",
+      "homeTeam": "Figueirense",
+      "awayTeam": "Paysandu",
+      "homeScore": 2,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "F",
+        "logoPath": "/logos/figueirense-137.png"
+      },
+      "awayBadge": {
+        "label": "P",
+        "logoPath": "/logos/paysandu-149.png"
+      }
+    },
+    {
+      "fixtureId": 1526836,
+      "fixtureDateKey": "2026-06-01",
+      "homeTeam": "Barra",
+      "awayTeam": "Brusque",
+      "homeScore": 1,
+      "awayScore": 0,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "B",
+        "logoPath": "/logos/barra-18271.png"
+      },
+      "awayBadge": {
+        "label": "B",
+        "logoPath": "/logos/brusque-1211.png"
       }
     }
   ],
-  "introTitle": "Brasileirão Série A",
-  "introSubtitle": "Rodada 18",
-  "hookText": "Última Rodada antes da parada mexe na tabela",
+  "introTitle": "Brasileirão Série C",
+  "introSubtitle": "Rodada 9",
+  "hookText": "Guarani goleia e os mandantes tomam conta!",
   "coldOpenData": {
     "matchRows": [
       {
-        "left": "RB BRAGANTINO",
-        "center": "3 - 1",
-        "right": "INTERNACIONAL"
-      },
-      {
-        "left": "PALMEIRAS",
-        "center": "1 - 0",
-        "right": "CHAPECOENSE"
-      },
-      {
-        "left": "VASCO DA GAMA",
+        "left": "AO ITABAIANA",
         "center": "0 - 1",
-        "right": "ATLETICO-MG"
+        "right": "VOLTA REDONDA"
       },
       {
-        "left": "CRUZEIRO",
-        "center": "1 - 1",
-        "right": "FLUMINENSE"
+        "left": "FLORESTA",
+        "center": "1 - 0",
+        "right": "CONFIANÇA"
+      },
+      {
+        "left": "BOTAFOGO PB",
+        "center": "2 - 1",
+        "right": "MARINGÁ"
+      },
+      {
+        "left": "CAXIAS",
+        "center": "2 - 1",
+        "right": "ITUANO"
       }
     ],
     "tableRows": [
       {
         "rank": 1,
-        "club": "RB BRAGANTINO",
+        "club": "AO ITABAIANA",
         "pts": 22
       },
       {
         "rank": 2,
-        "club": "INTERNACIONAL",
+        "club": "VOLTA REDONDA",
         "pts": 20
       },
       {
         "rank": 3,
-        "club": "PALMEIRAS",
+        "club": "FLORESTA",
         "pts": 18
       },
       {
         "rank": 4,
-        "club": "CHAPECOENSE",
+        "club": "CONFIANÇA",
         "pts": 16
       }
     ]
   },
-  "voiceoverEnabled": true,
-  "voiceoverText": "Fechamento da Rodada 18 do Brasileirão.. Vasco no Z4, Palmeiras e Flamengo venceram e Remo ganha do São Paulo",
-  "voiceoverPath": "/voiceovers/football/pt-br-bab9cb2e01bc9f04.mp3",
-  "voiceoverLabel": "Fechamento da Rodada 18 do Brasileirão.. Vasco no Z4, Palmeiras e Flamengo venceram e Remo ganha do São Paulo"
+  "voiceoverEnabled": false,
+  "voiceoverText": "Fala Galera, pra vocês... os últimos resultados do Brasileirão Série C."
 }

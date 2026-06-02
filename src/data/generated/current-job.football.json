@@ -1,230 +1,327 @@
 {
   "sport": "football",
-  "template": "tierlist",
-  "leagueId": 1,
+  "template": "standings",
+  "leagueId": 72,
   "season": 2026,
-  "leagueName": "World Cup 2026",
-  "channelProfile": "en",
-  "languageProfile": "en",
+  "leagueName": "Brasileirão Série B",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Champions - The Anthem plays.mp3",
-  "soundtrackLabel": "Champions - The Anthem Plays",
+  "soundtrackPath": "/audio/football/Estádio Vai Ferver.mp3",
+  "soundtrackLabel": "Estádio Vai Ferver",
   "soundtrackVolume": 0.2,
-  "outputName": "world-cup-2026-2026-tierlist-en.mp4",
+  "outputName": "brasileirao-serie-b-2026-classificacao-pt-br.mp4",
   "durationInFrames": 270,
-  "compositionId": "FootballTierlistShort",
+  "compositionId": "FootballStandingsShort",
   "leagueConfig": {
-    "leagueId": 1,
-    "leagueName": "World Cup 2026",
-    "accentColor": "#0A84FF",
-    "secondaryAccentColor": "#C8A84B"
+    "leagueId": 72,
+    "accentColor": "#2E86DE",
+    "standings": {
+      "safeArea": {
+        "left": 68,
+        "right": 104
+      },
+      "zones": [
+        {
+          "key": "acesso-direto",
+          "label": "Acesso direto",
+          "start": 1,
+          "end": 2,
+          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(101, 227, 133, 0.64)"
+        },
+        {
+          "key": "playoffs-acesso",
+          "label": "Playoffs de acesso",
+          "start": 3,
+          "end": 6,
+          "fill": "linear-gradient(90deg, rgba(240, 165, 0, 0.88), rgba(240, 165, 0, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(240, 165, 0, 0.52)"
+        },
+        {
+          "key": "rebaixamento",
+          "label": "Rebaixamento",
+          "start": 17,
+          "end": 20,
+          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 102, 102, 0.56)"
+        }
+      ]
+    },
+    "leagueName": "Brasileirão Série B"
   },
-  "titleLabel": "Tierlist",
-  "subtitleLabel": "World Cup Tierlist",
-  "topScorerPrediction": "Julian Alvarez",
-  "bestPlayerPrediction": "Michael Olise",
-  "ctaText": "Do you agree with this list?",
-  "tiers": [
+  "standingsLabel": "Rodada 11",
+  "ctaText": "Quem sobe e quem cai?",
+  "rows": [
     {
-      "key": "champion",
-      "label": "Champion",
-      "accentColor": "#FEDF00",
-      "entries": [
-        {
-          "team": "Spain",
-          "sourceTeam": "Spain",
-          "badge": {
-            "label": "S",
-            "imagePath": "/logos/spain-9.png"
-          }
-        }
-      ]
+      "rank": 1,
+      "team": "Sport",
+      "played": 11,
+      "points": 22,
+      "goalDifference": 8,
+      "form": "WWLWW",
+      "badge": {
+        "label": "S",
+        "logoPath": "/logos/sport-recife-123.png"
+      }
     },
     {
-      "key": "favorites",
-      "label": "Favorites",
-      "accentColor": "#009B3A",
-      "entries": [
-        {
-          "team": "Netherlands",
-          "sourceTeam": "Netherlands",
-          "badge": {
-            "label": "N",
-            "imagePath": "/logos/netherlands-1118.png"
-          }
-        },
-        {
-          "team": "France",
-          "sourceTeam": "France",
-          "badge": {
-            "label": "F",
-            "imagePath": "/logos/france-2.png"
-          }
-        },
-        {
-          "team": "Argentina",
-          "sourceTeam": "Argentina",
-          "badge": {
-            "label": "A",
-            "imagePath": "/logos/argentina-26.png"
-          }
-        }
-      ]
+      "rank": 2,
+      "team": "Vila Nova",
+      "played": 11,
+      "points": 22,
+      "goalDifference": 6,
+      "form": "WWWLD",
+      "badge": {
+        "label": "VN",
+        "logoPath": "/logos/vila-nova-142.png"
+      }
     },
     {
-      "key": "deep-run",
-      "label": "Deep Run",
-      "accentColor": "#0A84FF",
-      "entries": [
-        {
-          "team": "Brazil",
-          "sourceTeam": "Brazil",
-          "badge": {
-            "label": "B",
-            "imagePath": "/logos/brazil-6.png"
-          }
-        },
-        {
-          "team": "Portugal",
-          "sourceTeam": "Portugal",
-          "badge": {
-            "label": "P",
-            "imagePath": "/logos/portugal-27.png"
-          }
-        },
-        {
-          "team": "Germany",
-          "sourceTeam": "Germany",
-          "badge": {
-            "label": "G",
-            "imagePath": "/logos/germany-25.png"
-          }
-        },
-        {
-          "team": "Senegal",
-          "sourceTeam": "Senegal",
-          "badge": {
-            "label": "S",
-            "imagePath": "/logos/senegal-13.png"
-          }
-        },
-        {
-          "team": "Norway",
-          "sourceTeam": "Norway",
-          "badge": {
-            "label": "N",
-            "imagePath": "/logos/norway-1090.png"
-          }
-        }
-      ]
+      "rank": 3,
+      "team": "São Bernardo",
+      "played": 11,
+      "points": 21,
+      "goalDifference": 9,
+      "form": "DWDWW",
+      "badge": {
+        "label": "SB",
+        "logoPath": "/logos/sao-bernardo-7865.png"
+      }
     },
     {
-      "key": "dark-horses",
-      "label": "Dark Horses",
-      "accentColor": "#8E44AD",
-      "entries": [
-        {
-          "team": "Morocco",
-          "sourceTeam": "Morocco",
-          "badge": {
-            "label": "M",
-            "imagePath": "/logos/morocco-31.png"
-          }
-        },
-        {
-          "team": "Japan",
-          "sourceTeam": "Japan",
-          "badge": {
-            "label": "J",
-            "imagePath": "/logos/japan-12.png"
-          }
-        },
-        {
-          "team": "Paraguay",
-          "sourceTeam": "Paraguay",
-          "badge": {
-            "label": "P",
-            "imagePath": "/logos/paraguay-2380.png"
-          }
-        }
-      ]
+      "rank": 4,
+      "team": "Náutico",
+      "played": 11,
+      "points": 19,
+      "goalDifference": 5,
+      "form": "LWWWD",
+      "badge": {
+        "label": "N",
+        "logoPath": "/logos/nautico-recife-755.png"
+      }
     },
     {
-      "key": "group-stage-exit",
-      "label": "Group Stage Exit",
-      "accentColor": "#C86430",
-      "entries": [
-        {
-          "team": "USA",
-          "sourceTeam": "USA",
-          "badge": {
-            "label": "U",
-            "imagePath": "/logos/usa-2384.png"
-          }
-        },
-        {
-          "team": "Sweden",
-          "sourceTeam": "Sweden",
-          "badge": {
-            "label": "S",
-            "imagePath": "/logos/sweden-5.png"
-          }
-        },
-        {
-          "team": "Cote d'Ivoire",
-          "sourceTeam": "Cote d'Ivoire",
-          "badge": {
-            "label": "CD",
-            "imagePath": "/logos/ivory-coast-1501.png"
-          }
-        },
-        {
-          "team": "Uruguay",
-          "sourceTeam": "Uruguay",
-          "badge": {
-            "label": "U",
-            "imagePath": "/logos/uruguay-7.png"
-          }
-        }
-      ]
+      "rank": 5,
+      "team": "Fortaleza",
+      "played": 11,
+      "points": 18,
+      "goalDifference": 3,
+      "form": "LWLDW",
+      "badge": {
+        "label": "F",
+        "logoPath": "/logos/fortaleza-ec-154.png"
+      }
     },
     {
-      "key": "disappointment",
-      "label": "Disappointment",
-      "accentColor": "#E74C3C",
-      "entries": [
-        {
-          "team": "Belgium",
-          "sourceTeam": "Belgium",
-          "badge": {
-            "label": "B",
-            "imagePath": "/logos/belgium-1.png"
-          }
-        },
-        {
-          "team": "England",
-          "sourceTeam": "England",
-          "badge": {
-            "label": "E",
-            "imagePath": "/logos/england-10.png"
-          }
-        },
-        {
-          "team": "Mexico",
-          "sourceTeam": "Mexico",
-          "badge": {
-            "label": "M",
-            "imagePath": "/logos/mexico-16.png"
-          }
-        }
-      ]
+      "rank": 6,
+      "team": "Goias",
+      "played": 11,
+      "points": 17,
+      "goalDifference": -1,
+      "form": "DWWWL",
+      "badge": {
+        "label": "G",
+        "logoPath": "/logos/goias-151.png"
+      }
+    },
+    {
+      "rank": 7,
+      "team": "Novorizontino",
+      "played": 11,
+      "points": 17,
+      "goalDifference": 3,
+      "form": "DWDWD",
+      "badge": {
+        "label": "N",
+        "logoPath": "/logos/novorizontino-7834.png"
+      }
+    },
+    {
+      "rank": 8,
+      "team": "Criciuma",
+      "played": 11,
+      "points": 17,
+      "goalDifference": 3,
+      "form": "WDDDD",
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/criciuma-140.png"
+      }
+    },
+    {
+      "rank": 9,
+      "team": "Athletic Club",
+      "played": 11,
+      "points": 17,
+      "goalDifference": 2,
+      "form": "WWDDD",
+      "badge": {
+        "label": "AC",
+        "logoPath": "/logos/athletic-club-13975.png"
+      }
+    },
+    {
+      "rank": 10,
+      "team": "Juventude",
+      "played": 11,
+      "points": 16,
+      "goalDifference": 3,
+      "form": "WLDDD",
+      "badge": {
+        "label": "J",
+        "logoPath": "/logos/juventude-152.png"
+      }
+    },
+    {
+      "rank": 11,
+      "team": "Operario-PR",
+      "played": 11,
+      "points": 16,
+      "goalDifference": -2,
+      "form": "WDLLW",
+      "badge": {
+        "label": "O",
+        "logoPath": "/logos/operario-pr-1223.png"
+      }
+    },
+    {
+      "rank": 12,
+      "team": "CRB",
+      "played": 11,
+      "points": 14,
+      "goalDifference": 0,
+      "form": "LWWWW",
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/crb-146.png"
+      }
+    },
+    {
+      "rank": 13,
+      "team": "Ceara",
+      "played": 11,
+      "points": 13,
+      "goalDifference": -1,
+      "form": "LLWLL",
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/ceara-129.png"
+      }
+    },
+    {
+      "rank": 14,
+      "team": "Atlético-GO",
+      "played": 11,
+      "points": 13,
+      "goalDifference": -1,
+      "form": "DLDWD",
+      "badge": {
+        "label": "A",
+        "logoPath": "/logos/atletico-goianiense-144.png"
+      }
+    },
+    {
+      "rank": 15,
+      "team": "Cuiaba",
+      "played": 11,
+      "points": 13,
+      "goalDifference": 1,
+      "form": "WLDDD",
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/cuiaba-1193.png"
+      }
+    },
+    {
+      "rank": 16,
+      "team": "Botafogo SP",
+      "played": 11,
+      "points": 10,
+      "goalDifference": 0,
+      "form": "LLLDD",
+      "badge": {
+        "label": "BS",
+        "logoPath": "/logos/botafogo-sp-2618.png"
+      }
+    },
+    {
+      "rank": 17,
+      "team": "Avai",
+      "played": 11,
+      "points": 10,
+      "goalDifference": -4,
+      "form": "LLLDD",
+      "badge": {
+        "label": "A",
+        "logoPath": "/logos/avai-145.png"
+      }
+    },
+    {
+      "rank": 18,
+      "team": "Londrina",
+      "played": 11,
+      "points": 8,
+      "goalDifference": -7,
+      "form": "LLWLL",
+      "badge": {
+        "label": "L",
+        "logoPath": "/logos/londrina-148.png"
+      }
+    },
+    {
+      "rank": 19,
+      "team": "Ponte Preta",
+      "played": 11,
+      "points": 8,
+      "goalDifference": -11,
+      "form": "LLLLW",
+      "badge": {
+        "label": "PP",
+        "logoPath": "/logos/ponte-preta-139.png"
+      }
+    },
+    {
+      "rank": 20,
+      "team": "América-MG",
+      "played": 11,
+      "points": 3,
+      "goalDifference": -16,
+      "form": "LLDLL",
+      "badge": {
+        "label": "A",
+        "logoPath": "/logos/america-mineiro-125.png"
+      }
     }
   ],
-  "dataSource": "api",
-  "introTitle": "World Cup 2026",
-  "introSubtitle": "World Cup Tierlist",
-  "hookText": "My World Cup tierlist",
+  "introTitle": "Brasileirão Série B",
+  "introSubtitle": "Rodada 11",
+  "hookText": "Spot e Vila Nova dividindo a liderança da Série B",
+  "coldOpenData": {
+    "tableRows": [
+      {
+        "rank": 1,
+        "club": "SPORT",
+        "pts": 22
+      },
+      {
+        "rank": 2,
+        "club": "VILA NOVA",
+        "pts": 22
+      },
+      {
+        "rank": 3,
+        "club": "SÃO BERNARDO",
+        "pts": 21
+      },
+      {
+        "rank": 4,
+        "club": "NÁUTICO",
+        "pts": 19
+      }
+    ]
+  },
   "voiceoverEnabled": false,
-  "voiceoverText": "World Cup 2026 favorites tierlist"
+  "voiceoverText": "Fala Galera, pra vocês... a classificação do Brasileirão Série B."
 }

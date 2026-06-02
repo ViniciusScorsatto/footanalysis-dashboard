@@ -24,6 +24,7 @@ import type {
 } from '../lib/types';
 
 type FootballWorldCupGroupCompositionProps = {
+  languageProfile?: 'pt-br' | 'en';
   titleLabel: string;
   groupLabel: string;
   tableLabels: {
@@ -71,6 +72,7 @@ const normalizeWorldCupTeamName = (value: string) =>
     .trim();
 
 export const FootballWorldCupGroupComposition = ({
+  languageProfile,
   titleLabel,
   groupLabel,
   tableLabels,
@@ -94,6 +96,17 @@ export const FootballWorldCupGroupComposition = ({
 }: FootballWorldCupGroupCompositionProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
+  const isPortuguese = languageProfile !== 'en';
+  const fallbackQualificationLegend = isPortuguese
+    ? {
+        direct: '1º e 2º avançam',
+        bestThird: '8 melhores terceiros',
+      }
+    : {
+        direct: '1st and 2nd advance',
+        bestThird: '8 best third-place teams',
+      };
+  const fallbackLastResultsLabel = isPortuguese ? 'Últimos Resultados' : 'Last Results';
   const resolvedMatchMode =
     groupMatchSectionMode ??
     ((lastResults?.length ?? 0) === 0
@@ -239,12 +252,7 @@ export const FootballWorldCupGroupComposition = ({
         </div>
 
         <QualificationLegend
-          labels={
-            qualificationLegend ?? {
-              direct: '1st and 2nd advance',
-              bestThird: '8 best third-place teams',
-            }
-          }
+          labels={qualificationLegend ?? fallbackQualificationLegend}
           style={matchesSectionAnim}
         />
 
@@ -260,7 +268,7 @@ export const FootballWorldCupGroupComposition = ({
         >
           {visibleLastResults.length > 0 ? (
             <>
-              <ActivitySectionTitle label={lastResultsLabel ?? 'Last Results'} />
+              <ActivitySectionTitle label={lastResultsLabel ?? fallbackLastResultsLabel} />
               <div style={{display: 'flex', flexDirection: 'column', gap: 10}}>
                 {visibleLastResults.map((match, index) => (
                   <ResultRow
@@ -284,6 +292,7 @@ export const FootballWorldCupGroupComposition = ({
                   <MatchRow
                     key={`${match.homeTeam}-${match.awayTeam}-${index}`}
                     match={match}
+                    versusLabel={isPortuguese ? 'X' : 'VS'}
                     frame={frame}
                     fps={fps}
                     rowIndex={index + visibleLastResults.length}
@@ -551,12 +560,14 @@ const StandingsRow = ({
 
 const MatchRow = ({
   match,
+  versusLabel,
   frame,
   fps,
   rowIndex,
   baseFrame,
 }: {
   match: WorldCupNextMatch;
+  versusLabel: string;
   frame: number;
   fps: number;
   rowIndex: number;
@@ -596,7 +607,7 @@ const MatchRow = ({
             textTransform: 'uppercase',
           }}
         >
-          VS
+          {versusLabel}
         </div>
         <div
           style={{

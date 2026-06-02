@@ -2,24 +2,24 @@
   "sport": "football",
   "template": "predictions-long",
   "compositionId": "FootballPredictionsLong",
-  "leagueId": 0,
+  "leagueId": 1,
   "season": 2026,
-  "leagueName": "Brasileirão Série A",
+  "leagueName": "Copa do Mundo",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
   "soundtrackPath": "/audio/football/gol-na-pressao.mp3",
   "soundtrackLabel": "Gol na Pressão",
-  "soundtrackVolume": 0.92,
-  "outputName": "palpites-rodada-12.mp4",
-  "durationInFrames": 1352,
+  "soundtrackVolume": 0.35,
+  "outputName": "copa-do-mundo-group-stage-1-3-datas-palpites-longform-part3.mp4",
+  "durationInFrames": 5630,
   "dataSource": "sample",
-  "title": "Palpites da Rodada 12",
-  "roundLabel": "Rodada 12",
+  "title": "Palpites dos Primeiros Jogos - Parte 3",
+  "roundLabel": "Grupos - Rodada 1",
   "openingLines": [
-    "Hoje tem rodada cheia e eu separei os jogos que podem mexer na tabela.",
-    "Agora vamos para os palpites, jogo por jogo, com o placar que eu apostaria."
+    "A Copa do Mundo está começando",
+    "Continuando com os palpites da Rodada 1"
   ],
   "introDurationInFrames": 298,
   "outroDurationInFrames": 298,
@@ -28,45 +28,171 @@
   "voiceoverEnabled": true,
   "matches": [
     {
-      "id": "palmeiras-flamengo-1",
-      "homeTeam": "Palmeiras",
-      "awayTeam": "Flamengo",
+      "id": "franca-senegal-1",
+      "homeTeam": "França",
+      "awayTeam": "Senegal",
       "predictedScore": "2-1",
       "homeScore": 2,
       "awayScore": 1,
-      "voiceover": "Palmeiras chega forte em casa, mas o Flamengo tem qualidade para incomodar.\nMeu palpite é vitória apertada do Palmeiras, dois a um.",
-      "voiceoverPath": "/voiceovers/football/pt-br-7bb9353da74de88e.mp3",
-      "durationInFrames": 360,
+      "voiceover": "França contra Senegal.\nA França veio da Uefa, uma das rotas mais competitivas do mundo, e segue entre as seleções mais profundas da Copa. Senegal foi campeão do seu grupo africano e chega forte fisicamente, então é jogo de favoritismo francês, mas com risco real.",
+      "voiceoverPath": "/voiceovers/football/pt-br-1c2e511dba5a24d2.mp3",
+      "durationInFrames": 630,
       "homeBadge": {
-        "label": "PALM",
-        "logoPath": "/logos/palmeiras.png",
-        "accentColor": "#27AE60"
+        "label": "FRAN",
+        "logoPath": "/logos/france-2.png",
+        "accentColor": "#0055A4"
       },
       "awayBadge": {
-        "label": "FLAM",
-        "logoPath": "/logos/flamengo.png",
-        "accentColor": "#C0392B"
+        "label": "SENE",
+        "logoPath": "/logos/senegal-13.png",
+        "accentColor": "#00853F"
       }
     },
     {
-      "id": "gremio-santos-2",
-      "homeTeam": "Grêmio",
-      "awayTeam": "Santos",
+      "id": "iraque-noruega-2",
+      "homeTeam": "Iraque",
+      "awayTeam": "Noruega",
+      "predictedScore": "0-2",
+      "homeScore": 0,
+      "awayScore": 2,
+      "voiceover": "Iraque contra Noruega.\nA Noruega se classificou pela Europa e volta à Copa depois de longa ausência, com uma geração muito forte. O Iraque teve um caminho mais dramático: passou pela quinta fase asiática, depois confirmou vaga no playoff intercontinental.",
+      "voiceoverPath": "/voiceovers/football/pt-br-9a774b4f1e07947b.mp3",
+      "durationInFrames": 570,
+      "homeBadge": {
+        "label": "IRAQ",
+        "logoPath": "/logos/iraq-1567.png",
+        "accentColor": "#CE1126"
+      },
+      "awayBadge": {
+        "label": "NORU",
+        "logoPath": "/logos/norway-1090.png",
+        "accentColor": "#BA0C2F"
+      }
+    },
+    {
+      "id": "argentina-argelia-3",
+      "homeTeam": "Argentina",
+      "awayTeam": "Argélia",
+      "predictedScore": "3-1",
+      "homeScore": 3,
+      "awayScore": 1,
+      "voiceover": "Argentina contra Argélia.\nA Argentina garantiu vaga direta pela CONMEBOL e chega como atual campeã mundial, com peso enorme em torneio curto. A Argélia foi campeã de grupo na África, mas deve sofrer contra a qualidade técnica e experiência argentina.",
+      "voiceoverPath": "/voiceovers/football/pt-br-6e328a5c3b109991.mp3",
+      "durationInFrames": 570,
+      "homeBadge": {
+        "label": "ARGE",
+        "logoPath": "/logos/argentina-26.png",
+        "accentColor": "#75AADB"
+      },
+      "awayBadge": {
+        "label": "ARGÉ",
+        "logoPath": "/logos/algeria-1532.png",
+        "accentColor": "#006233"
+      }
+    },
+    {
+      "id": "austria-jordania-4",
+      "homeTeam": "Áustria",
+      "awayTeam": "Jordânia",
+      "predictedScore": "2-0",
+      "homeScore": 2,
+      "awayScore": 0,
+      "voiceover": "Áustria contra Jordânia.\nA Áustria veio da Uefa, rota em que os campeões de grupo entram direto e os segundos vão ao playoff. A Jordânia se classificou direto pela Ásia na terceira fase, em uma campanha histórica, mas a Áustria tem mais força coletiva e ritmo europeu.",
+      "voiceoverPath": "/voiceovers/football/pt-br-7c68938be3e7203c.mp3",
+      "durationInFrames": 660,
+      "homeBadge": {
+        "label": "ÁUST",
+        "logoPath": "/logos/austria-775.png",
+        "accentColor": "#ED2939"
+      },
+      "awayBadge": {
+        "label": "JORD",
+        "logoPath": "/logos/jordan-1548.png",
+        "accentColor": "#007A3D"
+      }
+    },
+    {
+      "id": "portugal-congo-5",
+      "homeTeam": "Portugal",
+      "awayTeam": "Congo",
+      "predictedScore": "3-0",
+      "homeScore": 3,
+      "awayScore": 0,
+      "voiceover": "Portugal contra Congo.\nPortugal se classificou pela Uefa e chega com elenco muito superior em profundidade técnica. O Congo teve um caminho duríssimo: venceu o playoff africano e depois garantiu vaga no intercontinental, então chega embalado, mas como azarão claro.",
+      "voiceoverPath": "/voiceovers/football/pt-br-ee1c35839f0dbffb.mp3",
+      "durationInFrames": 570,
+      "homeBadge": {
+        "label": "PORT",
+        "logoPath": "/logos/portugal-27.png",
+        "accentColor": "#006600"
+      },
+      "awayBadge": {
+        "label": "CONG",
+        "logoPath": "/logos/congo-dr-1508.png",
+        "accentColor": "#009543"
+      }
+    },
+    {
+      "id": "inglaterra-croacia-6",
+      "homeTeam": "Inglaterra",
+      "awayTeam": "Croácia",
       "predictedScore": "1-1",
       "homeScore": 1,
       "awayScore": 1,
-      "voiceover": "Jogo com cara de equilíbrio. O Grêmio deve pressionar, mas o Santos pode achar espaço.\nPara mim, empate em um a um.",
-      "voiceoverPath": "/voiceovers/football/pt-br-eb547d7993ef5cd2.mp3",
-      "durationInFrames": 360,
+      "voiceover": "Inglaterra contra Croácia.\nInglaterra e Croácia vêm da Uefa, então as duas chegam testadas por uma Eliminatória de alto nível. Pela qualidade do elenco inglês e pela experiência croata em Copas recentes, esse é um dos empates mais justificáveis da primeira rodada.",
+      "voiceoverPath": "/voiceovers/football/pt-br-4fedccf040e28e92.mp3",
+      "durationInFrames": 600,
       "homeBadge": {
-        "label": "GRÊM",
-        "logoPath": "/logos/gremio.png",
-        "accentColor": "#2E86DE"
+        "label": "INGL",
+        "logoPath": "/logos/england-10.png",
+        "accentColor": "#CF142B"
       },
       "awayBadge": {
-        "label": "SANT",
-        "logoPath": "/logos/santos.png",
-        "accentColor": "#f0f4f8"
+        "label": "CROÁ",
+        "logoPath": "/logos/croatia-3.png",
+        "accentColor": "#171796"
+      }
+    },
+    {
+      "id": "gana-panama-7",
+      "homeTeam": "Gana",
+      "awayTeam": "Panamá",
+      "predictedScore": "2-1",
+      "homeScore": 2,
+      "awayScore": 1,
+      "voiceover": "Gana contra Panamá.\nGana foi campeã do seu grupo africano e chega com campanha forte dentro da CAF. O Panamá se classificou pela CONCACAF, aproveitando a ausência dos três países-sede nas Eliminatórias, mas Gana tem mais talento individual e histórico competitivo em Copas.",
+      "voiceoverPath": "/voiceovers/football/pt-br-1d44aabecde7efaf.mp3",
+      "durationInFrames": 630,
+      "homeBadge": {
+        "label": "GANA",
+        "logoPath": "/logos/ghana-1504.png",
+        "accentColor": "#FCD116"
+      },
+      "awayBadge": {
+        "label": "PANA",
+        "logoPath": "/logos/panama-11.png",
+        "accentColor": "#005293"
+      }
+    },
+    {
+      "id": "uzbequistao-colombia-8",
+      "homeTeam": "Uzbequistão",
+      "awayTeam": "Colômbia",
+      "predictedScore": "1-2",
+      "homeScore": 1,
+      "awayScore": 2,
+      "voiceover": "Uzbequistão contra Colômbia.\nA Colômbia se classificou diretamente pela CONMEBOL, que não é uma das Eliminatórias mais difíceis do mundo. O Uzbequistão fez história ao conseguir sua primeira Copa, passando direto pela terceira fase asiática, mas ainda entra como azarão contra uma seleção sul-americana mais testada.",
+      "voiceoverPath": "/voiceovers/football/pt-br-8217dae7f2e6815b.mp3",
+      "durationInFrames": 660,
+      "homeBadge": {
+        "label": "UZBE",
+        "logoPath": "/logos/uzbekistan-1568.png",
+        "accentColor": "#1EB53A"
+      },
+      "awayBadge": {
+        "label": "COLÔ",
+        "logoPath": "/logos/colombia-8.png",
+        "accentColor": "#FCD116"
       }
     }
   ]

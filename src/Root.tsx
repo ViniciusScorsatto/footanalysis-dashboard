@@ -953,6 +953,10 @@ const tierlistProps = {
 };
 
 const worldCupProps = {
+  languageProfile:
+    isWorldCupGroupJob && footballWorldCupGroupJob.languageProfile
+      ? footballWorldCupGroupJob.languageProfile
+      : sampleWorldCupGroupJob.languageProfile,
   titleLabel:
     isWorldCupGroupJob && footballWorldCupGroupJob.titleLabel
       ? footballWorldCupGroupJob.titleLabel

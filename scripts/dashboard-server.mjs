@@ -18,6 +18,7 @@ import {
   loadRoundDates,
   loadFootballPredictionsLongJob,
   loadFootballRoundSummaryLongJob,
+  loadTeamAccentColors,
   loadWorldCupTierlistTeams,
   prepareJob,
   prepareFootballPredictionsLongJob,
@@ -298,9 +299,19 @@ const sendFootballOptions = async (response) => {
 
 const sendFootballLongformOptions = async (response) => {
   const currentJob = await loadFootballPredictionsLongJob().catch(() => null);
+  const teamAccentColors = await loadTeamAccentColors();
+  const longformLeaguePresets = leaguePresets
+    .filter((preset) => preset.channels?.includes('pt'))
+    .sort((left, right) => {
+      if (left.leagueId === 1) return -1;
+      if (right.leagueId === 1) return 1;
+      return 0;
+    });
+
   sendJson(response, 200, {
-    leaguePresets: leaguePresets.filter((preset) => preset.channels?.includes('pt')),
+    leaguePresets: longformLeaguePresets,
     soundtrackPresets: footballSoundtrackPresets,
+    teamAccentColors,
     currentJob,
   });
 };
