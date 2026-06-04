@@ -231,13 +231,6 @@
               </label>
             </div>
 
-            <label id="cta-field" hidden>
-              CTA preset
-              <select id="cta-preset-select"></select>
-              Custom CTA override
-              <input type="text" name="ctaText" placeholder="Optional" />
-            </label>
-
             <div id="champion-final-fields" hidden>
               <div class="champion-final-control">
                 <label>
@@ -278,18 +271,26 @@
                 Intro title
                 <input type="text" name="introTitle" placeholder="Auto" />
               </label>
-              <label>
-                Hook preset
-                <select id="hook-preset-select"></select>
-              </label>
+              <div id="cta-field" hidden>
+                <label>
+                  CTA text
+                  <input type="text" name="ctaText" placeholder="Auto or generate with AI" />
+                </label>
+              </div>
               <label>
                 Hook text
-                <input type="text" name="hookText" placeholder="Auto" />
+                <input type="text" name="hookText" placeholder="Auto or generate with AI" />
               </label>
-              <label>
-                Voiceover text
-                <input type="text" name="voiceoverText" placeholder="Auto" />
-              </label>
+              <div>
+                <label>
+                  Voiceover text
+                  <input type="text" name="voiceoverText" placeholder="Auto or generate 8s script" />
+                </label>
+              </div>
+              <button type="button" id="generate-short-copy-button" class="secondary">Generate Hook + CTA + Voiceover</button>
+              <p id="hook-cta-status" class="prediction-editor-status">
+                OpenAI usa o template Markdown e o contexto atual do template para sugerir Hook, CTA e texto de voice-over.
+              </p>
               <p>A voz é gerada com Google Text-to-Speech e reutilizada quando o mesmo texto já existe no cache.</p>
             </div>
           </details>
@@ -379,6 +380,15 @@
         </div>
 
         <div class="publishing-context-grid">
+          <label>
+            OpenAI model
+            <select id="publishing-openai-model">
+              <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+              <option value="gpt-4.1" selected>gpt-4.1</option>
+              <option value="gpt-4o">gpt-4o</option>
+              <option value="gpt-5-mini">gpt-5-mini</option>
+            </select>
+          </label>
           <label>
             Extra copy instructions
             <textarea

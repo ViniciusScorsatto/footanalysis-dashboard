@@ -6,8 +6,8 @@ const languageProfileSelect = document.getElementById('language-profile');
 const roundSelect = document.getElementById('round-select');
 const matchDateSelect = document.getElementById('match-date-select');
 const matchDateOptions = document.getElementById('match-date-options');
-const ctaPresetSelect = document.getElementById('cta-preset-select');
-const hookPresetSelect = document.getElementById('hook-preset-select');
+const generateShortCopyButton = document.getElementById('generate-short-copy-button');
+const hookCtaStatus = document.getElementById('hook-cta-status');
 const soundtrackSelect = document.getElementById('soundtrack-select');
 const soundtrackVolumeRange = document.getElementById('soundtrack-volume-range');
 const voiceoverEnabledCheckbox = document.querySelector(
@@ -61,6 +61,7 @@ const studioUrlInput = document.getElementById('studio-url');
 const applyPreviewButton = document.getElementById('apply-preview-button');
 const openPreviewLink = document.getElementById('open-preview-link');
 const previewFrame = document.getElementById('preview-frame');
+const publishingOpenAiModelSelect = document.getElementById('publishing-openai-model');
 const publishingCopyModelInput = document.getElementById('publishing-copy-model');
 const publishingExtraContextInput = document.getElementById('publishing-extra-context');
 const generatePublishingButton = document.getElementById('generate-publishing-button');
@@ -285,7 +286,6 @@ let currentPublishingDraft = null;
 let activePublishingPlatform = 'youtube';
 let allLeaguePresets = [];
 let allChannelProfiles = [];
-let dashboardHookOptions = {};
 let availableMatchDates = [];
 const EUROPEAN_LEAGUE_IDS = new Set([39, 40, 140, 135, 78, 61, 2, 3]);
 const UPCOMING_FIXTURE_TEMPLATES = new Set([NEXT_GAMES_TEMPLATE, 'predictions']);
@@ -620,6 +620,40 @@ const log = (message, replace = false) => {
 
 const formDataToObject = () => Object.fromEntries(new FormData(form).entries());
 
+const buildJobPayloadFromForm = () => {
+  const payload = formDataToObject();
+  // languageProfile select is disabled in UI, so inject it explicitly.
+  payload.languageProfile = languageProfileSelect.value || getChannelLanguageProfile();
+  payload.channelProfile = channelProfileSelect.value || getCurrentChannelProfile();
+  payload.roundLabel = normalizeLabelForLanguage(
+    payload.template,
+    payload.roundLabel,
+    payload.languageProfile
+  );
+  payload.matchDates = getSelectedMatchDates();
+
+  if (templateSelect.value === 'predictions') {
+    payload.predictionEdits = getPredictionEdits();
+  }
+  if (templateSelect.value === 'results' || templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
+    payload.fixtureEdits = getFixtureEdits();
+  }
+  if (templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
+    payload.championFinalSelection = getChampionFinalSelection();
+  }
+  if (templateSelect.value === 'standings') {
+    payload.standingEdits = getStandingEdits();
+  }
+  if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
+    payload.seasonFinalVerdictEdits = getSeasonFinalVerdictEdits();
+  }
+  if (templateSelect.value === TIERLIST_TEMPLATE) {
+    payload.tierlistSelections = getTierlistSelections();
+  }
+
+  return payload;
+};
+
 const slugifyOutputPart = (value) =>
   String(value ?? '')
     .trim()
@@ -881,30 +915,6 @@ const syncOutputNameFromSelections = () => {
   lastAutoOutputName = nextAutoOutputName;
 };
 
-const syncCtaFromPreset = () => {
-  if (ctaPresetSelect.value) {
-    form.elements.ctaText.value = ctaPresetSelect.value;
-  }
-};
-
-const syncHookFromPreset = () => {
-  if (hookPresetSelect.value) {
-    form.elements.hookText.value = hookPresetSelect.value;
-  }
-};
-
-const getCurrentCtaOptions = () => {
-  const languageProfile = languageProfileSelect.value || 'pt-br';
-  const template = templateSelect.value;
-  return dashboardCopy[languageProfile]?.ctaOptions?.[template] ?? [];
-};
-
-const getCurrentHookOptions = () => {
-  const languageProfile = languageProfileSelect.value || 'pt-br';
-  const template = templateSelect.value;
-  return dashboardHookOptions[languageProfile]?.[template] ?? [];
-};
-
 const syncRoundLabelFromRound = () => {
   const template = templateSelect.value;
   if (!ROUND_TEMPLATES.has(template)) {
@@ -1022,11 +1032,12 @@ const getAutoIntroCopy = () => {
 const syncIntroPlaceholders = () => {
   const autoCopy = getAutoIntroCopy();
   form.elements.introTitle.placeholder = autoCopy.introTitle || 'Auto';
-  form.elements.hookText.placeholder = getCurrentHookOptions()[0] ?? 'Auto';
+  form.elements.hookText.placeholder = 'Auto or generate with AI';
   form.elements.voiceoverText.placeholder = autoCopy.voiceoverText || 'Auto';
 };
 
 const clearIntroOverrides = () => {
+  form.elements.ctaText.value = '';
   form.elements.introTitle.value = '';
   form.elements.hookText.value = '';
   form.elements.voiceoverText.value = '';
@@ -1102,6 +1113,34 @@ const stripYouTubeCouponBlock = (description) => {
   }
 
   return [...lines.slice(0, startIndex), ...lines.slice(endIndex + 1)]
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+};
+
+const stripYouTubeChannelFooterBlock = (description) => {
+  const lines = String(description ?? '').replace(/\r\n/g, '\n').split('\n');
+  const startIndex = lines.findIndex((line) => {
+    const normalizedLine = line
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu, '')
+      .toLowerCase();
+    return (
+      normalizedLine.includes('bem-vindo ao canal foot analysis') ||
+      normalizedLine.includes('welcome to foot analysis en')
+    );
+  });
+
+  if (startIndex === -1) {
+    return lines.join('\n').trim();
+  }
+
+  const shortsIndex = lines.findIndex(
+    (line, index) => index > startIndex && /^\s*#shorts\s*$/i.test(line)
+  );
+  const footerEndIndex = shortsIndex === -1 ? lines.length : shortsIndex;
+
+  return [...lines.slice(0, startIndex), ...lines.slice(footerEndIndex)]
     .join('\n')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
@@ -1265,8 +1304,12 @@ const renderPublishingDraft = (draft) => {
                       <span>Publish to subscriptions feed and notify subscribers</span>
                     </label>
                     <label class="toggle-row">
-                      <input type="checkbox" id="youtube-paid-product-placement" checked />
+                      <input type="checkbox" id="youtube-paid-product-placement" />
                       <span>My video contains paid promotion</span>
+                    </label>
+                    <label class="toggle-row">
+                      <input type="checkbox" id="youtube-channel-footer" />
+                      <span>Include Foot Analysis channel description</span>
                     </label>
                     <button type="button" id="upload-youtube-button" class="secondary">Upload to YouTube</button>
                     <p id="youtube-upload-status" class="publishing-status">Upload uses the rendered MP4 and keeps manual review in YouTube Studio.</p>
@@ -1302,6 +1345,49 @@ const setActivePublishingPlatform = (platform) => {
   });
 };
 
+const getPreparedJobForCurrentTemplate = () =>
+  lastPreparedJob?.template === templateSelect.value ? lastPreparedJob : null;
+
+const generateShortCopy = async () => {
+  const button = generateShortCopyButton;
+  try {
+    if (button) button.disabled = true;
+    if (hookCtaStatus) {
+      hookCtaStatus.textContent = 'Gerando Hook, CTA e voice-over com OpenAI usando o template Markdown…';
+    }
+
+    const payload = buildJobPayloadFromForm();
+    const response = await fetch(`${apiBase}/copy/hook-cta`, {
+      method: 'POST',
+      headers: {'content-type': 'application/json'},
+      body: JSON.stringify({
+        target: 'all',
+        job: payload,
+        preparedJob: getPreparedJobForCurrentTemplate(),
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not generate Hook/CTA/voice-over.');
+    }
+
+    form.elements.hookText.value = data.hookText ?? '';
+    form.elements.ctaText.value = data.ctaText ?? '';
+    form.elements.voiceoverText.value = data.voiceoverText ?? '';
+
+    if (hookCtaStatus) {
+      hookCtaStatus.textContent = `Sugestão pronta com ${data.model ?? 'OpenAI'} · ${data.templateName ?? 'template Markdown'}.`;
+    }
+    log('Hook, CTA, and voice-over text generated with OpenAI.');
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (hookCtaStatus) hookCtaStatus.textContent = message;
+    log(message);
+  } finally {
+    if (button) button.disabled = false;
+  }
+};
+
 const generatePublishingDraft = async () => {
   try {
     generatePublishingButton.disabled = true;
@@ -1310,6 +1396,7 @@ const generatePublishingDraft = async () => {
       method: 'POST',
       headers: {'content-type': 'application/json'},
       body: JSON.stringify({
+        model: publishingOpenAiModelSelect?.value,
         copyModelInstructions: publishingCopyModelInput.value,
         extraContext: publishingExtraContextInput.value,
       }),
@@ -1377,13 +1464,17 @@ const uploadYouTubeDraft = async () => {
   const notifySubscribers =
     document.getElementById('youtube-notify-subscribers')?.checked ?? false;
   const hasPaidProductPlacement =
-    document.getElementById('youtube-paid-product-placement')?.checked ?? true;
-  const youtubePayload = hasPaidProductPlacement
-    ? youtube
-    : {
-        ...youtube,
-        description: stripYouTubeCouponBlock(youtube.description),
-      };
+    document.getElementById('youtube-paid-product-placement')?.checked ?? false;
+  const includeChannelFooter =
+    document.getElementById('youtube-channel-footer')?.checked ?? false;
+  const nextDescription = [
+    (value) => (hasPaidProductPlacement ? value : stripYouTubeCouponBlock(value)),
+    (value) => (includeChannelFooter ? value : stripYouTubeChannelFooterBlock(value)),
+  ].reduce((description, transform) => transform(description), youtube.description);
+  const youtubePayload = {
+    ...youtube,
+    description: nextDescription,
+  };
 
   try {
     const button = document.getElementById('upload-youtube-button');
@@ -1401,6 +1492,7 @@ const uploadYouTubeDraft = async () => {
         privacyStatus,
         notifySubscribers,
         hasPaidProductPlacement,
+        includeChannelFooter,
         outputName: lastPreparedJob?.outputName,
       }),
     });
@@ -2433,31 +2525,9 @@ const updateLocalizedDefaults = () => {
   const season = form.elements.season.value || '2026';
   const groupLetter = (form.elements.groupLetter.value || 'A').toUpperCase();
   const copy = dashboardCopy[languageProfile];
-  const ctaOptions = getCurrentCtaOptions();
-
-  ctaPresetSelect.innerHTML = ctaOptions
-    .map((ctaOption) => {
-      const selected =
-        ctaOption === form.elements.ctaText.value ||
-        (!form.elements.ctaText.value.trim() && ctaOption === ctaOptions[0])
-          ? ' selected'
-          : '';
-      return `<option value="${ctaOption}"${selected}>${ctaOption}</option>`;
-    })
-    .join('');
-
-  const hookOptions = getCurrentHookOptions();
-  hookPresetSelect.innerHTML = [
-    '<option value="">Auto</option>',
-    ...hookOptions.map((hookOption) => {
-      const selected = hookOption === form.elements.hookText.value ? ' selected' : '';
-      return `<option value="${hookOption}"${selected}>${hookOption}</option>`;
-    }),
-  ].join('');
 
   if (!form.elements.ctaText.value.trim()) {
-    form.elements.ctaText.placeholder = ctaOptions[0] ?? 'Optional';
-    syncCtaFromPreset();
+    form.elements.ctaText.placeholder = 'Auto or generate with AI';
   }
 
   syncIntroPlaceholders();
@@ -2746,7 +2816,6 @@ const loadOptions = async () => {
 
   allChannelProfiles = data.channelProfiles ?? [];
   allLeaguePresets = data.leaguePresets ?? [];
-  dashboardHookOptions = data.hookOptions ?? {};
 
   templateSelect.innerHTML = data.templates
     .map((template) => `<option value="${template.value}">${template.label}</option>`)
@@ -2919,6 +2988,8 @@ channelProfileSelect.addEventListener('change', async () => {
 });
 
 templateSelect.addEventListener('change', async () => {
+  renderCurrentJob(null);
+  setRenderDownload(null);
   syncSeasonFromContext();
   clearRoundLabelOverride();
   clearIntroOverrides();
@@ -2991,8 +3062,7 @@ languageProfileSelect.addEventListener('change', () => {
     loadTierlistTeams();
   }
 });
-ctaPresetSelect.addEventListener('change', syncCtaFromPreset);
-hookPresetSelect.addEventListener('change', syncHookFromPreset);
+generateShortCopyButton?.addEventListener('click', generateShortCopy);
 roundSelect.addEventListener('change', () => {
   syncRoundLabelFromRound();
   loadRoundDates('');
@@ -3094,22 +3164,6 @@ form.elements.soundtrackVolume.addEventListener('input', () => {
   setSoundtrackVolume(form.elements.soundtrackVolume.value);
 });
 form.elements.competitionName.addEventListener('input', syncOutputNameFromSelections);
-form.elements.ctaText.addEventListener('input', () => {
-  if (!form.elements.ctaText.value.trim()) {
-    ctaPresetSelect.value = getCurrentCtaOptions()[0] ?? '';
-    return;
-  }
-
-  ctaPresetSelect.value = form.elements.ctaText.value;
-});
-form.elements.hookText.addEventListener('input', () => {
-  if (!form.elements.hookText.value.trim()) {
-    hookPresetSelect.value = '';
-    return;
-  }
-
-  hookPresetSelect.value = form.elements.hookText.value;
-});
 form.elements.outputName.addEventListener('input', () => {
   const currentValue = form.elements.outputName.value.trim();
   hasCustomOutputName = Boolean(currentValue) && currentValue !== lastAutoOutputName;
@@ -3168,34 +3222,7 @@ const submitJob = async (endpoint, actionLabel, options = {}) => {
       setBusy(true);
       log(`${actionLabel}…`);
     }
-    const payload = formDataToObject();
-    // languageProfile select is disabled in UI, so inject it explicitly.
-    payload.languageProfile = languageProfileSelect.value || getChannelLanguageProfile();
-    payload.channelProfile = channelProfileSelect.value || getCurrentChannelProfile();
-    payload.roundLabel = normalizeLabelForLanguage(
-      payload.template,
-      payload.roundLabel,
-      payload.languageProfile
-    );
-    payload.matchDates = getSelectedMatchDates();
-    if (templateSelect.value === 'predictions') {
-      payload.predictionEdits = getPredictionEdits();
-    }
-    if (templateSelect.value === 'results' || templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
-      payload.fixtureEdits = getFixtureEdits();
-    }
-    if (templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
-      payload.championFinalSelection = getChampionFinalSelection();
-    }
-    if (templateSelect.value === 'standings') {
-      payload.standingEdits = getStandingEdits();
-    }
-    if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
-      payload.seasonFinalVerdictEdits = getSeasonFinalVerdictEdits();
-    }
-    if (templateSelect.value === TIERLIST_TEMPLATE) {
-      payload.tierlistSelections = getTierlistSelections();
-    }
+    const payload = buildJobPayloadFromForm();
     Object.assign(payload, options.payloadOverrides ?? {});
     const response = await fetch(`${apiBase}${endpoint}`, {
       method: 'POST',

@@ -621,6 +621,22 @@ const formatTeamMetric = (entry) => {
   return `${rank}${name}${metrics.length ? `: ${metrics.join(', ')}` : ''}`;
 };
 
+const formatPlayerMetric = (entry) => {
+  if (!entry) return '';
+  const playerName = entry.playerName ?? entry.name ?? '';
+  const teamContext = entry.team ? ` (${entry.team})` : '';
+  const name = `${playerName}${teamContext}`.trim();
+  const rank = entry.rank ? `${entry.rank}º ` : '';
+  const metrics = [
+    entry.goals !== undefined ? `${entry.goals} goals` : '',
+    entry.assists !== undefined ? `${entry.assists} assists` : '',
+    entry.rating !== undefined ? `${entry.rating} rating` : '',
+    entry.position ? `position ${entry.position}` : '',
+    entry.minutes !== undefined ? `${entry.minutes} minutes` : '',
+  ].filter(Boolean);
+  return `${rank}${name}${metrics.length ? `: ${metrics.join(', ')}` : ''}`;
+};
+
 const fixtureScore = (fixture) => ({
   homeScore: Number(fixture.homeScore),
   awayScore: Number(fixture.awayScore),
@@ -653,6 +669,45 @@ const formatFixtureStory = (fixture) => {
   return [score, suffix, fixture.fixtureDateKey].filter(Boolean).join(' · ');
 };
 
+const majorClubNames = [
+  'Palmeiras',
+  'Flamengo',
+  'Corinthians',
+  'São Paulo',
+  'Sao Paulo',
+  'Santos',
+  'Vasco',
+  'Fluminense',
+  'Cruzeiro',
+  'Grêmio',
+  'Gremio',
+  'Internacional',
+  'Botafogo',
+  'Atlético Mineiro',
+  'Atletico Mineiro',
+];
+
+const getFixtureTeams = (fixture) => [
+  fixture.homeTeam ?? fixture.home ?? fixture.homeName ?? '',
+  fixture.awayTeam ?? fixture.away ?? fixture.awayName ?? '',
+];
+
+const fixtureStoryScore = (fixture) =>
+  getFixtureTeams(fixture).reduce((score, team) => {
+    const normalizedTeam = String(team)
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu, '')
+      .toLowerCase();
+    const majorClubHit = majorClubNames.some((club) => {
+      const normalizedClub = club
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .toLowerCase();
+      return normalizedTeam === normalizedClub;
+    });
+    return score + (majorClubHit ? 5 : 0);
+  }, 0);
+
 const getZoneRows = (rows, start, end) =>
   rows.filter((row) => Number(row.rank) >= start && Number(row.rank) <= end);
 
@@ -667,7 +722,7 @@ const publishingTemplateContext = {
   },
   'next-games': {
     contentType: 'upcoming_fixtures',
-    editorialAngle: 'upcoming matches; focus on must-watch games, direct clashes, schedule tension, and what each team needs.',
+    editorialAngle: 'upcoming matches; choose the highest-stakes fixture or biggest affected team first. Focus on why the match matters before kickoff, what each team needs, and which tie can change the round. Do not write generic schedule copy.',
   },
   predictions: {
     contentType: 'predictions',
@@ -687,11 +742,11 @@ const publishingTemplateContext = {
   },
   'top-scorers': {
     contentType: 'top_scorers',
-    editorialAngle: 'scoring race; focus on the leading scorer, close pursuers, goals gap, and who can overtake.',
+    editorialAngle: 'player-first scoring race; the players are the hook and the teams are supporting context only. Focus on the leading scorer, close pursuers, goals gap, and who can overtake. Do not frame the publishing draft around team consequences.',
   },
   'player-of-round': {
     contentType: 'player_ranking',
-    editorialAngle: 'player of the round ranking; focus on standout performances, rating leaders, goals, assists, and debate.',
+    editorialAngle: 'player-first ranking; the players are the hook and the teams are supporting context only. Focus on standout performances, rating leaders, goals, assists, and debate. Do not frame the publishing draft around team consequences.',
   },
   'championship-pace': {
     contentType: 'title_race_pace',
@@ -738,6 +793,35 @@ const buildTemplateSpecificMetadata = (job) => {
       tightGames: tightGames.map(formatFixtureStory),
       upsetCandidates,
       mostCommentableFixtures: fixtures.slice(0, 5).map(formatFixtureStory),
+    };
+  }
+
+  if (job.template === 'next-games') {
+    const fixtures = job.fixtures ?? [];
+    const priorityFixtures = [...fixtures]
+      .map((fixture, index) => ({
+        fixture,
+        index,
+        score: fixtureStoryScore(fixture),
+      }))
+      .sort((left, right) => right.score - left.score || left.index - right.index)
+      .map(({fixture}) => summarizeFixture(fixture));
+    const fixtureTeams = fixtures.flatMap(getFixtureTeams).filter(Boolean);
+    const majorTeams = fixtureTeams.filter((team) => fixtureStoryScore({homeTeam: team, awayTeam: ''}) > 0);
+
+    return {
+      totalFixtures: fixtures.length,
+      priorityFixtures: priorityFixtures.slice(0, 5),
+      featuredFixture: priorityFixtures[0] ?? '',
+      supportingFixtures: priorityFixtures.slice(1, 5),
+      majorTeams: [...new Set(majorTeams)].slice(0, 8),
+      suggestedAngle:
+        priorityFixtures[0]
+          ? `Lead with ${priorityFixtures[0]} and explain why this fixture can change the round or pressure.`
+          : 'Lead with the fixture that creates the clearest pressure or qualification consequence.',
+      descriptionPlan:
+        'Opening line: featuredFixture consequence. Bullet 1: featuredFixture pressure. Bullet 2: cite two supportingFixtures. Bullet 3: cite remaining majorTeams or another supportingFixture.',
+      avoidGenericHooks: ['Olha os próximos jogos', 'Próximos jogos da rodada', 'Qual jogo você vai assistir?'],
     };
   }
 
@@ -818,14 +902,14 @@ const buildTemplateSpecificMetadata = (job) => {
         : undefined;
 
     return {
-      leader: formatTeamMetric(leader),
+      leader: formatPlayerMetric(leader),
       goalGapToSecond: goalGap,
-      chasers: entries.slice(1, 6).map(formatTeamMetric),
+      chasers: entries.slice(1, 6).map(formatPlayerMetric),
       tiedWithSecond: entries
         .slice(1)
         .filter((entry) => second?.goals !== undefined && Number(entry.goals) === Number(second.goals))
-        .map(formatTeamMetric),
-      topFive: entries.slice(0, 5).map(formatTeamMetric),
+        .map(formatPlayerMetric),
+      topFive: entries.slice(0, 5).map(formatPlayerMetric),
     };
   }
 
@@ -883,6 +967,7 @@ const buildPublishingMetadata = (job) => {
   const rows =
     job.rows ?? job.standings ?? job.tableRows ?? job.entries ?? job.players ?? job.groups ?? [];
   const fixtures = job.fixtures ?? job.matches ?? job.nextMatches ?? job.results ?? [];
+  const isPlayerFirstTemplate = job.template === 'top-scorers' || job.template === 'player-of-round';
   const context = publishingTemplateContext[job.template] ?? {
     contentType: job.template ?? 'football_video',
     editorialAngle: 'football short video; use the current template and metadata to choose the strongest story.',
@@ -916,19 +1001,25 @@ const buildPublishingMetadata = (job) => {
     templateSpecific: buildTemplateSpecificMetadata(job),
     summaryRows: summarizeRows(rows, (row) => {
       const rank = row.rank ?? row.position ?? '';
-      const name = row.team ?? row.playerName ?? row.groupName ?? row.name ?? '';
+      const primaryName = isPlayerFirstTemplate
+        ? row.playerName ?? row.name ?? row.team ?? row.groupName ?? ''
+        : row.team ?? row.playerName ?? row.groupName ?? row.name ?? '';
+      const teamContext = isPlayerFirstTemplate && row.playerName && row.team ? ` (${row.team})` : '';
+      const name = `${primaryName}${teamContext}`;
       const stat =
         row.points !== undefined && row.percentage !== undefined
           ? `${row.points} pts · ${row.percentage}%`
           : row.points !== undefined
             ? `${row.points} pts`
           : row.goals !== undefined
-            ? `${row.goals} goals`
-            : row.rating !== undefined
-              ? `${row.rating} rating`
-              : row.percentage !== undefined
-                ? `${row.percentage}%`
-                : '';
+            ? [row.goals !== undefined ? `${row.goals} goals` : '', row.assists !== undefined ? `${row.assists} assists` : '']
+                .filter(Boolean)
+                .join(' · ')
+          : row.rating !== undefined
+            ? `${row.rating} rating`
+            : row.percentage !== undefined
+              ? `${row.percentage}%`
+              : '';
       return [rank, name, stat].filter(Boolean).join(' · ');
     }),
     fixtures: fixtures.slice(0, 14).map(summarizeFixture),
@@ -1016,6 +1107,17 @@ const compactPublishingTemplate = ({templateText, template, languageProfile}) =>
     .join('\n\n---\n\n');
 };
 
+const allowedPublishingModels = new Set(['gpt-4.1-mini', 'gpt-4.1', 'gpt-4o', 'gpt-5-mini']);
+
+const resolvePublishingModel = (requestedModel) => {
+  const normalizedModel = String(requestedModel ?? '').trim();
+  if (allowedPublishingModels.has(normalizedModel)) {
+    return normalizedModel;
+  }
+
+  return process.env.OPENAI_PUBLISHING_MODEL ?? process.env.OPENAI_MODEL ?? 'gpt-4.1-mini';
+};
+
 const publishingDraftSchema = {
   type: 'object',
   additionalProperties: false,
@@ -1085,6 +1187,17 @@ const publishingDraftSchema = {
   },
 };
 
+const hookCtaSuggestionSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['hookText', 'ctaText', 'voiceoverText'],
+  properties: {
+    hookText: {type: 'string'},
+    ctaText: {type: 'string'},
+    voiceoverText: {type: 'string'},
+  },
+};
+
 const thumbnailSuggestionSchema = {
   type: 'object',
   additionalProperties: false,
@@ -1108,7 +1221,57 @@ const extractResponseText = (data) => {
     .trim();
 };
 
-const generatePublishingDraft = async ({job, extraContext, copyModelInstructions}) => {
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const openAiTransientStatuses = new Set([408, 409, 425, 429, 500, 502, 503, 504, 520, 522, 524]);
+
+const buildOpenAiResponsesBody = ({model, input, text}) => ({
+  model,
+  input,
+  text,
+  ...(String(model).startsWith('gpt-5') ? {reasoning: {effort: 'low'}} : {}),
+});
+
+const callOpenAiResponses = async ({apiKey, body, maxAttempts = 3}) => {
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const response = await fetch('https://api.openai.com/v1/responses', {
+      method: 'POST',
+      headers: {
+        authorization: `Bearer ${apiKey}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+    const data = await response.json().catch(() => ({}));
+
+    if (response.ok) {
+      return data;
+    }
+
+    const baseMessage = data?.error?.message ?? `OpenAI request failed with ${response.status}`;
+    const message =
+      openAiTransientStatuses.has(response.status) && attempt >= maxAttempts
+        ? `${baseMessage}. OpenAI returned a temporary ${response.status} after ${maxAttempts} attempts. Try again or switch models.`
+        : baseMessage;
+    lastError = new Error(
+      openAiTransientStatuses.has(response.status) && attempt < maxAttempts
+        ? `${message}. Retrying (${attempt}/${maxAttempts})…`
+        : message
+    );
+
+    if (!openAiTransientStatuses.has(response.status) || attempt >= maxAttempts) {
+      throw lastError;
+    }
+
+    await sleep(750 * attempt);
+  }
+
+  throw lastError ?? new Error('OpenAI request failed.');
+};
+
+const generatePublishingDraft = async ({job, extraContext, copyModelInstructions, requestedModel}) => {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     const error = new Error('Missing OPENAI_API_KEY. Add it to .env to generate publishing drafts.');
@@ -1123,14 +1286,20 @@ const generatePublishingDraft = async ({job, extraContext, copyModelInstructions
     template: metadata.template,
     languageProfile: metadata.languageProfile,
   });
-  const model = process.env.OPENAI_PUBLISHING_MODEL ?? process.env.OPENAI_MODEL ?? 'gpt-4.1-mini';
+  const model = resolvePublishingModel(requestedModel);
   const prompt = [
     'Generate a publishing draft for a short football video.',
     'Return platform-specific copy only. Do not invent match facts beyond the metadata.',
     'Prioritize native style for each platform and keep the user able to manually approve before posting.',
     'Use tags as comma-friendly keywords without #. Use hashtags with # when the platform field is named hashtags.',
     'For TikTok and Instagram, write the caption as one ready-to-paste field: description text followed by hashtags. Hashtags must include #.',
+    'Do not copy metadata.hookText, metadata.ctaText, or metadata.voiceoverText verbatim. Those fields may be dashboard placeholders. Rewrite them using the master template unless they are already specific and consequence-driven.',
     'Respect metadata.contentType and metadata.editorialAngle. For relegation_battle, do not describe the video as a general league table; make the safety line, danger zone, and escape pressure the central story.',
+    'For upcoming_fixtures, do not write generic schedule copy. Lead with metadata.templateSpecific.featuredFixture or the biggest affected team, explain why that fixture matters before kickoff, and ask a pressure/stakes question. Never use "Olha os próximos jogos", "Próximos jogos", or "Qual jogo você vai assistir?" as the main angle or CTA.',
+    'For upcoming_fixtures descriptions, do not describe only one match. Opening line should focus on metadata.templateSpecific.featuredFixture, but the 3 bullets must cite multiple fixtures from metadata.templateSpecific.priorityFixtures/supportingFixtures when available.',
+    'For top_scorers and player_ranking, write player-first copy: the main player/ranking is the hook, teams are supporting context only, and the CTA must ask about the individual race or player debate.',
+    'Before writing title and description, classify the story as team, player, match, table, or prediction. For top_scorers, assists, player-ranking, golden-boot, or player-stats, classify as player story and lead with player names. Do not write team-led titles unless no player names are available.',
+    'For top_scorers titles, priority order is: player names, goal count, race tension, competition, then team names only as support. Preferred formula: PLAYER 1 + PLAYER 2 + race status + competition.',
     `Compact master publishing template (${publishingTemplate.name}):\n${compactTemplate}`,
     copyModelInstructions
       ? `Additional editor instructions:\n${copyModelInstructions}`
@@ -1141,13 +1310,9 @@ const generatePublishingDraft = async ({job, extraContext, copyModelInstructions
     .filter(Boolean)
     .join('\n\n');
 
-  const openaiResponse = await fetch('https://api.openai.com/v1/responses', {
-    method: 'POST',
-    headers: {
-      authorization: `Bearer ${apiKey}`,
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
+  const data = await callOpenAiResponses({
+    apiKey,
+    body: buildOpenAiResponsesBody({
       model,
       input: [
         {
@@ -1171,12 +1336,6 @@ const generatePublishingDraft = async ({job, extraContext, copyModelInstructions
     }),
   });
 
-  const data = await openaiResponse.json().catch(() => ({}));
-  if (!openaiResponse.ok) {
-    const message = data?.error?.message ?? `OpenAI request failed with ${openaiResponse.status}`;
-    throw new Error(message);
-  }
-
   const outputText = extractResponseText(data);
   if (!outputText) {
     throw new Error('OpenAI returned an empty publishing draft.');
@@ -1194,6 +1353,268 @@ const generatePublishingDraft = async ({job, extraContext, copyModelInstructions
   return {
     draft,
     metadata,
+    model,
+    templateName: publishingTemplate.name,
+  };
+};
+
+const valuesCompatible = (left, right) => {
+  const leftText = String(left ?? '').trim();
+  const rightText = String(right ?? '').trim();
+  return !leftText || !rightText || leftText === rightText;
+};
+
+const normalizeIdentityText = (value) =>
+  String(value ?? '')
+    .trim()
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase();
+
+const valuesMatch = (left, right) => {
+  const leftText = normalizeIdentityText(left);
+  const rightText = normalizeIdentityText(right);
+  return Boolean(leftText && rightText && leftText === rightText);
+};
+
+const jobCompetitionMatches = (formJob = {}, preparedJob = null) => {
+  if (!preparedJob) return false;
+
+  const leagueIdMatches = valuesMatch(formJob.leagueId, preparedJob.leagueId);
+  const outputNameMatches = valuesMatch(formJob.outputName, preparedJob.outputName);
+  const formCompetitionNames = [formJob.leagueName, formJob.competitionName].filter(Boolean);
+  const preparedCompetitionNames = [preparedJob.leagueName, preparedJob.competitionName].filter(Boolean);
+  const competitionNameMatches = formCompetitionNames.some((formName) =>
+    preparedCompetitionNames.some((preparedName) => valuesMatch(formName, preparedName))
+  );
+
+  return leagueIdMatches || outputNameMatches || competitionNameMatches;
+};
+
+const canUsePreparedJobContext = (formJob = {}, preparedJob = null) => {
+  if (!preparedJob) return false;
+  return (
+    valuesMatch(formJob.template, preparedJob.template) &&
+    jobCompetitionMatches(formJob, preparedJob) &&
+    valuesCompatible(formJob.season, preparedJob.season) &&
+    valuesCompatible(formJob.languageProfile, preparedJob.languageProfile)
+  );
+};
+
+const preparedJobCreativeOverrideKeys = new Set([
+  'brandName',
+  'channelProfile',
+  'ctaText',
+  'hookText',
+  'introTitle',
+  'introSubtitle',
+  'voiceoverText',
+]);
+
+const mergePreparedJobContext = (formJob = {}, preparedJob = null) => {
+  if (!preparedJob) {
+    return formJob;
+  }
+
+  const merged = {...preparedJob};
+  Object.entries(formJob).forEach(([key, value]) => {
+    if (!preparedJobCreativeOverrideKeys.has(key)) return;
+    if (value === undefined || value === null) return;
+    if (typeof value === 'string' && !value.trim()) return;
+    if (Array.isArray(value) && value.length === 0) return;
+    merged[key] = value;
+  });
+  return merged;
+};
+
+const buildCtaGuidance = (metadata) => {
+  const languageProfile = metadata.languageProfile === 'en' ? 'en' : 'pt-br';
+  const template = metadata.template;
+  const leagueName = String(metadata.leagueName ?? '').trim();
+  const normalizedLeague = normalizeIdentityText(leagueName);
+  const isPromotionRace =
+    normalizedLeague.includes('serie b') ||
+    normalizedLeague.includes('serie c') ||
+    normalizedLeague.includes('serie d') ||
+    normalizedLeague.includes('championship');
+
+  if (languageProfile === 'en') {
+    if (template === 'standings' && isPromotionRace) {
+      return {
+        goal: `Ask one promotion-race question about ${leagueName}.`,
+        preferred: ['Who goes up?', 'Who wins promotion?', 'Who takes the promotion spot?'],
+        avoid: ['Who wins the title?', 'Who advances?', 'What do you think?'],
+      };
+    }
+    if (template === 'standings') {
+      return {
+        goal: `Ask one table-consequence question about ${leagueName}.`,
+        preferred: ['Who wins the title?', 'Who escapes?', 'Who takes the spot?'],
+        avoid: ['What do you think?', 'Comment below'],
+      };
+    }
+    if (template === 'results' || template === 'champion-final') {
+      return {
+        goal: `Ask one result-consequence question about ${leagueName}.`,
+        preferred: ['Who leaves stronger?', 'Who takes the trophy?', 'Who is under more pressure now?'],
+        avoid: ['What was the best match?', 'Comment below'],
+      };
+    }
+    if (template === 'next-games' || template === 'predictions') {
+      return {
+        goal: `Ask one prediction question tied to ${leagueName}.`,
+        preferred: ['Who needs the win most?', 'Which tie changes the round?', 'Who feels the pressure?'],
+        avoid: ['What do you think?', 'Comment below', 'Which match will you watch?'],
+      };
+    }
+    return {
+      goal: `Ask one specific question tied to ${leagueName || metadata.contentType}.`,
+      preferred: ['Who benefits most?', 'Who is in danger?', 'Who changes the race?'],
+      avoid: ['What do you think?', 'Comment below'],
+    };
+  }
+
+  if (template === 'standings' && isPromotionRace) {
+    return {
+      goal: `Pergunte sobre a briga pelo acesso em ${leagueName}.`,
+      preferred: ['Quem sobe?', 'Quem fica com o acesso?', 'Quem entra no G4?'],
+      avoid: ['Quem leva o título?', 'Quem avança?', 'O que achou?'],
+    };
+  }
+  if (template === 'standings') {
+    return {
+      goal: `Pergunte sobre a consequência da tabela em ${leagueName}.`,
+      preferred: ['Quem leva o título?', 'Quem escapa?', 'Quem pega a vaga?'],
+      avoid: ['O que achou?', 'Comente abaixo'],
+    };
+  }
+  if (template === 'results' || template === 'champion-final') {
+    return {
+      goal: `Pergunte sobre a consequência do resultado em ${leagueName}.`,
+      preferred: ['Quem sai mais forte?', 'Quem leva a taça?', 'Quem ficou mais pressionado?'],
+      avoid: ['Qual foi o melhor jogo?', 'O que achou?', 'Comente abaixo'],
+    };
+  }
+  if (template === 'next-games' || template === 'predictions') {
+    return {
+      goal: `Pergunte sobre palpite ou pressão da rodada em ${leagueName}.`,
+      preferred: ['Quem precisa vencer mais?', 'Qual confronto muda a rodada?', 'Quem sente mais a pressão?'],
+      avoid: ['O que achou?', 'Comente abaixo', 'Qual jogo você vai assistir?'],
+    };
+  }
+  if (template === 'relegation-line') {
+    return {
+      goal: `Pergunte sobre risco de queda em ${leagueName}.`,
+      preferred: ['Quem escapa?', 'Quem cai?', 'Quem reage a tempo?'],
+      avoid: ['Quem leva o título?', 'O que achou?'],
+    };
+  }
+  if (template === 'championship-pace') {
+    return {
+      goal: `Pergunte sobre a briga pelo título em ${leagueName}.`,
+      preferred: ['Quem leva o título?', 'Quem sustenta esse ritmo?', 'Dá para buscar o líder?'],
+      avoid: ['Quem sobe?', 'O que achou?'],
+    };
+  }
+  return {
+    goal: `Pergunte sobre a consequência central de ${leagueName || metadata.contentType}.`,
+    preferred: ['Quem se beneficia mais?', 'Quem ficou em perigo?', 'Quem muda a disputa?'],
+    avoid: ['O que achou?', 'Comente abaixo'],
+  };
+};
+
+const generateHookCtaSuggestion = async ({job, preparedJob, target}) => {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    const error = new Error('Missing OPENAI_API_KEY. Add it to .env to generate Hook/CTA/voice-over suggestions.');
+    error.errorType = 'missing_openai_key';
+    throw error;
+  }
+
+  const effectiveJob = mergePreparedJobContext(job ?? {}, preparedJob);
+  const metadata = buildPublishingMetadata(effectiveJob);
+  const formMetadata = buildPublishingMetadata(job ?? {});
+  const preparedMetadata = preparedJob ? buildPublishingMetadata(preparedJob) : null;
+  const ctaGuidance = buildCtaGuidance(metadata);
+  const publishingTemplate = await loadPublishingTemplate(metadata.languageProfile);
+  const compactTemplate = compactPublishingTemplate({
+    templateText: publishingTemplate.templateText,
+    template: metadata.template,
+    languageProfile: metadata.languageProfile,
+  });
+  const model =
+    process.env.OPENAI_HOOK_CTA_MODEL ??
+    process.env.OPENAI_PUBLISHING_MODEL ??
+    process.env.OPENAI_MODEL ??
+    'gpt-4.1-mini';
+  const requestedTarget =
+    target === 'hook'
+      ? 'hookText'
+      : target === 'cta'
+        ? 'ctaText'
+        : target === 'voiceover'
+          ? 'voiceoverText'
+          : 'all fields';
+  const prompt = [
+    'Generate short-video Hook, CTA, and voice-over text for the current football video setup.',
+    `Requested field: ${requestedTarget}. Still return hookText, ctaText, and voiceoverText.`,
+    'Use the Foot Analysis content system from the Markdown template.',
+    'Use prepared video metadata as the primary factual source when it is present. Use current form metadata for the latest selected template, league, language, and manual overrides.',
+    'Do not invent match facts beyond the metadata. If the metadata is incomplete, write a consequence-driven line that fits the selected template, league, round, and competition.',
+    'Hook text must be a first-frame curiosity line: short, consequence-driven, and direct.',
+    'CTA text must be one specific comment question derived from the exact same core story as the hookText and voiceoverText.',
+    'CTA text must use the CTA guidance below as its source of truth. Prefer one of the preferred CTA shapes unless metadata strongly supports a better specific question.',
+    'CTA text must be tied to the exact competition/league in Effective video metadata. Never mention or imply another competition.',
+    'Never use generic CTA questions like "O que achou?", "Gostou do vídeo?", "Comente abaixo", "What do you think?", or "Comment below".',
+    'Voiceover text is only the script text. Do not generate audio or TTS instructions.',
+    'Voiceover text must fit in an 8-second short video: one speakable sentence, maximum 22 words, no hashtags, no bullet points, no stage directions.',
+    'Voiceover text must follow the formula: consequence, one stat or evidence point, then pressure/question setup.',
+    'Match the languageProfile exactly: pt-br outputs in Brazilian Portuguese; en outputs in English.',
+    `Compact master publishing template (${publishingTemplate.name}):\n${compactTemplate}`,
+    `CTA guidance JSON:\n${JSON.stringify(ctaGuidance, null, 2)}`,
+    `Effective video metadata JSON:\n${JSON.stringify(metadata, null, 2)}`,
+    `Current form metadata JSON:\n${JSON.stringify(formMetadata, null, 2)}`,
+    preparedMetadata
+      ? `Prepared/rendered job metadata JSON:\n${JSON.stringify(preparedMetadata, null, 2)}`
+      : 'Prepared/rendered job metadata JSON: none available for this exact setup.',
+  ].join('\n\n');
+
+  const data = await callOpenAiResponses({
+    apiKey,
+    body: buildOpenAiResponsesBody({
+      model,
+      input: [
+        {
+          role: 'system',
+          content:
+            'You write concise football short-video hooks, CTAs, and 8-second voice-over scripts using the provided Foot Analysis publishing rules.',
+        },
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+      text: {
+        format: {
+          type: 'json_schema',
+          name: 'football_hook_cta_suggestion',
+          strict: true,
+          schema: hookCtaSuggestionSchema,
+        },
+      },
+    }),
+  });
+
+  const outputText = extractResponseText(data);
+  if (!outputText) {
+    throw new Error('OpenAI returned an empty Hook/CTA suggestion.');
+  }
+
+  const suggestion = JSON.parse(outputText);
+  return {
+    hookText: String(suggestion.hookText ?? '').trim(),
+    ctaText: String(suggestion.ctaText ?? '').trim(),
+    voiceoverText: String(suggestion.voiceoverText ?? '').trim(),
     model,
     templateName: publishingTemplate.name,
   };
@@ -1225,13 +1646,9 @@ const generateThumbnailSuggestion = async (body) => {
     `Extra context: ${body.extraContext || ''}`,
   ].join('\n');
 
-  const openaiResponse = await fetch('https://api.openai.com/v1/responses', {
-    method: 'POST',
-    headers: {
-      authorization: `Bearer ${apiKey}`,
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
+  const data = await callOpenAiResponses({
+    apiKey,
+    body: buildOpenAiResponsesBody({
       model,
       input: [
         {
@@ -1254,12 +1671,6 @@ const generateThumbnailSuggestion = async (body) => {
       },
     }),
   });
-
-  const data = await openaiResponse.json().catch(() => ({}));
-  if (!openaiResponse.ok) {
-    const message = data?.error?.message ?? `OpenAI request failed with ${openaiResponse.status}`;
-    throw new Error(message);
-  }
 
   const outputText = extractResponseText(data);
   if (!outputText) {
@@ -1519,6 +1930,34 @@ const stripYouTubeCouponBlock = (description) => {
     .trim();
 };
 
+const stripYouTubeChannelFooterBlock = (description) => {
+  const lines = String(description ?? '').replace(/\r\n/g, '\n').split('\n');
+  const startIndex = lines.findIndex((line) => {
+    const normalizedLine = line
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu, '')
+      .toLowerCase();
+    return (
+      normalizedLine.includes('bem-vindo ao canal foot analysis') ||
+      normalizedLine.includes('welcome to foot analysis en')
+    );
+  });
+
+  if (startIndex === -1) {
+    return lines.join('\n').trim();
+  }
+
+  const shortsIndex = lines.findIndex(
+    (line, index) => index > startIndex && /^\s*#shorts\s*$/i.test(line)
+  );
+  const footerEndIndex = shortsIndex === -1 ? lines.length : shortsIndex;
+
+  return [...lines.slice(0, startIndex), ...lines.slice(footerEndIndex)]
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+};
+
 const ensureShortsMetadata = ({title, description, tags}) => {
   const normalizedTags = [...new Set([...normalizeTagList(tags), 'shorts'])];
   const titleText = String(title ?? '').trim();
@@ -1609,20 +2048,21 @@ const uploadYouTubeVideo = async ({job, body}) => {
   }
   const youtubeFooter = await loadYouTubeDescriptionFooter(job.languageProfile);
   const notifySubscribers = body.notifySubscribers === true;
-  const hasPaidProductPlacement = body.hasPaidProductPlacement !== false;
+  const hasPaidProductPlacement = body.hasPaidProductPlacement === true;
+  const includeChannelFooter = body.includeChannelFooter === true;
+  const descriptionWithFooter = appendYouTubeDescriptionFooter({
+    description: youtube.description ?? body.description,
+    footer: youtubeFooter,
+  });
+  const descriptionWithoutCoupons = hasPaidProductPlacement
+    ? descriptionWithFooter
+    : stripYouTubeCouponBlock(descriptionWithFooter);
+  const uploadDescription = includeChannelFooter
+    ? descriptionWithoutCoupons
+    : stripYouTubeChannelFooterBlock(descriptionWithoutCoupons);
   const shortsMetadata = ensureShortsMetadata({
     title: youtube.title ?? body.title,
-    description: hasPaidProductPlacement
-      ? appendYouTubeDescriptionFooter({
-          description: youtube.description ?? body.description,
-          footer: youtubeFooter,
-        })
-      : stripYouTubeCouponBlock(
-          appendYouTubeDescriptionFooter({
-            description: youtube.description ?? body.description,
-            footer: youtubeFooter,
-          })
-        ),
+    description: uploadDescription,
     tags: youtube.tags ?? body.tags,
   });
   const title = compactText(shortsMetadata.title, 100);
@@ -2464,6 +2904,37 @@ const server = http.createServer(async (request, response) => {
         job: currentJob,
         extraContext: body.extraContext,
         copyModelInstructions: body.copyModelInstructions,
+        requestedModel: body.model,
+      });
+
+      sendJson(response, 200, {
+        ok: true,
+        ...result,
+      });
+    } catch (error) {
+      sendJson(response, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        errorType: error?.errorType ?? undefined,
+      });
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/copy/hook-cta') {
+    try {
+      const body = await readBody(request);
+      const currentJob = await loadCurrentJob().catch(() => null);
+      const requestPreparedJob = canUsePreparedJobContext(body.job ?? {}, body.preparedJob)
+        ? body.preparedJob
+        : null;
+      const preparedJob =
+        requestPreparedJob ??
+        (canUsePreparedJobContext(body.job ?? {}, currentJob) ? currentJob : null);
+      const result = await generateHookCtaSuggestion({
+        job: body.job ?? {},
+        preparedJob,
+        target: body.target,
       });
 
       sendJson(response, 200, {
