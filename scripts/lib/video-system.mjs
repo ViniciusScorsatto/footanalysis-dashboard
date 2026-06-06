@@ -3674,11 +3674,15 @@ export const parseFootballRoundSummaryLongYaml = (yamlText) => {
   matches.forEach((match, index) => {
     const label = `Match ${index + 1}`;
     const fixtureId = Number(match.fixtureId);
+    const homeTeam = String(match.homeTeam ?? '').trim();
+    const awayTeam = String(match.awayTeam ?? '').trim();
     const voiceover = String(match.voiceover ?? '').trim();
     const homeAccentColor = String(match.homeAccentColor ?? '').trim();
     const awayAccentColor = String(match.awayAccentColor ?? '').trim();
 
     if (!Number.isFinite(fixtureId)) errors.push(`${label}: fixtureId is required.`);
+    if (!homeTeam) errors.push(`${label}: homeTeam is required.`);
+    if (!awayTeam) errors.push(`${label}: awayTeam is required.`);
     if (!voiceover) errors.push(`${label}: voiceover is required.`);
     if (homeAccentColor && !isHexColor(homeAccentColor)) {
       errors.push(`${label}: homeAccentColor must be a hex color like "#27AE60".`);
@@ -3695,6 +3699,46 @@ export const parseFootballRoundSummaryLongYaml = (yamlText) => {
     errors,
     data,
   };
+};
+
+const getRoundSummaryTeamNamesForFixtureCheck = (teamName, leagueId, aliasesConfig, languageProfile) =>
+  [
+    teamName,
+    resolveDisplayTeamName(teamName, leagueId, aliasesConfig),
+    resolveVideoTeamName(teamName, leagueId, aliasesConfig),
+    resolveFixtureVideoTeamName(teamName, leagueId, languageProfile),
+  ]
+    .map(normalizeTeamAliasKey)
+    .filter(Boolean);
+
+const assertRoundSummaryFixtureMatchesYaml = ({
+  fixtureId,
+  index,
+  match,
+  apiHomeTeam,
+  apiAwayTeam,
+  leagueId,
+  aliasesConfig,
+  languageProfile,
+}) => {
+  const yamlHomeTeam = String(match.homeTeam ?? '').trim();
+  const yamlAwayTeam = String(match.awayTeam ?? '').trim();
+  const homeCandidates = new Set(
+    getRoundSummaryTeamNamesForFixtureCheck(apiHomeTeam, leagueId, aliasesConfig, languageProfile)
+  );
+  const awayCandidates = new Set(
+    getRoundSummaryTeamNamesForFixtureCheck(apiAwayTeam, leagueId, aliasesConfig, languageProfile)
+  );
+  const homeMatches = homeCandidates.has(normalizeTeamAliasKey(yamlHomeTeam));
+  const awayMatches = awayCandidates.has(normalizeTeamAliasKey(yamlAwayTeam));
+
+  if (homeMatches && awayMatches) {
+    return;
+  }
+
+  throw new Error(
+    `Match ${index + 1}: fixtureId ${fixtureId} resolves to "${apiHomeTeam} x ${apiAwayTeam}", but YAML says "${yamlHomeTeam} x ${yamlAwayTeam}". Use Generate Summary YAML for the selected league/round or update the fixtureId.`
+  );
 };
 
 export const prepareFootballRoundSummaryLongJob = async ({
@@ -3749,6 +3793,18 @@ export const prepareFootballRoundSummaryLongJob = async ({
       throw new Error(`No fixture found for fixtureId ${fixtureId}.`);
     }
 
+    const yamlLeagueId = Number(data.leagueId);
+    const fixtureLeagueId = Number(fixture.league?.id);
+    if (
+      Number.isFinite(yamlLeagueId) &&
+      Number.isFinite(fixtureLeagueId) &&
+      yamlLeagueId !== fixtureLeagueId
+    ) {
+      throw new Error(
+        `Match ${index + 1}: fixtureId ${fixtureId} belongs to league ${fixtureLeagueId}, but the YAML leagueId is ${yamlLeagueId}. Use Generate Summary YAML for the selected league/round or update the fixtureId.`
+      );
+    }
+
     leagueId = Number.isFinite(leagueId) ? leagueId : Number(fixture.league?.id);
     season = Number.isFinite(season) ? season : Number(fixture.league?.season);
     leagueName =
@@ -3760,6 +3816,16 @@ export const prepareFootballRoundSummaryLongJob = async ({
 
     const apiHomeTeam = fixture.teams?.home?.name;
     const apiAwayTeam = fixture.teams?.away?.name;
+    assertRoundSummaryFixtureMatchesYaml({
+      fixtureId,
+      index,
+      match,
+      apiHomeTeam,
+      apiAwayTeam,
+      leagueId,
+      aliasesConfig,
+      languageProfile: normalizedLanguageProfile,
+    });
     const home = longformBadgeForTeam(
       apiHomeTeam,
       leagueId,

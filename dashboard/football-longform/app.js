@@ -20,13 +20,29 @@ const logOutput = document.getElementById('log-output');
 const errorBanner = document.getElementById('error-banner');
 const errorBannerText = document.getElementById('error-banner-text');
 const dashboardQuickStatus = document.getElementById('dashboard-quick-status');
+const applyPreviewButton = document.getElementById('apply-preview-button');
+const openPreviewLink = document.getElementById('open-preview-link');
+const previewFrame = document.getElementById('preview-frame');
+const youtubeDraftOpenAiModelSelect = document.getElementById('youtube-draft-openai-model');
+const youtubeDraftCopyModelInput = document.getElementById('youtube-draft-copy-model');
+const youtubeDraftExtraContextInput = document.getElementById('youtube-draft-extra-context');
+const generateYoutubeDraftButton = document.getElementById('generate-youtube-draft-button');
+const copyYoutubeDraftJsonButton = document.getElementById('copy-youtube-draft-json-button');
+const youtubeDraftStatus = document.getElementById('youtube-draft-status');
+const youtubeDraftRoot = document.getElementById('youtube-draft-root');
+const youtubeDraftModelChip = document.getElementById('youtube-draft-model-chip');
+const youtubeChannelFooterCheckbox = document.getElementById('youtube-channel-footer');
 
 const apiBase = '/api/football/longform';
 const footballApiBase = '/api/football';
+const studioUrl = 'http://127.0.0.1:3000';
+const COMPOSITION_ID = 'FootballPredictionsLong';
+const previewKind = 'predictions';
 const englishLongformSoundtrackPath = '/audio/football/foot-analysis-whistle.mp3';
 const portugueseLongformSoundtrackPath = '/audio/football/gol-na-pressao.mp3';
 let teamAccentColors = {global: {}, leagues: {}};
 let allLeaguePresets = [];
+let currentYoutubeDraft = null;
 
 const sampleYamlPt = `title: "Palpites da Rodada 1"
 league: "Copa do Mundo"
@@ -392,6 +408,29 @@ const setRenderDownload = (job, render) => {
   `;
 };
 
+const buildStudioPreviewUrl = () => {
+  const refreshToken = Date.now().toString();
+
+  try {
+    const url = new URL(studioUrl);
+    const cleanPath = url.pathname === '/' ? '' : url.pathname.replace(/\/+$/, '');
+    url.pathname = `${cleanPath}/${encodeURIComponent(COMPOSITION_ID)}`;
+    url.searchParams.set('codexPreviewTs', refreshToken);
+    return url.toString();
+  } catch {
+    return `${studioUrl.replace(/\/+$/, '')}/${encodeURIComponent(COMPOSITION_ID)}?codexPreviewTs=${refreshToken}`;
+  }
+};
+
+const updatePreview = () => {
+  const previewUrl = `/football-longform-player/?kind=${encodeURIComponent(previewKind)}&previewTs=${Date.now()}`;
+  previewFrame.src = 'about:blank';
+  window.setTimeout(() => {
+    previewFrame.src = previewUrl;
+  }, 25);
+  openPreviewLink.href = buildStudioPreviewUrl();
+};
+
 const postJson = async (path, payload) => {
   const response = await fetch(`${apiBase}${path}`, {
     method: 'POST',
@@ -406,6 +445,176 @@ const postJson = async (path, payload) => {
     throw error;
   }
   return data;
+};
+
+const joinList = (value) => (Array.isArray(value) ? value.join(', ') : String(value ?? ''));
+
+const copyText = async (value) => {
+  const text = String(value ?? '');
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.append(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  textarea.remove();
+};
+
+const youtubeDraftField = ({label, key, value, multiline = true}) => {
+  const fieldValue = joinList(value);
+  const escapedValue = escapeHtml(fieldValue);
+  const control = multiline
+    ? `<textarea data-youtube-key="${key}" rows="5">${escapedValue}</textarea>`
+    : `<input data-youtube-key="${key}" type="text" value="${escapedValue}" />`;
+  return `
+    <label class="publishing-field">
+      <span>${escapeHtml(label)}</span>
+      ${control}
+      <button type="button" class="copy-field-button secondary">Copy</button>
+    </label>
+  `;
+};
+
+const renderYoutubeDraft = (draft) => {
+  currentYoutubeDraft = draft;
+  copyYoutubeDraftJsonButton.disabled = !draft;
+
+  if (!draft) {
+    youtubeDraftRoot.innerHTML = '';
+    return;
+  }
+
+  youtubeDraftRoot.innerHTML = `
+    <div class="publishing-summary">
+      <strong>Draft summary</strong>
+      <p>${escapeHtml(draft.summary ?? '')}</p>
+    </div>
+    <section class="publishing-card publishing-platform-card">
+      <div class="publishing-card-header">
+        <h3>YouTube</h3>
+        <span class="chip subtle">longform</span>
+      </div>
+      ${youtubeDraftField({label: 'Title', key: 'title', value: draft.youtube?.title, multiline: false})}
+      ${youtubeDraftField({label: 'Description', key: 'description', value: draft.youtube?.description, multiline: true})}
+      ${youtubeDraftField({label: 'Tags', key: 'tags', value: draft.youtube?.tags, multiline: true})}
+      <div class="youtube-upload-box">
+        <label class="publishing-field">
+          <span>Privacy</span>
+          <select id="youtube-privacy-status">
+            <option value="private" selected>Private</option>
+            <option value="unlisted">Unlisted</option>
+            <option value="public">Public</option>
+          </select>
+        </label>
+        <label class="toggle-row">
+          <input type="checkbox" id="youtube-notify-subscribers" />
+          <span>Publish to subscriptions feed and notify subscribers</span>
+        </label>
+        <label class="toggle-row">
+          <input type="checkbox" id="youtube-paid-product-placement" />
+          <span>My video contains paid promotion</span>
+        </label>
+        <button type="button" id="upload-youtube-button" class="secondary">Upload to YouTube</button>
+        <p id="youtube-upload-status" class="publishing-status">Upload uses the rendered long-form MP4 and keeps manual review in YouTube Studio.</p>
+      </div>
+    </section>
+  `;
+};
+
+const collectYoutubeDraftFromFields = () => {
+  if (!currentYoutubeDraft) return null;
+  const nextDraft = structuredClone(currentYoutubeDraft);
+  youtubeDraftRoot.querySelectorAll('[data-youtube-key]').forEach((field) => {
+    const key = field.dataset.youtubeKey;
+    if (!nextDraft.youtube || !key) return;
+    const rawValue = field.value ?? '';
+    nextDraft.youtube[key] =
+      key === 'tags'
+        ? rawValue.split(',').map((item) => item.trim()).filter(Boolean)
+        : rawValue;
+  });
+  return nextDraft;
+};
+
+const generateYoutubeDraft = async () => {
+  try {
+    generateYoutubeDraftButton.disabled = true;
+    youtubeDraftStatus.textContent = 'Generating YouTube title, description, and tags...';
+    const data = await postJson('/publishing/youtube-draft', {
+      model: youtubeDraftOpenAiModelSelect?.value,
+      copyModelInstructions: youtubeDraftCopyModelInput.value,
+      extraContext: youtubeDraftExtraContextInput.value,
+      includeChannelFooter: youtubeChannelFooterCheckbox?.checked === true,
+    });
+
+    if (youtubeDraftModelChip) {
+      youtubeDraftModelChip.textContent = data.model ?? 'draft ready';
+    }
+    renderYoutubeDraft(data.draft);
+    youtubeDraftStatus.textContent = 'YouTube draft ready. Review, edit, then copy.';
+    log('YouTube draft generated.');
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    youtubeDraftStatus.textContent = message;
+    log(message);
+  } finally {
+    generateYoutubeDraftButton.disabled = false;
+  }
+};
+
+const uploadYoutubeDraft = async () => {
+  const draft = collectYoutubeDraftFromFields();
+  const youtube = draft?.youtube;
+  if (!youtube) {
+    youtubeDraftStatus.textContent = 'Generate a YouTube draft before uploading.';
+    return;
+  }
+
+  const privacyStatus = document.getElementById('youtube-privacy-status')?.value ?? 'private';
+  const notifySubscribers = document.getElementById('youtube-notify-subscribers')?.checked ?? false;
+  const hasPaidProductPlacement = document.getElementById('youtube-paid-product-placement')?.checked ?? false;
+  const includeChannelFooter = youtubeChannelFooterCheckbox?.checked === true;
+
+  try {
+    const button = document.getElementById('upload-youtube-button');
+    const uploadStatus = document.getElementById('youtube-upload-status');
+    if (button) button.disabled = true;
+    if (uploadStatus) uploadStatus.textContent = 'Uploading long-form video to YouTube...';
+    youtubeDraftStatus.textContent = 'Uploading YouTube long-form video...';
+
+    const data = await postJson('/publishing/youtube/upload', {
+      youtube,
+      privacyStatus,
+      notifySubscribers,
+      hasPaidProductPlacement,
+      includeChannelFooter,
+    });
+
+    const link = data.youtube?.url
+      ? `<a class="download-link" href="${escapeHtml(data.youtube.url)}" target="_blank" rel="noreferrer">Open video</a>`
+      : '';
+    if (uploadStatus) {
+      uploadStatus.innerHTML = `Uploaded as ${escapeHtml(data.youtube?.privacyStatus ?? privacyStatus)}. ${link}`;
+    }
+    youtubeDraftStatus.textContent = 'YouTube upload completed.';
+    log(`YouTube upload completed: ${data.youtube?.url ?? data.youtube?.videoId ?? 'uploaded'}`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    const uploadStatus = document.getElementById('youtube-upload-status');
+    if (uploadStatus) uploadStatus.textContent = message;
+    youtubeDraftStatus.textContent = message;
+    log(message);
+  } finally {
+    const button = document.getElementById('upload-youtube-button');
+    if (button) button.disabled = false;
+  }
 };
 
 const loadRounds = async () => {
@@ -587,6 +796,7 @@ const prepareJob = async () => {
     const data = await postJson('/prepare', formDataToPayload());
     renderValidation(data.validation);
     renderCurrentJob(data.job);
+    updatePreview();
     log(data.message || 'Job preparado.');
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -607,6 +817,7 @@ const renderVideo = async () => {
     renderValidation(data.validation);
     renderCurrentJob(data.job);
     setRenderDownload(data.job, data.render);
+    updatePreview();
     log(data.message || 'Render completo.');
     if (data.render?.outputPath) log(`Arquivo renderizado: ${data.render.outputPath}`);
   } catch (error) {
@@ -643,6 +854,7 @@ const loadOptions = async () => {
   }
   renderCurrentJob(currentJob);
   renderValidation(null);
+  updatePreview();
   setErrorBanner('');
   log('Dashboard longform pronto.', true);
 };
@@ -665,6 +877,25 @@ form.elements.soundtrackVolume.addEventListener('input', () => {
 validateButton.addEventListener('click', validateYaml);
 prepareButton.addEventListener('click', prepareJob);
 renderButton.addEventListener('click', renderVideo);
+applyPreviewButton.addEventListener('click', updatePreview);
+generateYoutubeDraftButton.addEventListener('click', generateYoutubeDraft);
+copyYoutubeDraftJsonButton.addEventListener('click', async () => {
+  const draft = collectYoutubeDraftFromFields();
+  if (!draft) return;
+  await copyText(JSON.stringify(draft, null, 2));
+  youtubeDraftStatus.textContent = 'YouTube draft JSON copied.';
+});
+youtubeDraftRoot.addEventListener('click', async (event) => {
+  if (event.target.closest('#upload-youtube-button')) {
+    await uploadYoutubeDraft();
+    return;
+  }
+  const button = event.target.closest('.copy-field-button');
+  if (!button) return;
+  const field = button.closest('.publishing-field')?.querySelector('textarea, input');
+  await copyText(field?.value ?? '');
+  youtubeDraftStatus.textContent = 'Field copied.';
+});
 loadRoundsButton.addEventListener('click', loadRounds);
 generateYamlButton.addEventListener('click', generateYamlFromApi);
 channelProfileSelect.addEventListener('change', () => {

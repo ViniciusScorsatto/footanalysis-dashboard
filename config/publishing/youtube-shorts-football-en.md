@@ -1,10 +1,159 @@
-# TEMPLATE MASTER — YouTube Shorts / TikTok / Instagram Futebol
+# FOOT ANALYSIS EN — CONTENT GENERATION SYSTEM
 
 ---
 
 # Objetivo
 
-Criar um template universal que funcione para todos os formatos de vídeos de futebol:
+Create YouTube titles, descriptions, hooks, and publishing copy for Foot Analysis EN.
+
+Foot Analysis is not a generic football news channel.
+
+The channel explains:
+
+- What changed
+- Why it matters
+- Who benefits
+- Who is under pressure
+- What the result, table, or prediction means next
+
+---
+
+# Core Principle
+
+Never lead with generic events.
+
+Always lead with a specific consequence.
+
+Bad:
+
+- Premier League Matchday 1 Recap
+- Shocks, Standout Goals & Key Results
+- Updated Premier League Results
+- Big Surprises This Round
+
+Good:
+
+- Arsenal Put Early Pressure on the Title Race
+- Liverpool Start Fast as Chelsea Drop Points
+- Man United Already Face Pressure After Matchday 1
+- Newcastle Send a Warning in the Premier League
+- Tottenham Leave Themselves With Questions
+
+Every output must make the viewer understand the consequence in the first line.
+
+---
+
+# Story Selection
+
+Before writing, choose one primary story.
+
+Prioritize:
+
+- A major club directly affected by the result, table, prediction, qualification race, title race, or relegation fight
+- A matchup that changes expectations for the round
+- A team under pressure
+- A result that creates a clear table or season consequence
+
+If the video covers many matches, the title should still lead with the strongest specific story, then mention the broader round only as support.
+
+Bad:
+
+- Premier League 2025 Matchday 1 Recap: Shocks, Standout Goals & Key Results!
+
+Better:
+
+- Liverpool Set the Tone as Chelsea Drop Points | Premier League Matchday 1 Recap
+
+---
+
+# Title Formula
+
+TEAM + CONSEQUENCE + COMPETITION/STAKES
+
+Every title should contain:
+
+1. A team, player, or directly affected audience
+2. A consequence or pressure point
+3. The competition, round, or stakes when useful for search
+
+Rules:
+
+- Start with the team or consequence.
+- Make the impact clear in the first 45 characters.
+- Prefer verbs of movement and pressure: close in, pull away, survive, stumble, drop points, put pressure on, send warning, open gap, fall behind, keep pace.
+- Use the competition when it improves clarity or search relevance.
+- Avoid generic emotion unless paired with a specific consequence.
+
+Avoid:
+
+- Shocks
+- Standout goals
+- Key results
+- Matchday recap
+- Big surprises
+- What a round
+
+unless the title also names the affected team and consequence.
+
+Preferred:
+
+- Arsenal Put Pressure on City in the Premier League
+- Liverpool Keep Pace After Matchday 1
+- Chelsea Drop Points as the Top Four Race Starts Early
+- Newcastle Send a Warning in the Premier League
+
+---
+
+# Long-Form YouTube Rule
+
+For long-form horizontal YouTube videos, keep the same consequence-first logic but allow a broader editorial title.
+
+The title can include "recap", "predictions", or "round summary" only after the specific story is clear.
+
+Descriptions must not sound like a table of contents.
+
+Do not write:
+
+- In this video, we cover...
+- This recap looks at...
+- We go through every match...
+- Watch as we break down...
+
+Write about the football story itself:
+
+- For predictions, explain what the predictions say about the round: safer picks, risky fixtures, upset potential, scoreline logic, and pressure games.
+- For round summaries, explain how the round played out: who gained ground, who dropped points, which results changed the story, and what it means for the league context.
+- Use bullets for concrete teams, scorelines, stakes, and consequences, not for the video structure.
+
+Bad:
+
+- Premier League 2025 Matchday 1 Recap: Shocks, Standout Goals & Key Results!
+
+Good:
+
+- Liverpool Set the Tone as Chelsea Drop Points | Premier League Matchday 1 Recap
+
+Good:
+
+- Arsenal Face Early Pressure: Premier League Matchday 1 Predictions
+
+---
+
+# Universal Structure
+
+Use this for all formats:
+
+- Lead with the consequence, not the event.
+- Mention the team or audience affected.
+- Mention the competition when relevant.
+- Use one clear stat, scoreline, table movement, or prediction angle.
+- End with a specific comment trigger.
+
+---
+
+# Legacy Format Coverage
+
+This system can support:
 
 - classificação
 - últimos jogos
@@ -18,7 +167,7 @@ Criar um template universal que funcione para todos os formatos de vídeos de fu
 - top jogadores
 - comparações entre ligas
 
-O foco principal é:
+The main focus is:
 
 - CTR
 - retenção

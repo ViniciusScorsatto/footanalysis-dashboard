@@ -31,6 +31,7 @@ import {
 import {getFootballHookOptions} from './lib/football-copy.mjs';
 
 const dashboardDir = path.join(projectRoot, 'dashboard');
+const publicDir = path.join(projectRoot, 'public');
 const outDir = path.join(projectRoot, 'out');
 const publishingTemplateDir = path.join(projectRoot, 'config', 'publishing');
 const footballThumbnailJobFile = path.join(
@@ -728,6 +729,16 @@ const publishingTemplateContext = {
     contentType: 'predictions',
     editorialAngle: 'match predictions; focus on favorites, balanced fixtures, upset potential, and score discussion.',
   },
+  'predictions-long': {
+    contentType: 'longform_predictions',
+    editorialAngle: 'long-form horizontal YouTube match predictions; focus on the round narrative, strongest picks, upset candidates, and scoreline reasoning across multiple games.',
+    formatGuidance: 'This is a narrated horizontal long-form YouTube video, not a Short. Write metadata for viewers who may watch several minutes. Lead with what the predictions say about the round: expected winners, risky fixtures, upset potential, pressure games, and scoreline logic. Do not describe the video structure; describe the prediction story itself.',
+  },
+  'round-summary-long': {
+    contentType: 'longform_round_summary',
+    editorialAngle: 'long-form horizontal YouTube round recap; focus on results, decisive moments, scorelines, standout matches, and what the round changed.',
+    formatGuidance: 'This is a narrated horizontal long-form YouTube video, not a Short. Write metadata for viewers who may watch several minutes. Lead with how the round played out: key results, who gained ground, who dropped points, standout scorelines, pressure changes, and table/story impact. Do not describe the video structure; describe the round itself.',
+  },
   tierlist: {
     contentType: 'favorite_tierlist',
     editorialAngle: 'tournament favorites tierlist; focus on champion pick, favorites, dark horses, teams that can go deep, and disappointments.',
@@ -841,6 +852,49 @@ const buildTemplateSpecificMetadata = (job) => {
         tiers.find((tier) => tier.key === 'disappointment')?.entries?.map((entry) => entry.team) ?? [],
       topScorerPrediction: job.topScorerPrediction ?? '',
       bestPlayerPrediction: job.bestPlayerPrediction ?? '',
+    };
+  }
+
+  if (job.template === 'predictions-long') {
+    const matches = job.matches ?? [];
+    return {
+      totalMatches: matches.length,
+      predictions: matches.slice(0, 16).map((match) =>
+        [
+          match.homeTeam,
+          match.predictedScore,
+          match.awayTeam,
+          match.voiceover ? compactText(match.voiceover, 220) : '',
+        ].filter(Boolean).join(' · ')
+      ),
+      strongestDiscussionPoints: matches
+        .map((match) => compactText(match.voiceover, 180))
+        .filter(Boolean)
+        .slice(0, 8),
+    };
+  }
+
+  if (job.template === 'round-summary-long') {
+    const matches = job.matches ?? [];
+    return {
+      totalMatches: matches.length,
+      results: matches.slice(0, 16).map((match) =>
+        [
+          match.homeTeam,
+          `${match.homeScore ?? 0}-${match.awayScore ?? 0}`,
+          match.awayTeam,
+          match.statusLabel,
+          match.highlights?.slice(0, 2).join(' / '),
+        ].filter(Boolean).join(' · ')
+      ),
+      standoutMoments: matches
+        .flatMap((match) => match.highlights ?? [])
+        .filter(Boolean)
+        .slice(0, 10),
+      matchesWithEvents: matches
+        .filter((match) => Array.isArray(match.events) && match.events.length > 0)
+        .map((match) => `${match.homeTeam} ${match.homeScore ?? 0}-${match.awayScore ?? 0} ${match.awayTeam}`)
+        .slice(0, 8),
     };
   }
 
@@ -978,6 +1032,8 @@ const buildPublishingMetadata = (job) => {
     template: job.template ?? '',
     contentType: context.contentType,
     editorialAngle: context.editorialAngle,
+    publishingFormat: String(job.template ?? '').includes('long') ? 'youtube_longform_horizontal' : 'shortform_or_standard',
+    formatGuidance: context.formatGuidance ?? '',
     compositionId: job.compositionId ?? '',
     channelProfile: job.channelProfile ?? '',
     languageProfile: job.languageProfile ?? '',
@@ -1187,6 +1243,25 @@ const publishingDraftSchema = {
   },
 };
 
+const youtubePublishingDraftSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['summary', 'youtube'],
+  properties: {
+    summary: {type: 'string'},
+    youtube: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['title', 'description', 'tags'],
+      properties: {
+        title: {type: 'string'},
+        description: {type: 'string'},
+        tags: {type: 'array', items: {type: 'string'}},
+      },
+    },
+  },
+};
+
 const hookCtaSuggestionSchema = {
   type: 'object',
   additionalProperties: false,
@@ -1355,6 +1430,100 @@ const generatePublishingDraft = async ({job, extraContext, copyModelInstructions
     metadata,
     model,
     templateName: publishingTemplate.name,
+  };
+};
+
+const generateYouTubePublishingDraft = async ({
+  job,
+  extraContext,
+  copyModelInstructions,
+  requestedModel,
+  includeChannelFooter = false,
+}) => {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    const error = new Error('Missing OPENAI_API_KEY. Add it to .env to generate YouTube drafts.');
+    error.errorType = 'missing_openai_key';
+    throw error;
+  }
+
+  const metadata = buildPublishingMetadata(job);
+  const model = resolvePublishingModel(requestedModel);
+  const prompt = [
+    'Generate YouTube publishing metadata for a LONG-FORM football video.',
+    'Treat this as a horizontal narrated YouTube video, not as a Short. The copy should be built for a full video watch session, search discovery, and viewer retention.',
+    'Return only title, description, and tags for YouTube. Do not create copy for Shorts, TikTok, Instagram, Reddit, or X.',
+    'Do not use short-form language such as "quick", "short", "60 seconds", "reel", "clip", or "#Shorts" in the title, description, tags, or anywhere else.',
+    'Title must be compelling, accurate, searchable, and under 100 characters. Prefer an editorial long-form angle over punchy short-video hooks.',
+    'Title must be specific, not generic. It should normally include a team, player, fixture, scoreline, or direct consequence/stakes before broad words like "recap", "summary", "key results", "shocks", or "standout goals".',
+    'Avoid titles that only describe the format or the round, such as "Premier League Matchday 1 Recap: Shocks, Standout Goals & Key Results". Instead, choose the strongest concrete story from the metadata and make that the lead.',
+    'Use the consequence-first rule from the Foot Analysis PT system: do not merely describe what happened; explain who benefits, who is pressured, who dropped points, who gained ground, or what changed.',
+    'Description should be ready to paste into YouTube for a horizontal long-form video, but it must read like football analysis, not like an outline of the video.',
+    'Do not write "in this video", "we cover", "we go through", "this recap looks at", "vamos ver", or similar structure-first phrases. The description should describe the predictions/results themselves.',
+    'For long-form predictions, explain what the predictions are saying about the round: which teams look safer, where the risky games are, where an upset can happen, which scorelines carry the strongest logic, and what pressure each fixture creates.',
+    'For long-form round summaries, explain how the round actually went: which results mattered, who gained ground, who dropped points, which scorelines changed the story, and what the round means for the league context.',
+    'Description structure: opening analytical paragraph about the predictions/results themselves, 3-5 bullets with concrete match/team/stakes details from metadata, then one specific viewer question.',
+    'Tags must be comma-friendly keywords without #. Include broad football discovery terms, the league, round, teams when useful, channel brand, and long-form context terms such as analysis, predictions, recap, or round summary.',
+    'Do not invent match facts beyond the metadata. If the metadata is sparse, frame the video around the league, round, and format.',
+    'Respect metadata.contentType, metadata.editorialAngle, and metadata.formatGuidance.',
+    copyModelInstructions
+      ? `Additional editor instructions:\n${copyModelInstructions}`
+      : '',
+    extraContext ? `Additional context from editor:\n${extraContext}` : '',
+    `Video metadata JSON:\n${JSON.stringify(metadata, null, 2)}`,
+  ]
+    .filter(Boolean)
+    .join('\n\n');
+
+  const data = await callOpenAiResponses({
+    apiKey,
+    body: buildOpenAiResponsesBody({
+      model,
+      input: [
+        {
+          role: 'system',
+          content:
+            'You are a football YouTube publishing assistant for long-form videos. Produce concise, accurate JSON.',
+        },
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+      text: {
+        format: {
+          type: 'json_schema',
+          name: 'football_youtube_longform_draft',
+          strict: true,
+          schema: youtubePublishingDraftSchema,
+        },
+      },
+    }),
+  });
+
+  const outputText = extractResponseText(data);
+  if (!outputText) {
+    throw new Error('OpenAI returned an empty YouTube draft.');
+  }
+
+  const draft = JSON.parse(outputText);
+  const youtubeFooter = includeChannelFooter
+    ? await loadYouTubeDescriptionFooter(metadata.languageProfile)
+    : '';
+  draft.youtube = {
+    ...draft.youtube,
+    title: compactText(draft.youtube?.title, 100),
+    description: appendYouTubeDescriptionFooter({
+      description: draft.youtube?.description,
+      footer: youtubeFooter,
+    }),
+    tags: normalizeTagList(draft.youtube?.tags),
+  };
+
+  return {
+    draft,
+    metadata,
+    model,
   };
 };
 
@@ -2033,15 +2202,16 @@ const inspectVideoForShorts = async (filePath) => {
   }
 };
 
-const uploadYouTubeVideo = async ({job, body}) => {
+const uploadYouTubeVideo = async ({job, body, uploadMode = 'shorts'}) => {
   const accessToken = await getYouTubeAccessToken(job.channelProfile);
   const youtube = body.youtube ?? {};
   const filePath = await resolveRenderedVideoPath({
     outputName: body.outputName ?? job.outputName,
     renderPath: body.renderPath,
   });
-  const shortsCheck = await inspectVideoForShorts(filePath);
-  if (!shortsCheck.eligible) {
+  const isShortsUpload = uploadMode === 'shorts';
+  const shortsCheck = isShortsUpload ? await inspectVideoForShorts(filePath) : null;
+  if (isShortsUpload && !shortsCheck.eligible) {
     throw new Error(
       `Rendered video is not eligible for Shorts: ${shortsCheck.width}x${shortsCheck.height}, ${Number.isFinite(shortsCheck.duration) ? `${shortsCheck.duration.toFixed(1)}s` : 'unknown duration'}. Use a vertical video under 60 seconds.`
     );
@@ -2050,24 +2220,32 @@ const uploadYouTubeVideo = async ({job, body}) => {
   const notifySubscribers = body.notifySubscribers === true;
   const hasPaidProductPlacement = body.hasPaidProductPlacement === true;
   const includeChannelFooter = body.includeChannelFooter === true;
-  const descriptionWithFooter = appendYouTubeDescriptionFooter({
-    description: youtube.description ?? body.description,
-    footer: youtubeFooter,
-  });
+  const descriptionWithFooter = includeChannelFooter
+    ? appendYouTubeDescriptionFooter({
+        description: youtube.description ?? body.description,
+        footer: youtubeFooter,
+      })
+    : youtube.description ?? body.description;
   const descriptionWithoutCoupons = hasPaidProductPlacement
     ? descriptionWithFooter
     : stripYouTubeCouponBlock(descriptionWithFooter);
   const uploadDescription = includeChannelFooter
     ? descriptionWithoutCoupons
     : stripYouTubeChannelFooterBlock(descriptionWithoutCoupons);
-  const shortsMetadata = ensureShortsMetadata({
-    title: youtube.title ?? body.title,
-    description: uploadDescription,
-    tags: youtube.tags ?? body.tags,
-  });
-  const title = compactText(shortsMetadata.title, 100);
-  const description = shortsMetadata.description;
-  const tags = shortsMetadata.tags;
+  const uploadMetadata = isShortsUpload
+    ? ensureShortsMetadata({
+        title: youtube.title ?? body.title,
+        description: uploadDescription,
+        tags: youtube.tags ?? body.tags,
+      })
+    : {
+        title: youtube.title ?? body.title,
+        description: uploadDescription,
+        tags: normalizeTagList(youtube.tags ?? body.tags),
+      };
+  const title = compactText(uploadMetadata.title, 100);
+  const description = uploadMetadata.description;
+  const tags = uploadMetadata.tags;
   const privacyStatus = String(
     body.privacyStatus ?? process.env.YOUTUBE_PRIVACY_STATUS ?? 'private'
   ).toLowerCase();
@@ -2129,10 +2307,12 @@ const uploadYouTubeVideo = async ({job, body}) => {
   return {
     videoId: data.id,
     url: data.id ? `https://www.youtube.com/watch?v=${data.id}` : '',
-    shortsUrl: data.id ? `https://www.youtube.com/shorts/${data.id}` : '',
+    shortsUrl: isShortsUpload && data.id ? `https://www.youtube.com/shorts/${data.id}` : '',
     privacyStatus: metadata.status.privacyStatus,
     notifySubscribers,
     hasPaidProductPlacement,
+    includeChannelFooter,
+    uploadMode,
     title,
     filePath: path.relative(projectRoot, filePath),
     shortsCheck,
@@ -2822,6 +3002,57 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
+  if (request.method === 'POST' && url.pathname === '/api/football/longform/publishing/youtube-draft') {
+    try {
+      const body = await readBody(request);
+      const currentJob = await loadFootballPredictionsLongJob();
+      const result = await generateYouTubePublishingDraft({
+        job: currentJob,
+        extraContext: body.extraContext,
+        copyModelInstructions: body.copyModelInstructions,
+        requestedModel: body.model,
+        includeChannelFooter: body.includeChannelFooter === true,
+      });
+
+      sendJson(response, 200, {
+        ok: true,
+        ...result,
+      });
+    } catch (error) {
+      sendJson(response, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        errorType: error?.errorType ?? undefined,
+      });
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/longform/publishing/youtube/upload') {
+    try {
+      const body = await readBody(request);
+      const currentJob = await loadFootballPredictionsLongJob();
+      const result = await uploadYouTubeVideo({
+        job: currentJob,
+        body,
+        uploadMode: 'longform',
+      });
+
+      sendJson(response, 200, {
+        ok: true,
+        message: 'YouTube longform upload completed.',
+        youtube: result,
+      });
+    } catch (error) {
+      sendJson(response, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        errorType: error?.errorType ?? undefined,
+      });
+    }
+    return;
+  }
+
   if (request.method === 'POST' && url.pathname === '/api/football/round-summary-longform/prepare') {
     try {
       const body = await readBody(request);
@@ -2883,6 +3114,63 @@ const server = http.createServer(async (request, response) => {
         error: error instanceof Error ? error.message : String(error),
         errorType: error?.errorType ?? undefined,
         errorDetails: error?.details ?? undefined,
+      });
+    }
+    return;
+  }
+
+  if (
+    request.method === 'POST' &&
+    url.pathname === '/api/football/round-summary-longform/publishing/youtube-draft'
+  ) {
+    try {
+      const body = await readBody(request);
+      const currentJob = await loadFootballRoundSummaryLongJob();
+      const result = await generateYouTubePublishingDraft({
+        job: currentJob,
+        extraContext: body.extraContext,
+        copyModelInstructions: body.copyModelInstructions,
+        requestedModel: body.model,
+        includeChannelFooter: body.includeChannelFooter === true,
+      });
+
+      sendJson(response, 200, {
+        ok: true,
+        ...result,
+      });
+    } catch (error) {
+      sendJson(response, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        errorType: error?.errorType ?? undefined,
+      });
+    }
+    return;
+  }
+
+  if (
+    request.method === 'POST' &&
+    url.pathname === '/api/football/round-summary-longform/publishing/youtube/upload'
+  ) {
+    try {
+      const body = await readBody(request);
+      const currentJob = await loadFootballRoundSummaryLongJob();
+      const result = await uploadYouTubeVideo({
+        job: currentJob,
+        body,
+        uploadMode: 'longform',
+      });
+
+      sendJson(response, 200, {
+        ok: true,
+        message: 'YouTube round summary longform upload completed.',
+        youtube: result,
+      });
+    } catch (error) {
+      sendJson(response, 500, {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+        errorType: error?.errorType ?? undefined,
       });
     }
     return;
@@ -3011,6 +3299,24 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
+  const publicPathPrefixes = [
+    '/audio/',
+    '/backgrounds/',
+    '/branding/',
+    '/logos/',
+    '/voiceovers/',
+  ];
+  if (request.method === 'GET' && publicPathPrefixes.some((prefix) => url.pathname.startsWith(prefix))) {
+    const relativePath = decodeURIComponent(url.pathname.replace(/^\/+/, ''));
+    const filePath = path.resolve(publicDir, relativePath);
+    if (!filePath.startsWith(`${publicDir}${path.sep}`)) {
+      notFound(response);
+      return;
+    }
+    await serveStatic(response, filePath);
+    return;
+  }
+
   let filePath = '';
   if (url.pathname === '/') {
     filePath = path.join(dashboardDir, 'index.html');
@@ -3026,6 +3332,11 @@ const server = http.createServer(async (request, response) => {
     url.pathname === '/football-round-summary-longform/'
   ) {
     filePath = path.join(dashboardDir, 'football-round-summary-longform', 'index.html');
+  } else if (
+    url.pathname === '/football-longform-player' ||
+    url.pathname === '/football-longform-player/'
+  ) {
+    filePath = path.join(dashboardDir, 'football-longform-player', 'index.html');
   } else if (
     url.pathname === '/football-thumbnails' ||
     url.pathname === '/football-thumbnails/'

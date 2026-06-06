@@ -275,7 +275,55 @@ h1 {
 }
 
 .longform-grid {
-  grid-template-columns: minmax(0, 1.25fr) minmax(420px, 520px);
+  grid-template-columns: 1fr;
+}
+
+.longform-preview-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 390px);
+  gap: 28px;
+  margin-bottom: 28px;
+  align-items: start;
+}
+
+.round-summary-layout {
+  grid-template-columns: minmax(0, 1fr) minmax(430px, 520px);
+}
+
+.predictions-longform-layout {
+  grid-template-columns: minmax(0, 1fr) minmax(430px, 520px);
+}
+
+.longform-preview-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.longform-side-form,
+.round-summary-side-form {
+  max-height: none;
+}
+
+.longform-under-preview-form,
+.round-summary-under-preview-form {
+  margin-bottom: 28px;
+}
+
+.longform-under-preview-form textarea[name='yamlText'],
+.round-summary-under-preview-form textarea[name='yamlText'] {
+  min-height: 320px;
+}
+
+.longform-side-validation .longform-validation,
+.round-summary-side-validation .longform-validation {
+  max-height: 260px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.longform-bottom-activity {
+  margin-top: 28px;
 }
 
 .thumbnail-grid {
@@ -788,6 +836,19 @@ button:disabled {
   white-space: nowrap;
 }
 
+.score-pill {
+  flex: 0 0 auto;
+  min-width: 44px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(45, 157, 255, 0.18);
+  border: 1px solid rgba(45, 157, 255, 0.3);
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 1;
+  text-align: center;
+}
+
 .accent-dot {
   width: 12px;
   height: 12px;
@@ -845,6 +906,44 @@ button:disabled {
 .publishing-context-grid textarea,
 .publishing-field textarea {
   min-height: 124px;
+}
+
+.youtube-draft-toolbar {
+  display: grid;
+  grid-template-columns: minmax(240px, 320px) minmax(220px, 1fr) auto;
+  align-items: end;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.youtube-footer-toggle {
+  margin-bottom: 0;
+}
+
+.youtube-model-field,
+.youtube-draft-context-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.youtube-draft-actions {
+  justify-content: flex-end;
+  margin-bottom: 0;
+}
+
+.youtube-draft-context-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.youtube-draft-context-grid textarea {
+  min-height: 132px;
 }
 
 .publishing-field input {
@@ -1357,8 +1456,16 @@ button:disabled {
   margin-top: 20px;
 }
 
+.longform-preview-side .log-panel {
+  margin-top: 0;
+}
+
 .preview-panel {
   margin-top: 0;
+}
+
+.preview-panel + .preview-panel {
+  margin-top: 20px;
 }
 
 .preview-rail {
@@ -1372,6 +1479,14 @@ button:disabled {
   align-items: end;
   gap: 10px;
   margin-bottom: 12px;
+}
+
+.clean-preview-toolbar {
+  align-items: center;
+}
+
+.clean-preview-toolbar .panel-subtitle {
+  margin: 0;
 }
 
 .preview-url-field {
@@ -1412,6 +1527,15 @@ button:disabled {
   min-height: 0;
   aspect-ratio: 9 / 16;
   max-height: calc(100vh - 220px);
+}
+
+.horizontal-video-preview {
+  aspect-ratio: 16 / 9;
+  max-height: none;
+}
+
+.longform-video-panel .horizontal-video-preview {
+  width: 100%;
 }
 
 #preview-frame {
@@ -1494,11 +1618,14 @@ code {
 
   .hero,
   .grid,
+  .longform-preview-stage,
   .production-grid,
   .sports-grid,
   .settings-grid,
   .two-up,
   .publishing-context-grid,
+  .youtube-draft-toolbar,
+  .youtube-draft-context-grid,
   .publishing-draft-grid,
   .thumbnail-team-grid,
   .selected-team-list,

@@ -379,6 +379,7 @@ const SponsorBar = ({
       top: 804,
       width: MAIN_FRAME.width,
       height: 160,
+      boxSizing: 'border-box',
       display: 'grid',
       gridTemplateColumns: '360px minmax(0, 1fr) 330px',
       alignItems: 'center',

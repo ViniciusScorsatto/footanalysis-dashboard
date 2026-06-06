@@ -27,8 +27,27 @@
         </p>
       </section>
 
-      <section class="production-grid longform-grid">
-        <form id="longform-form" class="panel form-panel compact-form-panel">
+      <form id="longform-form" class="longform-predictions-form-shell">
+      <section class="longform-preview-stage predictions-longform-layout">
+        <section class="panel preview-panel longform-video-panel">
+          <div class="panel-header">
+            <h2>Video Preview</h2>
+            <span class="chip subtle">16:9</span>
+          </div>
+          <div class="preview-toolbar clean-preview-toolbar">
+            <p class="panel-subtitle">Preview limpo do vídeo preparado, sem sidebar ou timeline do Studio.</p>
+            <div class="preview-actions">
+              <button type="button" id="apply-preview-button" class="secondary">Refresh Preview</button>
+              <a id="open-preview-link" class="preview-link" href="#" target="_blank" rel="noreferrer">Open Studio</a>
+            </div>
+          </div>
+          <div class="preview-frame-shell horizontal-video-preview">
+            <iframe id="preview-frame" title="Remotion Studio preview"></iframe>
+          </div>
+        </section>
+
+        <aside class="longform-preview-side">
+          <section class="panel form-panel compact-form-panel longform-side-form">
           <div class="panel-header">
             <h2>Roteiro Setup</h2>
             <span class="chip">YAML</span>
@@ -72,7 +91,21 @@
               <button type="button" id="generate-yaml-button" class="secondary">Generate YAML</button>
             </div>
           </section>
+          </section>
 
+          <section class="panel preview-panel longform-side-validation">
+            <div class="panel-header">
+              <h2>Validation</h2>
+              <span class="chip subtle">Matches</span>
+            </div>
+            <div id="validation-output" class="longform-validation">
+              Load a YAML roteiro to preview the match list.
+            </div>
+          </section>
+        </aside>
+      </section>
+
+      <section class="panel form-panel compact-form-panel longform-under-preview-form">
           <section class="form-section">
             <div class="section-title">
               <span>Roteiro</span>
@@ -137,29 +170,69 @@
             <button type="button" id="prepare-button" class="secondary">Prepare Job</button>
             <button type="button" id="render-button">Render MP4</button>
           </div>
-        </form>
-
-        <aside class="preview-rail">
-          <section class="panel preview-panel">
-            <div class="panel-header">
-              <h2>Validation</h2>
-              <span class="chip subtle">Matches</span>
-            </div>
-            <div id="validation-output" class="longform-validation">
-              Load a YAML roteiro to preview the match list.
-            </div>
-          </section>
-
-          <details class="panel log-panel compact-details" open>
-            <summary>Activity</summary>
-            <div id="error-banner" class="helper" hidden>
-              <p>Erro no longform</p>
-              <span id="error-banner-text"></span>
-            </div>
-            <pre id="log-output"></pre>
-          </details>
-        </aside>
       </section>
+      </form>
+
+      <section class="panel publishing-panel longform-youtube-panel">
+        <div class="panel-header">
+          <div>
+            <h2>YouTube Draft</h2>
+            <p class="panel-subtitle">Generate title, description, and tags for the prepared long-form video.</p>
+          </div>
+          <span class="chip subtle" id="youtube-draft-model-chip">manual approval</span>
+        </div>
+
+        <div class="youtube-draft-toolbar">
+          <label class="youtube-model-field">
+            <span>OpenAI model</span>
+            <select id="youtube-draft-openai-model">
+              <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+              <option value="gpt-4.1" selected>gpt-4.1</option>
+              <option value="gpt-4o">gpt-4o</option>
+              <option value="gpt-5-mini">gpt-5-mini</option>
+            </select>
+          </label>
+          <label class="toggle-row youtube-footer-toggle">
+            <input type="checkbox" id="youtube-channel-footer" />
+            <span>Include Foot Analysis channel footer</span>
+          </label>
+          <div class="publishing-actions youtube-draft-actions">
+            <button type="button" id="generate-youtube-draft-button" class="secondary">Generate YouTube Draft</button>
+            <button type="button" id="copy-youtube-draft-json-button" class="secondary" disabled>Copy JSON</button>
+            <p id="youtube-draft-status" class="publishing-status">Prepare a long-form job, then generate YouTube metadata.</p>
+          </div>
+        </div>
+
+        <div class="youtube-draft-context-grid">
+          <label>
+            Extra copy instructions
+            <textarea
+              id="youtube-draft-copy-model"
+              rows="4"
+              placeholder="Optional title/description/tag guidance, tone, SEO angle, or teams to emphasize..."
+            ></textarea>
+          </label>
+          <label>
+            Extra video context
+            <textarea
+              id="youtube-draft-extra-context"
+              rows="4"
+              placeholder="Anything not captured in the job: thumbnail idea, story angle, target audience, key talking points..."
+            ></textarea>
+          </label>
+        </div>
+
+        <div id="youtube-draft-root" class="publishing-draft-grid"></div>
+      </section>
+
+      <details class="panel log-panel compact-details longform-bottom-activity" open>
+        <summary>Activity</summary>
+        <div id="error-banner" class="helper" hidden>
+          <p>Erro no longform</p>
+          <span id="error-banner-text"></span>
+        </div>
+        <pre id="log-output"></pre>
+      </details>
     </main>
 
     <script type="module" src="/football-longform/app.js"></script>
