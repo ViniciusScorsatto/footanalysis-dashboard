@@ -26,6 +26,7 @@ import {
   prepareFootballRoundSummaryLongJob,
   parseFootballRoundSummaryLongYaml,
   projectRoot,
+  syncCurrentFootballJobDuration,
   templates,
 } from './lib/video-system.mjs';
 import {getFootballHookOptions} from './lib/football-copy.mjs';
@@ -2596,6 +2597,7 @@ const runRender = async (compositionId, outputName) => {
   const npxCommand = process.platform === 'win32' ? 'npx.cmd' : 'npx';
 
   await fs.mkdir(path.join(projectRoot, 'out'), {recursive: true});
+  await syncCurrentFootballJobDuration();
 
   return new Promise((resolve, reject) => {
     const child = spawn(

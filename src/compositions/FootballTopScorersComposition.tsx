@@ -1,7 +1,18 @@
-import {AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Img, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {BrandMark} from '../components/BrandMark';
 import {CompetitionAccentRail} from '../components/CompetitionAccentRail';
-import {FootballColdOpen} from '../components/FootballColdOpen';
+import {
+  FootballShortOpening,
+  SHORT_MAIN_ENTRY_PREROLL_FRAMES,
+  SHORT_OPENING_DURATION_FRAMES,
+} from '../components/FootballShortOpening';
+import {
+  FootballShortBackdrop,
+  FootballShortFontFaces,
+  TEASER_HEADLINE_FONT,
+  TEASER_LABEL_FONT,
+  TEASER_NUMBER_FONT,
+} from '../components/FootballShortTeaser';
 import {SoundtrackBed} from '../components/SoundtrackBed';
 import {VoiceoverBed} from '../components/VoiceoverBed';
 import {fadeInStyle, footerStartFrame, headerEntranceStyle, rowStartFrame} from '../lib/animations';
@@ -65,12 +76,12 @@ export const FootballTopScorersComposition = ({
 }: FootballTopScorersCompositionProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
+  const contentFrame =
+    Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
   const isEnglishChannel = channelProfile === 'en' || languageProfile === 'en';
   const accentColor = leagueConfig?.accentColor ?? (isEnglishChannel ? '#0A84FF' : '#F0A500');
   const statColor = isEnglishChannel ? accentColor : '#F4C44E';
-  const fontFamily = isEnglishChannel
-    ? '"Poppins", "Arial", sans-serif'
-    : '"Barlow Condensed", "Arial Narrow", sans-serif';
+  const fontFamily = TEASER_NUMBER_FONT;
   const sortedEntries = [...entries]
     .sort((left, right) => {
       if (right.goals !== left.goals) {
@@ -82,9 +93,9 @@ export const FootballTopScorersComposition = ({
     .slice(0, 10);
   const leader = sortedEntries[0];
   const chasingPack = sortedEntries.slice(1);
-  const footerAnim = fadeInStyle(frame, fps, footerStartFrame(sortedEntries.length + 1));
-  const titleAnim = headerEntranceStyle(frame, fps, 4);
-  const subtitleAnim = headerEntranceStyle(frame, fps, 8);
+  const footerAnim = fadeInStyle(contentFrame, fps, footerStartFrame(sortedEntries.length + 1));
+  const titleAnim = headerEntranceStyle(contentFrame, fps, 4);
+  const subtitleAnim = headerEntranceStyle(contentFrame, fps, 8);
 
   return (
     <AbsoluteFill
@@ -95,17 +106,24 @@ export const FootballTopScorersComposition = ({
         fontFamily,
       }}
     >
+      <FootballShortFontFaces />
       <SoundtrackBed
         soundtrackPath={soundtrackPath}
         volume={soundtrackVolume}
         duckUntilSeconds={voiceoverPath ? 3.2 : 0}
       />
-      <VoiceoverBed voiceoverPath={voiceoverPath} />
-      <CompetitionAccentRail
+      <FootballShortBackdrop
+        template="top-scorers"
         accentColor={accentColor}
-        secondaryAccentColor={leagueConfig?.secondaryAccentColor}
+        opacity={0.5}
       />
-      <FootballColdOpen
+      <FootballShortOpening
+        template="top-scorers"
+        channelProfile={channelProfile}
+        leagueName={leagueName}
+        titleLabel={titleLabel}
+        subtitleLabel={subtitleLabel}
+        entries={sortedEntries}
         accentColor={accentColor}
         secondaryAccentColor={leagueConfig?.secondaryAccentColor}
         brandName={brandName}
@@ -116,34 +134,40 @@ export const FootballTopScorersComposition = ({
         coldOpenData={coldOpenData}
       />
 
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background:
-            `radial-gradient(circle at 78% 18%, ${accentColor}20, transparent 30%), radial-gradient(circle at 10% 80%, ${accentColor}18, transparent 24%)`,
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          inset: '0 0 auto 0',
-          height: 7,
-          background: accentColor,
-          boxShadow: `0 0 26px ${accentColor}88`,
-        }}
-      />
+      <Sequence from={SHORT_OPENING_DURATION_FRAMES}>
+        <VoiceoverBed voiceoverPath={voiceoverPath} />
+        <CompetitionAccentRail
+          accentColor={accentColor}
+          secondaryAccentColor={leagueConfig?.secondaryAccentColor}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background:
+              `radial-gradient(circle at 78% 18%, ${accentColor}20, transparent 30%), radial-gradient(circle at 10% 80%, ${accentColor}18, transparent 24%)`,
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            inset: '0 0 auto 0',
+            height: 7,
+            background: accentColor,
+            boxShadow: `0 0 26px ${accentColor}88`,
+          }}
+        />
 
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 1,
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          padding: `${SAFE_AREA.top}px ${SAFE_AREA.right}px ${SAFE_AREA.bottom}px ${SAFE_AREA.left}px`,
-        }}
-      >
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 1,
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: `${SAFE_AREA.top}px ${SAFE_AREA.right}px ${SAFE_AREA.bottom}px ${SAFE_AREA.left}px`,
+          }}
+        >
         <div style={{display: 'flex', flexDirection: 'column', gap: 10}}>
           <div
             style={{
@@ -153,13 +177,13 @@ export const FootballTopScorersComposition = ({
               background: '#111820',
               borderLeft: `8px solid ${accentColor}`,
               color: accentColor,
-              fontFamily: '"Barlow", "Arial", sans-serif',
+              fontFamily: TEASER_LABEL_FONT,
               fontSize: 20,
               lineHeight: 1,
               fontWeight: 800,
               letterSpacing: 2.2,
               textTransform: 'uppercase',
-              ...headerEntranceStyle(frame, fps, 0),
+              ...headerEntranceStyle(contentFrame, fps, 0),
             }}
           >
             {leagueName}
@@ -170,7 +194,8 @@ export const FootballTopScorersComposition = ({
               fontSize: 94,
               lineHeight: 0.88,
               fontWeight: 950,
-              letterSpacing: -2.4,
+              fontFamily: TEASER_HEADLINE_FONT,
+              letterSpacing: 0,
               textTransform: 'uppercase',
               color: accentColor,
               ...titleAnim,
@@ -184,6 +209,7 @@ export const FootballTopScorersComposition = ({
               fontSize: 42,
               lineHeight: 1,
               fontWeight: 800,
+              fontFamily: TEASER_LABEL_FONT,
               textTransform: 'uppercase',
               ...subtitleAnim,
             }}
@@ -198,7 +224,7 @@ export const FootballTopScorersComposition = ({
             accentColor={accentColor}
             statColor={statColor}
             isEnglishChannel={isEnglishChannel}
-            frame={frame}
+            frame={contentFrame}
             fps={fps}
           />
         ) : null}
@@ -211,7 +237,7 @@ export const FootballTopScorersComposition = ({
               accentColor={accentColor}
               statColor={statColor}
               isEnglishChannel={isEnglishChannel}
-              frame={frame}
+              frame={contentFrame}
               fps={fps}
               rowIndex={index}
             />
@@ -250,7 +276,8 @@ export const FootballTopScorersComposition = ({
           )}
           <BrandMark brandName={brandName} brandLogoPath={brandLogoPath} />
         </div>
-      </div>
+        </div>
+      </Sequence>
     </AbsoluteFill>
   );
 };
@@ -339,7 +366,7 @@ const LeaderCard = ({
             textTransform: 'uppercase',
           }}
         >
-          {entry.teamShort} · {entry.team}
+          {entry.team}
         </div>
       </div>
       <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end'}}>
@@ -348,6 +375,7 @@ const LeaderCard = ({
             fontSize: 98,
             lineHeight: 0.86,
             fontWeight: 950,
+            fontFamily: TEASER_NUMBER_FONT,
             color: statColor,
           }}
         >
@@ -455,7 +483,7 @@ const ScorerRow = ({
             textTransform: 'uppercase',
           }}
         >
-          {entry.teamShort} · {entry.team}
+          {entry.team}
         </div>
       </div>
       <div

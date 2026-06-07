@@ -1,7 +1,18 @@
-import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig} from 'remotion';
 import {BrandMark} from '../components/BrandMark';
 import {CompetitionAccentRail} from '../components/CompetitionAccentRail';
-import {FootballColdOpen} from '../components/FootballColdOpen';
+import {
+  FootballShortOpening,
+  SHORT_MAIN_ENTRY_PREROLL_FRAMES,
+  SHORT_OPENING_DURATION_FRAMES,
+} from '../components/FootballShortOpening';
+import {
+  FootballShortBackdrop,
+  FootballShortFontFaces,
+  TEASER_HEADLINE_FONT,
+  TEASER_LABEL_FONT,
+  TEASER_NUMBER_FONT,
+} from '../components/FootballShortTeaser';
 import {ResultRow} from '../components/ResultRow';
 import {SoundtrackBed} from '../components/SoundtrackBed';
 import {VoiceoverBed} from '../components/VoiceoverBed';
@@ -62,6 +73,8 @@ export const FootballFixturesComposition = ({
 }: FootballFixturesCompositionProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
+  const contentFrame =
+    Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
 
   const isEnglish = channelProfile === 'en';
   const accentColor = leagueConfig?.accentColor ?? '#F0A500';
@@ -86,10 +99,10 @@ export const FootballFixturesComposition = ({
   const subtitleColor = isEnglish ? '#4a6070' : '#3a5060';
   const backgroundColor = '#0b0d12';
 
-  const chipAnim = headerEntranceStyle(frame, fps, 0);
-  const titleAnim = headerEntranceStyle(frame, fps, HEADER_STAGGER_FRAMES);
-  const roundAnim = headerEntranceStyle(frame, fps, HEADER_STAGGER_FRAMES * 2);
-  const footerAnim = fadeInStyle(frame, fps, footerStartFrame(fixtures.length));
+  const chipAnim = headerEntranceStyle(contentFrame, fps, 0);
+  const titleAnim = headerEntranceStyle(contentFrame, fps, HEADER_STAGGER_FRAMES);
+  const roundAnim = headerEntranceStyle(contentFrame, fps, HEADER_STAGGER_FRAMES * 2);
+  const footerAnim = fadeInStyle(contentFrame, fps, footerStartFrame(fixtures.length));
   const ctaAccentColor = isEnglish && variant !== 'results' ? '#0A84FF' : accentColor;
 
   return (
@@ -98,20 +111,28 @@ export const FootballFixturesComposition = ({
         overflow: 'hidden',
         background: backgroundColor,
         color: '#ffffff',
-        fontFamily: '"Barlow Condensed", "Arial Narrow", sans-serif',
+        fontFamily: TEASER_NUMBER_FONT,
       }}
     >
+      <FootballShortFontFaces />
       <SoundtrackBed
         soundtrackPath={soundtrackPath}
         volume={soundtrackVolume}
         duckUntilSeconds={voiceoverPath ? 3.2 : 0}
       />
-      <VoiceoverBed voiceoverPath={voiceoverPath} />
-      <CompetitionAccentRail
+      <FootballShortBackdrop
+        template={variant}
+        variant={variant}
         accentColor={accentColor}
-        secondaryAccentColor={leagueConfig?.secondaryAccentColor}
+        opacity={0.5}
       />
-      <FootballColdOpen
+      <FootballShortOpening
+        template={variant}
+        variant={variant}
+        channelProfile={channelProfile}
+        leagueName={leagueName}
+        roundLabel={roundLabel}
+        fixtures={fixtures}
         accentColor={accentColor}
         secondaryAccentColor={leagueConfig?.secondaryAccentColor}
         brandName={brandName}
@@ -122,119 +143,128 @@ export const FootballFixturesComposition = ({
         coldOpenData={coldOpenData}
       />
 
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: accentWipeWidth(frame),
-          height: 6,
-          background: accentColor,
-        }}
-      />
+      <Sequence from={SHORT_OPENING_DURATION_FRAMES}>
+        <VoiceoverBed voiceoverPath={voiceoverPath} />
+        <CompetitionAccentRail
+          accentColor={accentColor}
+          secondaryAccentColor={leagueConfig?.secondaryAccentColor}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: accentWipeWidth(contentFrame),
+            height: 6,
+            background: accentColor,
+          }}
+        />
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          padding: `${topSafePadding}px ${sideSafeRight}px ${footerSafeBottom}px ${sideSafeLeft}px`,
-        }}
-      >
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: 16,
-            marginBottom: 28,
+            height: '100%',
+            padding: `${topSafePadding}px ${sideSafeRight}px ${footerSafeBottom}px ${sideSafeLeft}px`,
           }}
         >
-          <div style={chipAnim}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 16,
+              marginBottom: 28,
+            }}
+          >
+            <div style={chipAnim}>
+              <div
+                style={{
+                  alignSelf: 'flex-start',
+                  padding: '10px 18px 8px',
+                  borderRadius: 999,
+                  background: isEnglish ? '#141c24' : '#0f1318',
+                  border: isEnglish ? '1px solid #1e2a3a' : 'none',
+                  borderLeft: isEnglish ? '1px solid #1e2a3a' : `8px solid ${accentColor}`,
+                  color: isEnglish ? '#4a6070' : accentColor,
+                  fontFamily: TEASER_LABEL_FONT,
+                  fontSize: 20,
+                  lineHeight: 1,
+                  fontWeight: 600,
+                  letterSpacing: 2,
+                  textTransform: 'uppercase',
+                }}
+              >
+                {leagueName}
+              </div>
+            </div>
+
             <div
               style={{
-                alignSelf: 'flex-start',
-                padding: '10px 18px 8px',
-                borderRadius: 999,
-                background: isEnglish ? '#141c24' : '#0f1318',
-                border: isEnglish ? '1px solid #1e2a3a' : 'none',
-                borderLeft: isEnglish ? '1px solid #1e2a3a' : `8px solid ${accentColor}`,
-                color: isEnglish ? '#4a6070' : accentColor,
-                fontFamily: '"Barlow", "Arial", sans-serif',
-                fontSize: 20,
-                lineHeight: 1,
-                fontWeight: 600,
-                letterSpacing: 2,
+                fontSize: 96,
+                lineHeight: 0.92,
+                fontWeight: 900,
+                fontFamily: TEASER_HEADLINE_FONT,
+                letterSpacing: 0,
                 textTransform: 'uppercase',
+                color: titleColor,
+                ...titleAnim,
               }}
             >
-              {leagueName}
+              {titleText}
+            </div>
+
+            <div
+              style={{
+                fontSize: 56,
+                lineHeight: 1,
+                fontWeight: 600,
+                fontFamily: TEASER_LABEL_FONT,
+                textTransform: 'uppercase',
+                color: subtitleColor,
+                ...roundAnim,
+              }}
+            >
+              {roundLabel}
             </div>
           </div>
 
           <div
             style={{
-              fontSize: 96,
-              lineHeight: 0.92,
-              fontWeight: 900,
-              letterSpacing: -2.4,
-              textTransform: 'uppercase',
-              color: titleColor,
-              ...titleAnim,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 16,
+              paddingRight: 4,
             }}
           >
-            {titleText}
+            {fixtures.map((fixture, index) => (
+              <ResultRow
+                key={fixture.fixtureId ?? `${fixture.homeTeam}-${fixture.awayTeam}`}
+                fixture={fixture}
+                variant={variant}
+                rowIndex={index}
+                accentColor={accentColor}
+                channelProfile={channelProfile}
+                leagueId={leagueConfig?.leagueId}
+              />
+            ))}
           </div>
 
           <div
             style={{
-              fontSize: 56,
-              lineHeight: 1,
-              fontWeight: 600,
-              textTransform: 'uppercase',
-              color: subtitleColor,
-              ...roundAnim,
+              marginTop: 'auto',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-end',
+              gap: 32,
+              paddingRight: footerSafeRight,
+              ...footerAnim,
             }}
           >
-            {roundLabel}
+            <FooterCta text={ctaText} accentColor={ctaAccentColor} />
+            <BrandMark brandName={brandName} brandLogoPath={brandLogoPath} />
           </div>
         </div>
-
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 16,
-            paddingRight: 4,
-          }}
-        >
-          {fixtures.map((fixture, index) => (
-            <ResultRow
-              key={fixture.fixtureId ?? `${fixture.homeTeam}-${fixture.awayTeam}`}
-              fixture={fixture}
-              variant={variant}
-              rowIndex={index}
-              accentColor={accentColor}
-              channelProfile={channelProfile}
-              leagueId={leagueConfig?.leagueId}
-            />
-          ))}
-        </div>
-
-        <div
-          style={{
-            marginTop: 'auto',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-            gap: 32,
-            paddingRight: footerSafeRight,
-            ...footerAnim,
-          }}
-        >
-          <FooterCta text={ctaText} accentColor={ctaAccentColor} />
-          <BrandMark brandName={brandName} brandLogoPath={brandLogoPath} />
-        </div>
-      </div>
+      </Sequence>
     </AbsoluteFill>
   );
 };

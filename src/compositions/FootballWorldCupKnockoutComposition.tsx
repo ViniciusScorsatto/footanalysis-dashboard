@@ -1,8 +1,19 @@
-import {AbsoluteFill, Img, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Img, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import type {CSSProperties} from 'react';
 import {BrandMark} from '../components/BrandMark';
 import {CompetitionAccentRail} from '../components/CompetitionAccentRail';
-import {FootballColdOpen} from '../components/FootballColdOpen';
+import {
+  FootballShortOpening,
+  SHORT_MAIN_ENTRY_PREROLL_FRAMES,
+  SHORT_OPENING_DURATION_FRAMES,
+} from '../components/FootballShortOpening';
+import {
+  FootballShortBackdrop,
+  FootballShortFontFaces,
+  TEASER_HEADLINE_FONT,
+  TEASER_LABEL_FONT,
+  TEASER_NUMBER_FONT,
+} from '../components/FootballShortTeaser';
 import {SoundtrackBed} from '../components/SoundtrackBed';
 import {VoiceoverBed} from '../components/VoiceoverBed';
 import {
@@ -52,7 +63,8 @@ export const FootballWorldCupKnockoutComposition = ({
   const {fps} = useVideoConfig();
   const leftMatches = matches.slice(0, BRACKET_SIDE_SIZE);
   const rightMatches = matches.slice(BRACKET_SIDE_SIZE, BRACKET_SIDE_SIZE * 2);
-  const localFrame = frame;
+  const localFrame =
+    Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
   const isEnglish = /^world cup/i.test(titleLabel);
   const mainTitle = isEnglish ? 'Bracket' : 'Mata-Mata';
 
@@ -67,18 +79,28 @@ export const FootballWorldCupKnockoutComposition = ({
       style={{
         overflow: 'hidden',
         color: '#ffffff',
-        fontFamily: '"Barlow Condensed", "Arial Narrow", sans-serif',
+        fontFamily: TEASER_NUMBER_FONT,
         background: '#0b0d12',
       }}
     >
+      <FootballShortFontFaces />
       <SoundtrackBed
         soundtrackPath={soundtrackPath}
         volume={soundtrackVolume}
         duckUntilSeconds={voiceoverPath ? 3.2 : 0}
       />
-      <VoiceoverBed voiceoverPath={voiceoverPath} />
-      <CompetitionAccentRail accentColor="#F0D500" />
-      <FootballColdOpen
+      <FootballShortBackdrop
+        template="world-cup-knockout"
+        accentColor="#F0D500"
+        opacity={0.5}
+      />
+      <FootballShortOpening
+        template="world-cup-knockout"
+        channelProfile={isEnglish ? 'en' : 'pt'}
+        leagueName={isEnglish ? 'World Cup' : 'Copa do Mundo'}
+        titleLabel={titleLabel}
+        phaseLabel={phaseLabel}
+        matches={matches}
         accentColor="#F0D500"
         brandName={brandName}
         brandLogoPath={brandLogoPath}
@@ -87,26 +109,29 @@ export const FootballWorldCupKnockoutComposition = ({
         hookText={hookText}
         coldOpenData={coldOpenData}
       />
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: 10,
-          background:
-            'linear-gradient(90deg, #F0D500 0 33%, #27AE60 33% 66%, #E74C3C 66% 100%)',
-        }}
-      />
+      <Sequence from={SHORT_OPENING_DURATION_FRAMES}>
+        <VoiceoverBed voiceoverPath={voiceoverPath} />
+        <CompetitionAccentRail accentColor="#F0D500" />
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: 10,
+            background:
+              'linear-gradient(90deg, #F0D500 0 33%, #27AE60 33% 66%, #E74C3C 66% 100%)',
+          }}
+        />
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          padding: '40px 28px 118px 72px',
-        }}
-      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            padding: '40px 28px 118px 72px',
+          }}
+        >
         {/* Animated header */}
         <div
           style={{
@@ -124,7 +149,7 @@ export const FootballWorldCupKnockoutComposition = ({
                 background: '#0f1318',
                 borderLeft: '8px solid #F0D500',
                 color: '#F0D500',
-                fontFamily: '"Barlow", "Arial", sans-serif',
+                fontFamily: TEASER_LABEL_FONT,
                 fontSize: 20,
                 lineHeight: 1,
                 fontWeight: 600,
@@ -141,7 +166,8 @@ export const FootballWorldCupKnockoutComposition = ({
               fontSize: 96,
               lineHeight: 0.92,
               fontWeight: 900,
-              letterSpacing: -2.4,
+              fontFamily: TEASER_HEADLINE_FONT,
+              letterSpacing: 0,
               textTransform: 'uppercase',
               color: '#F0D500',
               ...titleAnim,
@@ -157,6 +183,7 @@ export const FootballWorldCupKnockoutComposition = ({
               fontSize: 56,
               lineHeight: 1,
               fontWeight: 600,
+              fontFamily: TEASER_LABEL_FONT,
               textTransform: 'uppercase',
               ...phaseAnim,
             }}
@@ -213,7 +240,8 @@ export const FootballWorldCupKnockoutComposition = ({
 
           <BrandMark brandName={brandName} brandLogoPath={brandLogoPath} />
         </div>
-      </div>
+        </div>
+      </Sequence>
     </AbsoluteFill>
   );
 };

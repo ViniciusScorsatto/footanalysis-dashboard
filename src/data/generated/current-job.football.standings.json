@@ -8,11 +8,11 @@
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/gol-na-pressao.mp3",
-  "soundtrackLabel": "Gol na Pressão",
+  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
+  "soundtrackLabel": "Gol de Arena",
   "soundtrackVolume": 0.35,
   "outputName": "brasileirao-serie-c-2026-classificacao-pt-br.mp4",
-  "durationInFrames": 270,
+  "durationInFrames": 360,
   "compositionId": "FootballStandingsShort",
   "leagueConfig": {
     "leagueId": 75,
@@ -44,7 +44,7 @@
     "leagueName": "Brasileirão Série C"
   },
   "standingsLabel": "Rodada 9",
-  "ctaText": "Qual foi o melhor jogo?",
+  "ctaText": "Quem sobe e quem cai?",
   "rows": [
     {
       "rank": 1,
@@ -314,8 +314,6 @@
       }
     ]
   },
-  "voiceoverEnabled": true,
-  "voiceoverText": "Fala Galera, pra vocês... a classificação do Brasileirão Série C.",
-  "voiceoverPath": "/voiceovers/football/pt-br-562aa04009879bcd.mp3",
-  "voiceoverLabel": "Fala Galera, pra vocês... a classificação do Brasileirão Série C."
+  "voiceoverEnabled": false,
+  "voiceoverText": "Fala Galera, pra vocês... a classificação do Brasileirão Série C."
 }

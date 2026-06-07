@@ -1,224 +1,232 @@
 {
   "sport": "football",
-  "template": "round-summary-long",
-  "compositionId": "FootballRoundSummaryLong",
-  "leagueId": 39,
-  "season": 2025,
-  "leagueName": "Premier League",
-  "channelProfile": "en",
-  "languageProfile": "en",
+  "template": "relegation-line",
+  "leagueId": 71,
+  "season": 2026,
+  "leagueName": "Brasileirão Série A",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/foot-analysis-whistle.mp3",
-  "soundtrackLabel": "Foot Analysis Whistle",
-  "soundtrackVolume": 0.35,
-  "outputName": "premier-league-matchday-30-resumo-longform.mp4",
-  "durationInFrames": 1312,
-  "dataSource": "api",
-  "title": "Matchday 30 Round Summary",
-  "roundLabel": "Matchday 30",
-  "openingLines": [
-    "The matchday is complete, and the scorelines only tell part of the story.",
-    "Let us go match by match through the goals, cards, numbers, and decisive moments."
-  ],
-  "introDurationInFrames": 298,
-  "outroDurationInFrames": 298,
-  "transitionDurationInFrames": 18,
-  "disclaimer": "Data is based on the available match information.",
-  "voiceoverEnabled": true,
-  "matches": [
-    {
-      "id": "burnley-bournemouth-1",
-      "fixtureId": 1379261,
-      "homeTeam": "Burnley",
-      "awayTeam": "Bournemouth",
-      "homeScore": 0,
-      "awayScore": 0,
-      "fixtureDateLabel": "2026-03-15",
-      "venueLabel": "Turf Moor",
-      "statusLabel": "FT",
-      "voiceover": "Burnley and Bournemouth finished 0 to 0.\nUse this space to narrate the match overview: context, turning point, and what the numbers say.",
-      "voiceoverPath": "/voiceovers/football/en-94d05bed0003b543.mp3",
-      "durationInFrames": 340,
-      "homeBadge": {
-        "label": "BURN",
-        "logoPath": "/logos/burnley-44.png",
-        "accentColor": "#6C1D45"
+  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
+  "soundtrackLabel": "Gol de Arena",
+  "soundtrackVolume": 0.25,
+  "outputName": "brasileirao-serie-a-2026-linha-do-rebaixamento-pt-br.mp4",
+  "durationInFrames": 360,
+  "compositionId": "FootballRelegationLineShort",
+  "leagueConfig": {
+    "leagueId": 71,
+    "accentColor": "#F0A500",
+    "standings": {
+      "safeArea": {
+        "left": 68,
+        "right": 104
       },
-      "awayBadge": {
-        "label": "BOUR",
-        "logoPath": "/logos/bournemouth-35.png",
-        "accentColor": "#3498DB"
-      },
-      "events": [
+      "zones": [
         {
-          "minute": 75,
-          "extraMinute": 0,
-          "team": "Burnley",
-          "player": "Hannibal Mejbri",
-          "assist": null,
-          "type": "card",
-          "detail": "Yellow Card",
-          "side": "home"
+          "key": "libertadores",
+          "label": "Libertadores",
+          "start": 1,
+          "end": 4,
+          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(101, 227, 133, 0.64)"
+        },
+        {
+          "key": "pre-libertadores",
+          "label": "Pré-Libertadores",
+          "start": 5,
+          "end": 5,
+          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 190, 92, 0.58)"
+        },
+        {
+          "key": "sul-americana",
+          "label": "Sul-Americana",
+          "start": 6,
+          "end": 11,
+          "fill": "linear-gradient(90deg, rgba(0, 177, 183, 0.82), rgba(0, 177, 183, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(0, 177, 183, 0.54)"
+        },
+        {
+          "key": "rebaixamento",
+          "label": "Rebaixamento",
+          "start": 17,
+          "end": 20,
+          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 102, 102, 0.56)"
         }
-      ],
-      "keyStats": [
-        {
-          "label": "On target",
-          "homeValue": "2",
-          "awayValue": "3"
-        },
-        {
-          "label": "Shots",
-          "homeValue": "15",
-          "awayValue": "22"
-        },
-        {
-          "label": "Possession",
-          "homeValue": "38%",
-          "awayValue": "62%"
-        },
-        {
-          "label": "Corners",
-          "homeValue": "5",
-          "awayValue": "8"
-        },
-        {
-          "label": "Fouls",
-          "homeValue": "11",
-          "awayValue": "5"
-        },
-        {
-          "label": "Yellow cards",
-          "homeValue": "1",
-          "awayValue": "0"
-        },
-        {
-          "label": "Saves",
-          "homeValue": "2",
-          "awayValue": "2"
-        }
-      ],
-      "highlights": [
-        "Empate em 0 a 0, com equilíbrio no placar final."
       ]
     },
-    {
-      "id": "sunderland-brighton-2",
-      "fixtureId": 1379267,
-      "homeTeam": "Sunderland",
-      "awayTeam": "Brighton",
-      "homeScore": 0,
-      "awayScore": 1,
-      "fixtureDateLabel": "2026-03-15",
-      "venueLabel": "Stadium of Light",
-      "statusLabel": "FT",
-      "voiceover": "Sunderland and Brighton finished 0 to 1.\nUse this space to narrate the match overview: context, turning point, and what the numbers say.",
-      "voiceoverPath": "/voiceovers/football/en-06c38ab6da2ae09b.mp3",
-      "durationInFrames": 340,
-      "homeBadge": {
-        "label": "SUND",
-        "logoPath": "/logos/sunderland-746.png",
-        "accentColor": "#2E86DE"
+    "leagueName": "Brasileirão Série A",
+    "pace": {
+      "championship": {
+        "benchmarkPercentage": 68,
+        "benchmarkLabel": "Média dos últimos 10 campeões",
+        "entryCount": 10
       },
-      "awayBadge": {
-        "label": "BRIG",
-        "logoPath": "/logos/brighton-51.png",
-        "accentColor": "#0057B8"
-      },
-      "events": [
-        {
-          "minute": 50,
-          "extraMinute": 0,
-          "team": "Sunderland",
-          "player": "Chris Rigg",
-          "assist": null,
-          "type": "var",
-          "detail": "Goal cancelled",
-          "side": "home"
-        },
-        {
-          "minute": 51,
-          "extraMinute": 0,
-          "team": "Brighton",
-          "player": "Diego Gómez",
-          "assist": null,
-          "type": "card",
-          "detail": "Yellow Card",
-          "side": "away"
-        },
-        {
-          "minute": 58,
-          "extraMinute": 0,
-          "team": "Brighton",
-          "player": "Y. Minteh",
-          "assist": null,
-          "type": "goal",
-          "detail": "Normal Goal",
-          "side": "away"
-        },
-        {
-          "minute": 74,
-          "extraMinute": 0,
-          "team": "Brighton",
-          "player": "Yankuba Minteh",
-          "assist": null,
-          "type": "card",
-          "detail": "Yellow Card",
-          "side": "away"
-        },
-        {
-          "minute": 75,
-          "extraMinute": 0,
-          "team": "Sunderland",
-          "player": "Granit Xhaka",
-          "assist": null,
-          "type": "card",
-          "detail": "Yellow Card",
-          "side": "home"
-        }
-      ],
-      "keyStats": [
-        {
-          "label": "On target",
-          "homeValue": "4",
-          "awayValue": "4"
-        },
-        {
-          "label": "Shots",
-          "homeValue": "14",
-          "awayValue": "12"
-        },
-        {
-          "label": "Possession",
-          "homeValue": "48%",
-          "awayValue": "52%"
-        },
-        {
-          "label": "Corners",
-          "homeValue": "7",
-          "awayValue": "3"
-        },
-        {
-          "label": "Fouls",
-          "homeValue": "7",
-          "awayValue": "12"
-        },
-        {
-          "label": "Yellow cards",
-          "homeValue": "1",
-          "awayValue": "2"
-        },
-        {
-          "label": "Saves",
-          "homeValue": "3",
-          "awayValue": "3"
-        }
-      ],
-      "highlights": [
-        "Brighton venceu pelo placar de 0 a 1.",
-        "Gols de Y. Minteh."
-      ]
+      "relegation": {
+        "benchmarkPercentage": 38,
+        "benchmarkLabel": "Linha de segurança",
+        "safeRowsAbove": 3,
+        "maxRows": 10
+      }
     }
-  ]
+  },
+  "titleLabel": "Linha do Rebaixamento",
+  "subtitleLabel": "Aproveitamento na Rodada 18",
+  "benchmarkPercentage": 38,
+  "benchmarkLabel": "Linha de segurança",
+  "noteLabel": "*times com jogos a menos",
+  "ctaText": "Quem cai esse ano?",
+  "entries": [
+    {
+      "rank": 11,
+      "team": "Cruzeiro",
+      "played": 18,
+      "points": 24,
+      "percentage": 44,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/cruzeiro-135.png"
+      }
+    },
+    {
+      "rank": 12,
+      "team": "Botafogo",
+      "played": 17,
+      "points": 22,
+      "percentage": 43,
+      "hasGameInHand": true,
+      "badge": {
+        "label": "B",
+        "logoPath": "/logos/botafogo-120.png"
+      }
+    },
+    {
+      "rank": 13,
+      "team": "Vitoria",
+      "played": 17,
+      "points": 22,
+      "percentage": 43,
+      "hasGameInHand": true,
+      "badge": {
+        "label": "V",
+        "logoPath": "/logos/vitoria-136.png"
+      }
+    },
+    {
+      "rank": 14,
+      "team": "Internacional",
+      "played": 18,
+      "points": 21,
+      "percentage": 39,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "I",
+        "logoPath": "/logos/internacional-119.png"
+      }
+    },
+    {
+      "rank": 15,
+      "team": "Santos",
+      "played": 18,
+      "points": 21,
+      "percentage": 39,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "S",
+        "logoPath": "/logos/santos-128.png"
+      }
+    },
+    {
+      "rank": 16,
+      "team": "Gremio",
+      "played": 18,
+      "points": 21,
+      "percentage": 39,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "G",
+        "logoPath": "/logos/gremio-130.png"
+      }
+    },
+    {
+      "rank": 17,
+      "team": "Vasco DA Gama",
+      "played": 18,
+      "points": 20,
+      "percentage": 37,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "VDG",
+        "logoPath": "/logos/vasco-da-gama-133.png"
+      }
+    },
+    {
+      "rank": 18,
+      "team": "Remo",
+      "played": 18,
+      "points": 18,
+      "percentage": 33,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "R",
+        "logoPath": "/logos/remo-1198.png"
+      }
+    },
+    {
+      "rank": 19,
+      "team": "Mirassol",
+      "played": 17,
+      "points": 16,
+      "percentage": 31,
+      "hasGameInHand": true,
+      "badge": {
+        "label": "M",
+        "logoPath": "/logos/mirassol-7848.png"
+      }
+    },
+    {
+      "rank": 20,
+      "team": "Chapecoense",
+      "played": 17,
+      "points": 9,
+      "percentage": 18,
+      "hasGameInHand": true,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/chapecoense-sc-132.png"
+      }
+    }
+  ],
+  "introTitle": "Brasileirão Série A",
+  "introSubtitle": "Aproveitamento na Rodada 18",
+  "hookText": "A linha está chegando",
+  "coldOpenData": {
+    "tableRows": [
+      {
+        "rank": 1,
+        "club": "CRUZEIRO",
+        "pts": 10
+      },
+      {
+        "rank": 2,
+        "club": "BOTAFOGO",
+        "pts": 8
+      },
+      {
+        "rank": 3,
+        "club": "VITORIA",
+        "pts": 6
+      },
+      {
+        "rank": 4,
+        "club": "INTERNACIONAL",
+        "pts": 4
+      }
+    ]
+  },
+  "voiceoverEnabled": false,
+  "voiceoverText": "Fala Galera, pra vocês... a linha do rebaixamento do Brasileirão Série A."
 }

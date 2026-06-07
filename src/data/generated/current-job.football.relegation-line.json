@@ -10,9 +10,9 @@
   "brandLogoPath": "/branding/foot-analysis-logo.png",
   "soundtrackPath": "/audio/football/gol-de-arena.mp3",
   "soundtrackLabel": "Gol de Arena",
-  "soundtrackVolume": 0.1,
+  "soundtrackVolume": 0.25,
   "outputName": "brasileirao-serie-a-2026-linha-do-rebaixamento-pt-br.mp4",
-  "durationInFrames": 270,
+  "durationInFrames": 360,
   "compositionId": "FootballRelegationLineShort",
   "leagueConfig": {
     "leagueId": 71,
@@ -77,7 +77,7 @@
   "benchmarkPercentage": 38,
   "benchmarkLabel": "Linha de segurança",
   "noteLabel": "*times com jogos a menos",
-  "ctaText": "Quem fica com a taça?",
+  "ctaText": "Quem cai esse ano?",
   "entries": [
     {
       "rank": 11,

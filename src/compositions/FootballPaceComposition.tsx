@@ -1,7 +1,18 @@
-import {AbsoluteFill, Img, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Img, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {BrandMark} from '../components/BrandMark';
 import {CompetitionAccentRail} from '../components/CompetitionAccentRail';
-import {FootballColdOpen} from '../components/FootballColdOpen';
+import {
+  FootballShortOpening,
+  SHORT_MAIN_ENTRY_PREROLL_FRAMES,
+  SHORT_OPENING_DURATION_FRAMES,
+} from '../components/FootballShortOpening';
+import {
+  FootballShortBackdrop,
+  FootballShortFontFaces,
+  TEASER_HEADLINE_FONT,
+  TEASER_LABEL_FONT,
+  TEASER_NUMBER_FONT,
+} from '../components/FootballShortTeaser';
 import {SoundtrackBed} from '../components/SoundtrackBed';
 import {VoiceoverBed} from '../components/VoiceoverBed';
 import {
@@ -71,6 +82,8 @@ export const FootballPaceComposition = ({
 }: FootballPaceCompositionProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
+  const contentFrame =
+    Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
   const competitionAccent = leagueConfig?.accentColor ?? '#F0A500';
   const titleColor = variant === 'relegation' ? '#E74C3C' : competitionAccent;
   const sortedEntries = [...entries].sort((left, right) => {
@@ -88,11 +101,11 @@ export const FootballPaceComposition = ({
     variant === 'championship'
       ? Math.max(sortedEntries.filter((entry) => entry.percentage >= benchmarkPercentage).length, 1)
       : Math.max(sortedEntries.filter((entry) => entry.percentage >= benchmarkPercentage).length, 1);
-  const footerAnim = fadeInStyle(frame, fps, footerStartFrame(entries.length + 1));
-  const chipAnim = headerEntranceStyle(frame, fps, 0);
-  const titleAnim = headerEntranceStyle(frame, fps, HEADER_STAGGER_FRAMES);
-  const subtitleAnim = headerEntranceStyle(frame, fps, HEADER_STAGGER_FRAMES * 2);
-  const accentWidth = accentWipeWidth(frame);
+  const footerAnim = fadeInStyle(contentFrame, fps, footerStartFrame(entries.length + 1));
+  const chipAnim = headerEntranceStyle(contentFrame, fps, 0);
+  const titleAnim = headerEntranceStyle(contentFrame, fps, HEADER_STAGGER_FRAMES);
+  const subtitleAnim = headerEntranceStyle(contentFrame, fps, HEADER_STAGGER_FRAMES * 2);
+  const accentWidth = accentWipeWidth(contentFrame);
 
   return (
     <AbsoluteFill
@@ -100,20 +113,30 @@ export const FootballPaceComposition = ({
         overflow: 'hidden',
         background: '#0b0d12',
         color: '#ffffff',
-        fontFamily: '"Barlow Condensed", "Arial Narrow", sans-serif',
+        fontFamily: TEASER_NUMBER_FONT,
       }}
     >
+      <FootballShortFontFaces />
       <SoundtrackBed
         soundtrackPath={soundtrackPath}
         volume={soundtrackVolume}
         duckUntilSeconds={voiceoverPath ? 3.2 : 0}
       />
-      <VoiceoverBed voiceoverPath={voiceoverPath} />
-      <CompetitionAccentRail
+      <FootballShortBackdrop
+        template={variant === 'relegation' ? 'relegation-line' : 'championship-pace'}
+        variant={variant}
         accentColor={competitionAccent}
-        secondaryAccentColor={leagueConfig?.secondaryAccentColor}
+        opacity={0.5}
       />
-      <FootballColdOpen
+      <FootballShortOpening
+        template={variant === 'relegation' ? 'relegation-line' : 'championship-pace'}
+        variant={variant}
+        leagueName={leagueName}
+        titleLabel={titleLabel}
+        subtitleLabel={subtitleLabel}
+        benchmarkPercentage={benchmarkPercentage}
+        benchmarkLabel={benchmarkLabel}
+        entries={sortedEntries}
         accentColor={competitionAccent}
         secondaryAccentColor={leagueConfig?.secondaryAccentColor}
         brandName={brandName}
@@ -124,25 +147,31 @@ export const FootballPaceComposition = ({
         coldOpenData={coldOpenData}
       />
 
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: accentWidth,
-          height: 8,
-          background: competitionAccent,
-        }}
-      />
+      <Sequence from={SHORT_OPENING_DURATION_FRAMES}>
+        <VoiceoverBed voiceoverPath={voiceoverPath} />
+        <CompetitionAccentRail
+          accentColor={competitionAccent}
+          secondaryAccentColor={leagueConfig?.secondaryAccentColor}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: accentWidth,
+            height: 8,
+            background: competitionAccent,
+          }}
+        />
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          padding: `${SAFE_AREA.top}px ${SAFE_AREA.right}px ${SAFE_AREA.bottom}px ${SAFE_AREA.left}px`,
-        }}
-      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            padding: `${SAFE_AREA.top}px ${SAFE_AREA.right}px ${SAFE_AREA.bottom}px ${SAFE_AREA.left}px`,
+          }}
+        >
         <div style={{display: 'flex', flexDirection: 'column', gap: 12}}>
           <div style={chipAnim}>
             <div
@@ -153,7 +182,7 @@ export const FootballPaceComposition = ({
                 background: '#0f1318',
                 borderLeft: `8px solid ${competitionAccent}`,
                 color: competitionAccent,
-                fontFamily: '"Barlow", "Arial", sans-serif',
+                fontFamily: TEASER_LABEL_FONT,
                 fontSize: 20,
                 lineHeight: 1,
                 fontWeight: 600,
@@ -170,7 +199,8 @@ export const FootballPaceComposition = ({
               fontSize: 84,
               lineHeight: 0.92,
               fontWeight: 900,
-              letterSpacing: -2.2,
+              fontFamily: TEASER_HEADLINE_FONT,
+              letterSpacing: 0,
               textTransform: 'uppercase',
               color: titleColor,
               ...titleAnim,
@@ -185,6 +215,7 @@ export const FootballPaceComposition = ({
               fontSize: 46,
               lineHeight: 1,
               fontWeight: 600,
+              fontFamily: TEASER_LABEL_FONT,
               textTransform: 'uppercase',
               ...subtitleAnim,
             }}
@@ -205,7 +236,7 @@ export const FootballPaceComposition = ({
             <PaceRow
               key={`${entry.rank}-${entry.team}`}
               entry={entry}
-              frame={frame}
+              frame={contentFrame}
               fps={fps}
               rowIndex={index}
               benchmarkPercentage={benchmarkPercentage}
@@ -219,7 +250,7 @@ export const FootballPaceComposition = ({
           label={benchmarkLabel}
           variant={variant}
           leftInset={SAFE_AREA.left}
-          frame={frame}
+          frame={contentFrame}
           fps={fps}
           rowIndex={splitIndex}
         />
@@ -237,7 +268,7 @@ export const FootballPaceComposition = ({
             <PaceRow
               key={`${entry.rank}-${entry.team}`}
               entry={entry}
-              frame={frame}
+              frame={contentFrame}
               fps={fps}
               rowIndex={splitIndex + 1 + index}
               benchmarkPercentage={benchmarkPercentage}
@@ -298,7 +329,8 @@ export const FootballPaceComposition = ({
           </div>
           <BrandMark brandName={brandName} brandLogoPath={brandLogoPath} />
         </div>
-      </div>
+        </div>
+      </Sequence>
     </AbsoluteFill>
   );
 };
@@ -348,6 +380,7 @@ const BenchmarkDivider = ({
           fontSize: 54,
           lineHeight: 1,
           fontWeight: 900,
+          fontFamily: TEASER_NUMBER_FONT,
           minWidth: 120,
         }}
       >
@@ -487,6 +520,7 @@ const PaceRow = ({
               fontSize: 44,
               lineHeight: 1,
               fontWeight: 900,
+              fontFamily: TEASER_NUMBER_FONT,
             }}
           >
             {entry.percentage}%

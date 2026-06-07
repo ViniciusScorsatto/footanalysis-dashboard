@@ -10,9 +10,9 @@
   "brandLogoPath": "/branding/foot-analysis-logo.png",
   "soundtrackPath": "/audio/football/gol-de-arena.mp3",
   "soundtrackLabel": "Gol de Arena",
-  "soundtrackVolume": 0.1,
+  "soundtrackVolume": 0.25,
   "outputName": "brasileirao-serie-a-2026-ritmo-de-campeao-pt-br.mp4",
-  "durationInFrames": 270,
+  "durationInFrames": 360,
   "compositionId": "FootballChampionshipPaceShort",
   "leagueConfig": {
     "leagueId": 71,
@@ -77,7 +77,7 @@
   "benchmarkPercentage": 68,
   "benchmarkLabel": "Média dos últimos 10 campeões",
   "noteLabel": "*times com jogos a menos",
-  "ctaText": "Quem segue firme na briga?",
+  "ctaText": "Quem leva o título?",
   "entries": [
     {
       "rank": 1,
@@ -129,13 +129,13 @@
     },
     {
       "rank": 5,
-      "team": "RB Bragantino",
+      "team": "Bragantino",
       "played": 18,
       "points": 29,
       "percentage": 54,
       "hasGameInHand": false,
       "badge": {
-        "label": "RB",
+        "label": "B",
         "logoPath": "/logos/rb-bragantino-794.png"
       }
     },
@@ -202,7 +202,7 @@
   ],
   "introTitle": "Brasileirão Série A",
   "introSubtitle": "Aproveitamento na Rodada 18",
-  "hookText": "Só o Palmeiras está acima dessa linha",
+  "hookText": "Quem tem ritmo de taça?",
   "coldOpenData": {
     "tableRows": [
       {
@@ -227,6 +227,8 @@
       }
     ]
   },
-  "voiceoverEnabled": false,
-  "voiceoverText": "Fala Galera, pra vocês... o ritmo de campeão do Brasileirão Série A."
+  "voiceoverEnabled": true,
+  "voiceoverText": "Fala Galera, pra vocês... o ritmo de campeão do Brasileirão Série A.",
+  "voiceoverPath": "/voiceovers/football/pt-br-4f5fa3f5fce62350.mp3",
+  "voiceoverLabel": "Fala Galera, pra vocês... o ritmo de campeão do Brasileirão Série A."
 }

@@ -1,22 +1,22 @@
 {
   "sport": "football",
   "template": "predictions",
-  "leagueId": 1,
+  "leagueId": 13,
   "season": 2026,
-  "leagueName": "World Cup",
-  "channelProfile": "en",
-  "languageProfile": "en",
+  "leagueName": "Copa Libertadores",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Premier League - Shakes the Ground.mp3",
-  "soundtrackLabel": "Premier League - Shakes the Ground",
-  "soundtrackVolume": 0.1,
-  "outputName": "world-cup-2026-predictions-group-stage-1-3-dates-en.mp4",
-  "durationInFrames": 270,
+  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
+  "soundtrackLabel": "Gol de Arena",
+  "soundtrackVolume": 0.25,
+  "outputName": "copa-libertadores-2026-palpites-round-of-16-2026-08-11-pt-br.mp4",
+  "durationInFrames": 330,
   "compositionId": "FootballPredictionsShort",
   "leagueConfig": {
-    "leagueId": 1,
-    "accentColor": "#F0D500",
+    "leagueId": 13,
+    "accentColor": "#F39C12",
     "standings": {
       "safeArea": {
         "left": 64,
@@ -41,23 +41,22 @@
         }
       ]
     },
-    "leagueName": "World Cup"
+    "leagueName": "Copa Libertadores"
   },
-  "round": "Group Stage - 1",
+  "round": "Round of 16",
+  "matchDate": "2026-08-11",
   "matchDates": [
-    "2026-06-16",
-    "2026-06-17",
-    "2026-06-18"
+    "2026-08-11"
   ],
-  "roundLabel": "Predictions - Group Stage - 1",
-  "ctaText": "Who wins this round?",
+  "roundLabel": "Palpites da Fase de 16",
+  "ctaText": "Quem vence essa rodada?",
   "fixtures": [
     {
-      "fixtureId": 1489380,
-      "fixtureDateKey": "2026-06-16",
-      "homeTeam": "Spain",
-      "awayTeam": "Cape Verde Islands",
-      "homeScore": 3,
+      "fixtureId": 1547762,
+      "fixtureDateKey": "2026-08-11",
+      "homeTeam": "Palmeiras",
+      "awayTeam": "Cerro P.",
+      "homeScore": 0,
       "awayScore": 0,
       "predictionSource": "manual",
       "homeEliminated": false,
@@ -66,87 +65,21 @@
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "S",
-        "logoPath": "/logos/spain-9.png"
+        "label": "P",
+        "logoPath": "/logos/palmeiras-121.png"
       },
       "awayBadge": {
-        "label": "CVI",
-        "logoPath": "/logos/cape-verde-islands-1533.png"
+        "label": "CP",
+        "logoPath": "/logos/cerro-porteno-1176.png"
       }
     },
     {
-      "fixtureId": 1489377,
-      "fixtureDateKey": "2026-06-16",
-      "homeTeam": "Belgium",
-      "awayTeam": "Egypt",
-      "homeScore": 2,
-      "awayScore": 1,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "B",
-        "logoPath": "/logos/belgium-1.png"
-      },
-      "awayBadge": {
-        "label": "E",
-        "logoPath": "/logos/egypt-32.png"
-      }
-    },
-    {
-      "fixtureId": 1489379,
-      "fixtureDateKey": "2026-06-16",
-      "homeTeam": "Saudi Arabia",
-      "awayTeam": "Uruguay",
-      "homeScore": 0,
-      "awayScore": 2,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "SA",
-        "logoPath": "/logos/saudi-arabia-23.png"
-      },
-      "awayBadge": {
-        "label": "U",
-        "logoPath": "/logos/uruguay-7.png"
-      }
-    },
-    {
-      "fixtureId": 1489378,
-      "fixtureDateKey": "2026-06-16",
-      "homeTeam": "Iran",
-      "awayTeam": "New Zealand",
+      "fixtureId": 1547760,
+      "fixtureDateKey": "2026-08-11",
+      "homeTeam": "Fluminense",
+      "awayTeam": "Rivadavia",
       "homeScore": 1,
-      "awayScore": 1,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "I",
-        "logoPath": "/logos/iran-22.png"
-      },
-      "awayBadge": {
-        "label": "NZ",
-        "logoPath": "/logos/new-zealand-4673.png"
-      }
-    },
-    {
-      "fixtureId": 1489383,
-      "fixtureDateKey": "2026-06-17",
-      "homeTeam": "France",
-      "awayTeam": "Senegal",
-      "homeScore": 2,
-      "awayScore": 1,
+      "awayScore": 0,
       "predictionSource": "manual",
       "homeEliminated": false,
       "awayEliminated": false,
@@ -155,41 +88,19 @@
       "awayPenaltyScore": null,
       "homeBadge": {
         "label": "F",
-        "logoPath": "/logos/france-2.png"
+        "logoPath": "/logos/fluminense-124.png"
       },
       "awayBadge": {
-        "label": "S",
-        "logoPath": "/logos/senegal-13.png"
+        "label": "R",
+        "logoPath": "/logos/independ-rivadavia-473.png"
       }
     },
     {
-      "fixtureId": 1539016,
-      "fixtureDateKey": "2026-06-17",
-      "homeTeam": "Iraq",
-      "awayTeam": "Norway",
-      "homeScore": 0,
-      "awayScore": 2,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "I",
-        "logoPath": "/logos/iraq-1567.png"
-      },
-      "awayBadge": {
-        "label": "N",
-        "logoPath": "/logos/norway-1090.png"
-      }
-    },
-    {
-      "fixtureId": 1489381,
-      "fixtureDateKey": "2026-06-17",
-      "homeTeam": "Argentina",
-      "awayTeam": "Algeria",
-      "homeScore": 3,
+      "fixtureId": 1547757,
+      "fixtureDateKey": "2026-08-11",
+      "homeTeam": "Cruzeiro",
+      "awayTeam": "Flamengo",
+      "homeScore": 1,
       "awayScore": 1,
       "predictionSource": "manual",
       "homeEliminated": false,
@@ -198,19 +109,19 @@
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "A",
-        "logoPath": "/logos/argentina-26.png"
+        "label": "C",
+        "logoPath": "/logos/cruzeiro-135.png"
       },
       "awayBadge": {
-        "label": "A",
-        "logoPath": "/logos/algeria-1532.png"
+        "label": "F",
+        "logoPath": "/logos/flamengo-127.png"
       }
     },
     {
-      "fixtureId": 1489382,
-      "fixtureDateKey": "2026-06-17",
-      "homeTeam": "Austria",
-      "awayTeam": "Jordan",
+      "fixtureId": 1547764,
+      "fixtureDateKey": "2026-08-11",
+      "homeTeam": "Rosario C.",
+      "awayTeam": "Corinthians",
       "homeScore": 2,
       "awayScore": 0,
       "predictionSource": "manual",
@@ -220,43 +131,21 @@
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "A",
-        "logoPath": "/logos/austria-775.png"
+        "label": "RC",
+        "logoPath": "/logos/rosario-central-437.png"
       },
       "awayBadge": {
-        "label": "J",
-        "logoPath": "/logos/jordan-1548.png"
+        "label": "C",
+        "logoPath": "/logos/corinthians-131.png"
       }
     },
     {
-      "fixtureId": 1539003,
-      "fixtureDateKey": "2026-06-18",
-      "homeTeam": "Portugal",
-      "awayTeam": "Congo DR",
-      "homeScore": 3,
-      "awayScore": 0,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "P",
-        "logoPath": "/logos/portugal-27.png"
-      },
-      "awayBadge": {
-        "label": "CD",
-        "logoPath": "/logos/congo-dr-1508.png"
-      }
-    },
-    {
-      "fixtureId": 1489384,
-      "fixtureDateKey": "2026-06-18",
-      "homeTeam": "England",
-      "awayTeam": "Croatia",
+      "fixtureId": 1547759,
+      "fixtureDateKey": "2026-08-11",
+      "homeTeam": "Estudiantes",
+      "awayTeam": "U. Catolica",
       "homeScore": 1,
-      "awayScore": 1,
+      "awayScore": 0,
       "predictionSource": "manual",
       "homeEliminated": false,
       "awayEliminated": false,
@@ -265,20 +154,20 @@
       "awayPenaltyScore": null,
       "homeBadge": {
         "label": "E",
-        "logoPath": "/logos/england-10.png"
+        "logoPath": "/logos/estudiantes-l-p-450.png"
       },
       "awayBadge": {
-        "label": "C",
-        "logoPath": "/logos/croatia-3.png"
+        "label": "UC",
+        "logoPath": "/logos/u-catolica-2994.png"
       }
     },
     {
-      "fixtureId": 1489385,
-      "fixtureDateKey": "2026-06-18",
-      "homeTeam": "Ghana",
-      "awayTeam": "Panama",
+      "fixtureId": 1547763,
+      "fixtureDateKey": "2026-08-11",
+      "homeTeam": "Platense",
+      "awayTeam": "Coquimbo",
       "homeScore": 2,
-      "awayScore": 1,
+      "awayScore": null,
       "predictionSource": "manual",
       "homeEliminated": false,
       "awayEliminated": false,
@@ -286,86 +175,108 @@
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "G",
-        "logoPath": "/logos/ghana-1504.png"
-      },
-      "awayBadge": {
         "label": "P",
-        "logoPath": "/logos/panama-11.png"
-      }
-    },
-    {
-      "fixtureId": 1489386,
-      "fixtureDateKey": "2026-06-18",
-      "homeTeam": "Uzbekistan",
-      "awayTeam": "Colombia",
-      "homeScore": 1,
-      "awayScore": 2,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "U",
-        "logoPath": "/logos/uzbekistan-1568.png"
+        "logoPath": "/logos/platense-1064.png"
       },
       "awayBadge": {
         "label": "C",
-        "logoPath": "/logos/colombia-8.png"
+        "logoPath": "/logos/coquimbo-unido-2330.png"
+      }
+    },
+    {
+      "fixtureId": 1547758,
+      "fixtureDateKey": "2026-08-11",
+      "homeTeam": "Tolima",
+      "awayTeam": "Del Valle",
+      "homeScore": 1,
+      "awayScore": 0,
+      "predictionSource": "manual",
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "T",
+        "logoPath": "/logos/deportes-tolima-1142.png"
+      },
+      "awayBadge": {
+        "label": "DV",
+        "logoPath": "/logos/independiente-del-valle-1153.png"
+      }
+    },
+    {
+      "fixtureId": 1547761,
+      "fixtureDateKey": "2026-08-11",
+      "homeTeam": "Mirassol",
+      "awayTeam": "LDU de Quito",
+      "homeScore": 1,
+      "awayScore": 0,
+      "predictionSource": "manual",
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "M",
+        "logoPath": "/logos/mirassol-7848.png"
+      },
+      "awayBadge": {
+        "label": "LDQ",
+        "logoPath": "/logos/ldu-de-quito-1158.png"
       }
     }
   ],
-  "introTitle": "World Cup",
-  "introSubtitle": "Predictions - Group Stage - 1",
-  "hookText": "Lock in your picks for the last games of Round 1 of the World Cup",
+  "introTitle": "Copa Libertadores",
+  "introSubtitle": "Palpites da Fase de 16",
+  "hookText": "Você crava esses placares?",
   "coldOpenData": {
     "matchRows": [
       {
-        "left": "SPAIN",
-        "center": "3 - 0",
-        "right": "CAPE VERDE ISLANDS"
+        "left": "PALMEIRAS",
+        "center": "0 - 0",
+        "right": "CERRO P."
       },
       {
-        "left": "BELGIUM",
-        "center": "2 - 1",
-        "right": "EGYPT"
+        "left": "FLUMINENSE",
+        "center": "1 - 0",
+        "right": "RIVADAVIA"
       },
       {
-        "left": "SAUDI ARABIA",
-        "center": "0 - 2",
-        "right": "URUGUAY"
-      },
-      {
-        "left": "IRAN",
+        "left": "CRUZEIRO",
         "center": "1 - 1",
-        "right": "NEW ZEALAND"
+        "right": "FLAMENGO"
+      },
+      {
+        "left": "ROSARIO C.",
+        "center": "2 - 0",
+        "right": "CORINTHIANS"
       }
     ],
     "tableRows": [
       {
         "rank": 1,
-        "club": "SPAIN",
+        "club": "PALMEIRAS",
         "pts": 22
       },
       {
         "rank": 2,
-        "club": "CAPE VERDE ISLANDS",
+        "club": "CERRO P.",
         "pts": 20
       },
       {
         "rank": 3,
-        "club": "BELGIUM",
+        "club": "FLUMINENSE",
         "pts": 18
       },
       {
         "rank": 4,
-        "club": "EGYPT",
+        "club": "RIVADAVIA",
         "pts": 16
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "World Cup predictions"
+  "voiceoverText": "Fala Galera, pra vocês... os palpites da Copa Libertadores."
 }

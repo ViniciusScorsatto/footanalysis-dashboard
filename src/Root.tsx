@@ -40,6 +40,7 @@ import {sampleFixtures} from './data/results';
 import {sampleStandingsRows} from './data/standings';
 import {sampleTopScorersJob} from './data/topScorers';
 import {sampleWorldCupGroupJob, sampleWorldCupKnockoutJob} from './data/worldCup';
+import {getFootballShortDurationInFrames} from './lib/football-short-durations';
 import type {
   FootballPredictionsLongVideoJob,
   FootballRoundSummaryLongVideoJob,
@@ -1092,7 +1093,6 @@ const worldCupKnockoutProps = {
       : sampleWorldCupKnockoutJob.coldOpenData,
 };
 
-const FOOTBALL_DURATION_IN_FRAMES = 270;
 const FOOTBALL_LONG_DURATION_IN_FRAMES =
   footballPredictionsLongJob.template === 'predictions-long' &&
   typeof footballPredictionsLongJob.durationInFrames === 'number'
@@ -1110,7 +1110,7 @@ export const RemotionRoot = () => {
       <Composition
         id="FootballResultsShort"
         component={FootballFixturesComposition}
-        durationInFrames={FOOTBALL_DURATION_IN_FRAMES}
+        durationInFrames={getFootballShortDurationInFrames('FootballResultsShort')}
         fps={30}
         width={1080}
         height={1920}
@@ -1119,7 +1119,7 @@ export const RemotionRoot = () => {
       <Composition
         id="FootballNextGamesShort"
         component={FootballFixturesComposition}
-        durationInFrames={FOOTBALL_DURATION_IN_FRAMES}
+        durationInFrames={getFootballShortDurationInFrames('FootballNextGamesShort')}
         fps={30}
         width={1080}
         height={1920}
@@ -1128,7 +1128,7 @@ export const RemotionRoot = () => {
       <Composition
         id="FootballPredictionsShort"
         component={FootballFixturesComposition}
-        durationInFrames={FOOTBALL_DURATION_IN_FRAMES}
+        durationInFrames={getFootballShortDurationInFrames('FootballPredictionsShort')}
         fps={30}
         width={1080}
         height={1920}
@@ -1164,7 +1164,7 @@ export const RemotionRoot = () => {
       <Composition
         id="FootballStandingsShort"
         component={FootballStandingsComposition}
-        durationInFrames={FOOTBALL_DURATION_IN_FRAMES}
+        durationInFrames={getFootballShortDurationInFrames('FootballStandingsShort')}
         fps={30}
         width={1080}
         height={1920}
@@ -1173,7 +1173,7 @@ export const RemotionRoot = () => {
       <Composition
         id="FootballSeasonFinalVerdictShort"
         component={FootballSeasonFinalVerdictComposition}
-        durationInFrames={FOOTBALL_DURATION_IN_FRAMES}
+        durationInFrames={getFootballShortDurationInFrames('FootballSeasonFinalVerdictShort')}
         fps={30}
         width={1080}
         height={1920}
@@ -1182,7 +1182,7 @@ export const RemotionRoot = () => {
       <Composition
         id="FootballChampionFinalShort"
         component={FootballChampionFinalComposition}
-        durationInFrames={FOOTBALL_DURATION_IN_FRAMES}
+        durationInFrames={getFootballShortDurationInFrames('FootballChampionFinalShort')}
         fps={30}
         width={1080}
         height={1920}
@@ -1191,7 +1191,7 @@ export const RemotionRoot = () => {
       <Composition
         id="FootballTopScorersShort"
         component={FootballTopScorersComposition}
-        durationInFrames={FOOTBALL_DURATION_IN_FRAMES}
+        durationInFrames={getFootballShortDurationInFrames('FootballTopScorersShort')}
         fps={30}
         width={1080}
         height={1920}
@@ -1200,7 +1200,7 @@ export const RemotionRoot = () => {
       <Composition
         id="FootballPlayerOfRoundShort"
         component={FootballPlayerOfRoundComposition}
-        durationInFrames={FOOTBALL_DURATION_IN_FRAMES}
+        durationInFrames={getFootballShortDurationInFrames('FootballPlayerOfRoundShort')}
         fps={30}
         width={1080}
         height={1920}
@@ -1209,7 +1209,7 @@ export const RemotionRoot = () => {
       <Composition
         id="FootballChampionshipPaceShort"
         component={FootballPaceComposition}
-        durationInFrames={FOOTBALL_DURATION_IN_FRAMES}
+        durationInFrames={getFootballShortDurationInFrames('FootballChampionshipPaceShort')}
         fps={30}
         width={1080}
         height={1920}
@@ -1221,7 +1221,7 @@ export const RemotionRoot = () => {
       <Composition
         id="FootballRelegationLineShort"
         component={FootballPaceComposition}
-        durationInFrames={FOOTBALL_DURATION_IN_FRAMES}
+        durationInFrames={getFootballShortDurationInFrames('FootballRelegationLineShort')}
         fps={30}
         width={1080}
         height={1920}
@@ -1233,7 +1233,7 @@ export const RemotionRoot = () => {
       <Composition
         id="FootballContinentalGroupsShort"
         component={FootballContinentalGroupsComposition}
-        durationInFrames={FOOTBALL_DURATION_IN_FRAMES}
+        durationInFrames={getFootballShortDurationInFrames('FootballContinentalGroupsShort')}
         fps={30}
         width={1080}
         height={1920}
@@ -1242,7 +1242,7 @@ export const RemotionRoot = () => {
       <Composition
         id="FootballTierlistShort"
         component={FootballTierlistComposition}
-        durationInFrames={FOOTBALL_DURATION_IN_FRAMES}
+        durationInFrames={getFootballShortDurationInFrames('FootballTierlistShort')}
         fps={30}
         width={1080}
         height={1920}
@@ -1251,7 +1251,7 @@ export const RemotionRoot = () => {
       <Composition
         id="FootballWorldCupGroupShort"
         component={FootballWorldCupGroupComposition}
-        durationInFrames={FOOTBALL_DURATION_IN_FRAMES}
+        durationInFrames={getFootballShortDurationInFrames('FootballWorldCupGroupShort')}
         fps={30}
         width={1080}
         height={1920}
@@ -1260,7 +1260,7 @@ export const RemotionRoot = () => {
       <Composition
         id="FootballWorldCupKnockoutShort"
         component={FootballWorldCupKnockoutComposition}
-        durationInFrames={FOOTBALL_DURATION_IN_FRAMES}
+        durationInFrames={getFootballShortDurationInFrames('FootballWorldCupKnockoutShort')}
         fps={30}
         width={1080}
         height={1920}

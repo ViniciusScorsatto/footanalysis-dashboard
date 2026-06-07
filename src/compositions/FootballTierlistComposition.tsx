@@ -1,7 +1,18 @@
-import {AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Img, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {BrandMark} from '../components/BrandMark';
 import {CompetitionAccentRail} from '../components/CompetitionAccentRail';
-import {FootballColdOpen} from '../components/FootballColdOpen';
+import {
+  FootballShortOpening,
+  SHORT_MAIN_ENTRY_PREROLL_FRAMES,
+  SHORT_OPENING_DURATION_FRAMES,
+} from '../components/FootballShortOpening';
+import {
+  FootballShortBackdrop,
+  FootballShortFontFaces,
+  TEASER_HEADLINE_FONT,
+  TEASER_LABEL_FONT,
+  TEASER_NUMBER_FONT,
+} from '../components/FootballShortTeaser';
 import {SoundtrackBed} from '../components/SoundtrackBed';
 import {VoiceoverBed} from '../components/VoiceoverBed';
 import {
@@ -62,9 +73,9 @@ export const FootballTierlistComposition = ({
 }: FootballTierlistCompositionProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const mainStartFrame = Math.round(fps * 1.45);
-  const contentFrame = Math.max(0, frame - mainStartFrame);
-  const mainOpacity = interpolate(frame, [mainStartFrame, mainStartFrame + 8], [0, 1], {
+  const contentFrame =
+    Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
+  const mainOpacity = interpolate(contentFrame, [0, 8], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -83,18 +94,31 @@ export const FootballTierlistComposition = ({
       style={{
         overflow: 'hidden',
         color: '#f0f4f8',
-        fontFamily: '"Barlow Condensed", "Arial Narrow", sans-serif',
+        fontFamily: TEASER_NUMBER_FONT,
         background:
           'radial-gradient(circle at 86% 12%, rgba(0,155,58,0.16), transparent 28%), radial-gradient(circle at 12% 88%, rgba(0,39,118,0.18), transparent 26%), linear-gradient(180deg, #0b0d12 0%, #07090d 100%)',
       }}
     >
+      <FootballShortFontFaces />
       <SoundtrackBed
         soundtrackPath={soundtrackPath}
         volume={soundtrackVolume}
         duckUntilSeconds={voiceoverPath ? 3.2 : 0}
       />
-      <VoiceoverBed voiceoverPath={voiceoverPath} />
-      <FootballColdOpen
+      <FootballShortBackdrop
+        template="tierlist"
+        accentColor={accentColor}
+        opacity={0.5}
+      />
+      <FootballShortOpening
+        template="tierlist"
+        channelProfile={channelProfile}
+        leagueName={leagueName}
+        titleLabel={titleLabel}
+        subtitleLabel={subtitleLabel}
+        tiers={tiers}
+        topScorerPrediction={topScorerPrediction}
+        bestPlayerPrediction={bestPlayerPrediction}
         accentColor={accentColor}
         secondaryAccentColor={secondaryAccentColor}
         brandName={brandName}
@@ -105,6 +129,8 @@ export const FootballTierlistComposition = ({
         coldOpenData={coldOpenData}
       />
 
+      <Sequence from={SHORT_OPENING_DURATION_FRAMES}>
+      <VoiceoverBed voiceoverPath={voiceoverPath} />
       <AbsoluteFill style={{opacity: mainOpacity}}>
         <CompetitionAccentRail
           accentColor={accentColor}
@@ -138,6 +164,7 @@ export const FootballTierlistComposition = ({
                 color: accentColor,
                 fontSize: 22,
                 fontWeight: 900,
+                fontFamily: TEASER_LABEL_FONT,
                 letterSpacing: 2.2,
                 textTransform: 'uppercase',
               }}
@@ -151,7 +178,8 @@ export const FootballTierlistComposition = ({
                 fontSize: 88,
                 lineHeight: 0.86,
                 fontWeight: 950,
-                letterSpacing: -2.2,
+                fontFamily: TEASER_HEADLINE_FONT,
+                letterSpacing: 0,
                 textTransform: 'uppercase',
               }}
             >
@@ -247,6 +275,7 @@ export const FootballTierlistComposition = ({
           </footer>
         </div>
       </AbsoluteFill>
+      </Sequence>
     </AbsoluteFill>
   );
 };
@@ -281,7 +310,7 @@ const TierRow = ({
         opacity,
         transform: `translateY(${translateY}px)`,
         display: 'grid',
-        gridTemplateColumns: isChampion ? '214px 1fr' : '188px 1fr',
+        gridTemplateColumns: isChampion ? '214px 1fr' : '172px 1fr',
         minHeight: isChampion ? 166 : 116,
         borderRadius: 22,
         overflow: 'hidden',
@@ -312,9 +341,9 @@ const TierRow = ({
         style={{
           display: 'grid',
           gridTemplateColumns: isChampion ? '1fr' : `repeat(${Math.min(5, Math.max(1, tier.entries.length))}, 1fr)`,
-          gap: isChampion ? 0 : 12,
+          gap: isChampion ? 0 : 4,
           alignItems: 'center',
-          padding: isChampion ? '16px 26px' : '12px 16px',
+          padding: isChampion ? '16px 26px' : '12px 8px',
         }}
       >
         {tier.entries.map((entry, index) => (
@@ -344,6 +373,7 @@ const TierTeam = ({
 }) => {
   const imagePath = badge.imagePath ?? badge.logoPath;
   const imageSrc = imagePath ? staticFile(imagePath.replace(/^\/+/, '')) : null;
+  const teamFontSize = featured ? fitTierTeamFontSize(team, 66, 42) : fitTierTeamFontSize(team, 24, 19);
 
   return (
     <div
@@ -353,13 +383,13 @@ const TierTeam = ({
         flexDirection: featured ? 'row' : 'column',
         alignItems: 'center',
         justifyContent: featured ? 'flex-start' : 'center',
-        gap: featured ? 24 : 8,
+        gap: featured ? 24 : 6,
       }}
     >
       <div
         style={{
-          width: featured ? 116 : 62,
-          height: featured ? 116 : 62,
+          width: featured ? 116 : 58,
+          height: featured ? 116 : 58,
           borderRadius: featured ? 28 : 17,
           background: '#141c24',
           border: `2px solid ${accentColor}55`,
@@ -374,8 +404,8 @@ const TierTeam = ({
           <Img
             src={imageSrc}
             style={{
-              width: featured ? 88 : 48,
-              height: featured ? 88 : 48,
+              width: featured ? 88 : 45,
+              height: featured ? 88 : 45,
               objectFit: 'contain',
             }}
           />
@@ -395,18 +425,33 @@ const TierTeam = ({
         style={{
           minWidth: 0,
           color: '#f0f4f8',
-          fontSize: featured ? 66 : 24,
+          fontSize: teamFontSize,
           lineHeight: featured ? 0.92 : 0.96,
           fontWeight: 950,
           textAlign: featured ? 'left' : 'center',
           textTransform: 'uppercase',
-          overflowWrap: 'anywhere',
+          whiteSpace: 'nowrap',
+          overflow: 'visible',
         }}
       >
         {team}
       </div>
     </div>
   );
+};
+
+const fitTierTeamFontSize = (label: string, maxSize: number, minSize: number) => {
+  const weightedLength = [...label.trim().toUpperCase()].reduce((total, char) => {
+    if (char === ' ') return total + 0.35;
+    if ('1IÍÌÎÏL.'.includes(char)) return total + 0.42;
+    if ('MW@'.includes(char)) return total + 1.12;
+    if ('-–/'.includes(char)) return total + 0.5;
+    return total + 0.78;
+  }, 0);
+  const maxWidth = maxSize <= 24 ? 104 : 610;
+  const fitted = Math.floor(maxWidth / Math.max(1, weightedLength));
+
+  return Math.max(minSize, Math.min(maxSize, fitted));
 };
 
 const ManualPredictionCard = ({

@@ -8,9 +8,9 @@
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
-  "soundtrackLabel": "Gol de Arena",
-  "soundtrackVolume": 0.1,
+  "soundtrackPath": "/audio/football/foot-analysis-whistle.mp3",
+  "soundtrackLabel": "Foot Analysis Whistle",
+  "soundtrackVolume": 0.35,
   "outputName": "brasileirao-serie-a-2026-artilheiros-pt-br.mp4",
   "durationInFrames": 270,
   "compositionId": "FootballTopScorersShort",
@@ -74,7 +74,7 @@
   },
   "titleLabel": "Artilheiros",
   "subtitleLabel": "Top 10 do campeonato",
-  "ctaText": "Quem faz mais gols?",
+  "ctaText": "Quem termina artilheiro?",
   "entries": [
     {
       "rank": 1,
@@ -102,6 +102,18 @@
     },
     {
       "rank": 3,
+      "playerName": "John Kennedy",
+      "team": "Fluminense",
+      "teamShort": "FLUM",
+      "goals": 9,
+      "assists": 1,
+      "badge": {
+        "label": "F",
+        "logoPath": "/logos/fluminense-124.png"
+      }
+    },
+    {
+      "rank": 4,
       "playerName": "Carlos Vinícius",
       "team": "Gremio",
       "teamShort": "GREM",
@@ -110,18 +122,6 @@
       "badge": {
         "label": "G",
         "logoPath": "/logos/gremio-130.png"
-      }
-    },
-    {
-      "rank": 4,
-      "playerName": "John Kennedy",
-      "team": "Fluminense",
-      "teamShort": "FLUM",
-      "goals": 8,
-      "assists": 1,
-      "badge": {
-        "label": "F",
-        "logoPath": "/logos/fluminense-124.png"
       }
     },
     {
@@ -138,7 +138,7 @@
     },
     {
       "rank": 6,
-      "playerName": "Danilo",
+      "playerName": "Danilo Santos",
       "team": "Botafogo",
       "teamShort": "BOTA",
       "goals": 7,
@@ -199,7 +199,7 @@
   ],
   "introTitle": "Brasileirão Série A",
   "introSubtitle": "Top 10 do campeonato",
-  "hookText": "Artilheiro do Athletico-PR ainda na frente!",
+  "hookText": "A artilharia pegou fogo",
   "coldOpenData": {
     "tableRows": [
       {
@@ -214,16 +214,18 @@
       },
       {
         "rank": 3,
-        "club": "GREMIO",
+        "club": "FLUMINENSE",
         "pts": 6
       },
       {
         "rank": 4,
-        "club": "FLUMINENSE",
+        "club": "GREMIO",
         "pts": 4
       }
     ]
   },
-  "voiceoverEnabled": false,
-  "voiceoverText": "Fala Galera, pra vocês... os artilheiros do Brasileirão Série A."
+  "voiceoverEnabled": true,
+  "voiceoverText": "Fala Galera, pra vocês... os artilheiros do Brasileirão Série A.",
+  "voiceoverPath": "/voiceovers/football/pt-br-7904c844093056de.mp3",
+  "voiceoverLabel": "Fala Galera, pra vocês... os artilheiros do Brasileirão Série A."
 }

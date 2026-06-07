@@ -2,9 +2,9 @@
   "sport": "football",
   "template": "predictions-long",
   "compositionId": "FootballPredictionsLong",
-  "leagueId": 1,
-  "season": 2026,
-  "leagueName": "World Cup",
+  "leagueId": 39,
+  "season": 2025,
+  "leagueName": "Premier League",
   "channelProfile": "en",
   "languageProfile": "en",
   "brandName": "Foot Analysis",
@@ -12,14 +12,14 @@
   "soundtrackPath": "/audio/football/foot-analysis-whistle.mp3",
   "soundtrackLabel": "Foot Analysis Whistle",
   "soundtrackVolume": 0.35,
-  "outputName": "world-cup-group-stage-1-3-dates-palpites-longform-pt2.mp4",
-  "durationInFrames": 6920,
+  "outputName": "premier-league-matchday-1-2025-08-18-2025-08-19-palpites-longform.mp4",
+  "durationInFrames": 1718,
   "dataSource": "sample",
-  "title": "Predictions for Group Stage - 1 - 3 dates",
-  "roundLabel": "Group Stage - 1",
+  "title": "Predictions for Matchday 1 - 2 dates",
+  "roundLabel": "Matchday 1",
   "openingLines": [
-    "Predictions for Round 1 - Part 2",
-    "Here some predictions, let's have some fun"
+    "This matchday has a few games that can shift the table.",
+    "Now let us go game by game with the scorelines I would call."
   ],
   "introDurationInFrames": 298,
   "outroDurationInFrames": 298,
@@ -28,171 +28,84 @@
   "voiceoverEnabled": true,
   "matches": [
     {
-      "id": "france-senegal-1",
-      "homeTeam": "France",
-      "awayTeam": "Senegal",
-      "predictedScore": "2-1",
-      "homeScore": 2,
-      "awayScore": 1,
-      "voiceover": "France have one of the deepest squads in the tournament and can win in different ways: possession, transition, or individual moments. Senegal are powerful, direct, and experienced enough to punish any slow start. France are favourites, but Senegal’s athleticism makes this one of the most dangerous openers for a title contender. My prediction is France wins 2-1",
-      "voiceoverPath": "/voiceovers/football/en-5881c5c4ada4bc59.mp3",
-      "durationInFrames": 780,
-      "homeBadge": {
-        "label": "FRAN",
-        "logoPath": "/logos/france-2.png",
-        "accentColor": "#0055A4"
-      },
-      "awayBadge": {
-        "label": "SENE",
-        "logoPath": "/logos/senegal-13.png",
-        "accentColor": "#00853F"
-      }
-    },
-    {
-      "id": "iraq-norway-2",
-      "homeTeam": "Iraq",
-      "awayTeam": "Norway",
-      "predictedScore": "0-2",
-      "homeScore": 0,
-      "awayScore": 2,
-      "voiceover": "Iraq arrive with huge resilience after a long and dramatic qualification path, so they should not be treated like a passive underdog. But Norway have one of the most explosive attacking profiles in the tournament, especially with Haaland leading the line. If Norway create space early, Iraq may struggle to keep the game close. My prediction is Norway wins 2-nil",
-      "voiceoverPath": "/voiceovers/football/en-0e2c8f2fb8f65e97.mp3",
-      "durationInFrames": 810,
-      "homeBadge": {
-        "label": "IRAQ",
-        "logoPath": "/logos/iraq-1567.png",
-        "accentColor": "#CE1126"
-      },
-      "awayBadge": {
-        "label": "NORW",
-        "logoPath": "/logos/norway-1090.png",
-        "accentColor": "#BA0C2F"
-      }
-    },
-    {
-      "id": "argentina-algeria-3",
-      "homeTeam": "Argentina",
-      "awayTeam": "Algeria",
-      "predictedScore": "3-1",
-      "homeScore": 3,
-      "awayScore": 1,
-      "voiceover": "Argentina come in with the authority of world champions and a team that still knows how to control tournament games emotionally and tactically. Algeria have quality and finished their African campaign strongly, but Argentina’s midfield control and attacking experience should be too much over ninety minutes. My prediction is Argentina wins 3-1",
-      "voiceoverPath": "/voiceovers/football/en-61b8ec27454c5e4a.mp3",
-      "durationInFrames": 720,
-      "homeBadge": {
-        "label": "ARGE",
-        "logoPath": "/logos/argentina-26.png",
-        "accentColor": "#75AADB"
-      },
-      "awayBadge": {
-        "label": "ALGE",
-        "logoPath": "/logos/algeria-1532.png",
-        "accentColor": "#006233"
-      }
-    },
-    {
-      "id": "austria-jordan-4",
-      "homeTeam": "Austria",
-      "awayTeam": "Jordan",
-      "predictedScore": "2-0",
-      "homeScore": 2,
+      "id": "chelsea-c-palace-1",
+      "homeTeam": "Chelsea",
+      "awayTeam": "C. Palace",
+      "predictedScore": "1-0",
+      "homeScore": 1,
       "awayScore": 0,
-      "voiceover": "Austria have been one of Europe’s more disciplined and intense sides, with a collective style that makes them hard to play through. Jordan’s qualification is historic and they should arrive with confidence, but this is a difficult stylistic matchup. Austria’s pressing and structure give them a clear advantage. My prediction is Austria wins 2-nil",
-      "voiceoverPath": "/voiceovers/football/en-a5edfc8fef697725.mp3",
-      "durationInFrames": 750,
+      "voiceover": "Chelsea against C. Palace.\nMy prediction for this game is 0 to 0.",
+      "voiceoverPath": "/voiceovers/football/en-38471c1f59fac312.mp3",
+      "durationInFrames": 270,
       "homeBadge": {
-        "label": "AUST",
-        "logoPath": "/logos/austria-775.png",
-        "accentColor": "#ED2939"
+        "label": "CHEL",
+        "logoPath": "/logos/chelsea-49.png",
+        "accentColor": "#034694"
       },
       "awayBadge": {
-        "label": "JORD",
-        "logoPath": "/logos/jordan-1548.png",
-        "accentColor": "#007A3D"
+        "label": "CP",
+        "accentColor": "#1ABC9C"
       }
     },
     {
-      "id": "portugal-congo-5",
-      "homeTeam": "Portugal",
-      "awayTeam": "Congo",
+      "id": "nott-forest-brentford-2",
+      "homeTeam": "Nott Forest",
+      "awayTeam": "Brentford",
+      "predictedScore": "0-0",
+      "homeScore": 0,
+      "awayScore": 0,
+      "voiceover": "Nott Forest against Brentford.\nMy prediction for this game is 0 to 0.",
+      "voiceoverPath": "/voiceovers/football/en-b4b813b7cf3fc34f.mp3",
+      "durationInFrames": 270,
+      "homeBadge": {
+        "label": "NF",
+        "accentColor": "#E67E22"
+      },
+      "awayBadge": {
+        "label": "BREN",
+        "logoPath": "/logos/brentford-55.png",
+        "accentColor": "#E30613"
+      }
+    },
+    {
+      "id": "man-united-arsenal-3",
+      "homeTeam": "Man United",
+      "awayTeam": "Arsenal",
       "predictedScore": "3-0",
       "homeScore": 3,
       "awayScore": 0,
-      "voiceover": "Portugal have one of the deepest attacking squads in the tournament, with enough technical quality to break down a low block and punish transitions. Congo arrive with momentum after a difficult qualification route, but they will probably spend long stretches defending. If Portugal score first, the game can open quickly. My prediction is Portgual wins 3-nil",
-      "voiceoverPath": "/voiceovers/football/en-17d2819d09e68ae8.mp3",
-      "durationInFrames": 780,
+      "voiceover": "Man United against Arsenal.\nMy prediction for this game is 0 to 0.",
+      "voiceoverPath": "/voiceovers/football/en-3e4d5bbc0e3e2f57.mp3",
+      "durationInFrames": 270,
       "homeBadge": {
-        "label": "PORT",
-        "logoPath": "/logos/portugal-27.png",
-        "accentColor": "#006600"
+        "label": "MU",
+        "accentColor": "#F39C12"
       },
       "awayBadge": {
-        "label": "CONG",
-        "logoPath": "/logos/congo-dr-1508.png",
-        "accentColor": "#009543"
+        "label": "ARSE",
+        "logoPath": "/logos/arsenal-42.png",
+        "accentColor": "#EF0107"
       }
     },
     {
-      "id": "england-croatia-6",
-      "homeTeam": "England",
-      "awayTeam": "Croatia",
-      "predictedScore": "1-1",
-      "homeScore": 1,
-      "awayScore": 1,
-      "voiceover": "England have the stronger squad on paper, with depth in almost every position and enough attacking talent to win the group. Croatia, though, are still one of the most awkward tournament opponents: experienced, patient, and very comfortable slowing games down. That is why this feels more like a tactical stalemate than an English walkover. My prediction is a 1-1 draw.",
-      "voiceoverPath": "/voiceovers/football/en-f3ae396ed13b92d9.mp3",
-      "durationInFrames": 810,
+      "id": "leeds-everton-4",
+      "homeTeam": "Leeds",
+      "awayTeam": "Everton",
+      "predictedScore": "4-0",
+      "homeScore": 4,
+      "awayScore": 0,
+      "voiceover": "Leeds against Everton.\nMy prediction for this game is 0 to 0.",
+      "voiceoverPath": "/voiceovers/football/en-76b45ae49a68c42a.mp3",
+      "durationInFrames": 240,
       "homeBadge": {
-        "label": "ENGL",
-        "logoPath": "/logos/england-10.png",
-        "accentColor": "#CF142B"
+        "label": "LEED",
+        "logoPath": "/logos/leeds-63.png",
+        "accentColor": "#1ABC9C"
       },
       "awayBadge": {
-        "label": "CROA",
-        "logoPath": "/logos/croatia-3.png",
-        "accentColor": "#171796"
-      }
-    },
-    {
-      "id": "ghana-panama-7",
-      "homeTeam": "Ghana",
-      "awayTeam": "Panama",
-      "predictedScore": "2-1",
-      "homeScore": 2,
-      "awayScore": 1,
-      "voiceover": "Ghana arrive with strong African qualifying form and enough individual quality to hurt teams in transition. Panama are competitive and organized, especially in CONCACAF-style games, but they may struggle if Ghana turn this into a faster, more physical match. Ghana have the higher ceiling here. My prediction is Ghana wins 2-1",
-      "voiceoverPath": "/voiceovers/football/en-3bcedef8ff37a507.mp3",
-      "durationInFrames": 720,
-      "homeBadge": {
-        "label": "GHAN",
-        "logoPath": "/logos/ghana-1504.png",
-        "accentColor": "#FCD116"
-      },
-      "awayBadge": {
-        "label": "PANA",
-        "logoPath": "/logos/panama-11.png",
-        "accentColor": "#005293"
-      }
-    },
-    {
-      "id": "uzbekistan-colombia-8",
-      "homeTeam": "Uzbekistan",
-      "awayTeam": "Colombia",
-      "predictedScore": "1-2",
-      "homeScore": 1,
-      "awayScore": 2,
-      "voiceover": "Uzbekistan are making history with their first World Cup appearance, and they have earned it with a disciplined, mature qualifying campaign. Colombia, though, arrive from a very demanding CONMEBOL route and have been playing with confidence, intensity, and more attacking variety. Uzbekistan can compete, but Colombia look more prepared for this level.. My prediction is Colombia wins 2-1.",
-      "voiceoverPath": "/voiceovers/football/en-cca75e906f0fafc5.mp3",
-      "durationInFrames": 810,
-      "homeBadge": {
-        "label": "UZBE",
-        "logoPath": "/logos/uzbekistan-1568.png",
-        "accentColor": "#1EB53A"
-      },
-      "awayBadge": {
-        "label": "COLO",
-        "logoPath": "/logos/colombia-8.png",
-        "accentColor": "#FCD116"
+        "label": "EVER",
+        "logoPath": "/logos/everton-45.png",
+        "accentColor": "#003399"
       }
     }
   ]

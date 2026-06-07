@@ -8,11 +8,11 @@
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
-  "soundtrackLabel": "Gol de Arena",
-  "soundtrackVolume": 0.1,
+  "soundtrackPath": "/audio/football/foot-analysis-whistle.mp3",
+  "soundtrackLabel": "Foot Analysis Whistle",
+  "soundtrackVolume": 0.35,
   "outputName": "copa-do-mundo-2026-grupo-a-pt-br.mp4",
-  "durationInFrames": 270,
+  "durationInFrames": 360,
   "compositionId": "FootballWorldCupGroupShort",
   "competitionName": "Copa do Mundo 2026",
   "groupLetter": "A",
@@ -31,7 +31,7 @@
   "lastResultsLabel": "Últimos Resultados - Grupo A",
   "nextMatchesLabel": "Próximos Jogos - Grupo A",
   "groupMatchSectionMode": "next-only",
-  "ctaText": "Quem faz mais gols?",
+  "ctaText": "Quem avança?",
   "rows": [
     {
       "rank": 1,
@@ -138,6 +138,8 @@
       }
     ]
   },
-  "voiceoverEnabled": false,
-  "voiceoverText": "Fala Galera, pra vocês... Grupo A da Copa do Mundo 2026."
+  "voiceoverEnabled": true,
+  "voiceoverText": "Fala Galera, pra vocês... Grupo A da Copa do Mundo 2026.",
+  "voiceoverPath": "/voiceovers/football/pt-br-2753fa342a56455b.mp3",
+  "voiceoverLabel": "Fala Galera, pra vocês... Grupo A da Copa do Mundo 2026."
 }

@@ -1,5 +1,6 @@
 import {AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import type {FootballColdOpenData} from '../lib/types';
+import {FootballShortBackdrop} from './FootballShortTeaser';
+import type {FootballColdOpenData, FootballVideoTemplate} from '../lib/types';
 
 type FootballColdOpenProps = {
   accentColor: string;
@@ -10,6 +11,9 @@ type FootballColdOpenProps = {
   introSubtitle?: string;
   hookText?: string;
   coldOpenData?: FootballColdOpenData;
+  startSettled?: boolean;
+  template?: FootballVideoTemplate;
+  variant?: 'results' | 'next-games' | 'predictions' | 'championship' | 'relegation';
 };
 
 export const FootballColdOpen = ({
@@ -21,6 +25,9 @@ export const FootballColdOpen = ({
   introSubtitle,
   hookText,
   coldOpenData,
+  startSettled = false,
+  template,
+  variant,
 }: FootballColdOpenProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -33,44 +40,49 @@ export const FootballColdOpen = ({
 
   const fadeOutStart = Math.round(fps * 1.28);
   const fadeOutEnd = Math.round(fps * 1.5);
-  const opacity = interpolate(frame, [0, 4, fadeOutStart, fadeOutEnd], [0, 1, 1, 0], {
+  const opacity = startSettled
+    ? interpolate(frame, [0, fadeOutStart, fadeOutEnd], [1, 1, 0], {
+        extrapolateLeft: 'clamp',
+        extrapolateRight: 'clamp',
+      })
+    : interpolate(frame, [0, 4, fadeOutStart, fadeOutEnd], [0, 1, 1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+      });
+  const logoScale = startSettled ? 1 : interpolate(frame, [0, 5, 12, fadeOutStart], [0.72, 1.1, 1, 1.03], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
-  const logoScale = interpolate(frame, [0, 5, 12, fadeOutStart], [0.72, 1.1, 1, 1.03], {
+  const lineGrow = startSettled ? 1 : interpolate(frame, [0, 8, fadeOutStart], [0.08, 1, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
-  const lineGrow = interpolate(frame, [0, 8, fadeOutStart], [0.08, 1, 1], {
+  const flashOpacity = startSettled ? 0 : interpolate(frame, [0, 2, 9], [0.72, 0.35, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
-  const flashOpacity = interpolate(frame, [0, 2, 9], [0.72, 0.35, 0], {
+  const titleLift = startSettled ? 0 : interpolate(frame, [0, 12], [28, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
-  const titleLift = interpolate(frame, [0, 12], [28, 0], {
+  const titleOpacity = startSettled ? 1 : interpolate(frame, [4, 12], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
-  const titleOpacity = interpolate(frame, [4, 12], [0, 1], {
+  const hookOpacity = startSettled ? 1 : interpolate(frame, [10, 17, fadeOutStart - 2], [0, 1, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
-  const hookOpacity = interpolate(frame, [10, 17, fadeOutStart - 2], [0, 1, 1], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
-  const hookLift = interpolate(frame, [10, 18], [22, 0], {
+  const hookLift = startSettled ? 0 : interpolate(frame, [10, 18], [22, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
   const glitchShift = frame % 6 < 2 ? 6 : frame % 9 < 2 ? -4 : 0;
-  const textHighlightWidth = interpolate(frame, [10, 20], [0, 100], {
+  const textHighlightWidth = startSettled ? 100 : interpolate(frame, [10, 20], [0, 100], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
-  const dataPanelOpacity = interpolate(frame, [5, 13, fadeOutStart], [0, 0.92, 0.82], {
+  const dataPanelOpacity = startSettled ? 0.88 : interpolate(frame, [5, 13, fadeOutStart], [0, 0.92, 0.82], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -96,10 +108,19 @@ export const FootballColdOpen = ({
         background: '#0b0d12',
       }}
     >
+      {template ? (
+        <FootballShortBackdrop
+          template={template}
+          variant={variant}
+          accentColor={accentColor}
+          opacity={0.5}
+          intensity={0.68}
+        />
+      ) : null}
       <AbsoluteFill
         style={{
           background:
-            `radial-gradient(circle at 50% 42%, ${accentColor}33, transparent 28%), radial-gradient(circle at 18% 16%, rgba(255,255,255,0.14), transparent 18%), linear-gradient(180deg, rgba(11,13,18,0.97), rgba(11,13,18,0.99))`,
+            `radial-gradient(circle at 50% 42%, ${accentColor}33, transparent 28%), radial-gradient(circle at 18% 16%, rgba(255,255,255,0.14), transparent 18%), linear-gradient(180deg, rgba(11,13,18,0.76), rgba(11,13,18,0.88))`,
         }}
       />
 

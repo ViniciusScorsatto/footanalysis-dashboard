@@ -1,7 +1,18 @@
-import {AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Img, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {BrandMark} from '../components/BrandMark';
 import {CompetitionAccentRail} from '../components/CompetitionAccentRail';
-import {FootballColdOpen} from '../components/FootballColdOpen';
+import {
+  FootballShortOpening,
+  SHORT_MAIN_ENTRY_PREROLL_FRAMES,
+  SHORT_OPENING_DURATION_FRAMES,
+} from '../components/FootballShortOpening';
+import {
+  FootballShortBackdrop,
+  FootballShortFontFaces,
+  TEASER_HEADLINE_FONT,
+  TEASER_LABEL_FONT,
+  TEASER_NUMBER_FONT,
+} from '../components/FootballShortTeaser';
 import {SoundtrackBed} from '../components/SoundtrackBed';
 import {VoiceoverBed} from '../components/VoiceoverBed';
 import {
@@ -62,9 +73,9 @@ export const FootballSeasonFinalVerdictComposition = ({
 }: FootballSeasonFinalVerdictCompositionProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const mainStartFrame = Math.round(fps * 1.55);
-  const contentFrame = Math.max(0, frame - mainStartFrame);
-  const mainOpacity = interpolate(frame, [mainStartFrame, mainStartFrame + 8], [0, 1], {
+  const contentFrame =
+    Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
+  const mainOpacity = interpolate(contentFrame, [0, 8], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -81,18 +92,32 @@ export const FootballSeasonFinalVerdictComposition = ({
       style={{
         overflow: 'hidden',
         color: '#f0f4f8',
-        fontFamily: '"Barlow Condensed", "Arial Narrow", sans-serif',
+        fontFamily: TEASER_NUMBER_FONT,
         background:
           'radial-gradient(circle at 82% 16%, rgba(240,165,0,0.14), transparent 30%), linear-gradient(180deg, #0b0d12 0%, #07090d 100%)',
       }}
     >
+      <FootballShortFontFaces />
       <SoundtrackBed
         soundtrackPath={soundtrackPath}
         volume={soundtrackVolume}
         duckUntilSeconds={voiceoverPath ? 3.2 : 0}
       />
-      <VoiceoverBed voiceoverPath={voiceoverPath} />
-      <FootballColdOpen
+      <FootballShortBackdrop
+        template="season-final-verdict"
+        accentColor={accentColor}
+        opacity={0.5}
+      />
+      <FootballShortOpening
+        template="season-final-verdict"
+        channelProfile={channelProfile}
+        leagueName={leagueName}
+        titleLabel={titleLabel}
+        subtitleLabel={subtitleLabel}
+        championTeam={champion.team}
+        championBadge={champion.badge}
+        qualificationGroups={qualificationGroups}
+        relegationGroup={relegationGroup}
         accentColor={accentColor}
         secondaryAccentColor={leagueConfig?.secondaryAccentColor}
         brandName={brandName}
@@ -102,6 +127,8 @@ export const FootballSeasonFinalVerdictComposition = ({
         hookText={hookText}
         coldOpenData={coldOpenData}
       />
+      <Sequence from={SHORT_OPENING_DURATION_FRAMES}>
+      <VoiceoverBed voiceoverPath={voiceoverPath} />
       <AbsoluteFill style={{opacity: mainOpacity}}>
         <CompetitionAccentRail
           accentColor={accentColor}
@@ -134,6 +161,7 @@ export const FootballSeasonFinalVerdictComposition = ({
               color: accentColor,
               fontSize: 22,
               fontWeight: 900,
+              fontFamily: TEASER_LABEL_FONT,
               letterSpacing: 2.2,
               textTransform: 'uppercase',
             }}
@@ -147,7 +175,8 @@ export const FootballSeasonFinalVerdictComposition = ({
               fontSize: 82,
               lineHeight: 0.86,
               fontWeight: 950,
-              letterSpacing: -2.8,
+              fontFamily: TEASER_HEADLINE_FONT,
+              letterSpacing: 0,
               textTransform: 'uppercase',
             }}
           >
@@ -230,6 +259,7 @@ export const FootballSeasonFinalVerdictComposition = ({
         </footer>
       </div>
       </AbsoluteFill>
+      </Sequence>
     </AbsoluteFill>
   );
 };
@@ -277,6 +307,7 @@ const ChampionCard = ({
           fontSize: 56,
           lineHeight: 0.92,
           fontWeight: 950,
+          fontFamily: TEASER_HEADLINE_FONT,
           textTransform: 'uppercase',
         }}
       >
@@ -284,7 +315,7 @@ const ChampionCard = ({
       </div>
     </div>
     <div style={{textAlign: 'right'}}>
-      <div style={{color: accentColor, fontSize: 74, lineHeight: 0.86, fontWeight: 950}}>
+      <div style={{color: accentColor, fontSize: 74, lineHeight: 0.86, fontWeight: 950, fontFamily: TEASER_NUMBER_FONT}}>
         {champion.points}
       </div>
       <div
@@ -422,7 +453,7 @@ const VerdictRow = ({
       >
         {row.team}
       </div>
-      <div style={{color: accentColor, fontSize: 38, fontWeight: 950}}>{row.points}</div>
+      <div style={{color: accentColor, fontSize: 38, fontWeight: 950, fontFamily: TEASER_NUMBER_FONT}}>{row.points}</div>
     </div>
   );
 };

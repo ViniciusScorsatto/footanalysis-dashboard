@@ -1,0 +1,24 @@
+{
+  "fps": 30,
+  "opening": {
+    "teaserFrames": 60,
+    "introFrames": 45
+  },
+  "defaultContentFrames": 345,
+  "contentFramesByComposition": {
+    "FootballResultsShort": 225,
+    "FootballNextGamesShort": 225,
+    "FootballPredictionsShort": 225,
+    "FootballStandingsShort": 255,
+    "FootballSeasonFinalVerdictShort": 135,
+    "FootballChampionFinalShort": 135,
+    "FootballTopScorersShort": 165,
+    "FootballPlayerOfRoundShort": 135,
+    "FootballChampionshipPaceShort": 255,
+    "FootballRelegationLineShort": 255,
+    "FootballContinentalGroupsShort": 315,
+    "FootballTierlistShort": 195,
+    "FootballWorldCupGroupShort": 255,
+    "FootballWorldCupKnockoutShort": 255
+  }
+}
