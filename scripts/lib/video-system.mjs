@@ -735,7 +735,8 @@ const normalizeTeamAliasKey = (value) =>
     .trim();
 
 const getWorldCupGroupKey = (groupName) => {
-  const match = String(groupName ?? '').match(/group\s+([a-z])/i);
+  const matches = [...String(groupName ?? '').matchAll(/group\s+([a-l])/gi)];
+  const match = matches.at(-1);
   return match ? match[1].toUpperCase() : null;
 };
 
@@ -2690,6 +2691,9 @@ const formatWorldCupDateLabel = (isoDate, languageProfile) => {
   return `${monthDay} • ${time} (UTC)`;
 };
 
+const getWorldCupMatchKey = (homeTeam, awayTeam) =>
+  `${normalizeGroupName(homeTeam)}::${normalizeGroupName(awayTeam)}`;
+
 const buildWorldCupGroupJob = async ({
   apiKey,
   apiHost,
@@ -2712,8 +2716,15 @@ const buildWorldCupGroupJob = async ({
   const worldCupConfig = await loadWorldCupConfig().catch(() => ({groups: {}}));
   const normalizedGroupLetter = String(groupLetter ?? 'A').trim().toUpperCase();
   const fallbackGroup = worldCupConfig.groups?.[normalizedGroupLetter];
+  const fallbackTeamFlags = new Map(
+    [
+      ...(fallbackGroup?.teams ?? []).map((team) => [normalizeGroupName(team.name), team.flag]),
+      ...(fallbackGroup?.standings ?? []).map((row) => [normalizeGroupName(row.team), row.flag]),
+    ].filter((entry) => entry[0] && entry[1])
+  );
   const fallbackFlags = new Map(
     [
+      ...fallbackTeamFlags,
       ...(fallbackGroup?.standings ?? []).map((row) => [normalizeGroupName(row.team), row.flag]),
       ...(fallbackGroup?.nextMatches ?? []).flatMap((match) => [
         [normalizeGroupName(match.homeTeam), match.homeFlag],
@@ -2726,14 +2737,25 @@ const buildWorldCupGroupJob = async ({
     ].filter((entry) => entry[0] && entry[1])
   );
 
-  let rows = fallbackGroup?.teams?.map((team, index) => ({
-    rank: index + 1,
-    team: translateWorldCupCountryName(team.name, languageProfile),
-    played: 0,
-    goalDifference: 0,
-    points: 0,
-    badge: {label: team.flag},
-  })) ?? [];
+  const fallbackStandingsRows =
+    fallbackGroup?.standings?.length
+      ? fallbackGroup.standings
+      : fallbackGroup?.teams?.map((team, index) => ({
+          rank: index + 1,
+          team: team.name,
+          goalDifference: 0,
+          points: 0,
+          flag: team.flag,
+        })) ?? [];
+
+  let rows = fallbackStandingsRows.map((row, index) => ({
+    rank: row.rank ?? index + 1,
+    team: translateWorldCupCountryName(row.team, languageProfile),
+    played: row.played ?? 0,
+    goalDifference: row.goalDifference ?? 0,
+    points: row.points ?? 0,
+    badge: {label: row.flag ?? fallbackTeamFlags.get(normalizeGroupName(row.team)) ?? initials(row.team)},
+  }));
 
   let nextMatches = fallbackGroup?.nextMatches?.map((match) => ({
     homeTeam: translateWorldCupCountryName(match.homeTeam, languageProfile),
@@ -2828,9 +2850,6 @@ const buildWorldCupGroupJob = async ({
         .sort((a, b) => (a.fixture?.timestamp ?? 0) - (b.fixture?.timestamp ?? 0))
         .slice(0, 2);
 
-      lastResults = [];
-      nextMatches = [];
-
       if (finishedFixtures.length > 0) {
         lastResults = await Promise.all(
           finishedFixtures.map(async (fixture) => ({
@@ -2901,6 +2920,15 @@ const buildWorldCupGroupJob = async ({
         );
       }
     }
+  }
+
+  if (lastResults.length > 0 && nextMatches.length > 0) {
+    const completedMatchKeys = new Set(
+      lastResults.map((match) => getWorldCupMatchKey(match.homeTeam, match.awayTeam))
+    );
+    nextMatches = nextMatches.filter(
+      (match) => !completedMatchKeys.has(getWorldCupMatchKey(match.homeTeam, match.awayTeam))
+    );
   }
 
   const finalCompetitionName = detectedCompetitionName || copy.worldCup.title(season);

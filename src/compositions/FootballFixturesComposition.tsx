@@ -98,6 +98,15 @@ export const FootballFixturesComposition = ({
   const titleColor = isEnglish ? '#f0f4f8' : accentColor;
   const subtitleColor = isEnglish ? '#4a6070' : '#3a5060';
   const backgroundColor = '#0b0d12';
+  const isCompactFixtureLayout = fixtures.length >= 6;
+  const isExpandedFixtureLayout = fixtures.length > 0 && fixtures.length < 6;
+  const fixtureListGap = isExpandedFixtureLayout
+    ? fixtures.length <= 2
+      ? 28
+      : fixtures.length <= 3
+        ? 22
+        : 16
+    : 16;
 
   const chipAnim = headerEntranceStyle(contentFrame, fps, 0);
   const titleAnim = headerEntranceStyle(contentFrame, fps, HEADER_STAGGER_FRAMES);
@@ -232,8 +241,12 @@ export const FootballFixturesComposition = ({
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: 16,
+              gap: fixtureListGap,
               paddingRight: 4,
+              flex: isExpandedFixtureLayout ? 1 : undefined,
+              justifyContent: isExpandedFixtureLayout ? 'center' : undefined,
+              marginTop: isExpandedFixtureLayout ? 10 : undefined,
+              marginBottom: isExpandedFixtureLayout ? 24 : undefined,
             }}
           >
             {fixtures.map((fixture, index) => (
@@ -245,6 +258,8 @@ export const FootballFixturesComposition = ({
                 accentColor={accentColor}
                 channelProfile={channelProfile}
                 leagueId={leagueConfig?.leagueId}
+                density={isCompactFixtureLayout ? 'compact' : 'expanded'}
+                fixtureCount={fixtures.length}
               />
             ))}
           </div>

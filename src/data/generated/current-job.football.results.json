@@ -1,158 +1,61 @@
 {
   "sport": "football",
   "template": "results",
-  "leagueId": 1128,
+  "leagueId": 1,
   "season": 2026,
-  "leagueName": "Brasileirão Sub-17",
+  "leagueName": "Copa do Mundo",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Estádio Vai Ferver.mp3",
-  "soundtrackLabel": "Estádio Vai Ferver",
+  "soundtrackPath": "/audio/football/Cidade Parou Gol.mp3",
+  "soundtrackLabel": "Cidade Parou Gol",
   "soundtrackVolume": 0.25,
-  "outputName": "brasileirao-sub-17-2026-resultados-pt-br.mp4",
+  "outputName": "copa-do-mundo-2026-resultados-group-stage-1-2026-06-11-pt-br.mp4",
   "durationInFrames": 330,
   "compositionId": "FootballResultsShort",
   "leagueConfig": {
-    "leagueId": 1128,
-    "accentColor": "#E67E22",
+    "leagueId": 1,
+    "accentColor": "#F0D500",
     "standings": {
       "safeArea": {
-        "left": 40,
-        "right": 120
+        "left": 64,
+        "right": 92
       },
       "zones": [
         {
-          "key": "champion",
-          "label": "Campeão",
+          "key": "top-three",
+          "label": "Top 3",
           "start": 1,
-          "end": 1
+          "end": 3,
+          "fill": "linear-gradient(90deg, rgba(58, 196, 88, 0.84), rgba(58, 196, 88, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(86, 214, 120, 0.62)"
         },
         {
-          "key": "relegation",
-          "label": "Rebaixamento",
+          "key": "bottom-three",
+          "label": "Bottom 3",
           "start": 18,
-          "end": 20
+          "end": 20,
+          "fill": "linear-gradient(90deg, rgba(224, 48, 48, 0.84), rgba(224, 48, 48, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 90, 90, 0.56)"
         }
       ]
     },
-    "leagueName": "Brasileirão Sub-17"
+    "leagueName": "World Cup"
   },
-  "round": "Regular Season - 3",
-  "roundLabel": "Rodada 3",
-  "ctaText": "Quem sai mais forte após a rodada?",
+  "round": "Group Stage - 1",
+  "matchDate": "2026-06-11",
+  "matchDates": [
+    "2026-06-11"
+  ],
+  "roundLabel": "Grupo A",
+  "ctaText": "Qual foi o melhor jogo da rodada na Copa do Mundo?",
   "fixtures": [
     {
-      "fixtureId": 1543891,
-      "fixtureDateKey": "2026-06-09",
-      "homeTeam": "Atletico GO",
-      "awayTeam": "Bahia",
-      "homeScore": 0,
-      "awayScore": 3,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "AG",
-        "logoPath": "/logos/atletico-go-u17-24470.png"
-      },
-      "awayBadge": {
-        "label": "B",
-        "logoPath": "/logos/bahia.png"
-      }
-    },
-    {
-      "fixtureId": 1543892,
-      "fixtureDateKey": "2026-06-09",
-      "homeTeam": "Atlético MG",
-      "awayTeam": "Cruzeiro",
-      "homeScore": 1,
-      "awayScore": 3,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "AM",
-        "logoPath": "/logos/atletico-mg.png"
-      },
-      "awayBadge": {
-        "label": "C",
-        "logoPath": "/logos/cruzeiro.png"
-      }
-    },
-    {
-      "fixtureId": 1543893,
-      "fixtureDateKey": "2026-06-09",
-      "homeTeam": "Corinthians",
-      "awayTeam": "Gremio",
-      "homeScore": 7,
-      "awayScore": 0,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "C",
-        "logoPath": "/logos/corinthians.png"
-      },
-      "awayBadge": {
-        "label": "G",
-        "logoPath": "/logos/gremio.png"
-      }
-    },
-    {
-      "fixtureId": 1543896,
-      "fixtureDateKey": "2026-06-09",
-      "homeTeam": "Juventude",
-      "awayTeam": "America MG",
-      "homeScore": 0,
-      "awayScore": 4,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "J",
-        "logoPath": "/logos/juventude-152.png"
-      },
-      "awayBadge": {
-        "label": "AM",
-        "logoPath": "/logos/america-mineiro-125.png"
-      }
-    },
-    {
-      "fixtureId": 1543898,
-      "fixtureDateKey": "2026-06-09",
-      "homeTeam": "Sao Paulo",
-      "awayTeam": "Flamengo",
-      "homeScore": 1,
-      "awayScore": 1,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "SP",
-        "logoPath": "/logos/sao-paulo.png"
-      },
-      "awayBadge": {
-        "label": "F",
-        "logoPath": "/logos/flamengo.png"
-      }
-    },
-    {
-      "fixtureId": 1543899,
-      "fixtureDateKey": "2026-06-09",
-      "homeTeam": "Vasco",
-      "awayTeam": "Athletico PR",
+      "fixtureId": 1489369,
+      "fixtureDateKey": "2026-06-11",
+      "homeTeam": "México",
+      "awayTeam": "África do Sul",
       "homeScore": 2,
       "awayScore": 0,
       "homeEliminated": false,
@@ -161,83 +64,20 @@
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "V",
-        "logoPath": "/logos/vasco-da-gama-133.png"
+        "label": "M",
+        "logoPath": "/logos/mexico-16.png"
       },
       "awayBadge": {
-        "label": "AP",
-        "logoPath": "/logos/atletico-paranaense.png"
+        "label": "ÁDS",
+        "logoPath": "/logos/south-africa-1531.png"
       }
     },
     {
-      "fixtureId": 1543900,
-      "fixtureDateKey": "2026-06-09",
-      "homeTeam": "Vitoria",
-      "awayTeam": "Botafogo",
-      "homeScore": 0,
-      "awayScore": 1,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "V",
-        "logoPath": "/logos/vitoria.png"
-      },
-      "awayBadge": {
-        "label": "B",
-        "logoPath": "/logos/botafogo.png"
-      }
-    },
-    {
-      "fixtureId": 1543894,
-      "fixtureDateKey": "2026-06-10",
-      "homeTeam": "Fluminense",
-      "awayTeam": "Fortaleza",
-      "homeScore": 3,
-      "awayScore": 0,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "F",
-        "logoPath": "/logos/fluminense.png"
-      },
-      "awayBadge": {
-        "label": "F",
-        "logoPath": "/logos/fortaleza-ec-154.png"
-      }
-    },
-    {
-      "fixtureId": 1543895,
-      "fixtureDateKey": "2026-06-10",
-      "homeTeam": "Internacional",
-      "awayTeam": "RB Bragantino",
-      "homeScore": 1,
-      "awayScore": 5,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "I",
-        "logoPath": "/logos/internacional.png"
-      },
-      "awayBadge": {
-        "label": "RB",
-        "logoPath": "/logos/rb-bragantino.png"
-      }
-    },
-    {
-      "fixtureId": 1543897,
+      "fixtureId": 1538999,
       "fixtureDateKey": "2026-06-11",
-      "homeTeam": "Palmeiras",
-      "awayTeam": "Santos",
-      "homeScore": 4,
+      "homeTeam": "Coreia do Sul",
+      "awayTeam": "Czech Rep.",
+      "homeScore": 2,
       "awayScore": 1,
       "homeEliminated": false,
       "awayEliminated": false,
@@ -245,64 +85,54 @@
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "P",
-        "logoPath": "/logos/palmeiras.png"
+        "label": "CDS",
+        "logoPath": "/logos/south-korea-17.png"
       },
       "awayBadge": {
-        "label": "S",
-        "logoPath": "/logos/santos.png"
+        "label": "CR",
+        "logoPath": "/logos/czech-republic-770.png"
       }
     }
   ],
-  "introTitle": "Brasileirão Sub-17",
-  "introSubtitle": "Rodada 3",
-  "hookText": "Corinthians atropela com 7 a 0 no Brasileirão Sub-17!",
+  "introTitle": "Copa do Mundo",
+  "introSubtitle": "Grupo A",
+  "hookText": "México e Coreia do Sul vencem na estreia da Copa do Mundo!",
   "coldOpenData": {
     "matchRows": [
       {
-        "left": "ATLETICO GO",
-        "center": "0 - 3",
-        "right": "BAHIA"
+        "left": "MÉXICO",
+        "center": "2 - 0",
+        "right": "ÁFRICA DO SUL"
       },
       {
-        "left": "ATLÉTICO MG",
-        "center": "1 - 3",
-        "right": "CRUZEIRO"
-      },
-      {
-        "left": "CORINTHIANS",
-        "center": "7 - 0",
-        "right": "GREMIO"
-      },
-      {
-        "left": "JUVENTUDE",
-        "center": "0 - 4",
-        "right": "AMERICA MG"
+        "left": "COREIA DO SUL",
+        "center": "2 - 1",
+        "right": "CZECH REP."
       }
     ],
     "tableRows": [
       {
         "rank": 1,
-        "club": "ATLETICO GO",
+        "club": "MÉXICO",
         "pts": 22
       },
       {
         "rank": 2,
-        "club": "BAHIA",
+        "club": "ÁFRICA DO SUL",
         "pts": 20
       },
       {
         "rank": 3,
-        "club": "ATLÉTICO MG",
+        "club": "COREIA DO SUL",
         "pts": 18
       },
       {
         "rank": 4,
-        "club": "CRUZEIRO",
+        "club": "CZECH REP.",
         "pts": 16
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "Corrida no Brasileirão Sub-17 esquenta com Corinthians vencendo por 7 a 0; quem sai mais forte?"
+  "voiceoverText": "México e Coreia do Sul vencem seus jogos na estreia da Copa do Mundo, prometendo emoções no grupo."
 }

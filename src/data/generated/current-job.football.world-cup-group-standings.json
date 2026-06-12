@@ -8,9 +8,9 @@
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/foot-analysis-whistle.mp3",
-  "soundtrackLabel": "Foot Analysis Whistle",
-  "soundtrackVolume": 0.35,
+  "soundtrackPath": "/audio/football/É Gol, É Gol.mp3",
+  "soundtrackLabel": "É Gol, É Gol",
+  "soundtrackVolume": 0.25,
   "outputName": "copa-do-mundo-2026-grupo-a-pt-br.mp4",
   "durationInFrames": 360,
   "compositionId": "FootballWorldCupGroupShort",
@@ -30,15 +30,15 @@
   },
   "lastResultsLabel": "Últimos Resultados - Grupo A",
   "nextMatchesLabel": "Próximos Jogos - Grupo A",
-  "groupMatchSectionMode": "next-only",
+  "groupMatchSectionMode": "mixed",
   "ctaText": "Quem avança?",
   "rows": [
     {
       "rank": 1,
       "team": "México",
-      "played": 0,
-      "goalDifference": 0,
-      "points": 0,
+      "played": 1,
+      "goalDifference": 2,
+      "points": 3,
       "qualifiesAsBestThird": false,
       "badge": {
         "label": "🇲🇽",
@@ -47,22 +47,10 @@
     },
     {
       "rank": 2,
-      "team": "África do Sul",
-      "played": 0,
-      "goalDifference": 0,
-      "points": 0,
-      "qualifiesAsBestThird": false,
-      "badge": {
-        "label": "🇿🇦",
-        "imagePath": "/logos/south-africa-1531.png"
-      }
-    },
-    {
-      "rank": 3,
       "team": "Coreia do Sul",
-      "played": 0,
-      "goalDifference": 0,
-      "points": 0,
+      "played": 1,
+      "goalDifference": 1,
+      "points": 3,
       "qualifiesAsBestThird": false,
       "badge": {
         "label": "SK",
@@ -70,36 +58,36 @@
       }
     },
     {
-      "rank": 4,
+      "rank": 3,
       "team": "Rep. Tcheca",
-      "played": 0,
-      "goalDifference": 0,
+      "played": 1,
+      "goalDifference": -1,
       "points": 0,
-      "qualifiesAsBestThird": false,
+      "qualifiesAsBestThird": true,
       "badge": {
         "label": "CR",
         "imagePath": "/logos/czech-republic-770.png"
       }
-    }
-  ],
-  "lastResults": [],
-  "nextMatches": [
+    },
     {
-      "homeTeam": "México",
-      "awayTeam": "África do Sul",
-      "homeBadge": {
-        "label": "🇲🇽",
-        "imagePath": "/logos/mexico-16.png"
-      },
-      "awayBadge": {
+      "rank": 4,
+      "team": "África do Sul",
+      "played": 1,
+      "goalDifference": -2,
+      "points": 0,
+      "qualifiesAsBestThird": false,
+      "badge": {
         "label": "🇿🇦",
         "imagePath": "/logos/south-africa-1531.png"
-      },
-      "dateLabel": "11 de jun • 16:00 (BRT)"
-    },
+      }
+    }
+  ],
+  "lastResults": [
     {
       "homeTeam": "Coreia do Sul",
       "awayTeam": "Rep. Tcheca",
+      "homeScore": 2,
+      "awayScore": 1,
       "homeBadge": {
         "label": "SK",
         "imagePath": "/logos/south-korea-17.png"
@@ -109,6 +97,49 @@
         "imagePath": "/logos/czech-republic-770.png"
       },
       "dateLabel": "11 de jun • 23:00 (BRT)"
+    },
+    {
+      "homeTeam": "México",
+      "awayTeam": "África do Sul",
+      "homeScore": 2,
+      "awayScore": 0,
+      "homeBadge": {
+        "label": "🇲🇽",
+        "imagePath": "/logos/mexico-16.png"
+      },
+      "awayBadge": {
+        "label": "🇿🇦",
+        "imagePath": "/logos/south-africa-1531.png"
+      },
+      "dateLabel": "11 de jun • 16:00 (BRT)"
+    }
+  ],
+  "nextMatches": [
+    {
+      "homeTeam": "Rep. Tcheca",
+      "awayTeam": "África do Sul",
+      "homeBadge": {
+        "label": "CR",
+        "imagePath": "/logos/czech-republic-770.png"
+      },
+      "awayBadge": {
+        "label": "🇿🇦",
+        "imagePath": "/logos/south-africa-1531.png"
+      },
+      "dateLabel": "18 de jun • 13:00 (BRT)"
+    },
+    {
+      "homeTeam": "México",
+      "awayTeam": "Coreia do Sul",
+      "homeBadge": {
+        "label": "🇲🇽",
+        "imagePath": "/logos/mexico-16.png"
+      },
+      "awayBadge": {
+        "label": "SK",
+        "imagePath": "/logos/south-korea-17.png"
+      },
+      "dateLabel": "18 de jun • 22:00 (BRT)"
     }
   ],
   "introTitle": "Copa do Mundo 2026",
@@ -119,27 +150,25 @@
       {
         "rank": 1,
         "club": "MÉXICO",
-        "pts": 0
+        "pts": 3
       },
       {
         "rank": 2,
-        "club": "ÁFRICA DO SUL",
-        "pts": 0
+        "club": "COREIA DO SUL",
+        "pts": 3
       },
       {
         "rank": 3,
-        "club": "COREIA DO SUL",
+        "club": "REP. TCHECA",
         "pts": 0
       },
       {
         "rank": 4,
-        "club": "REP. TCHECA",
+        "club": "ÁFRICA DO SUL",
         "pts": 0
       }
     ]
   },
-  "voiceoverEnabled": true,
-  "voiceoverText": "Fala Galera, pra vocês... Grupo A da Copa do Mundo 2026.",
-  "voiceoverPath": "/voiceovers/football/pt-br-2753fa342a56455b.mp3",
-  "voiceoverLabel": "Fala Galera, pra vocês... Grupo A da Copa do Mundo 2026."
+  "voiceoverEnabled": false,
+  "voiceoverText": "México e Coreia lideram o Grupo A da Copa do Mundo 2026 com 3 pontos, quem vai garantir vaga?"
 }

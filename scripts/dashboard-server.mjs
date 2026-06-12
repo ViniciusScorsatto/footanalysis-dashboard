@@ -1024,6 +1024,7 @@ const buildPublishingMetadata = (job) => {
     job.rows ?? job.standings ?? job.tableRows ?? job.entries ?? job.players ?? job.groups ?? [];
   const fixtures = job.fixtures ?? job.matches ?? job.nextMatches ?? job.results ?? [];
   const isPlayerFirstTemplate = job.template === 'top-scorers' || job.template === 'player-of-round';
+  const languageProfile = job.languageProfile === 'en' || job.channelProfile === 'en' ? 'en' : 'pt-br';
   const context = publishingTemplateContext[job.template] ?? {
     contentType: job.template ?? 'football_video',
     editorialAngle: 'football short video; use the current template and metadata to choose the strongest story.',
@@ -1038,7 +1039,7 @@ const buildPublishingMetadata = (job) => {
     formatGuidance: context.formatGuidance ?? '',
     compositionId: job.compositionId ?? '',
     channelProfile: job.channelProfile ?? '',
-    languageProfile: job.languageProfile ?? '',
+    languageProfile,
     leagueId: job.leagueId ?? '',
     leagueName: job.leagueName ?? job.competitionName ?? '',
     season: job.season ?? '',
@@ -1140,6 +1141,24 @@ const templateSectionMap = {
 };
 
 const compactPublishingTemplate = ({templateText, template, languageProfile}) => {
+  if (languageProfile === 'en') {
+    const englishTemplateText =
+      templateText
+        .split(/^# Legacy Format Coverage/m)[0]
+        ?.split(/^# Estrutura Universal/m)[0]
+        ?.trim() || templateText;
+    return [
+      'Language profile: en.',
+      'Write every title, description, YouTube tag, hashtag, CTA, and platform field in English only.',
+      'Never output Portuguese words or Brazilian Portuguese football terms in English-channel metadata.',
+      'Use comma-friendly YouTube tags without #. Tags must be English search keywords such as football, soccer, Premier League, predictions, results, fixtures, standings, analysis, and relevant team/league names.',
+      'Use the Foot Analysis EN compact brief below instead of the full template.',
+      englishTemplateText,
+    ]
+      .filter(Boolean)
+      .join('\n\n---\n\n');
+  }
+
   const titleRules = sectionBetween(templateText, /^## Regras do Título/m, /^# DESCRIÇÃO UNIVERSAL/m);
   const descriptionRules = sectionBetween(templateText, /^# DESCRIÇÃO UNIVERSAL/m, /^# BLOCOS DINÂMICOS POR FORMATO/m);
   const formatRules = sectionBetween(
@@ -1367,6 +1386,8 @@ const generatePublishingDraft = async ({job, extraContext, copyModelInstructions
   const prompt = [
     'Generate a publishing draft for a short football video.',
     'Return platform-specific copy only. Do not invent match facts beyond the metadata.',
+    'Match metadata.languageProfile exactly: when metadata.languageProfile is "en", every output field including YouTube tags must be English only; when it is "pt-br", use Brazilian Portuguese.',
+    'Do not mix languages inside tags. YouTube tags are plain search keywords, not translated labels from another channel.',
     'Prioritize native style for each platform and keep the user able to manually approve before posting.',
     'Use tags as comma-friendly keywords without #. Use hashtags with # when the platform field is named hashtags.',
     'For TikTok and Instagram, write the caption as one ready-to-paste field: description text followed by hashtags. Hashtags must include #.',
@@ -1453,6 +1474,8 @@ const generateYouTubePublishingDraft = async ({
   const model = resolvePublishingModel(requestedModel);
   const prompt = [
     'Generate YouTube publishing metadata for a LONG-FORM football video.',
+    'Match metadata.languageProfile exactly: when metadata.languageProfile is "en", title, description, and every tag must be English only; when it is "pt-br", use Brazilian Portuguese.',
+    'Do not mix languages inside tags. YouTube tags are plain search keywords, not translated labels from another channel.',
     'Treat this as a horizontal narrated YouTube video, not as a Short. The copy should be built for a full video watch session, search discovery, and viewer retention.',
     'Return only title, description, and tags for YouTube. Do not create copy for Shorts, TikTok, Instagram, Reddit, or X.',
     'Do not use short-form language such as "quick", "short", "60 seconds", "reel", "clip", or "#Shorts" in the title, description, tags, or anywhere else.',
