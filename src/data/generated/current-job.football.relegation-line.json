@@ -1,9 +1,9 @@
 {
   "sport": "football",
   "template": "relegation-line",
-  "leagueId": 71,
+  "leagueId": 612,
   "season": 2026,
-  "leagueName": "Brasileirão Série A",
+  "leagueName": "Copa do Nordeste",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
@@ -11,222 +11,185 @@
   "soundtrackPath": "/audio/football/gol-de-arena.mp3",
   "soundtrackLabel": "Gol de Arena",
   "soundtrackVolume": 0.25,
-  "outputName": "brasileirao-serie-a-2026-linha-do-rebaixamento-pt-br.mp4",
+  "outputName": "copa-do-nordeste-2026-linha-do-rebaixamento-pt-br.mp4",
   "durationInFrames": 360,
   "compositionId": "FootballRelegationLineShort",
   "leagueConfig": {
-    "leagueId": 71,
-    "accentColor": "#F0A500",
+    "leagueId": 612,
+    "accentColor": "#2E86DE",
     "standings": {
       "safeArea": {
-        "left": 68,
-        "right": 104
+        "left": 64,
+        "right": 92
       },
       "zones": [
         {
-          "key": "libertadores",
-          "label": "Libertadores",
+          "key": "classification",
+          "label": "Classificação",
           "start": 1,
           "end": 4,
-          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(101, 227, 133, 0.64)"
-        },
-        {
-          "key": "pre-libertadores",
-          "label": "Pré-Libertadores",
-          "start": 5,
-          "end": 5,
-          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 190, 92, 0.58)"
-        },
-        {
-          "key": "sul-americana",
-          "label": "Sul-Americana",
-          "start": 6,
-          "end": 11,
-          "fill": "linear-gradient(90deg, rgba(0, 177, 183, 0.82), rgba(0, 177, 183, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(0, 177, 183, 0.54)"
-        },
-        {
-          "key": "rebaixamento",
-          "label": "Rebaixamento",
-          "start": 17,
-          "end": 20,
-          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 102, 102, 0.56)"
+          "fill": "linear-gradient(90deg, rgba(58, 196, 88, 0.84), rgba(58, 196, 88, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(86, 214, 120, 0.62)"
         }
       ]
     },
-    "leagueName": "Brasileirão Série A",
-    "pace": {
-      "championship": {
-        "benchmarkPercentage": 68,
-        "benchmarkLabel": "Média dos últimos 10 campeões",
-        "entryCount": 10
-      },
-      "relegation": {
-        "benchmarkPercentage": 38,
-        "benchmarkLabel": "Linha de segurança",
-        "safeRowsAbove": 3,
-        "maxRows": 10
-      }
-    }
+    "leagueName": "Copa do Nordeste",
+    "secondaryAccentColor": "#E74C3C"
   },
   "titleLabel": "Linha do Rebaixamento",
-  "subtitleLabel": "Aproveitamento na Rodada 18",
+  "subtitleLabel": "Aproveitamento na Rodada 5",
   "benchmarkPercentage": 38,
   "benchmarkLabel": "Linha de segurança",
-  "noteLabel": "*times com jogos a menos",
   "ctaText": "Quem cai esse ano?",
   "entries": [
     {
-      "rank": 11,
-      "team": "Cruzeiro",
-      "played": 18,
-      "points": 24,
-      "percentage": 44,
+      "rank": 2,
+      "team": "Juazeirense",
+      "played": 5,
+      "points": 6,
+      "percentage": 40,
       "hasGameInHand": false,
       "badge": {
-        "label": "C",
-        "logoPath": "/logos/cruzeiro-135.png"
+        "label": "J",
+        "logoPath": "/logos/juazeirense-1224.png"
       }
     },
     {
-      "rank": 12,
-      "team": "Botafogo",
-      "played": 17,
-      "points": 22,
-      "percentage": 43,
-      "hasGameInHand": true,
-      "badge": {
-        "label": "B",
-        "logoPath": "/logos/botafogo-120.png"
-      }
-    },
-    {
-      "rank": 13,
-      "team": "Vitoria",
-      "played": 17,
-      "points": 22,
-      "percentage": 43,
-      "hasGameInHand": true,
-      "badge": {
-        "label": "V",
-        "logoPath": "/logos/vitoria-136.png"
-      }
-    },
-    {
-      "rank": 14,
-      "team": "Internacional",
-      "played": 18,
-      "points": 21,
-      "percentage": 39,
+      "rank": 3,
+      "team": "Botafogo PB",
+      "played": 5,
+      "points": 6,
+      "percentage": 40,
       "hasGameInHand": false,
       "badge": {
-        "label": "I",
-        "logoPath": "/logos/internacional-119.png"
+        "label": "BP",
+        "logoPath": "/logos/botafogo-pb-1197.png"
       }
     },
     {
-      "rank": 15,
-      "team": "Santos",
-      "played": 18,
-      "points": 21,
-      "percentage": 39,
+      "rank": 4,
+      "team": "Fluminense PI",
+      "played": 5,
+      "points": 6,
+      "percentage": 40,
       "hasGameInHand": false,
       "badge": {
-        "label": "S",
-        "logoPath": "/logos/santos-128.png"
+        "label": "FP",
+        "logoPath": "/logos/fluminense-pi-15617.png"
       }
     },
     {
-      "rank": 16,
-      "team": "Gremio",
-      "played": 18,
-      "points": 21,
-      "percentage": 39,
-      "hasGameInHand": false,
-      "badge": {
-        "label": "G",
-        "logoPath": "/logos/gremio-130.png"
-      }
-    },
-    {
-      "rank": 17,
-      "team": "Vasco DA Gama",
-      "played": 18,
-      "points": 20,
-      "percentage": 37,
-      "hasGameInHand": false,
-      "badge": {
-        "label": "VDG",
-        "logoPath": "/logos/vasco-da-gama-133.png"
-      }
-    },
-    {
-      "rank": 18,
-      "team": "Remo",
-      "played": 18,
-      "points": 18,
+      "rank": 4,
+      "team": "CRB",
+      "played": 5,
+      "points": 5,
       "percentage": 33,
       "hasGameInHand": false,
       "badge": {
-        "label": "R",
-        "logoPath": "/logos/remo-1198.png"
+        "label": "C",
+        "logoPath": "/logos/crb-146.png"
       }
     },
     {
-      "rank": 19,
-      "team": "Mirassol",
-      "played": 17,
-      "points": 16,
-      "percentage": 31,
-      "hasGameInHand": true,
+      "rank": 4,
+      "team": "America-RN",
+      "played": 5,
+      "points": 5,
+      "percentage": 33,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "A",
+        "logoPath": "/logos/america-rn-2233.png"
+      }
+    },
+    {
+      "rank": 5,
+      "team": "Piauí",
+      "played": 5,
+      "points": 4,
+      "percentage": 27,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "P",
+        "logoPath": "/logos/piaui-13094.png"
+      }
+    },
+    {
+      "rank": 5,
+      "team": "Imperatriz",
+      "played": 5,
+      "points": 4,
+      "percentage": 27,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "I",
+        "logoPath": "/logos/imperatriz-2213.png"
+      }
+    },
+    {
+      "rank": 5,
+      "team": "AO Itabaiana",
+      "played": 5,
+      "points": 3,
+      "percentage": 20,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "AI",
+        "logoPath": "/logos/ao-itabaiana-2204.png"
+      }
+    },
+    {
+      "rank": 4,
+      "team": "Jacuipense",
+      "played": 5,
+      "points": 1,
+      "percentage": 7,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "J",
+        "logoPath": "/logos/jacuipense-7831.png"
+      }
+    },
+    {
+      "rank": 5,
+      "team": "Maranhão",
+      "played": 5,
+      "points": 1,
+      "percentage": 7,
+      "hasGameInHand": false,
       "badge": {
         "label": "M",
-        "logoPath": "/logos/mirassol-7848.png"
-      }
-    },
-    {
-      "rank": 20,
-      "team": "Chapecoense",
-      "played": 17,
-      "points": 9,
-      "percentage": 18,
-      "hasGameInHand": true,
-      "badge": {
-        "label": "C",
-        "logoPath": "/logos/chapecoense-sc-132.png"
+        "logoPath": "/logos/maranhao-7832.png"
       }
     }
   ],
-  "introTitle": "Brasileirão Série A",
-  "introSubtitle": "Aproveitamento na Rodada 18",
+  "introTitle": "Copa do Nordeste",
+  "introSubtitle": "Aproveitamento na Rodada 5",
   "hookText": "A linha está chegando",
   "coldOpenData": {
     "tableRows": [
       {
         "rank": 1,
-        "club": "CRUZEIRO",
+        "club": "JUAZEIRENSE",
         "pts": 10
       },
       {
         "rank": 2,
-        "club": "BOTAFOGO",
+        "club": "BOTAFOGO PB",
         "pts": 8
       },
       {
         "rank": 3,
-        "club": "VITORIA",
+        "club": "FLUMINENSE PI",
         "pts": 6
       },
       {
         "rank": 4,
-        "club": "INTERNACIONAL",
+        "club": "CRB",
         "pts": 4
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "Fala Galera, pra vocês... a linha do rebaixamento do Brasileirão Série A."
+  "voiceoverText": "Fala Galera, pra vocês... a linha do rebaixamento da Copa do Nordeste."
 }

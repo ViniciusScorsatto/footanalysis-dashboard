@@ -25,6 +25,7 @@ const footballPredictionsLongJobFile = path.join(
 );
 const leagueConfigDir = path.join(projectRoot, 'config', 'leagues');
 const teamNameAliasesFile = path.join(projectRoot, 'config', 'football-team-name-aliases.json');
+const teamLogoOverridesFile = path.join(projectRoot, 'config', 'football-team-logo-overrides.json');
 const teamAccentColorsFile = path.join(projectRoot, 'config', 'football-team-accent-colors.json');
 const worldCupConfigFile = path.join(projectRoot, 'config', 'world-cup', 'groups.json');
 const shortDurationsFile = path.join(projectRoot, 'config', 'football-short-durations.json');
@@ -818,6 +819,64 @@ const loadTeamNameAliases = async () => {
   }
 };
 
+const normalizePublicLogoPath = (value) => {
+  const normalized = String(value ?? '').trim();
+  if (!normalized) {
+    return undefined;
+  }
+
+  return normalized.startsWith('/') ? normalized : `/${normalized}`;
+};
+
+const loadTeamLogoOverrides = async () => {
+  try {
+    const overridesConfig = await readJsonFile(teamLogoOverridesFile);
+    const normalizeOverrideMap = (overrides = {}) =>
+      Object.fromEntries(
+        Object.entries(overrides)
+          .map(([key, value]) => [normalizeTeamAliasKey(key), normalizePublicLogoPath(value)])
+          .filter(([, value]) => Boolean(value))
+      );
+
+    return {
+      global: normalizeOverrideMap(overridesConfig.global),
+      leagues: Object.fromEntries(
+        Object.entries(overridesConfig.leagues ?? {}).map(([leagueId, overrides]) => [
+          leagueId,
+          normalizeOverrideMap(overrides),
+        ])
+      ),
+    };
+  } catch {
+    return {global: {}, leagues: {}};
+  }
+};
+
+let teamLogoOverridesCache;
+
+const getTeamLogoOverrides = async () => {
+  if (!teamLogoOverridesCache) {
+    teamLogoOverridesCache = await loadTeamLogoOverrides();
+  }
+
+  return teamLogoOverridesCache;
+};
+
+const resolveTeamLogoOverride = ({apiTeamName, displayTeamName, leagueId, logoOverrides}) => {
+  const leagueOverrides = logoOverrides?.leagues?.[String(leagueId)] ?? {};
+  const globalOverrides = logoOverrides?.global ?? {};
+  const keys = [displayTeamName, apiTeamName].map(normalizeTeamAliasKey).filter(Boolean);
+
+  for (const key of keys) {
+    const override = leagueOverrides[key] ?? globalOverrides[key];
+    if (override) {
+      return override;
+    }
+  }
+
+  return undefined;
+};
+
 export const loadTeamAccentColors = async () => {
   try {
     const accentConfig = await readJsonFile(teamAccentColorsFile);
@@ -1178,7 +1237,20 @@ const resolveTeamLogo = async ({
   displayTeamName,
   leagueId,
   aliasesConfig,
+  logoOverrides,
 }) => {
+  const effectiveLogoOverrides = logoOverrides ?? (await getTeamLogoOverrides());
+  const logoOverride = resolveTeamLogoOverride({
+    apiTeamName,
+    displayTeamName,
+    leagueId,
+    logoOverrides: effectiveLogoOverrides,
+  });
+
+  if (logoOverride) {
+    return logoOverride;
+  }
+
   const youthProfessionalLogo = findYouthProfessionalLogo({
     apiTeamName,
     displayTeamName,

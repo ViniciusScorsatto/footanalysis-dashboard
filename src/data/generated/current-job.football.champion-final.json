@@ -10,7 +10,7 @@
   "brandLogoPath": "/branding/foot-analysis-logo.png",
   "soundtrackPath": "/audio/football/gol-de-arena.mp3",
   "soundtrackLabel": "Gol de Arena",
-  "soundtrackVolume": 0.35,
+  "soundtrackVolume": 0.25,
   "outputName": "copa-do-nordeste-2026-campeao-pt-br.mp4",
   "durationInFrames": 240,
   "compositionId": "FootballChampionFinalShort",
@@ -52,7 +52,7 @@
     "awayTeam": "Vitoria",
     "homeScore": 1,
     "awayScore": 2,
-    "homeEliminated": true,
+    "homeEliminated": false,
     "awayEliminated": false,
     "hasPenalties": false,
     "homePenaltyScore": null,
@@ -78,8 +78,6 @@
       }
     ]
   },
-  "voiceoverEnabled": true,
-  "voiceoverText": "Vitória bate o Fortaleza novamente e é O campeão da Copa do Nordeste!",
-  "voiceoverPath": "/voiceovers/football/pt-br-df2b1c1d54745e35.mp3",
-  "voiceoverLabel": "Vitória bate o Fortaleza novamente e é O campeão da Copa do Nordeste!"
+  "voiceoverEnabled": false,
+  "voiceoverText": "Fala Galera, pra vocês... o campeão da Copa do Nordeste."
 }

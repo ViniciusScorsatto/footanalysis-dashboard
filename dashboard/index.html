@@ -6,39 +6,59 @@
     <title>Foot Analysis Dashboard</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
-  <body>
+  <body class="home-dashboard">
     <main class="shell shell-home">
-      <section class="hero hero-home">
+      <section class="home-console-header">
         <div>
-          <p class="eyebrow">Foot Analysis</p>
-          <h1>Football Creation Dashboard</h1>
-          <p class="intro">Results, predictions, standings, scorers, round highlights, and longform prediction videos for the football channels.</p>
+          <h1>Foot Analysis</h1>
+          <p class="quick-status">Production workspaces for football shorts, longform videos, round summaries, and thumbnails.</p>
+        </div>
+        <div class="home-env-status" aria-label="Environment status">
+          <span class="status-chip ready">Football</span>
+          <span class="status-chip neutral">Remotion</span>
+          <span class="status-chip neutral">Local dashboard</span>
         </div>
       </section>
-      <section class="sports-grid">
-        <a class="sport-card sport-card-football" href="/football/">
-          <span class="sport-kicker">Shorts</span>
-          <h2>Football Dashboard</h2>
-          <p>Prepare and render vertical football templates.</p>
-          <span class="sport-link">Open football workspace</span>
+
+      <section class="workflow-grid" aria-label="Foot Analysis workflows">
+        <a class="workflow-card" href="/football/">
+          <div class="workflow-card-header">
+            <span class="status-chip ready">Shorts</span>
+            <span class="workflow-format">1080x1920 MP4</span>
+          </div>
+          <h2>Football Shorts</h2>
+          <p>Prepare vertical templates for results, predictions, standings, scorers, tierlists, and World Cup videos.</p>
+          <span class="workflow-link">Open workspace</span>
         </a>
-        <a class="sport-card sport-card-football" href="/football-longform/">
-          <span class="sport-kicker">Longform</span>
-          <h2>Football Longform Predictions</h2>
-          <p>Paste a YAML roteiro and render 1920x1080 prediction videos.</p>
-          <span class="sport-link">Open longform workspace</span>
+
+        <a class="workflow-card" href="/football-longform/">
+          <div class="workflow-card-header">
+            <span class="status-chip neutral">Longform</span>
+            <span class="workflow-format">1920x1080 MP4</span>
+          </div>
+          <h2>Prediction Longform</h2>
+          <p>Generate a YAML roteiro, validate match blocks, preview the clean player, and render full prediction videos.</p>
+          <span class="workflow-link">Open workspace</span>
         </a>
-        <a class="sport-card sport-card-football" href="/football-round-summary-longform/">
-          <span class="sport-kicker">Longform</span>
-          <h2>Round Summary Longform</h2>
-          <p>Generate 1920x1080 rodada summaries with match events and statistics from the API.</p>
-          <span class="sport-link">Open summary workspace</span>
+
+        <a class="workflow-card" href="/football-round-summary-longform/">
+          <div class="workflow-card-header">
+            <span class="status-chip neutral">Summary</span>
+            <span class="workflow-format">1920x1080 MP4</span>
+          </div>
+          <h2>Round Summary</h2>
+          <p>Build rodada summaries with API match events, statistics, validation, preview, publishing copy, and render controls.</p>
+          <span class="workflow-link">Open workspace</span>
         </a>
-        <a class="sport-card sport-card-football" href="/football-thumbnails/">
-          <span class="sport-kicker">Thumbnails</span>
-          <h2>Football Thumbnails</h2>
-          <p>Create repeatable 1920x1080 YouTube thumbnails with controlled Remotion templates.</p>
-          <span class="sport-link">Open thumbnail workspace</span>
+
+        <a class="workflow-card" href="/football-thumbnails/">
+          <div class="workflow-card-header">
+            <span class="status-chip warning">Thumbnails</span>
+            <span class="workflow-format">1920x1080 PNG</span>
+          </div>
+          <h2>Thumbnail Studio</h2>
+          <p>Create controlled YouTube thumbnail stills with team logos, preset backgrounds, copy suggestions, and PNG render.</p>
+          <span class="workflow-link">Open workspace</span>
         </a>
       </section>
     </main>

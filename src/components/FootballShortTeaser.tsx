@@ -820,9 +820,10 @@ const HeroFixturePanel = ({
       style={{
         minHeight: panelHeight,
         display: 'grid',
-        gridTemplateColumns: '1fr 280px 1fr',
+        gridTemplateColumns: 'minmax(0, 320px) 240px minmax(0, 320px)',
+        justifyContent: 'center',
         alignItems: 'center',
-        gap: 24,
+        gap: 26,
         padding: isSingle ? '58px 34px 52px' : '34px 30px 30px',
         borderRadius: 34,
         border: 'none',
@@ -873,34 +874,61 @@ const HeroFixtureTeam = ({
   align?: 'left' | 'right';
   badgeSize: number;
   isSingle: boolean;
-}) => (
-  <div
-    style={{
-      minWidth: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: align === 'left' ? 'flex-start' : 'flex-end',
-      gap: 20,
-      textAlign: align,
-    }}
-  >
-    <FixtureBadge badge={badge} label={team} size={badgeSize} align={align} />
+}) => {
+  const label = String(team ?? '');
+  const fontSize = isSingle
+    ? label.length > 15
+      ? 38
+      : label.length > 11
+        ? 44
+        : 56
+    : label.length > 15
+      ? 28
+      : label.length > 11
+        ? 34
+        : label.length > 8
+          ? 40
+          : 46;
+
+  return (
     <div
       style={{
-        maxWidth: 310,
-        color: '#f0f4f8',
-        fontSize: isSingle ? 58 : 48,
-        lineHeight: 0.9,
-        fontWeight: 900,
-        textTransform: 'uppercase',
-        textWrap: 'balance',
-        textShadow: `0 0 16px ${accentColor}66, 0 8px 20px rgba(0,0,0,0.9)`,
+        width: '100%',
+        minWidth: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 18,
+        textAlign: 'center',
       }}
     >
-      {team}
+      <FixtureBadge badge={badge} label={team} size={badgeSize} align={align} />
+      <div
+        style={{
+          width: '100%',
+          maxWidth: 320,
+          minHeight: isSingle ? 96 : 64,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#f0f4f8',
+          fontSize,
+          lineHeight: 0.9,
+          fontWeight: 900,
+          textTransform: 'uppercase',
+          textAlign: 'center',
+          textWrap: 'balance',
+          overflow: 'hidden',
+          overflowWrap: 'anywhere',
+          textShadow: `0 0 16px ${accentColor}66, 0 8px 20px rgba(0,0,0,0.9)`,
+        }}
+      >
+        {team}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const SecondaryFixtureRow = ({
   fixture,
@@ -917,25 +945,25 @@ const SecondaryFixtureRow = ({
   return (
     <div
       style={{
-        minHeight: 124,
+        minHeight: 150,
         display: 'grid',
-        gridTemplateColumns: 'minmax(0, 1fr) 96px 132px 96px minmax(0, 1fr)',
+        gridTemplateColumns: '132px 144px 132px',
+        justifyContent: 'center',
         alignItems: 'center',
-        gap: 4,
-        padding: '12px 34px',
+        gap: 18,
+        padding: '12px 28px',
         borderRadius: 18,
         border: 'none',
         background: 'transparent',
         boxShadow: 'none',
       }}
     >
-      <PosterTeam align="right">{teams.home}</PosterTeam>
-      <FixtureBadge badge={teams.homeBadge} label={teams.home} size={92} align="left" />
+      <FixtureBadge badge={teams.homeBadge} label={teams.home} size={128} align="center" />
       <div
         style={{
           ...TEASER_NUMBER_EFFECT,
           color: '#f0f4f8',
-          fontSize: 56,
+          fontSize: 64,
           lineHeight: 0.9,
           fontWeight: 900,
           textAlign: 'center',
@@ -945,8 +973,7 @@ const SecondaryFixtureRow = ({
       >
         {scoreText}
       </div>
-      <FixtureBadge badge={teams.awayBadge} label={teams.away} size={92} align="right" />
-      <PosterTeam align="left">{teams.away}</PosterTeam>
+      <FixtureBadge badge={teams.awayBadge} label={teams.away} size={128} align="center" />
     </div>
   );
 };
@@ -3097,8 +3124,21 @@ const PaceFloatingStat = ({
 );
 
 const PosterTeam = ({children, align = 'left'}: {children: React.ReactNode; align?: 'left' | 'right'}) => {
-  const label = String(children ?? '');
-  const fontSize = label.length > 16 ? 30 : label.length > 13 ? 34 : label.length > 10 ? 38 : 42;
+  const label = String(children ?? '').replace(/\s+/g, ' ').trim();
+  const fontSize =
+    label.length > 24
+      ? 18
+      : label.length > 21
+        ? 20
+        : label.length > 18
+          ? 22
+          : label.length > 15
+            ? 25
+            : label.length > 12
+              ? 29
+              : label.length > 9
+                ? 34
+                : 40;
 
   return (
     <div
@@ -3110,12 +3150,13 @@ const PosterTeam = ({children, align = 'left'}: {children: React.ReactNode; alig
         textAlign: align,
         textTransform: 'uppercase',
         whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
+        overflow: 'visible',
         textShadow: '0 8px 18px rgba(0,0,0,0.88), 0 0 14px rgba(240,244,248,0.18)',
+        width: '100%',
+        minWidth: 0,
       }}
     >
-      {children}
+      {label}
     </div>
   );
 };

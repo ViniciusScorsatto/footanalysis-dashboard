@@ -582,33 +582,41 @@ const setBusy = (busy) => {
   renderButton.disabled = busy;
 };
 
+const setNoticeStatus = (element, message, tone = 'info') => {
+  if (!element) return;
+  element.textContent = message;
+  element.classList.add('notice');
+  element.classList.remove('info', 'success', 'warning', 'error');
+  element.classList.add(tone);
+};
+
 const startYouTubeOAuth = async (channel) => {
   try {
-    settingsStatus.textContent = `Preparing YouTube ${channel.toUpperCase()} consent link…`;
+    setNoticeStatus(settingsStatus, `Preparing YouTube ${channel.toUpperCase()} consent link…`, 'warning');
     const response = await fetch(`${apiBase}/settings/youtube/oauth-url?channel=${encodeURIComponent(channel)}`);
     const data = await response.json();
     if (!response.ok || !data.ok) {
       throw new Error(data.error || 'Could not create YouTube OAuth URL');
     }
     window.open(data.authUrl, '_blank', 'noopener,noreferrer');
-    settingsStatus.textContent = `Consent opened for ${channel.toUpperCase()}. Finish it in the new tab.`;
+    setNoticeStatus(settingsStatus, `Consent opened for ${channel.toUpperCase()}. Finish it in the new tab.`, 'success');
   } catch (error) {
-    settingsStatus.textContent = error instanceof Error ? error.message : String(error);
+    setNoticeStatus(settingsStatus, error instanceof Error ? error.message : String(error), 'error');
   }
 };
 
 const startTikTokOAuth = async (channel) => {
   try {
-    settingsStatus.textContent = `Preparing TikTok ${channel.toUpperCase()} consent link…`;
+    setNoticeStatus(settingsStatus, `Preparing TikTok ${channel.toUpperCase()} consent link…`, 'warning');
     const response = await fetch(`${apiBase}/settings/tiktok/oauth-url?channel=${encodeURIComponent(channel)}`);
     const data = await response.json();
     if (!response.ok || !data.ok) {
       throw new Error(data.error || 'Could not create TikTok OAuth URL');
     }
     window.open(data.authUrl, '_blank', 'noopener,noreferrer');
-    settingsStatus.textContent = `Consent opened for TikTok ${channel.toUpperCase()}. Finish it in the new tab.`;
+    setNoticeStatus(settingsStatus, `Consent opened for TikTok ${channel.toUpperCase()}. Finish it in the new tab.`, 'success');
   } catch (error) {
-    settingsStatus.textContent = error instanceof Error ? error.message : String(error);
+    setNoticeStatus(settingsStatus, error instanceof Error ? error.message : String(error), 'error');
   }
 };
 
@@ -1055,8 +1063,9 @@ const setRenderDownload = (job, render) => {
     .map((part) => encodeURIComponent(part))
     .join('/')}`;
   renderDownloadRoot.innerHTML = `
-    <div class="job-download-card">
-      <div>
+    <div class="job-status-line job-render-line">
+      <span class="status-chip success">render</span>
+      <div class="job-status-copy">
         <strong>Render ready</strong>
         <span>${escapeHtml(job.outputName)}</span>
       </div>
@@ -1163,7 +1172,7 @@ const updatePublishingMetadata = (job) => {
   ].filter(Boolean);
 
   publishingMetadataRoot.innerHTML = chips
-    .map((chip) => `<span class="chip subtle">${escapeHtml(chip)}</span>`)
+    .map((chip) => `<span class="status-chip neutral">${escapeHtml(chip)}</span>`)
     .join('');
 };
 
@@ -1177,7 +1186,7 @@ const draftField = ({platform, label, key, value, multiline = true}) => {
     <label class="publishing-field">
       <span>${escapeHtml(label)}</span>
       ${control}
-      <button type="button" class="copy-field-button secondary" data-copy-value="${escapeHtml(fieldValue)}">Copy</button>
+      <button type="button" class="copy-field-button btn btn-secondary btn-compact" data-copy-value="${escapeHtml(fieldValue)}">Copy</button>
     </label>
   `;
 };
@@ -1280,7 +1289,7 @@ const renderPublishingDraft = (draft) => {
           >
             <div class="publishing-card-header">
               <h3>${escapeHtml(card.label)}</h3>
-              <span class="chip subtle">draft</span>
+              <span class="status-chip neutral">draft</span>
             </div>
             ${card.fields
               .map(([label, key, value, multiline]) =>
@@ -1290,7 +1299,7 @@ const renderPublishingDraft = (draft) => {
             ${
               card.key === 'youtube'
                 ? `
-                  <div class="youtube-upload-box">
+                  <div class="youtube-upload-box notice info">
                     <label class="publishing-field">
                       <span>Privacy</span>
                       <select id="youtube-privacy-status">
@@ -1311,15 +1320,15 @@ const renderPublishingDraft = (draft) => {
                       <input type="checkbox" id="youtube-channel-footer" />
                       <span>Include Foot Analysis channel description</span>
                     </label>
-                    <button type="button" id="upload-youtube-button" class="secondary">Upload to YouTube</button>
-                    <p id="youtube-upload-status" class="publishing-status">Upload uses the rendered MP4 and keeps manual review in YouTube Studio.</p>
+                    <button type="button" id="upload-youtube-button" class="btn btn-secondary">Upload to YouTube</button>
+                    <p id="youtube-upload-status" class="publishing-status notice info">Upload uses the rendered MP4 and keeps manual review in YouTube Studio.</p>
                   </div>
                 `
                 : card.key === 'tiktok'
                   ? `
-                    <div class="youtube-upload-box">
-                      <button type="button" id="upload-tiktok-button" class="secondary">Upload to TikTok Inbox</button>
-                      <p id="tiktok-upload-status" class="publishing-status">TikTok upload sends the rendered MP4 to your inbox/draft flow. Copy the caption and finish in TikTok.</p>
+                    <div class="youtube-upload-box notice info">
+                      <button type="button" id="upload-tiktok-button" class="btn btn-secondary">Upload to TikTok Inbox</button>
+                      <p id="tiktok-upload-status" class="publishing-status notice info">TikTok upload sends the rendered MP4 to your inbox/draft flow. Copy the caption and finish in TikTok.</p>
                     </div>
                   `
                 : ''
@@ -1352,9 +1361,7 @@ const generateShortCopy = async () => {
   const button = generateShortCopyButton;
   try {
     if (button) button.disabled = true;
-    if (hookCtaStatus) {
-      hookCtaStatus.textContent = 'Gerando Hook, CTA e voice-over com OpenAI usando o template Markdown…';
-    }
+    setNoticeStatus(hookCtaStatus, 'Gerando Hook, CTA e voice-over com OpenAI usando o template Markdown…', 'warning');
 
     const payload = buildJobPayloadFromForm();
     const response = await fetch(`${apiBase}/copy/hook-cta`, {
@@ -1375,13 +1382,15 @@ const generateShortCopy = async () => {
     form.elements.ctaText.value = data.ctaText ?? '';
     form.elements.voiceoverText.value = data.voiceoverText ?? '';
 
-    if (hookCtaStatus) {
-      hookCtaStatus.textContent = `Sugestão pronta com ${data.model ?? 'OpenAI'} · ${data.templateName ?? 'template Markdown'}.`;
-    }
+    setNoticeStatus(
+      hookCtaStatus,
+      `Sugestão pronta com ${data.model ?? 'OpenAI'} · ${data.templateName ?? 'template Markdown'}.`,
+      'success'
+    );
     log('Hook, CTA, and voice-over text generated with OpenAI.');
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    if (hookCtaStatus) hookCtaStatus.textContent = message;
+    setNoticeStatus(hookCtaStatus, message, 'error');
     log(message);
   } finally {
     if (button) button.disabled = false;
@@ -1391,7 +1400,7 @@ const generateShortCopy = async () => {
 const generatePublishingDraft = async () => {
   try {
     generatePublishingButton.disabled = true;
-    publishingStatus.textContent = 'Generating publishing draft from current video metadata…';
+    setNoticeStatus(publishingStatus, 'Generating publishing draft from current video metadata…', 'warning');
     const response = await fetch(`${apiBase}/publishing/draft`, {
       method: 'POST',
       headers: {'content-type': 'application/json'},
@@ -1412,10 +1421,10 @@ const generatePublishingDraft = async () => {
         : data.model ?? 'draft ready';
     }
     renderPublishingDraft(data.draft);
-    publishingStatus.textContent = 'Draft ready. Review, edit, copy, then publish manually.';
+    setNoticeStatus(publishingStatus, 'Draft ready. Review, edit, copy, then publish manually.', 'success');
     log('Publishing draft generated.');
   } catch (error) {
-    publishingStatus.textContent = error instanceof Error ? error.message : String(error);
+    setNoticeStatus(publishingStatus, error instanceof Error ? error.message : String(error), 'error');
     log(publishingStatus.textContent);
   } finally {
     generatePublishingButton.disabled = false;
@@ -1455,7 +1464,7 @@ const uploadYouTubeDraft = async () => {
   const draft = collectPublishingDraftFromFields();
   const youtube = draft?.platforms?.youtube;
   if (!youtube) {
-    publishingStatus.textContent = 'Generate a YouTube draft before uploading.';
+    setNoticeStatus(publishingStatus, 'Generate a YouTube draft before uploading.', 'warning');
     return;
   }
 
@@ -1480,9 +1489,9 @@ const uploadYouTubeDraft = async () => {
     const button = document.getElementById('upload-youtube-button');
     if (button) button.disabled = true;
     if (youtubeUploadStatusRoot) {
-      youtubeUploadStatusRoot.textContent = 'Uploading to YouTube…';
+      setNoticeStatus(youtubeUploadStatusRoot, 'Uploading to YouTube…', 'warning');
     }
-    publishingStatus.textContent = 'Uploading YouTube video…';
+    setNoticeStatus(publishingStatus, 'Uploading YouTube video…', 'warning');
 
     const response = await fetch(`${apiBase}/publishing/youtube/upload`, {
       method: 'POST',
@@ -1517,14 +1526,14 @@ const uploadYouTubeDraft = async () => {
         data.youtube?.privacyStatus ?? privacyStatus
       )}.${escapeHtml(shortsCheckLabel)} ${link}`;
     }
-    publishingStatus.textContent = 'YouTube upload completed.';
+    setNoticeStatus(publishingStatus, 'YouTube upload completed.', 'success');
     log(`YouTube upload completed: ${data.youtube?.shortsUrl ?? data.youtube?.url ?? data.youtube?.videoId ?? 'uploaded'}`);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     if (youtubeUploadStatusRoot) {
-      youtubeUploadStatusRoot.textContent = message;
+      setNoticeStatus(youtubeUploadStatusRoot, message, 'error');
     }
-    publishingStatus.textContent = message;
+    setNoticeStatus(publishingStatus, message, 'error');
     log(message);
   } finally {
     const button = document.getElementById('upload-youtube-button');
@@ -1536,7 +1545,7 @@ const uploadTikTokDraft = async () => {
   const draft = collectPublishingDraftFromFields();
   const tiktok = draft?.platforms?.tiktok;
   if (!tiktok) {
-    publishingStatus.textContent = 'Generate a TikTok draft before uploading.';
+    setNoticeStatus(publishingStatus, 'Generate a TikTok draft before uploading.', 'warning');
     return;
   }
 
@@ -1544,9 +1553,9 @@ const uploadTikTokDraft = async () => {
     const button = document.getElementById('upload-tiktok-button');
     if (button) button.disabled = true;
     if (tiktokUploadStatusRoot) {
-      tiktokUploadStatusRoot.textContent = 'Uploading to TikTok inbox…';
+      setNoticeStatus(tiktokUploadStatusRoot, 'Uploading to TikTok inbox…', 'warning');
     }
-    publishingStatus.textContent = 'Uploading TikTok draft…';
+    setNoticeStatus(publishingStatus, 'Uploading TikTok draft…', 'warning');
 
     const response = await fetch(`${apiBase}/publishing/tiktok/upload`, {
       method: 'POST',
@@ -1575,16 +1584,16 @@ const uploadTikTokDraft = async () => {
       .join(' ');
 
     if (tiktokUploadStatusRoot) {
-      tiktokUploadStatusRoot.textContent = statusText;
+      setNoticeStatus(tiktokUploadStatusRoot, statusText, 'success');
     }
-    publishingStatus.textContent = 'TikTok inbox upload completed.';
+    setNoticeStatus(publishingStatus, 'TikTok inbox upload completed.', 'success');
     log(`TikTok upload completed: ${data.tiktok?.publishId ?? 'uploaded'}`);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     if (tiktokUploadStatusRoot) {
-      tiktokUploadStatusRoot.textContent = message;
+      setNoticeStatus(tiktokUploadStatusRoot, message, 'error');
     }
-    publishingStatus.textContent = message;
+    setNoticeStatus(publishingStatus, message, 'error');
     log(message);
   } finally {
     const button = document.getElementById('upload-tiktok-button');
@@ -1604,7 +1613,7 @@ const renderPredictionEditor = (fixtures = []) => {
     .map((fixture, index) => {
       const sourceLabel = fixture.predictionSource === 'api' ? 'API' : 'Manual';
       return `
-        <div class="prediction-card">
+        <div class="prediction-card editor-row fixture-editor-row">
           <label class="prediction-team">
             <span>${escapeHtml(fixture.homeTeam)}</span>
           </label>
@@ -1631,7 +1640,7 @@ const renderPredictionEditor = (fixtures = []) => {
           <label class="prediction-team" style="justify-content:flex-end;text-align:right;">
             <span>${escapeHtml(fixture.awayTeam)}</span>
           </label>
-          <div class="prediction-source" style="grid-column:1 / -1;">${index + 1}. ${sourceLabel}</div>
+          <div class="prediction-source status-chip neutral" style="grid-column:1 / -1;">${index + 1}. ${sourceLabel}</div>
         </div>
       `;
     })
@@ -1666,7 +1675,7 @@ const renderResultEditor = (fixtures = []) => {
   resultEditorList.innerHTML = fixtures
     .map((fixture) => {
       return `
-        <div class="prediction-card">
+        <div class="prediction-card editor-row fixture-editor-row">
           <div class="prediction-team-block">
             <label class="prediction-team">
               <span>${escapeHtml(fixture.homeTeam)}</span>
@@ -1814,7 +1823,7 @@ const renderStandingsEditor = (rows = []) => {
         : `<span class="season-verdict-fallback-badge">${escapeHtml(row.badge?.label ?? '')}</span>`;
 
       return `
-        <div class="standings-editor-row" data-original-rank="${row.rank}">
+        <div class="standings-editor-row editor-row" data-original-rank="${row.rank}">
           <div class="standings-editor-team">
             ${badgeHtml}
             <input
@@ -1905,15 +1914,18 @@ const loadChampionFinalOptions = async () => {
   const season = Number(seasonValue);
 
   if (!leagueIdValue || !seasonValue || !Number.isFinite(leagueId) || !Number.isFinite(season)) {
-    championFinalStatus.textContent =
-      'Auto usa a final. Escolha uma liga e temporada para carregar campeões da tabela.';
+    setNoticeStatus(
+      championFinalStatus,
+      'Auto usa a final. Escolha uma liga e temporada para carregar campeões da tabela.',
+      'warning'
+    );
     renderChampionFinalOptions([]);
     return;
   }
 
   try {
     reloadChampionFinalButton.disabled = true;
-    championFinalStatus.textContent = 'Carregando tabela para escolher o campeão...';
+    setNoticeStatus(championFinalStatus, 'Carregando tabela para escolher o campeão...', 'warning');
     const params = new URLSearchParams({
       leagueId: String(leagueId),
       season: String(season),
@@ -1926,12 +1938,16 @@ const loadChampionFinalOptions = async () => {
     }
 
     renderChampionFinalOptions(data.rows ?? []);
-    championFinalStatus.textContent = data.rows?.length
-      ? 'Auto resolve copas pela final. Para liga, escolha o campeão da tabela.'
-      : 'Sem tabela disponível. Use a final selecionada para resolver o campeão.';
+    setNoticeStatus(
+      championFinalStatus,
+      data.rows?.length
+        ? 'Auto resolve copas pela final. Para liga, escolha o campeão da tabela.'
+        : 'Sem tabela disponível. Use a final selecionada para resolver o campeão.',
+      data.rows?.length ? 'success' : 'warning'
+    );
   } catch (error) {
     renderChampionFinalOptions([]);
-    championFinalStatus.textContent = 'Não foi possível carregar a tabela. Auto continua disponível.';
+    setNoticeStatus(championFinalStatus, 'Não foi possível carregar a tabela. Auto continua disponível.', 'error');
     log(error instanceof Error ? error.message : String(error));
   } finally {
     reloadChampionFinalButton.disabled = false;
@@ -1946,20 +1962,20 @@ const loadStandingsEditor = async () => {
   const season = Number(seasonValue);
 
   if (template !== 'standings') {
-    standingsEditorStatus.textContent = 'Select Standings to load table overrides.';
+    setNoticeStatus(standingsEditorStatus, 'Select Standings to load table overrides.', 'info');
     renderStandingsEditor([]);
     return;
   }
 
   if (!leagueIdValue || !seasonValue || !Number.isFinite(leagueId) || !Number.isFinite(season)) {
-    standingsEditorStatus.textContent = 'Choose a league and season to load standings.';
+    setNoticeStatus(standingsEditorStatus, 'Choose a league and season to load standings.', 'warning');
     renderStandingsEditor([]);
     return;
   }
 
   try {
     reloadStandingsButton.disabled = true;
-    standingsEditorStatus.textContent = 'Loading standings…';
+    setNoticeStatus(standingsEditorStatus, 'Loading standings…', 'warning');
     const params = new URLSearchParams({
       leagueId: String(leagueId),
       season: String(season),
@@ -1972,12 +1988,16 @@ const loadStandingsEditor = async () => {
     }
 
     renderStandingsEditor(data.rows ?? []);
-    standingsEditorStatus.textContent = data.rows?.length
-      ? `Loaded ${data.rows.length} teams. Edit only what the API got wrong.`
-      : 'No standings rows found.';
+    setNoticeStatus(
+      standingsEditorStatus,
+      data.rows?.length
+        ? `Loaded ${data.rows.length} teams. Edit only what the API got wrong.`
+        : 'No standings rows found.',
+      data.rows?.length ? 'success' : 'warning'
+    );
   } catch (error) {
     renderStandingsEditor([]);
-    standingsEditorStatus.textContent = 'Could not load standings.';
+    setNoticeStatus(standingsEditorStatus, 'Could not load standings.', 'error');
     log(error instanceof Error ? error.message : String(error));
   } finally {
     reloadStandingsButton.disabled = false;
@@ -2008,7 +2028,7 @@ const renderSeasonVerdictEditor = (rows = [], statusOptions = []) => {
         : `<span class="season-verdict-fallback-badge">${escapeHtml(row.badge?.label ?? '')}</span>`;
 
       return `
-        <div class="season-verdict-row" data-rank="${row.rank}">
+        <div class="season-verdict-row editor-row" data-rank="${row.rank}">
           <div class="season-verdict-team">
             ${badgeHtml}
             <div>
@@ -2058,20 +2078,20 @@ const loadSeasonFinalVerdictEditor = async () => {
   const season = Number(seasonValue);
 
   if (template !== SEASON_FINAL_VERDICT_TEMPLATE) {
-    seasonVerdictEditorStatus.textContent = 'Select Season Wrap-up to load standings overrides.';
+    setNoticeStatus(seasonVerdictEditorStatus, 'Select Season Wrap-up to load standings overrides.', 'info');
     renderSeasonVerdictEditor([]);
     return;
   }
 
   if (!leagueIdValue || !seasonValue || !Number.isFinite(leagueId) || !Number.isFinite(season)) {
-    seasonVerdictEditorStatus.textContent = 'Choose a league and season to load standings.';
+    setNoticeStatus(seasonVerdictEditorStatus, 'Choose a league and season to load standings.', 'warning');
     renderSeasonVerdictEditor([]);
     return;
   }
 
   try {
     reloadSeasonVerdictButton.disabled = true;
-    seasonVerdictEditorStatus.textContent = 'Loading standings…';
+    setNoticeStatus(seasonVerdictEditorStatus, 'Loading standings…', 'warning');
     const params = new URLSearchParams({
       leagueId: String(leagueId),
       season: String(season),
@@ -2085,12 +2105,16 @@ const loadSeasonFinalVerdictEditor = async () => {
     }
 
     renderSeasonVerdictEditor(data.rows ?? [], data.statusOptions ?? []);
-    seasonVerdictEditorStatus.textContent = data.rows?.length
-      ? `Loaded ${data.rows.length} teams. Change only the teams affected by playoffs.`
-      : 'No standings rows found.';
+    setNoticeStatus(
+      seasonVerdictEditorStatus,
+      data.rows?.length
+        ? `Loaded ${data.rows.length} teams. Change only the teams affected by playoffs.`
+        : 'No standings rows found.',
+      data.rows?.length ? 'success' : 'warning'
+    );
   } catch (error) {
     renderSeasonVerdictEditor([]);
-    seasonVerdictEditorStatus.textContent = 'Could not load standings overrides.';
+    setNoticeStatus(seasonVerdictEditorStatus, 'Could not load standings overrides.', 'error');
     log(error instanceof Error ? error.message : String(error));
   } finally {
     reloadSeasonVerdictButton.disabled = false;
@@ -2186,7 +2210,7 @@ const renderTierlistEditor = (teams = []) => {
       }).join('');
 
       return `
-        <div class="tierlist-editor-row">
+        <div class="tierlist-editor-row editor-row">
           <div class="tierlist-editor-label">
             <strong>${escapeHtml(group.label)}</strong>
             <span>${group.count} team${group.count === 1 ? '' : 's'}</span>
@@ -2215,20 +2239,20 @@ const loadTierlistTeams = async () => {
   const languageProfile = languageProfileSelect.value || 'pt-br';
 
   if (template !== TIERLIST_TEMPLATE) {
-    tierlistEditorStatus.textContent = 'Select Tierlist to load teams.';
+    setNoticeStatus(tierlistEditorStatus, 'Select Tierlist to load teams.', 'info');
     renderTierlistEditor([]);
     return;
   }
 
   if (!seasonValue || !Number.isFinite(season)) {
-    tierlistEditorStatus.textContent = 'Choose a season to load World Cup teams.';
+    setNoticeStatus(tierlistEditorStatus, 'Choose a season to load World Cup teams.', 'warning');
     renderTierlistEditor([]);
     return;
   }
 
   try {
     reloadTierlistButton.disabled = true;
-    tierlistEditorStatus.textContent = 'Loading World Cup teams…';
+    setNoticeStatus(tierlistEditorStatus, 'Loading World Cup teams…', 'warning');
     const params = new URLSearchParams({
       season: String(season),
       languageProfile,
@@ -2241,12 +2265,16 @@ const loadTierlistTeams = async () => {
     }
 
     renderTierlistEditor(data.teams ?? []);
-    tierlistEditorStatus.textContent = data.teams?.length
-      ? `Loaded ${data.teams.length} teams. Fill all tiers before preparing.`
-      : 'No World Cup teams found.';
+    setNoticeStatus(
+      tierlistEditorStatus,
+      data.teams?.length
+        ? `Loaded ${data.teams.length} teams. Fill all tiers before preparing.`
+        : 'No World Cup teams found.',
+      data.teams?.length ? 'success' : 'warning'
+    );
   } catch (error) {
     renderTierlistEditor([]);
-    tierlistEditorStatus.textContent = 'Could not load Tierlist teams.';
+    setNoticeStatus(tierlistEditorStatus, 'Could not load Tierlist teams.', 'error');
     log(error instanceof Error ? error.message : String(error));
   } finally {
     reloadTierlistButton.disabled = false;
@@ -2262,12 +2290,12 @@ const loadResultFixturesForEditor = async () => {
   const season = Number(seasonValue);
 
   if (template !== 'results' && template !== CHAMPION_FINAL_TEMPLATE) {
-    resultEditorStatus.textContent = 'Select Results or Champion Final to load fixtures.';
+    setNoticeStatus(resultEditorStatus, 'Select Results or Champion Final to load fixtures.', 'info');
     return;
   }
 
   if (!leagueIdValue || !seasonValue || !Number.isFinite(leagueId) || !Number.isFinite(season)) {
-    resultEditorStatus.textContent = 'Choose a league and season to load results.';
+    setNoticeStatus(resultEditorStatus, 'Choose a league and season to load results.', 'warning');
     renderResultEditor([]);
     return;
   }
@@ -2275,7 +2303,7 @@ const loadResultFixturesForEditor = async () => {
   const selectedRound = roundSelect.value.trim();
   const selectedDates = getSelectedMatchDates();
 
-  resultEditorStatus.textContent = 'Loading result fixtures…';
+  setNoticeStatus(resultEditorStatus, 'Loading result fixtures…', 'warning');
 
   try {
     const params = new URLSearchParams({
@@ -2296,11 +2324,15 @@ const loadResultFixturesForEditor = async () => {
     const visibleFixtures = data.fixtures ?? [];
     renderResultEditor(visibleFixtures);
     const dateLabel = getMatchDateSelectionLabel();
-    resultEditorStatus.textContent = visibleFixtures.length
-      ? `Loaded ${visibleFixtures.length} fixtures for ${data.round}${dateLabel ? ` • ${dateLabel}` : ''}.`
-      : 'No fixtures found for the selected round.';
+    setNoticeStatus(
+      resultEditorStatus,
+      visibleFixtures.length
+        ? `Loaded ${visibleFixtures.length} fixtures for ${data.round}${dateLabel ? ` • ${dateLabel}` : ''}.`
+        : 'No fixtures found for the selected round.',
+      visibleFixtures.length ? 'success' : 'warning'
+    );
   } catch (error) {
-    resultEditorStatus.textContent = 'Could not load result fixtures.';
+    setNoticeStatus(resultEditorStatus, 'Could not load result fixtures.', 'error');
     log(error instanceof Error ? error.message : String(error));
   }
 };
@@ -2314,10 +2346,15 @@ const buildStudioPreviewUrl = () => {
   const studioUrl = normalizeStudioUrl(studioUrlInput.value);
   const compositionId = templateCompositionMap[templateSelect.value];
   const refreshToken = Date.now().toString();
+  const knownCompositionIds = new Set(Object.values(templateCompositionMap).filter(Boolean));
 
   try {
     const url = new URL(studioUrl);
-    const cleanPath = url.pathname === '/' ? '' : url.pathname.replace(/\/+$/, '');
+    const pathParts = url.pathname.split('/').filter(Boolean);
+    if (pathParts.length && knownCompositionIds.has(decodeURIComponent(pathParts[pathParts.length - 1]))) {
+      pathParts.pop();
+    }
+    const cleanPath = pathParts.length ? `/${pathParts.map(encodeURIComponent).join('/')}` : '';
     url.pathname = compositionId ? `${cleanPath}/${encodeURIComponent(compositionId)}` : cleanPath || '/';
     url.searchParams.set('codexPreviewTs', refreshToken);
     return url.toString();
@@ -2359,7 +2396,7 @@ const updateDashboardMeta = () => {
 
 const loadPredictionFixtures = async () => {
   if (templateSelect.value !== 'predictions') {
-    predictionEditorStatus.textContent = 'Select the Predictions template to load fixtures.';
+    setNoticeStatus(predictionEditorStatus, 'Select the Predictions template to load fixtures.', 'info');
     renderPredictionEditor([]);
     return;
   }
@@ -2370,14 +2407,14 @@ const loadPredictionFixtures = async () => {
   const season = Number(seasonValue);
 
   if (!leagueIdValue || !seasonValue || !Number.isFinite(leagueId) || !Number.isFinite(season)) {
-    predictionEditorStatus.textContent = 'Choose a league and season to load predictions.';
+    setNoticeStatus(predictionEditorStatus, 'Choose a league and season to load predictions.', 'warning');
     renderPredictionEditor([]);
     return;
   }
 
   try {
     reloadPredictionsButton.disabled = true;
-    predictionEditorStatus.textContent = 'Loading prediction fixtures…';
+    setNoticeStatus(predictionEditorStatus, 'Loading prediction fixtures…', 'warning');
 
     const params = new URLSearchParams({
       leagueId: String(leagueId),
@@ -2402,15 +2439,19 @@ const loadPredictionFixtures = async () => {
     const dateLabel = getMatchDateSelectionLabel();
 
     renderPredictionEditor(visibleFixtures);
-    predictionEditorStatus.textContent = visibleFixtures.length
-      ? `Loaded ${visibleFixtures.length} fixtures for ${data.round}${dateLabel ? ` • ${dateLabel}` : ''}.`
-      : 'No fixtures found for this selection.';
+    setNoticeStatus(
+      predictionEditorStatus,
+      visibleFixtures.length
+        ? `Loaded ${visibleFixtures.length} fixtures for ${data.round}${dateLabel ? ` • ${dateLabel}` : ''}.`
+        : 'No fixtures found for this selection.',
+      visibleFixtures.length ? 'success' : 'warning'
+    );
     log(
       `Loaded ${visibleFixtures.length ?? 0} prediction fixtures for ${data.round}${dateLabel ? ` • ${dateLabel}` : ''}.`
     );
   } catch (error) {
     renderPredictionEditor([]);
-    predictionEditorStatus.textContent = 'Could not load prediction fixtures.';
+    setNoticeStatus(predictionEditorStatus, 'Could not load prediction fixtures.', 'error');
     log(error instanceof Error ? error.message : String(error));
   } finally {
     reloadPredictionsButton.disabled = false;
@@ -2437,7 +2478,7 @@ const renderCurrentJob = (job) => {
     updatePublishingMetadata(null);
     templateChip.textContent = 'no job';
     currentJobRoot.innerHTML =
-      '<div class="job-status-card"><div><strong>No prepared job yet</strong><span>Use the setup above, then prepare a preview job.</span></div></div>';
+      '<div class="empty-state command-empty-state"><span class="status-chip neutral">no job</span><strong>No prepared job yet</strong><span>Prepare a preview after choosing template, league, season, and round.</span></div>';
     if (dashboardQuickStatus) {
       dashboardQuickStatus.textContent = 'Choose a template, league, and round/date. Then prepare a preview job.';
     }
@@ -2499,14 +2540,15 @@ const renderCurrentJob = (job) => {
   }
 
   currentJobRoot.innerHTML = `
-    <div class="job-status-card">
-      <div>
+    <div class="job-status-line">
+      <span class="status-chip success">ready</span>
+      <div class="job-status-copy">
         <strong>${escapeHtml(job.leagueName)} • ${escapeHtml(templateLabel)}</strong>
         <span>${escapeHtml(titleLine)} • ${escapeHtml(detailLine)} • ${escapeHtml(job.outputName)}</span>
       </div>
       <div class="job-status-meta">
-        <span class="chip subtle">${escapeHtml(job.languageProfile ?? 'pt-br')}</span>
-        <span class="chip subtle">${escapeHtml(job.brandName)}</span>
+        <span class="status-chip neutral">${escapeHtml(job.languageProfile ?? 'pt-br')}</span>
+        <span class="status-chip neutral">${escapeHtml(job.brandName)}</span>
       </div>
     </div>
   `;
@@ -3189,7 +3231,7 @@ copyPublishingJsonButton.addEventListener('click', async () => {
   const draft = collectPublishingDraftFromFields();
   if (!draft) return;
   await copyText(JSON.stringify(draft, null, 2));
-  publishingStatus.textContent = 'Edited draft JSON copied.';
+  setNoticeStatus(publishingStatus, 'Edited draft JSON copied.', 'success');
 });
 publishingDraftRoot.addEventListener('click', async (event) => {
   const tab = event.target.closest('[data-publishing-tab]');
@@ -3212,7 +3254,7 @@ publishingDraftRoot.addEventListener('click', async (event) => {
   if (!button) return;
   const field = button.closest('.publishing-field')?.querySelector('textarea, input');
   await copyText(field?.value ?? '');
-  publishingStatus.textContent = 'Field copied.';
+  setNoticeStatus(publishingStatus, 'Field copied.', 'success');
 });
 
 const submitJob = async (endpoint, actionLabel, options = {}) => {
@@ -3239,7 +3281,7 @@ const submitJob = async (endpoint, actionLabel, options = {}) => {
     setRenderDownload(data.job, data.render);
     updatePreview();
     if (silent && templateSelect.value === TIERLIST_TEMPLATE) {
-      tierlistEditorStatus.textContent = 'Preview updated.';
+      setNoticeStatus(tierlistEditorStatus, 'Preview updated.', 'success');
     } else {
       log(data.message || `${actionLabel} finished.`);
     }
@@ -3249,7 +3291,7 @@ const submitJob = async (endpoint, actionLabel, options = {}) => {
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     if (silent && templateSelect.value === TIERLIST_TEMPLATE) {
-      tierlistEditorStatus.textContent = message;
+      setNoticeStatus(tierlistEditorStatus, message, 'error');
     } else {
       log(message);
     }
