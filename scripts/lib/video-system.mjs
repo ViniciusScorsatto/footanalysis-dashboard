@@ -120,13 +120,20 @@ const FOOTBALL_SHORT_DEFAULT_CONTENT_FRAMES = positiveFrameCount(
   shortDurationsConfig?.defaultContentFrames,
   345
 );
+const FOOTBALL_SHORT_MINIMUM_TOTAL_FRAMES = positiveFrameCount(
+  shortDurationsConfig?.minimumTotalFrames,
+  360
+);
 const shortContentFramesByComposition = shortDurationsConfig?.contentFramesByComposition ?? {};
 
 export const getFootballShortDurationInFrames = (compositionId) =>
-  FOOTBALL_SHORT_OPENING_FRAMES +
-  positiveFrameCount(
-    shortContentFramesByComposition?.[compositionId],
-    FOOTBALL_SHORT_DEFAULT_CONTENT_FRAMES
+  Math.max(
+    FOOTBALL_SHORT_MINIMUM_TOTAL_FRAMES,
+    FOOTBALL_SHORT_OPENING_FRAMES +
+      positiveFrameCount(
+        shortContentFramesByComposition?.[compositionId],
+        FOOTBALL_SHORT_DEFAULT_CONTENT_FRAMES
+      )
   );
 
 export const isFootballShortComposition = (compositionId) =>
@@ -743,9 +750,24 @@ const getWorldCupGroupKey = (groupName) => {
 const getWorldCupStandingTeamKey = (row) =>
   row?.team?.id ? `id:${row.team.id}` : `name:${normalizeGroupName(row?.team?.name)}`;
 
+const dedupeWorldCupStandingRows = (groupRows = []) => {
+  const seen = new Set();
+  return (groupRows ?? []).filter((row) => {
+    const key = getWorldCupStandingTeamKey(row);
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
+};
+
 const getBestWorldCupThirdPlaceKeys = (standingsGroups) => {
   const thirdPlaceRows = (standingsGroups ?? [])
-    .map((groupRows) => (groupRows ?? []).find((row) => row?.rank === 3) ?? groupRows?.[2])
+    .map((groupRows) => {
+      const uniqueRows = dedupeWorldCupStandingRows(groupRows);
+      return uniqueRows.find((row) => row?.rank === 3) ?? uniqueRows?.[2];
+    })
     .filter((row) => row && Number(row?.all?.played ?? 0) > 0);
 
   return new Set(
@@ -2793,8 +2815,9 @@ const buildWorldCupGroupJob = async ({
     });
 
     if (selectedGroupRows?.length) {
+      const uniqueSelectedGroupRows = dedupeWorldCupStandingRows(selectedGroupRows);
       rows = await Promise.all(
-        selectedGroupRows.slice(0, 4).map(async (row) => ({
+        uniqueSelectedGroupRows.slice(0, 4).map(async (row) => ({
           rank: row.rank,
           team: translateWorldCupCountryName(row.team?.name ?? 'TBC', languageProfile),
           played: row.all?.played ?? 0,
@@ -2822,7 +2845,7 @@ const buildWorldCupGroupJob = async ({
     );
     const groupTeams = new Set(
       selectedGroupRows?.length
-        ? selectedGroupRows.map((row) => normalizeGroupName(row.team?.name))
+        ? dedupeWorldCupStandingRows(selectedGroupRows).map((row) => normalizeGroupName(row.team?.name))
         : [...fallbackGroupTeams]
     );
     if (groupTeams.size > 0) {

@@ -122,6 +122,7 @@ const main = async () => {
   const teaserFrames = positiveFrameCount(config.opening?.teaserFrames, 60);
   const introFrames = positiveFrameCount(config.opening?.introFrames, 45);
   const defaultContentFrames = positiveFrameCount(config.defaultContentFrames, 345);
+  const minimumTotalFrames = positiveFrameCount(config.minimumTotalFrames, 360);
   const openingFrames = teaserFrames + introFrames;
   const compositions = Object.entries(config.contentFramesByComposition ?? {});
 
@@ -130,7 +131,7 @@ const main = async () => {
   const failures = [];
   for (const [compositionId, configuredContentFrames] of compositions) {
     const contentFrames = positiveFrameCount(configuredContentFrames, defaultContentFrames);
-    const durationInFrames = openingFrames + contentFrames;
+    const durationInFrames = Math.max(minimumTotalFrames, openingFrames + contentFrames);
     const finalFrame = durationInFrames - 1;
     const outputPath = path.join(outputDir, `${compositionId}-frame-${finalFrame}.png`);
 

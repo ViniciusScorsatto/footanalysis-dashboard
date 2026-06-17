@@ -2,110 +2,260 @@
   "sport": "football",
   "template": "predictions-long",
   "compositionId": "FootballPredictionsLong",
-  "leagueId": 39,
-  "season": 2025,
-  "leagueName": "Premier League",
-  "channelProfile": "en",
-  "languageProfile": "en",
+  "leagueId": 1,
+  "season": 2026,
+  "leagueName": "Copa do Mundo",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/foot-analysis-whistle.mp3",
-  "soundtrackLabel": "Foot Analysis Whistle",
-  "soundtrackVolume": 0.35,
-  "outputName": "premier-league-matchday-1-2025-08-18-2025-08-19-palpites-longform.mp4",
-  "durationInFrames": 1718,
+  "soundtrackPath": "/audio/football/gol-na-pressao.mp3",
+  "soundtrackLabel": "Gol na Pressão",
+  "soundtrackVolume": 0.3,
+  "outputName": "copa-do-mundo-group-stage-2-3-datas-palpites-longform.mp4",
+  "durationInFrames": 10724,
   "dataSource": "sample",
-  "title": "Predictions for Matchday 1 - 2 dates",
-  "roundLabel": "Matchday 1",
+  "title": "Palpites da Rodada 2 da Copa",
+  "roundLabel": "Group Stage - 2",
   "openingLines": [
-    "This matchday has a few games that can shift the table.",
-    "Now let us go game by game with the scorelines I would call."
+    "Separei os primeriso jogos da Rodada 2 que podem mexer na tabela.",
+    "Agora vamos para os palpites, jogo por jogo, com o placar que eu imagino"
   ],
   "introDurationInFrames": 298,
   "outroDurationInFrames": 298,
   "transitionDurationInFrames": 18,
-  "disclaimer": "Predictions are for entertainment purposes only.",
+  "disclaimer": "Os palpites têm caráter exclusivamente recreativo.",
   "voiceoverEnabled": true,
   "matches": [
     {
-      "id": "chelsea-c-palace-1",
-      "homeTeam": "Chelsea",
-      "awayTeam": "C. Palace",
-      "predictedScore": "1-0",
-      "homeScore": 1,
+      "id": "rep-tcheca-africa-do-sul-1",
+      "homeTeam": "Rep. Tcheca",
+      "awayTeam": "África do Sul",
+      "predictedScore": "2-0",
+      "homeScore": 2,
       "awayScore": 0,
-      "voiceover": "Chelsea against C. Palace.\nMy prediction for this game is 0 to 0.",
-      "voiceoverPath": "/voiceovers/football/en-38471c1f59fac312.mp3",
-      "durationInFrames": 270,
+      "voiceover": "A República Tcheca perdeu por 2 a 1 para a Coreia do Sul na estreia, então já precisa reagir nessa segunda rodada.\nA África do Sul também começou mal, perdendo por 2 a 0 para o México, e não pode se complicar ainda mais.\nA República Tcheca deve ter mais organização e mais controle em um jogo de muita pressão para os dois lados.\nMeu palpite é 2 a 0 República Tcheca.",
+      "voiceoverPath": "/voiceovers/football/pt-br-7946af3ddb900ea6.mp3",
+      "durationInFrames": 960,
       "homeBadge": {
-        "label": "CHEL",
-        "logoPath": "/logos/chelsea-49.png",
-        "accentColor": "#034694"
-      },
-      "awayBadge": {
-        "label": "CP",
+        "label": "RT",
+        "logoPath": "/logos/czech-republic-770.png",
         "accentColor": "#1ABC9C"
-      }
-    },
-    {
-      "id": "nott-forest-brentford-2",
-      "homeTeam": "Nott Forest",
-      "awayTeam": "Brentford",
-      "predictedScore": "0-0",
-      "homeScore": 0,
-      "awayScore": 0,
-      "voiceover": "Nott Forest against Brentford.\nMy prediction for this game is 0 to 0.",
-      "voiceoverPath": "/voiceovers/football/en-b4b813b7cf3fc34f.mp3",
-      "durationInFrames": 270,
-      "homeBadge": {
-        "label": "NF",
-        "accentColor": "#E67E22"
       },
       "awayBadge": {
-        "label": "BREN",
-        "logoPath": "/logos/brentford-55.png",
-        "accentColor": "#E30613"
+        "label": "ÁDS",
+        "logoPath": "/logos/south-africa-1531.png",
+        "accentColor": "#9B59B6"
       }
     },
     {
-      "id": "man-united-arsenal-3",
-      "homeTeam": "Man United",
-      "awayTeam": "Arsenal",
-      "predictedScore": "3-0",
-      "homeScore": 3,
-      "awayScore": 0,
-      "voiceover": "Man United against Arsenal.\nMy prediction for this game is 0 to 0.",
-      "voiceoverPath": "/voiceovers/football/en-3e4d5bbc0e3e2f57.mp3",
-      "durationInFrames": 270,
+      "id": "suica-bosnia-2",
+      "homeTeam": "Suíça",
+      "awayTeam": "Bosnia",
+      "predictedScore": "2-1",
+      "homeScore": 2,
+      "awayScore": 1,
+      "voiceover": "A Suíça empatou por 1 a 1 com o Catar, então esse jogo ficou mais importante do que o esperado.\nA Bosnia também empatou por 1 a 1 com o Canadá, deixando o grupo completamente aberto depois da primeira rodada.\nA Suíça ainda tem elenco mais forte, mas a Bosnia já mostrou que consegue competir e se manter viva no jogo.\nMeu palpite é 2 a 1 Suíça.",
+      "voiceoverPath": "/voiceovers/football/pt-br-6316590b24f96d8c.mp3",
+      "durationInFrames": 930,
       "homeBadge": {
-        "label": "MU",
+        "label": "SUÍÇ",
+        "logoPath": "/logos/switzerland-15.png",
+        "accentColor": "#8E44AD"
+      },
+      "awayBadge": {
+        "label": "BOSN",
+        "logoPath": "/logos/bosnia-herzegovina-1113.png",
+        "accentColor": "#E74C3C"
+      }
+    },
+    {
+      "id": "canada-catar-3",
+      "homeTeam": "Canadá",
+      "awayTeam": "Catar",
+      "predictedScore": "1-1",
+      "homeScore": 1,
+      "awayScore": 1,
+      "voiceover": "O Canadá estreou com empate por 1 a 1 contra a Bosnia, então ainda precisa vencer para assumir o controle do grupo.\nO Catar também empatou por 1 a 1 com a Suíça e chega com confiança depois de evitar uma derrota importante.\nCom os dois times somando um ponto, esse deve ser um jogo tenso, em que ninguém vai querer se expor demais.\nMeu palpite é 1 a 1 empate.",
+      "voiceoverPath": "/voiceovers/football/pt-br-fdb06ac274bb1440.mp3",
+      "durationInFrames": 960,
+      "homeBadge": {
+        "label": "CANA",
+        "logoPath": "/logos/canada-5529.png",
+        "accentColor": "#D80621"
+      },
+      "awayBadge": {
+        "label": "CATA",
+        "logoPath": "/logos/qatar-1569.png",
+        "accentColor": "#8E44AD"
+      }
+    },
+    {
+      "id": "mexico-coreia-do-sul-4",
+      "homeTeam": "México",
+      "awayTeam": "Coreia do Sul",
+      "predictedScore": "2-1",
+      "homeScore": 2,
+      "awayScore": 1,
+      "voiceover": "O México começou bem, vencendo a África do Sul por 2 a 0, e pode dar um passo enorme rumo à classificação.\nA Coreia do Sul também venceu na estreia, batendo a Rep. Tcheca por 2 a 1, então esse vira confronto direto pela liderança.\nEu espero um jogo apertado, mas o México tem o fator casa e deve ser mais forte nos momentos decisivos.\nMeu palpite é 2 a 1 México.",
+      "voiceoverPath": "/voiceovers/football/pt-br-b6ba6a0beae46a92.mp3",
+      "durationInFrames": 960,
+      "homeBadge": {
+        "label": "MÉXI",
+        "logoPath": "/logos/mexico-16.png",
+        "accentColor": "#006847"
+      },
+      "awayBadge": {
+        "label": "CDS",
+        "logoPath": "/logos/south-korea-17.png",
+        "accentColor": "#2E86DE"
+      }
+    },
+    {
+      "id": "eua-australia-5",
+      "homeTeam": "EUA",
+      "awayTeam": "Austrália",
+      "predictedScore": "2-1",
+      "homeScore": 2,
+      "awayScore": 1,
+      "voiceover": "Os Estados Unidos tiveram uma das estreias mais fortes da Copa, vencendo o Paraguai por 4 a 1.\nA Austrália também impressionou, batendo a Turquia por 2 a 0, então esse jogo virou uma disputa direta pela liderança.\nOs Estados Unidos devem ter mais força ofensiva, mas a Austrália já mostrou que pode ser muito perigosa.\nMeu palpite é 2 a 1 Estados Unidos.",
+      "voiceoverPath": "/voiceovers/football/pt-br-6c893c7fc190055c.mp3",
+      "durationInFrames": 870,
+      "homeBadge": {
+        "label": "EUA",
+        "logoPath": "/logos/united-states.svg",
+        "accentColor": "#1ABC9C"
+      },
+      "awayBadge": {
+        "label": "AUST",
+        "logoPath": "/logos/australia-20.png",
+        "accentColor": "#E74C3C"
+      }
+    },
+    {
+      "id": "escocia-marrocos-6",
+      "homeTeam": "Escócia",
+      "awayTeam": "Marrocos",
+      "predictedScore": "0-1",
+      "homeScore": 0,
+      "awayScore": 1,
+      "voiceover": "A Escócia começou com vitória por 1 a 0 sobre o Haiti e já tem três pontos importantes no grupo.\nO Marrocos empatou por 1 a 1 com o Brasil, em uma das atuações mais fortes da primeira rodada.\nMesmo com a Escócia na frente na tabela, o Marrocos mostrou nível para vencer esse jogo e deixar o grupo completamente aberto.\nMeu palpite é 1 a 0 Marrocos.",
+      "voiceoverPath": "/voiceovers/football/pt-br-79014aa1d6c1e56c.mp3",
+      "durationInFrames": 930,
+      "homeBadge": {
+        "label": "ESCÓ",
+        "logoPath": "/logos/scotland-1108.png",
         "accentColor": "#F39C12"
       },
       "awayBadge": {
-        "label": "ARSE",
-        "logoPath": "/logos/arsenal-42.png",
-        "accentColor": "#EF0107"
+        "label": "MARR",
+        "logoPath": "/logos/morocco-31.png",
+        "accentColor": "#27AE60"
       }
     },
     {
-      "id": "leeds-everton-4",
-      "homeTeam": "Leeds",
-      "awayTeam": "Everton",
-      "predictedScore": "4-0",
-      "homeScore": 4,
+      "id": "brasil-haiti-7",
+      "homeTeam": "Brasil",
+      "awayTeam": "Haiti",
+      "predictedScore": "3-0",
+      "homeScore": 3,
       "awayScore": 0,
-      "voiceover": "Leeds against Everton.\nMy prediction for this game is 0 to 0.",
-      "voiceoverPath": "/voiceovers/football/en-76b45ae49a68c42a.mp3",
-      "durationInFrames": 240,
+      "voiceover": "O Brasil começou com um empate frustrante por 1 a 1 contra o Marrocos, então esse jogo virou importante para confiança e saldo de gols.\nO Haiti perdeu por 1 a 0 para a Escócia e agora enfrenta um adversário ainda mais forte tecnicamente.\nO Brasil deve dominar a posse, criar muito mais volume e buscar uma vitória confortável.\nMeu palpite é 3 a 0 Brasil.",
+      "voiceoverPath": "/voiceovers/football/pt-br-5d3bc617a1798ea0.mp3",
+      "durationInFrames": 900,
       "homeBadge": {
-        "label": "LEED",
-        "logoPath": "/logos/leeds-63.png",
-        "accentColor": "#1ABC9C"
+        "label": "BRAS",
+        "logoPath": "/logos/brazil-6.png",
+        "accentColor": "#009B3A"
       },
       "awayBadge": {
-        "label": "EVER",
-        "logoPath": "/logos/everton-45.png",
-        "accentColor": "#003399"
+        "label": "HAIT",
+        "logoPath": "/logos/haiti-2386.png",
+        "accentColor": "#F39C12"
+      }
+    },
+    {
+      "id": "turquia-paraguai-8",
+      "homeTeam": "Turquia",
+      "awayTeam": "Paraguai",
+      "predictedScore": "2-1",
+      "homeScore": 2,
+      "awayScore": 1,
+      "voiceover": "A Turquia perdeu por 2 a 0 para a Austrália, então precisa reagir imediatamente para continuar viva no grupo.\nO Paraguai começou ainda pior, sofrendo uma derrota pesada por 4 a 1 para os Estados Unidos.\nCom os dois times pressionados, esse deve ser um jogo físico e tenso, mas a Turquia tem um pouco mais de qualidade ofensiva.\nMeu palpite é 2 a 1 Turquia.",
+      "voiceoverPath": "/voiceovers/football/pt-br-988a294d2abe9ead.mp3",
+      "durationInFrames": 900,
+      "homeBadge": {
+        "label": "TURQ",
+        "logoPath": "/logos/turkey.svg",
+        "accentColor": "#9B59B6"
+      },
+      "awayBadge": {
+        "label": "PARA",
+        "logoPath": "/logos/paraguay-2380.png",
+        "accentColor": "#2E86DE"
+      }
+    },
+    {
+      "id": "holanda-suecia-9",
+      "homeTeam": "Holanda",
+      "awayTeam": "Suécia",
+      "predictedScore": "2-2",
+      "homeScore": 2,
+      "awayScore": 2,
+      "voiceover": "A Holanda empatou por 2 a 2 com o Japão na estreia, mostrando força ofensiva, mas também problemas defensivos.\nA Suécia começou com uma goleada por 5 a 1 sobre a Tunísia e chega com muita confiança.\nEsse jogo tem cara de confronto aberto, com os dois times capazes de marcar mais de uma vez.\nMeu palpite é 2 a 2 empate.",
+      "voiceoverPath": "/voiceovers/football/pt-br-ce5939df459b4619.mp3",
+      "durationInFrames": 840,
+      "homeBadge": {
+        "label": "HOLA",
+        "logoPath": "/logos/netherlands-1118.png",
+        "accentColor": "#F39C12"
+      },
+      "awayBadge": {
+        "label": "SUÉC",
+        "logoPath": "/logos/sweden-5.png",
+        "accentColor": "#E67E22"
+      }
+    },
+    {
+      "id": "alemanha-c-do-marfim-10",
+      "homeTeam": "Alemanha",
+      "awayTeam": "C. do Marfim",
+      "predictedScore": "3-1",
+      "homeScore": 3,
+      "awayScore": 1,
+      "voiceover": "A Alemanha teve o resultado mais dominante da primeira rodada, goleando Curaçao por 7 a 1.\nA Costa do Marfim também fez uma estreia forte, vencendo o Equador por 1 a 0.\nA Alemanha ainda é favorita clara, mas a Costa do Marfim já mostrou organização suficiente para competir e marcar.\nMeu palpite é 3 a 1 Alemanha.",
+      "voiceoverPath": "/voiceovers/football/pt-br-ee2206474810f5cb.mp3",
+      "durationInFrames": 810,
+      "homeBadge": {
+        "label": "ALEM",
+        "logoPath": "/logos/germany-25.png",
+        "accentColor": "#111111"
+      },
+      "awayBadge": {
+        "label": "CDM",
+        "logoPath": "/logos/ivory-coast-1501.png",
+        "accentColor": "#27AE60"
+      }
+    },
+    {
+      "id": "equador-curacao-11",
+      "homeTeam": "Equador",
+      "awayTeam": "Curaçao",
+      "predictedScore": "3-0",
+      "homeScore": 3,
+      "awayScore": 0,
+      "voiceover": "O Equador perdeu por 1 a 0 para a Costa do Marfim, então precisa vencer para se recuperar no grupo.\nCuraçao vem de uma derrota pesada por 7 a 1 contra a Alemanha, o que coloca muita pressão na defesa.\nO Equador deve atacar desde o início e usar esse jogo para buscar pontos e saldo de gols.\nMeu palpite é 3 a 0 Equador.",
+      "voiceoverPath": "/voiceovers/football/pt-br-15c7e7350602608b.mp3",
+      "durationInFrames": 870,
+      "homeBadge": {
+        "label": "EQUA",
+        "logoPath": "/logos/ecuador-2382.png",
+        "accentColor": "#8E44AD"
+      },
+      "awayBadge": {
+        "label": "CURA",
+        "logoPath": "/logos/curacao-5530.png",
+        "accentColor": "#E67E22"
       }
     }
   ]

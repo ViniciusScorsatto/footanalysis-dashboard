@@ -50,7 +50,7 @@
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
   "outputName": "serie-a-2026-standings.mp4",
-  "durationInFrames": 330,
+  "durationInFrames": 420,
   "compositionId": "FootballStandingsShort",
   "standingsLabel": "Current Table",
   "rows": [

@@ -1,62 +1,87 @@
 {
   "sport": "football",
   "template": "results",
-  "leagueId": 1,
+  "leagueId": 72,
   "season": 2026,
-  "leagueName": "Copa do Mundo",
+  "leagueName": "Brasileirão Série B",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Cidade Parou Gol.mp3",
-  "soundtrackLabel": "Cidade Parou Gol",
+  "soundtrackPath": "/audio/football/gol-de-hoje.mp3",
+  "soundtrackLabel": "Gol de Hoje",
   "soundtrackVolume": 0.25,
-  "outputName": "copa-do-mundo-2026-resultados-group-stage-1-2026-06-11-pt-br.mp4",
-  "durationInFrames": 330,
+  "outputName": "brasileirao-serie-b-2026-resultados-pt-br.mp4",
+  "durationInFrames": 360,
   "compositionId": "FootballResultsShort",
   "leagueConfig": {
-    "leagueId": 1,
-    "accentColor": "#F0D500",
+    "leagueId": 72,
+    "accentColor": "#2E86DE",
     "standings": {
       "safeArea": {
-        "left": 64,
-        "right": 92
+        "left": 68,
+        "right": 104
       },
       "zones": [
         {
-          "key": "top-three",
-          "label": "Top 3",
+          "key": "acesso-direto",
+          "label": "Acesso direto",
           "start": 1,
-          "end": 3,
-          "fill": "linear-gradient(90deg, rgba(58, 196, 88, 0.84), rgba(58, 196, 88, 0.28) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(86, 214, 120, 0.62)"
+          "end": 2,
+          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(101, 227, 133, 0.64)"
         },
         {
-          "key": "bottom-three",
-          "label": "Bottom 3",
-          "start": 18,
+          "key": "playoffs-acesso",
+          "label": "Playoffs de acesso",
+          "start": 3,
+          "end": 6,
+          "fill": "linear-gradient(90deg, rgba(240, 165, 0, 0.88), rgba(240, 165, 0, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(240, 165, 0, 0.52)"
+        },
+        {
+          "key": "rebaixamento",
+          "label": "Rebaixamento",
+          "start": 17,
           "end": 20,
-          "fill": "linear-gradient(90deg, rgba(224, 48, 48, 0.84), rgba(224, 48, 48, 0.28) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 90, 90, 0.56)"
+          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 102, 102, 0.56)"
         }
       ]
     },
-    "leagueName": "World Cup"
+    "leagueName": "Brasileirão Série B"
   },
-  "round": "Group Stage - 1",
-  "matchDate": "2026-06-11",
-  "matchDates": [
-    "2026-06-11"
-  ],
-  "roundLabel": "Grupo A",
-  "ctaText": "Qual foi o melhor jogo da rodada na Copa do Mundo?",
+  "round": "Regular Season - 13",
+  "roundLabel": "Rodada 13",
+  "ctaText": "Qual foi o melhor jogo?",
   "fixtures": [
     {
-      "fixtureId": 1489369,
-      "fixtureDateKey": "2026-06-11",
-      "homeTeam": "México",
-      "awayTeam": "África do Sul",
-      "homeScore": 2,
+      "fixtureId": 1520721,
+      "fixtureDateKey": "2026-06-12",
+      "homeTeam": "Atlético-GO",
+      "awayTeam": "CRB",
+      "homeScore": 3,
+      "awayScore": 3,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "A",
+        "logoPath": "/logos/atletico-goianiense-144.png"
+      },
+      "awayBadge": {
+        "label": "C",
+        "logoPath": "/logos/crb-146.png"
+      }
+    },
+    {
+      "fixtureId": 1520726,
+      "fixtureDateKey": "2026-06-14",
+      "homeTeam": "Juventude",
+      "awayTeam": "Ponte Preta",
+      "homeScore": 3,
       "awayScore": 0,
       "homeEliminated": false,
       "awayEliminated": false,
@@ -64,19 +89,82 @@
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "M",
-        "logoPath": "/logos/mexico-16.png"
+        "label": "J",
+        "logoPath": "/logos/juventude-152.png"
       },
       "awayBadge": {
-        "label": "ÁDS",
-        "logoPath": "/logos/south-africa-1531.png"
+        "label": "PP",
+        "logoPath": "/logos/ponte-preta-139.png"
       }
     },
     {
-      "fixtureId": 1538999,
-      "fixtureDateKey": "2026-06-11",
-      "homeTeam": "Coreia do Sul",
-      "awayTeam": "Czech Rep.",
+      "fixtureId": 1520729,
+      "fixtureDateKey": "2026-06-14",
+      "homeTeam": "São Bernardo",
+      "awayTeam": "Sport",
+      "homeScore": 0,
+      "awayScore": 0,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "SB",
+        "logoPath": "/logos/sao-bernardo-7865.png"
+      },
+      "awayBadge": {
+        "label": "S",
+        "logoPath": "/logos/sport-recife-123.png"
+      }
+    },
+    {
+      "fixtureId": 1520720,
+      "fixtureDateKey": "2026-06-14",
+      "homeTeam": "Athletic Club",
+      "awayTeam": "Goias",
+      "homeScore": 1,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "AC",
+        "logoPath": "/logos/athletic-club-13975.png"
+      },
+      "awayBadge": {
+        "label": "G",
+        "logoPath": "/logos/goias-151.png"
+      }
+    },
+    {
+      "fixtureId": 1520724,
+      "fixtureDateKey": "2026-06-14",
+      "homeTeam": "Cuiaba",
+      "awayTeam": "Vila Nova",
+      "homeScore": 1,
+      "awayScore": 0,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "C",
+        "logoPath": "/logos/cuiaba-1193.png"
+      },
+      "awayBadge": {
+        "label": "VN",
+        "logoPath": "/logos/vila-nova-142.png"
+      }
+    },
+    {
+      "fixtureId": 1520722,
+      "fixtureDateKey": "2026-06-14",
+      "homeTeam": "Botafogo SP",
+      "awayTeam": "Operario-PR",
       "homeScore": 2,
       "awayScore": 1,
       "homeEliminated": false,
@@ -85,54 +173,148 @@
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "CDS",
-        "logoPath": "/logos/south-korea-17.png"
+        "label": "BS",
+        "logoPath": "/logos/botafogo-sp-2618.png"
       },
       "awayBadge": {
-        "label": "CR",
-        "logoPath": "/logos/czech-republic-770.png"
+        "label": "O",
+        "logoPath": "/logos/operario-pr-1223.png"
+      }
+    },
+    {
+      "fixtureId": 1520728,
+      "fixtureDateKey": "2026-06-14",
+      "homeTeam": "Novorizontino",
+      "awayTeam": "Náutico",
+      "homeScore": 2,
+      "awayScore": 2,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "N",
+        "logoPath": "/logos/novorizontino.svg"
+      },
+      "awayBadge": {
+        "label": "N",
+        "logoPath": "/logos/nautico-recife-755.png"
+      }
+    },
+    {
+      "fixtureId": 1520723,
+      "fixtureDateKey": "2026-06-15",
+      "homeTeam": "Criciuma",
+      "awayTeam": "Ceara",
+      "homeScore": 1,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "C",
+        "logoPath": "/logos/criciuma-140.png"
+      },
+      "awayBadge": {
+        "label": "C",
+        "logoPath": "/logos/ceara-129.png"
+      }
+    },
+    {
+      "fixtureId": 1520727,
+      "fixtureDateKey": "2026-06-15",
+      "homeTeam": "Londrina",
+      "awayTeam": "Avai",
+      "homeScore": 3,
+      "awayScore": 2,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "L",
+        "logoPath": "/logos/londrina-148.png"
+      },
+      "awayBadge": {
+        "label": "A",
+        "logoPath": "/logos/avai-145.png"
+      }
+    },
+    {
+      "fixtureId": 1520725,
+      "fixtureDateKey": "2026-06-16",
+      "homeTeam": "Fortaleza",
+      "awayTeam": "América-MG",
+      "homeScore": 0,
+      "awayScore": 3,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "F",
+        "logoPath": "/logos/fortaleza-ec-154.png"
+      },
+      "awayBadge": {
+        "label": "A",
+        "logoPath": "/logos/america-mineiro-125.png"
       }
     }
   ],
-  "introTitle": "Copa do Mundo",
-  "introSubtitle": "Grupo A",
-  "hookText": "México e Coreia do Sul vencem na estreia da Copa do Mundo!",
+  "introTitle": "Brasileirão Série B",
+  "introSubtitle": "Rodada 13",
+  "hookText": "Olha o que aconteceu na rodada",
   "coldOpenData": {
     "matchRows": [
       {
-        "left": "MÉXICO",
-        "center": "2 - 0",
-        "right": "ÁFRICA DO SUL"
+        "left": "ATLÉTICO-GO",
+        "center": "3 - 3",
+        "right": "CRB"
       },
       {
-        "left": "COREIA DO SUL",
-        "center": "2 - 1",
-        "right": "CZECH REP."
+        "left": "JUVENTUDE",
+        "center": "3 - 0",
+        "right": "PONTE PRETA"
+      },
+      {
+        "left": "SÃO BERNARDO",
+        "center": "0 - 0",
+        "right": "SPORT"
+      },
+      {
+        "left": "ATHLETIC CLUB",
+        "center": "1 - 1",
+        "right": "GOIAS"
       }
     ],
     "tableRows": [
       {
         "rank": 1,
-        "club": "MÉXICO",
+        "club": "ATLÉTICO-GO",
         "pts": 22
       },
       {
         "rank": 2,
-        "club": "ÁFRICA DO SUL",
+        "club": "CRB",
         "pts": 20
       },
       {
         "rank": 3,
-        "club": "COREIA DO SUL",
+        "club": "JUVENTUDE",
         "pts": 18
       },
       {
         "rank": 4,
-        "club": "CZECH REP.",
+        "club": "PONTE PRETA",
         "pts": 16
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "México e Coreia do Sul vencem seus jogos na estreia da Copa do Mundo, prometendo emoções no grupo."
+  "voiceoverText": "Fala Galera, pra vocês... os últimos resultados do Brasileirão Série B."
 }

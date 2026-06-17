@@ -5,6 +5,7 @@ type ShortDurationsConfig = {
     teaserFrames?: number;
     introFrames?: number;
   };
+  minimumTotalFrames?: number;
   defaultContentFrames?: number;
   contentFramesByComposition?: Record<string, number>;
 };
@@ -17,6 +18,7 @@ const positiveFrameCount = (value: unknown, fallback: number) =>
 export const FOOTBALL_SHORT_TEASER_FRAMES = positiveFrameCount(config.opening?.teaserFrames, 60);
 export const FOOTBALL_SHORT_INTRO_FRAMES = positiveFrameCount(config.opening?.introFrames, 45);
 export const FOOTBALL_SHORT_OPENING_FRAMES = FOOTBALL_SHORT_TEASER_FRAMES + FOOTBALL_SHORT_INTRO_FRAMES;
+export const FOOTBALL_SHORT_MINIMUM_TOTAL_FRAMES = positiveFrameCount(config.minimumTotalFrames, 360);
 export const FOOTBALL_SHORT_DEFAULT_CONTENT_FRAMES = positiveFrameCount(config.defaultContentFrames, 345);
 
 export const getFootballShortDurationInFrames = (compositionId: string) => {
@@ -25,5 +27,5 @@ export const getFootballShortDurationInFrames = (compositionId: string) => {
     FOOTBALL_SHORT_DEFAULT_CONTENT_FRAMES
   );
 
-  return FOOTBALL_SHORT_OPENING_FRAMES + contentFrames;
+  return Math.max(FOOTBALL_SHORT_MINIMUM_TOTAL_FRAMES, FOOTBALL_SHORT_OPENING_FRAMES + contentFrames);
 };

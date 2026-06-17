@@ -1353,6 +1353,18 @@ const standingPoints = (row: StandingRow | WorldCupGroupRow) => ('points' in row
 const standingForm = (row: StandingRow | WorldCupGroupRow) =>
   'form' in row && row.form ? row.form.slice(0, 5).toUpperCase().split('') : [];
 
+const fitStandingsTeaserTeamFontSize = (team: string, maxSize: number, targetWidth: number) => {
+  const weightedLength = [...String(team ?? '').trim().toUpperCase()].reduce((total, char) => {
+    if (char === ' ') return total + 0.38;
+    if ('1IÍÌÎÏL.'.includes(char)) return total + 0.42;
+    if ('MW@'.includes(char)) return total + 1.16;
+    if ('-–/'.includes(char)) return total + 0.5;
+    return total + 0.78;
+  }, 0);
+  const fitted = Math.floor(targetWidth / Math.max(1, weightedLength));
+  return Math.max(24, Math.min(maxSize, fitted));
+};
+
 const formDotColor = (result: string) => {
   if (result === 'W' || result === 'V') return '#79D84A';
   if (result === 'D' || result === 'E') return '#8CA0B4';
@@ -1731,10 +1743,10 @@ const StandingsHeaderRow = ({accentColor, isEnglish}: {accentColor: string; isEn
     style={{
       minHeight: 52,
       display: 'grid',
-      gridTemplateColumns: '86px 100px minmax(0, 1fr) 112px 190px',
+      gridTemplateColumns: '72px 78px minmax(0, 1fr) 132px 170px',
       alignItems: 'center',
-      gap: 14,
-      padding: '0 22px',
+      gap: 12,
+      padding: '0 18px',
       color: '#f0f4f8',
       fontSize: 22,
       lineHeight: 1,
@@ -1748,8 +1760,8 @@ const StandingsHeaderRow = ({accentColor, isEnglish}: {accentColor: string; isEn
     <div />
     <div />
     <div />
-    <div>{isEnglish ? 'Pts' : 'Pontos'}</div>
-    <div>{isEnglish ? 'Form' : 'Últimos'}</div>
+    <div style={{textAlign: 'center'}}>{isEnglish ? 'Pts' : 'Pontos'}</div>
+    <div style={{textAlign: 'center'}}>{isEnglish ? 'Form' : 'Últimos'}</div>
   </div>
 );
 
@@ -1824,15 +1836,20 @@ const StandingsTeaserRow = ({
   isEnglish: boolean;
 }) => {
   const form = standingForm(row);
+  const teamFontSize = fitStandingsTeaserTeamFontSize(
+    row.team,
+    highlight ? 46 : danger ? 36 : 40,
+    390
+  );
   return (
     <div
       style={{
         minHeight: highlight ? 142 : danger ? 94 : 106,
         display: 'grid',
-        gridTemplateColumns: '86px 100px minmax(0, 1fr) 112px 190px',
+        gridTemplateColumns: '72px 78px minmax(0, 1fr) 132px 170px',
         alignItems: 'center',
-        gap: 14,
-        padding: '0 22px',
+        gap: 12,
+        padding: '0 18px',
         borderBottom: '1px solid rgba(240,244,248,0.13)',
         background: highlight
           ? `linear-gradient(90deg, ${accentColor}24, rgba(15,19,24,0.92))`
@@ -1854,24 +1871,23 @@ const StandingsTeaserRow = ({
       >
         {row.rank}
       </div>
-      <MiniBadge badge={row.badge} label={row.team} size={highlight ? 82 : 70} />
+      <MiniBadge badge={row.badge} label={row.team} size={highlight ? 72 : 62} />
       <div
         style={{
           minWidth: 0,
           color: '#f0f4f8',
-          fontSize: highlight ? 46 : danger ? 36 : 40,
+          fontSize: teamFontSize,
           lineHeight: 0.9,
           fontWeight: 900,
           textTransform: 'uppercase',
           whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
+          overflow: 'visible',
           textShadow: highlight ? '0 6px 18px rgba(0,0,0,0.68)' : undefined,
         }}
       >
         {row.team}
       </div>
-      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
+      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
         <span
           style={{
             color: highlight || danger ? accentColor : '#f0f4f8',
@@ -1898,21 +1914,20 @@ const StandingsTeaserRow = ({
         style={{
           display: 'flex',
           flexDirection: highlight ? 'column' : 'row',
-          alignItems: highlight ? 'flex-end' : 'center',
+          alignItems: 'center',
           justifyContent: 'center',
           gap: highlight ? 10 : 9,
+          minWidth: 0,
         }}
       >
         {highlight ? (
           <div
             style={{
-              alignSelf: 'flex-end',
-              marginRight: 4,
-              padding: '8px 18px 6px',
+              padding: '7px 14px 5px',
               transform: 'skewX(-12deg)',
               background: accentColor,
               color: '#0b0d12',
-              fontSize: 22,
+              fontSize: 18,
               lineHeight: 1,
               fontWeight: 900,
               textTransform: 'uppercase',

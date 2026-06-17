@@ -3,7 +3,7 @@
   "template": "world-cup-group-standings",
   "leagueId": 1,
   "season": 2026,
-  "leagueName": "Copa do Mundo 2026",
+  "leagueName": "World Cup 2026",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
@@ -11,13 +11,13 @@
   "soundtrackPath": "/audio/football/É Gol, É Gol.mp3",
   "soundtrackLabel": "É Gol, É Gol",
   "soundtrackVolume": 0.25,
-  "outputName": "copa-do-mundo-2026-grupo-a-pt-br.mp4",
+  "outputName": "world-cup-2026-grupo-j-pt-br.mp4",
   "durationInFrames": 360,
   "compositionId": "FootballWorldCupGroupShort",
-  "competitionName": "Copa do Mundo 2026",
-  "groupLetter": "A",
-  "titleLabel": "Copa do Mundo 2026",
-  "groupLabel": "Grupo A",
+  "competitionName": "World Cup 2026",
+  "groupLetter": "J",
+  "titleLabel": "World Cup 2026",
+  "groupLabel": "Grupo J",
   "tableLabels": {
     "pos": "Pos",
     "team": "Equipe",
@@ -28,147 +28,147 @@
     "direct": "1º e 2º avançam",
     "bestThird": "8 melhores terceiros"
   },
-  "lastResultsLabel": "Últimos Resultados - Grupo A",
-  "nextMatchesLabel": "Próximos Jogos - Grupo A",
+  "lastResultsLabel": "Últimos Resultados - Grupo J",
+  "nextMatchesLabel": "Próximos Jogos - Grupo J",
   "groupMatchSectionMode": "mixed",
   "ctaText": "Quem avança?",
   "rows": [
     {
       "rank": 1,
-      "team": "México",
+      "team": "Argentina",
+      "played": 1,
+      "goalDifference": 3,
+      "points": 3,
+      "qualifiesAsBestThird": false,
+      "badge": {
+        "label": "🇦🇷",
+        "imagePath": "/logos/argentina-26.png"
+      }
+    },
+    {
+      "rank": 2,
+      "team": "Áustria",
       "played": 1,
       "goalDifference": 2,
       "points": 3,
       "qualifiesAsBestThird": false,
       "badge": {
-        "label": "🇲🇽",
-        "imagePath": "/logos/mexico-16.png"
-      }
-    },
-    {
-      "rank": 2,
-      "team": "Coreia do Sul",
-      "played": 1,
-      "goalDifference": 1,
-      "points": 3,
-      "qualifiesAsBestThird": false,
-      "badge": {
-        "label": "SK",
-        "imagePath": "/logos/south-korea-17.png"
+        "label": "🇦🇹",
+        "imagePath": "/logos/austria-775.png"
       }
     },
     {
       "rank": 3,
-      "team": "Rep. Tcheca",
-      "played": 1,
-      "goalDifference": -1,
-      "points": 0,
-      "qualifiesAsBestThird": true,
-      "badge": {
-        "label": "CR",
-        "imagePath": "/logos/czech-republic-770.png"
-      }
-    },
-    {
-      "rank": 4,
-      "team": "África do Sul",
+      "team": "Jordânia",
       "played": 1,
       "goalDifference": -2,
       "points": 0,
       "qualifiesAsBestThird": false,
       "badge": {
-        "label": "🇿🇦",
-        "imagePath": "/logos/south-africa-1531.png"
+        "label": "🇯🇴",
+        "imagePath": "/logos/jordan-1548.png"
+      }
+    },
+    {
+      "rank": 4,
+      "team": "Argélia",
+      "played": 1,
+      "goalDifference": -3,
+      "points": 0,
+      "qualifiesAsBestThird": false,
+      "badge": {
+        "label": "🇩🇿",
+        "imagePath": "/logos/algeria-1532.png"
       }
     }
   ],
   "lastResults": [
     {
-      "homeTeam": "Coreia do Sul",
-      "awayTeam": "Rep. Tcheca",
-      "homeScore": 2,
+      "homeTeam": "Áustria",
+      "awayTeam": "Jordânia",
+      "homeScore": 3,
       "awayScore": 1,
       "homeBadge": {
-        "label": "SK",
-        "imagePath": "/logos/south-korea-17.png"
+        "label": "🇦🇹",
+        "imagePath": "/logos/austria-775.png"
       },
       "awayBadge": {
-        "label": "CR",
-        "imagePath": "/logos/czech-republic-770.png"
+        "label": "🇯🇴",
+        "imagePath": "/logos/jordan-1548.png"
       },
-      "dateLabel": "11 de jun • 23:00 (BRT)"
+      "dateLabel": "17 de jun • 01:00 (BRT)"
     },
     {
-      "homeTeam": "México",
-      "awayTeam": "África do Sul",
-      "homeScore": 2,
+      "homeTeam": "Argentina",
+      "awayTeam": "Argélia",
+      "homeScore": 3,
       "awayScore": 0,
       "homeBadge": {
-        "label": "🇲🇽",
-        "imagePath": "/logos/mexico-16.png"
+        "label": "🇦🇷",
+        "imagePath": "/logos/argentina-26.png"
       },
       "awayBadge": {
-        "label": "🇿🇦",
-        "imagePath": "/logos/south-africa-1531.png"
+        "label": "🇩🇿",
+        "imagePath": "/logos/algeria-1532.png"
       },
-      "dateLabel": "11 de jun • 16:00 (BRT)"
+      "dateLabel": "16 de jun • 22:00 (BRT)"
     }
   ],
   "nextMatches": [
     {
-      "homeTeam": "Rep. Tcheca",
-      "awayTeam": "África do Sul",
+      "homeTeam": "Argentina",
+      "awayTeam": "Áustria",
       "homeBadge": {
-        "label": "CR",
-        "imagePath": "/logos/czech-republic-770.png"
+        "label": "🇦🇷",
+        "imagePath": "/logos/argentina-26.png"
       },
       "awayBadge": {
-        "label": "🇿🇦",
-        "imagePath": "/logos/south-africa-1531.png"
+        "label": "🇦🇹",
+        "imagePath": "/logos/austria-775.png"
       },
-      "dateLabel": "18 de jun • 13:00 (BRT)"
+      "dateLabel": "22 de jun • 14:00 (BRT)"
     },
     {
-      "homeTeam": "México",
-      "awayTeam": "Coreia do Sul",
+      "homeTeam": "Jordânia",
+      "awayTeam": "Argélia",
       "homeBadge": {
-        "label": "🇲🇽",
-        "imagePath": "/logos/mexico-16.png"
+        "label": "🇯🇴",
+        "imagePath": "/logos/jordan-1548.png"
       },
       "awayBadge": {
-        "label": "SK",
-        "imagePath": "/logos/south-korea-17.png"
+        "label": "🇩🇿",
+        "imagePath": "/logos/algeria-1532.png"
       },
-      "dateLabel": "18 de jun • 22:00 (BRT)"
+      "dateLabel": "23 de jun • 00:00 (BRT)"
     }
   ],
   "introTitle": "Copa do Mundo 2026",
-  "introSubtitle": "Grupo A",
+  "introSubtitle": "Grupo J",
   "hookText": "Quem sai desse grupo?",
   "coldOpenData": {
     "tableRows": [
       {
         "rank": 1,
-        "club": "MÉXICO",
+        "club": "ARGENTINA",
         "pts": 3
       },
       {
         "rank": 2,
-        "club": "COREIA DO SUL",
+        "club": "ÁUSTRIA",
         "pts": 3
       },
       {
         "rank": 3,
-        "club": "REP. TCHECA",
+        "club": "JORDÂNIA",
         "pts": 0
       },
       {
         "rank": 4,
-        "club": "ÁFRICA DO SUL",
+        "club": "ARGÉLIA",
         "pts": 0
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "México e Coreia lideram o Grupo A da Copa do Mundo 2026 com 3 pontos, quem vai garantir vaga?"
+  "voiceoverText": "Argentina e Áustria começam na liderança com 3 pontos cada; quem garante classificação na Copa do Mundo 2026?"
 }
