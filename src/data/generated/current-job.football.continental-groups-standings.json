@@ -1,22 +1,22 @@
 {
   "sport": "football",
   "template": "continental-groups-standings",
-  "leagueId": 11,
+  "leagueId": 1,
   "season": 2026,
-  "leagueName": "Copa Sulamericana",
+  "leagueName": "Brasileirão Série A",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
-  "soundtrackLabel": "Gol de Arena",
-  "soundtrackVolume": 0.2,
-  "outputName": "copa-sulamericana-2026-grupos-pt-br.mp4",
-  "durationInFrames": 270,
+  "soundtrackPath": "/audio/football/foot-analysis-whistle.mp3",
+  "soundtrackLabel": "Foot Analysis Whistle",
+  "soundtrackVolume": 0.35,
+  "outputName": "brasileirao-serie-a-2026-grupos-pt-br.mp4",
+  "durationInFrames": 360,
   "compositionId": "FootballContinentalGroupsShort",
   "leagueConfig": {
-    "leagueId": 11,
-    "accentColor": "#1ABC9C",
+    "leagueId": 1,
+    "accentColor": "#F0D500",
     "standings": {
       "safeArea": {
         "left": 64,
@@ -41,7 +41,7 @@
         }
       ]
     },
-    "leagueName": "Copa Sul-Americana"
+    "leagueName": "World Cup"
   },
   "titleLabel": "Tabela dos Grupos",
   "subtitleLabel": "Fase de Grupos",
@@ -51,7 +51,7 @@
     "gd": "SG",
     "pts": "Pts"
   },
-  "ctaText": "Veja quem passou para próxima fase da Libertadores",
+  "ctaText": "Quem avança?",
   "groups": [
     {
       "groupKey": "A",
@@ -59,42 +59,42 @@
       "rows": [
         {
           "rank": 1,
-          "team": "Macara",
-          "goalDifference": 3,
-          "points": 10,
+          "team": "Mexico",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
             "label": "M",
-            "logoPath": "/logos/macara-1155.png"
+            "logoPath": "/logos/mexico-16.png"
           }
         },
         {
           "rank": 2,
-          "team": "Tigre",
-          "goalDifference": 3,
-          "points": 9,
+          "team": "South Africa",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "T",
-            "logoPath": "/logos/tigre-452.png"
+            "label": "SA",
+            "logoPath": "/logos/south-africa-1531.png"
           }
         },
         {
           "rank": 3,
-          "team": "Ame. Cali",
-          "goalDifference": 1,
-          "points": 9,
+          "team": "South Korea",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "AC",
-            "logoPath": "/logos/america-de-cali-1138.png"
+            "label": "SK",
+            "logoPath": "/logos/south-korea-17.png"
           }
         },
         {
           "rank": 4,
-          "team": "Alianza Atl.",
-          "goalDifference": -7,
-          "points": 2,
+          "team": "Czech Rep.",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "AA",
-            "logoPath": "/logos/alianza-atletico-2560.png"
+            "label": "CR",
+            "logoPath": "/logos/czech-republic-770.png"
           }
         }
       ]
@@ -105,42 +105,42 @@
       "rows": [
         {
           "rank": 1,
-          "team": "Atletico-MG",
-          "goalDifference": 2,
-          "points": 10,
+          "team": "Canada",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "A",
-            "logoPath": "/logos/atletico-mg-1062.png"
+            "label": "C",
+            "logoPath": "/logos/canada-5529.png"
           }
         },
         {
           "rank": 2,
-          "team": "Cienciano",
-          "goalDifference": -2,
-          "points": 8,
+          "team": "Bosnia",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "C",
-            "logoPath": "/logos/cienciano-2562.png"
+            "label": "B",
+            "logoPath": "/logos/bosnia-herzegovina-1113.png"
           }
         },
         {
           "rank": 3,
-          "team": "Juventud",
-          "goalDifference": 3,
-          "points": 7,
+          "team": "Qatar",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "J",
-            "logoPath": "/logos/juventud-2353.png"
+            "label": "Q",
+            "logoPath": "/logos/qatar-1569.png"
           }
         },
         {
           "rank": 4,
-          "team": "P. Cabello",
-          "goalDifference": -3,
-          "points": 7,
+          "team": "Switzerland",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "PC",
-            "logoPath": "/logos/puerto-cabello-2827.png"
+            "label": "S",
+            "logoPath": "/logos/switzerland-15.png"
           }
         }
       ]
@@ -151,42 +151,42 @@
       "rows": [
         {
           "rank": 1,
-          "team": "Sao Paulo",
-          "goalDifference": 5,
-          "points": 12,
+          "team": "Brazil",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "SP",
-            "logoPath": "/logos/sao-paulo-126.png"
+            "label": "B",
+            "logoPath": "/logos/brazil-6.png"
           }
         },
         {
           "rank": 2,
-          "team": "O'Higgins",
-          "goalDifference": 2,
-          "points": 10,
+          "team": "Morocco",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "O",
-            "logoPath": "/logos/o-higgins-2320.png"
+            "label": "M",
+            "logoPath": "/logos/morocco-31.png"
           }
         },
         {
           "rank": 3,
-          "team": "Millonarios",
+          "team": "Haiti",
           "goalDifference": 0,
-          "points": 8,
+          "points": 0,
           "badge": {
-            "label": "M",
-            "logoPath": "/logos/millonarios-1125.png"
+            "label": "H",
+            "logoPath": "/logos/haiti-2386.png"
           }
         },
         {
           "rank": 4,
-          "team": "Boston River",
-          "goalDifference": -7,
-          "points": 3,
+          "team": "Scotland",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "BR",
-            "logoPath": "/logos/boston-river-2361.png"
+            "label": "S",
+            "logoPath": "/logos/scotland-1108.png"
           }
         }
       ]
@@ -197,42 +197,42 @@
       "rows": [
         {
           "rank": 1,
-          "team": "Recoleta",
-          "goalDifference": 1,
-          "points": 8,
+          "team": "USA",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "R",
-            "logoPath": "/logos/deportivo-recoleta-10476.png"
+            "label": "U",
+            "logoPath": "/logos/usa-2384.png"
           }
         },
         {
           "rank": 2,
-          "team": "Santos",
-          "goalDifference": 2,
-          "points": 7,
+          "team": "Paraguay",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "S",
-            "logoPath": "/logos/santos-128.png"
+            "label": "P",
+            "logoPath": "/logos/paraguay-2380.png"
           }
         },
         {
           "rank": 3,
-          "team": "San Lorenzo",
-          "goalDifference": 1,
-          "points": 7,
+          "team": "Australia",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "SL",
-            "logoPath": "/logos/san-lorenzo-460.png"
+            "label": "A",
+            "logoPath": "/logos/australia-20.png"
           }
         },
         {
           "rank": 4,
-          "team": "Dep. Cuenca",
-          "goalDifference": -4,
-          "points": 6,
+          "team": "Türkiye",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "DC",
-            "logoPath": "/logos/deportivo-cuenca-1154.png"
+            "label": "T",
+            "logoPath": "/logos/turkiye-777.png"
           }
         }
       ]
@@ -243,42 +243,42 @@
       "rows": [
         {
           "rank": 1,
-          "team": "Botafogo",
-          "goalDifference": 10,
-          "points": 16,
+          "team": "Germany",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "B",
-            "logoPath": "/logos/botafogo-120.png"
+            "label": "G",
+            "logoPath": "/logos/germany-25.png"
           }
         },
         {
           "rank": 2,
-          "team": "Caracas FC",
+          "team": "Curaçao",
           "goalDifference": 0,
-          "points": 9,
+          "points": 0,
           "badge": {
-            "label": "CF",
-            "logoPath": "/logos/caracas-fc-2808.png"
+            "label": "C",
+            "logoPath": "/logos/curacao-5530.png"
           }
         },
         {
           "rank": 3,
-          "team": "Racing Club",
-          "goalDifference": 2,
-          "points": 8,
+          "team": "Ivory Coast",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "RC",
-            "logoPath": "/logos/racing-club-436.png"
+            "label": "IC",
+            "logoPath": "/logos/ivory-coast-1501.png"
           }
         },
         {
           "rank": 4,
-          "team": "Ind. Petrolero",
-          "goalDifference": -12,
+          "team": "Ecuador",
+          "goalDifference": 0,
           "points": 0,
           "badge": {
-            "label": "IP",
-            "logoPath": "/logos/independiente-petrolero-15702.png"
+            "label": "E",
+            "logoPath": "/logos/ecuador-2382.png"
           }
         }
       ]
@@ -289,42 +289,42 @@
       "rows": [
         {
           "rank": 1,
-          "team": "Atl. Torque",
-          "goalDifference": 6,
-          "points": 13,
+          "team": "Netherlands",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "AT",
-            "logoPath": "/logos/atletico-torque-2365.png"
+            "label": "N",
+            "logoPath": "/logos/netherlands-1118.png"
           }
         },
         {
           "rank": 2,
-          "team": "Gremio",
-          "goalDifference": 5,
-          "points": 11,
+          "team": "Japan",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "G",
-            "logoPath": "/logos/gremio-130.png"
+            "label": "J",
+            "logoPath": "/logos/japan-12.png"
           }
         },
         {
           "rank": 3,
-          "team": "Dep. Riestra",
-          "goalDifference": -6,
-          "points": 5,
+          "team": "Sweden",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "DR",
-            "logoPath": "/logos/deportivo-riestra-476.png"
+            "label": "S",
+            "logoPath": "/logos/sweden-5.png"
           }
         },
         {
           "rank": 4,
-          "team": "Palestino",
-          "goalDifference": -5,
-          "points": 3,
+          "team": "Tunisia",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "P",
-            "logoPath": "/logos/palestino-2318.png"
+            "label": "T",
+            "logoPath": "/logos/tunisia-28.png"
           }
         }
       ]
@@ -335,42 +335,42 @@
       "rows": [
         {
           "rank": 1,
-          "team": "Olimpia",
-          "goalDifference": 4,
-          "points": 13,
+          "team": "Belgium",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "O",
-            "logoPath": "/logos/olimpia-1182.png"
+            "label": "B",
+            "logoPath": "/logos/belgium-1.png"
           }
         },
         {
           "rank": 2,
-          "team": "Vasco DA Gama",
-          "goalDifference": 4,
-          "points": 10,
+          "team": "Egypt",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "VDG",
-            "logoPath": "/logos/vasco-da-gama-133.png"
+            "label": "E",
+            "logoPath": "/logos/egypt-32.png"
           }
         },
         {
           "rank": 3,
-          "team": "A. Italiano",
-          "goalDifference": -2,
-          "points": 7,
+          "team": "Iran",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "AI",
-            "logoPath": "/logos/a-italiano-2329.png"
+            "label": "I",
+            "logoPath": "/logos/iran-22.png"
           }
         },
         {
           "rank": 4,
-          "team": "Barracas",
-          "goalDifference": -6,
-          "points": 3,
+          "team": "New Zealand",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "B",
-            "logoPath": "/logos/barracas-central-2432.png"
+            "label": "NZ",
+            "logoPath": "/logos/new-zealand-4673.png"
           }
         }
       ]
@@ -381,76 +381,306 @@
       "rows": [
         {
           "rank": 1,
-          "team": "River Plate",
-          "goalDifference": 6,
-          "points": 14,
+          "team": "Spain",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "RP",
-            "logoPath": "/logos/river-plate-435.png"
+            "label": "S",
+            "logoPath": "/logos/spain-9.png"
           }
         },
         {
           "rank": 2,
-          "team": "RB Bragantino",
-          "goalDifference": 7,
-          "points": 10,
+          "team": "Cape Verde",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "RB",
-            "logoPath": "/logos/rb-bragantino-794.png"
+            "label": "CV",
+            "logoPath": "/logos/cape-verde-islands-1533.png"
           }
         },
         {
           "rank": 3,
-          "team": "Carabobo FC",
-          "goalDifference": 1,
-          "points": 9,
+          "team": "Saudi Arabia",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "CF",
-            "logoPath": "/logos/carabobo-fc-2810.png"
+            "label": "SA",
+            "logoPath": "/logos/saudi-arabia-23.png"
           }
         },
         {
           "rank": 4,
-          "team": "Blooming",
-          "goalDifference": -14,
-          "points": 1,
+          "team": "Uruguay",
+          "goalDifference": 0,
+          "points": 0,
           "badge": {
-            "label": "B",
-            "logoPath": "/logos/blooming-3701.png"
+            "label": "U",
+            "logoPath": "/logos/uruguay-7.png"
+          }
+        }
+      ]
+    },
+    {
+      "groupKey": "I",
+      "groupLabel": "Grupo I",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "France",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "F",
+            "logoPath": "/logos/france-2.png"
+          }
+        },
+        {
+          "rank": 2,
+          "team": "Senegal",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "S",
+            "logoPath": "/logos/senegal-13.png"
+          }
+        },
+        {
+          "rank": 3,
+          "team": "Iraq",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "I",
+            "logoPath": "/logos/iraq-1567.png"
+          }
+        },
+        {
+          "rank": 4,
+          "team": "Norway",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "N",
+            "logoPath": "/logos/norway-1090.png"
+          }
+        }
+      ]
+    },
+    {
+      "groupKey": "J",
+      "groupLabel": "Grupo J",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Argentina",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "A",
+            "logoPath": "/logos/argentina-26.png"
+          }
+        },
+        {
+          "rank": 2,
+          "team": "Algeria",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "A",
+            "logoPath": "/logos/algeria-1532.png"
+          }
+        },
+        {
+          "rank": 3,
+          "team": "Austria",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "A",
+            "logoPath": "/logos/austria-775.png"
+          }
+        },
+        {
+          "rank": 4,
+          "team": "Jordan",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "J",
+            "logoPath": "/logos/jordan-1548.png"
+          }
+        }
+      ]
+    },
+    {
+      "groupKey": "K",
+      "groupLabel": "Grupo K",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "Portugal",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "P",
+            "logoPath": "/logos/portugal-27.png"
+          }
+        },
+        {
+          "rank": 2,
+          "team": "Congo DR",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "CD",
+            "logoPath": "/logos/congo-dr-1508.png"
+          }
+        },
+        {
+          "rank": 3,
+          "team": "Uzbekistan",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "U",
+            "logoPath": "/logos/uzbekistan-1568.png"
+          }
+        },
+        {
+          "rank": 4,
+          "team": "Colombia",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "C",
+            "logoPath": "/logos/colombia-8.png"
+          }
+        }
+      ]
+    },
+    {
+      "groupKey": "L",
+      "groupLabel": "Grupo L",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "England",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "E",
+            "logoPath": "/logos/england-10.png"
+          }
+        },
+        {
+          "rank": 2,
+          "team": "Croatia",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "C",
+            "logoPath": "/logos/croatia-3.png"
+          }
+        },
+        {
+          "rank": 3,
+          "team": "Ghana",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "G",
+            "logoPath": "/logos/ghana-1504.png"
+          }
+        },
+        {
+          "rank": 4,
+          "team": "Panama",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "P",
+            "logoPath": "/logos/panama-11.png"
+          }
+        }
+      ]
+    },
+    {
+      "groupKey": "ranking-of-third-placed-teams",
+      "groupLabel": "Ranking of third-placed teams",
+      "rows": [
+        {
+          "rank": 1,
+          "team": "South Korea",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "SK",
+            "logoPath": "/logos/south-korea-17.png"
+          }
+        },
+        {
+          "rank": 2,
+          "team": "Qatar",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "Q",
+            "logoPath": "/logos/qatar-1569.png"
+          }
+        },
+        {
+          "rank": 3,
+          "team": "Haiti",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "H",
+            "logoPath": "/logos/haiti-2386.png"
+          }
+        },
+        {
+          "rank": 4,
+          "team": "Australia",
+          "goalDifference": 0,
+          "points": 0,
+          "badge": {
+            "label": "A",
+            "logoPath": "/logos/australia-20.png"
           }
         }
       ]
     }
   ],
-  "introTitle": "Copa Sulamericana",
+  "introTitle": "Brasileirão Série A",
   "introSubtitle": "Fase de Grupos",
-  "hookText": "Veja quem passou pras Oitavas na Sulamericana e quem vai para os Playoffs",
+  "hookText": "Os grupos mudaram",
   "coldOpenData": {
     "tableRows": [
       {
         "rank": 1,
-        "club": "MACARA",
-        "pts": 10
+        "club": "MEXICO",
+        "pts": 0
       },
       {
         "rank": 2,
-        "club": "TIGRE",
-        "pts": 9
+        "club": "SOUTH AFRICA",
+        "pts": 0
       },
       {
         "rank": 3,
-        "club": "AME. CALI",
-        "pts": 9
+        "club": "SOUTH KOREA",
+        "pts": 0
       },
       {
         "rank": 4,
-        "club": "ALIANZA ATL.",
-        "pts": 2
+        "club": "CZECH REP.",
+        "pts": 0
       }
     ]
   },
   "voiceoverEnabled": true,
-  "voiceoverText": "Fechamento da Primeira fase da Sulamericana.... Veja quem passou para as Oitavas e quem vai para os Playoffs",
-  "voiceoverPath": "/voiceovers/football/pt-br-5d234c8e543c5ee4.mp3",
-  "voiceoverLabel": "Fechamento da Primeira fase da Sulamericana.... Veja quem passou para as Oitavas e quem vai para os Playoffs"
+  "voiceoverText": "Fala Galera, pra vocês... a tabela dos grupos do Brasileirão Série A.",
+  "voiceoverPath": "/voiceovers/football/pt-br-6709f9387f27ec22.mp3",
+  "voiceoverLabel": "Fala Galera, pra vocês... a tabela dos grupos do Brasileirão Série A."
 }

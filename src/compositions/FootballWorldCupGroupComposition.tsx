@@ -1,8 +1,19 @@
-import {AbsoluteFill, Img, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Img, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import type {CSSProperties} from 'react';
 import {BrandMark} from '../components/BrandMark';
 import {CompetitionAccentRail} from '../components/CompetitionAccentRail';
-import {FootballColdOpen} from '../components/FootballColdOpen';
+import {
+  FootballShortOpening,
+  SHORT_MAIN_ENTRY_PREROLL_FRAMES,
+  SHORT_OPENING_DURATION_FRAMES,
+} from '../components/FootballShortOpening';
+import {
+  FootballShortBackdrop,
+  FootballShortFontFaces,
+  TEASER_HEADLINE_FONT,
+  TEASER_LABEL_FONT,
+  TEASER_NUMBER_FONT,
+} from '../components/FootballShortTeaser';
 import {SoundtrackBed} from '../components/SoundtrackBed';
 import {VoiceoverBed} from '../components/VoiceoverBed';
 import {
@@ -96,6 +107,8 @@ export const FootballWorldCupGroupComposition = ({
 }: FootballWorldCupGroupCompositionProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
+  const contentFrame =
+    Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
   const isPortuguese = languageProfile !== 'en';
   const fallbackQualificationLegend = isPortuguese
     ? {
@@ -128,11 +141,11 @@ export const FootballWorldCupGroupComposition = ({
       : (nextMatches ?? []).filter(belongsToCurrentGroup).slice(0, 2);
   const matchRowCount = visibleLastResults.length + visibleNextMatches.length;
 
-  const chipAnim = headerEntranceStyle(frame, fps, 0);
-  const titleAnim = headerEntranceStyle(frame, fps, HEADER_STAGGER_FRAMES);
-  const matchesSectionAnim = fadeInStyle(frame, fps, MATCHES_SECTION_START);
+  const chipAnim = headerEntranceStyle(contentFrame, fps, 0);
+  const titleAnim = headerEntranceStyle(contentFrame, fps, HEADER_STAGGER_FRAMES);
+  const matchesSectionAnim = fadeInStyle(contentFrame, fps, MATCHES_SECTION_START);
   const footerAnim = fadeInStyle(
-    frame,
+    contentFrame,
     fps,
     footerStartFrame(STANDINGS_ROW_COUNT + Math.max(2, matchRowCount))
   );
@@ -142,18 +155,30 @@ export const FootballWorldCupGroupComposition = ({
       style={{
         overflow: 'hidden',
         color: '#ffffff',
-        fontFamily: '"Barlow Condensed", "Arial Narrow", sans-serif',
+        fontFamily: TEASER_NUMBER_FONT,
         background: '#0b0d12',
       }}
     >
+      <FootballShortFontFaces />
       <SoundtrackBed
         soundtrackPath={soundtrackPath}
         volume={soundtrackVolume}
         duckUntilSeconds={voiceoverPath ? 3.2 : 0}
       />
-      <VoiceoverBed voiceoverPath={voiceoverPath} />
-      <CompetitionAccentRail accentColor="#F0D500" />
-      <FootballColdOpen
+      <FootballShortBackdrop
+        template="world-cup-group-standings"
+        accentColor="#F0D500"
+        opacity={0.5}
+      />
+      <FootballShortOpening
+        template="world-cup-group-standings"
+        channelProfile={languageProfile === 'en' ? 'en' : 'pt'}
+        leagueName={isPortuguese ? 'Copa do Mundo' : 'World Cup'}
+        titleLabel={titleLabel}
+        groupLabel={groupLabel}
+        rows={rows}
+        nextMatches={visibleNextMatches}
+        lastResults={visibleLastResults}
         accentColor="#F0D500"
         brandName={brandName}
         brandLogoPath={brandLogoPath}
@@ -162,27 +187,30 @@ export const FootballWorldCupGroupComposition = ({
         hookText={hookText}
         coldOpenData={coldOpenData}
       />
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: 10,
-          background:
-            'linear-gradient(90deg, #F0D500 0 33%, #27AE60 33% 66%, #E74C3C 66% 100%)',
-        }}
-      />
+      <Sequence from={SHORT_OPENING_DURATION_FRAMES}>
+        <VoiceoverBed voiceoverPath={voiceoverPath} />
+        <CompetitionAccentRail accentColor="#F0D500" />
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: 10,
+            background:
+              'linear-gradient(90deg, #F0D500 0 33%, #27AE60 33% 66%, #E74C3C 66% 100%)',
+          }}
+        />
 
-      <div
-        style={{
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          padding: '40px 28px 120px 72px',
-        }}
-      >
+        <div
+          style={{
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            padding: '40px 28px 120px 72px',
+          }}
+        >
         {/* Animated header */}
         <div
           style={{
@@ -201,7 +229,7 @@ export const FootballWorldCupGroupComposition = ({
                 background: '#0f1318',
                 borderLeft: '8px solid #F0D500',
                 color: '#F0D500',
-                fontFamily: '"Barlow", "Arial", sans-serif',
+                fontFamily: TEASER_LABEL_FONT,
                 fontSize: 20,
                 lineHeight: 1,
                 fontWeight: 600,
@@ -218,7 +246,8 @@ export const FootballWorldCupGroupComposition = ({
               fontSize: 96,
               lineHeight: 0.92,
               fontWeight: 900,
-              letterSpacing: -2.4,
+              fontFamily: TEASER_HEADLINE_FONT,
+              letterSpacing: 0,
               textTransform: 'uppercase',
               color: '#F0D500',
               ...titleAnim,
@@ -243,7 +272,7 @@ export const FootballWorldCupGroupComposition = ({
               <StandingsRow
                 key={`${row.rank}-${row.team}`}
                 row={row}
-                frame={frame}
+                frame={contentFrame}
                 fps={fps}
                 rowIndex={index}
               />
@@ -274,7 +303,7 @@ export const FootballWorldCupGroupComposition = ({
                   <ResultRow
                     key={`${match.homeTeam}-${match.awayTeam}-${index}`}
                     match={match}
-                    frame={frame}
+                    frame={contentFrame}
                     fps={fps}
                     rowIndex={index}
                     baseFrame={MATCHES_SECTION_START + 6}
@@ -293,7 +322,7 @@ export const FootballWorldCupGroupComposition = ({
                     key={`${match.homeTeam}-${match.awayTeam}-${index}`}
                     match={match}
                     versusLabel={isPortuguese ? 'X' : 'VS'}
-                    frame={frame}
+                    frame={contentFrame}
                     fps={fps}
                     rowIndex={index + visibleLastResults.length}
                     baseFrame={MATCHES_SECTION_START + 6}
@@ -335,7 +364,8 @@ export const FootballWorldCupGroupComposition = ({
 
           <BrandMark brandName={brandName} brandLogoPath={brandLogoPath} />
         </div>
-      </div>
+        </div>
+      </Sequence>
     </AbsoluteFill>
   );
 };

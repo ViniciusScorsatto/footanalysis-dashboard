@@ -1,7 +1,18 @@
-import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig} from 'remotion';
 import {BrandMark} from '../components/BrandMark';
 import {CompetitionAccentRail} from '../components/CompetitionAccentRail';
-import {FootballColdOpen} from '../components/FootballColdOpen';
+import {
+  FootballShortOpening,
+  SHORT_MAIN_ENTRY_PREROLL_FRAMES,
+  SHORT_OPENING_DURATION_FRAMES,
+} from '../components/FootballShortOpening';
+import {
+  FootballShortBackdrop,
+  FootballShortFontFaces,
+  TEASER_HEADLINE_FONT,
+  TEASER_LABEL_FONT,
+  TEASER_NUMBER_FONT,
+} from '../components/FootballShortTeaser';
 import {SoundtrackBed} from '../components/SoundtrackBed';
 import {StandingsLegend} from '../components/StandingsLegend';
 import {StandingsTable} from '../components/StandingsTable';
@@ -81,6 +92,8 @@ export const FootballStandingsComposition = ({
 }: FootballStandingsCompositionProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
+  const contentFrame =
+    Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
   const isEnglish = channelProfile === 'en';
 
   const standingsConfig = leagueConfig?.standings;
@@ -90,31 +103,37 @@ export const FootballStandingsComposition = ({
   const zones = standingsConfig?.zones?.length ? standingsConfig.zones : fallbackZones;
   const accentColor = leagueConfig?.accentColor ?? '#F0A500';
 
-  const chipAnim = headerEntranceStyle(frame, fps, 0);
-  const titleAnim = headerEntranceStyle(frame, fps, HEADER_STAGGER_FRAMES);
-  const labelAnim = headerEntranceStyle(frame, fps, HEADER_STAGGER_FRAMES * 2);
-  const footerAnim = fadeInStyle(frame, fps, footerStartFrame(rows.length));
+  const chipAnim = headerEntranceStyle(contentFrame, fps, 0);
+  const titleAnim = headerEntranceStyle(contentFrame, fps, HEADER_STAGGER_FRAMES);
+  const labelAnim = headerEntranceStyle(contentFrame, fps, HEADER_STAGGER_FRAMES * 2);
+  const footerAnim = fadeInStyle(contentFrame, fps, footerStartFrame(rows.length));
 
   return (
     <AbsoluteFill
       style={{
         overflow: 'hidden',
         color: '#ffffff',
-        fontFamily: '"Barlow Condensed", "Arial Narrow", sans-serif',
+        fontFamily: TEASER_NUMBER_FONT,
         background: '#0b0d12',
       }}
     >
+      <FootballShortFontFaces />
       <SoundtrackBed
         soundtrackPath={soundtrackPath}
         volume={soundtrackVolume}
         duckUntilSeconds={voiceoverPath ? 3.2 : 0}
       />
-      <VoiceoverBed voiceoverPath={voiceoverPath} />
-      <CompetitionAccentRail
+      <FootballShortBackdrop
+        template="standings"
         accentColor={accentColor}
-        secondaryAccentColor={leagueConfig?.secondaryAccentColor}
+        opacity={0.5}
       />
-      <FootballColdOpen
+      <FootballShortOpening
+        template="standings"
+        channelProfile={channelProfile}
+        leagueName={leagueName}
+        roundLabel={standingsLabel}
+        rows={rows}
         accentColor={accentColor}
         secondaryAccentColor={leagueConfig?.secondaryAccentColor}
         brandName={brandName}
@@ -124,24 +143,30 @@ export const FootballStandingsComposition = ({
         hookText={hookText}
         coldOpenData={coldOpenData}
       />
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: accentWipeWidth(frame),
-          height: 6,
-          background: accentColor,
-        }}
-      />
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          padding: `40px 28px 136px ${contentLeftPadding}px`,
-        }}
-      >
+      <Sequence from={SHORT_OPENING_DURATION_FRAMES}>
+        <VoiceoverBed voiceoverPath={voiceoverPath} />
+        <CompetitionAccentRail
+          accentColor={accentColor}
+          secondaryAccentColor={leagueConfig?.secondaryAccentColor}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: accentWipeWidth(contentFrame),
+            height: 6,
+            background: accentColor,
+          }}
+        />
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            padding: `40px 28px 136px ${contentLeftPadding}px`,
+          }}
+        >
         {/* Animated header */}
         <StandingsHeader
           channelProfile={channelProfile}
@@ -211,7 +236,8 @@ export const FootballStandingsComposition = ({
           )}
           <BrandMark brandName={brandName} brandLogoPath={brandLogoPath} />
         </div>
-      </div>
+        </div>
+      </Sequence>
     </AbsoluteFill>
   );
 };
@@ -254,7 +280,7 @@ const StandingsHeader = ({
             border: isEnglish ? '1px solid #1e2a3a' : 'none',
             borderLeft: isEnglish ? '1px solid #1e2a3a' : `8px solid ${accentColor}`,
             color: isEnglish ? '#4a6070' : accentColor,
-            fontFamily: '"Barlow", "Arial", sans-serif',
+            fontFamily: TEASER_LABEL_FONT,
             fontSize: 20,
             lineHeight: 1,
             fontWeight: 600,
@@ -271,7 +297,8 @@ const StandingsHeader = ({
           fontSize: 96,
           lineHeight: 0.92,
           fontWeight: 900,
-          letterSpacing: -2.4,
+          fontFamily: TEASER_HEADLINE_FONT,
+          letterSpacing: 0,
           textTransform: 'uppercase',
           color: isEnglish ? '#f0f4f8' : accentColor,
           ...titleAnim,
@@ -286,6 +313,7 @@ const StandingsHeader = ({
           fontSize: 56,
           lineHeight: 1,
           fontWeight: 600,
+          fontFamily: TEASER_LABEL_FONT,
           textTransform: 'uppercase',
           ...labelAnim,
         }}

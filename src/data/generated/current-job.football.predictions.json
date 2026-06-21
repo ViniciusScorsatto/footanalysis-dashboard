@@ -1,153 +1,166 @@
 {
   "sport": "football",
   "template": "predictions",
-  "leagueId": 1,
+  "leagueId": 1128,
   "season": 2026,
-  "leagueName": "World Cup",
-  "channelProfile": "en",
-  "languageProfile": "en",
+  "leagueName": "Brasileirão Sub-17",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Premier League - Shakes the Ground.mp3",
-  "soundtrackLabel": "Premier League - Shakes the Ground",
-  "soundtrackVolume": 0.1,
-  "outputName": "world-cup-2026-predictions-group-stage-1-3-dates-en.mp4",
-  "durationInFrames": 270,
+  "soundtrackPath": "/audio/football/Cidade Parou Gol.mp3",
+  "soundtrackLabel": "Cidade Parou Gol",
+  "soundtrackVolume": 0.25,
+  "outputName": "brasileirao-sub-17-2026-palpites-group-stage-2-3-dates-pt-br.mp4",
+  "durationInFrames": 360,
   "compositionId": "FootballPredictionsShort",
   "leagueConfig": {
-    "leagueId": 1,
-    "accentColor": "#F0D500",
+    "leagueId": 1128,
+    "accentColor": "#E67E22",
     "standings": {
       "safeArea": {
-        "left": 64,
-        "right": 92
+        "left": 40,
+        "right": 120
       },
       "zones": [
         {
-          "key": "top-three",
-          "label": "Top 3",
+          "key": "champion",
+          "label": "Campeão",
           "start": 1,
-          "end": 3,
-          "fill": "linear-gradient(90deg, rgba(58, 196, 88, 0.84), rgba(58, 196, 88, 0.28) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(86, 214, 120, 0.62)"
+          "end": 1
         },
         {
-          "key": "bottom-three",
-          "label": "Bottom 3",
+          "key": "relegation",
+          "label": "Rebaixamento",
           "start": 18,
-          "end": 20,
-          "fill": "linear-gradient(90deg, rgba(224, 48, 48, 0.84), rgba(224, 48, 48, 0.28) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 90, 90, 0.56)"
+          "end": 20
         }
       ]
     },
-    "leagueName": "World Cup"
+    "leagueName": "Brasileirão Sub-17"
   },
-  "round": "Group Stage - 1",
-  "matchDates": [
-    "2026-06-16",
-    "2026-06-17",
-    "2026-06-18"
-  ],
-  "roundLabel": "Predictions - Group Stage - 1",
-  "ctaText": "Who wins this round?",
+  "round": "Regular Season - 5",
+  "roundLabel": "Palpites da Rodada 5",
+  "ctaText": "Quem vence essa rodada?",
   "fixtures": [
     {
-      "fixtureId": 1489380,
-      "fixtureDateKey": "2026-06-16",
-      "homeTeam": "Spain",
-      "awayTeam": "Cape Verde Islands",
-      "homeScore": 3,
-      "awayScore": 0,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "S",
-        "logoPath": "/logos/spain-9.png"
-      },
-      "awayBadge": {
-        "label": "CVI",
-        "logoPath": "/logos/cape-verde-islands-1533.png"
-      }
-    },
-    {
-      "fixtureId": 1489377,
-      "fixtureDateKey": "2026-06-16",
-      "homeTeam": "Belgium",
-      "awayTeam": "Egypt",
-      "homeScore": 2,
-      "awayScore": 1,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "B",
-        "logoPath": "/logos/belgium-1.png"
-      },
-      "awayBadge": {
-        "label": "E",
-        "logoPath": "/logos/egypt-32.png"
-      }
-    },
-    {
-      "fixtureId": 1489379,
-      "fixtureDateKey": "2026-06-16",
-      "homeTeam": "Saudi Arabia",
-      "awayTeam": "Uruguay",
+      "fixtureId": 1543911,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "America MG",
+      "awayTeam": "Sao Paulo",
       "homeScore": 0,
-      "awayScore": 2,
-      "predictionSource": "manual",
+      "awayScore": 0,
+      "predictionSource": "api",
       "homeEliminated": false,
       "awayEliminated": false,
       "hasPenalties": false,
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "SA",
-        "logoPath": "/logos/saudi-arabia-23.png"
+        "label": "AM",
+        "logoPath": "/logos/america-mineiro-125.png"
       },
       "awayBadge": {
-        "label": "U",
-        "logoPath": "/logos/uruguay-7.png"
+        "label": "SP",
+        "logoPath": "/logos/sao-paulo.png"
       }
     },
     {
-      "fixtureId": 1489378,
-      "fixtureDateKey": "2026-06-16",
-      "homeTeam": "Iran",
-      "awayTeam": "New Zealand",
-      "homeScore": 1,
-      "awayScore": 1,
-      "predictionSource": "manual",
+      "fixtureId": 1543912,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Athletico PR",
+      "awayTeam": "Internacional",
+      "homeScore": 0,
+      "awayScore": 0,
+      "predictionSource": "api",
       "homeEliminated": false,
       "awayEliminated": false,
       "hasPenalties": false,
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
+        "label": "AP",
+        "logoPath": "/logos/atletico-paranaense.png"
+      },
+      "awayBadge": {
         "label": "I",
-        "logoPath": "/logos/iran-22.png"
-      },
-      "awayBadge": {
-        "label": "NZ",
-        "logoPath": "/logos/new-zealand-4673.png"
+        "logoPath": "/logos/internacional.png"
       }
     },
     {
-      "fixtureId": 1489383,
-      "fixtureDateKey": "2026-06-17",
-      "homeTeam": "France",
-      "awayTeam": "Senegal",
-      "homeScore": 2,
-      "awayScore": 1,
-      "predictionSource": "manual",
+      "fixtureId": 1543913,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Atletico GO",
+      "awayTeam": "Fortaleza",
+      "homeScore": 0,
+      "awayScore": 0,
+      "predictionSource": "api",
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "AG",
+        "logoPath": "/logos/atletico-go-u17-24470.png"
+      },
+      "awayBadge": {
+        "label": "F",
+        "logoPath": "/logos/fortaleza-ec-154.png"
+      }
+    },
+    {
+      "fixtureId": 1543914,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Atlético MG",
+      "awayTeam": "Palmeiras",
+      "homeScore": 0,
+      "awayScore": 0,
+      "predictionSource": "api",
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "AM",
+        "logoPath": "/logos/atletico-mg.png"
+      },
+      "awayBadge": {
+        "label": "P",
+        "logoPath": "/logos/palmeiras.png"
+      }
+    },
+    {
+      "fixtureId": 1543916,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Corinthians",
+      "awayTeam": "Botafogo",
+      "homeScore": 0,
+      "awayScore": 0,
+      "predictionSource": "api",
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "C",
+        "logoPath": "/logos/corinthians.png"
+      },
+      "awayBadge": {
+        "label": "B",
+        "logoPath": "/logos/botafogo.png"
+      }
+    },
+    {
+      "fixtureId": 1543917,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Fluminense",
+      "awayTeam": "RB Bragantino",
+      "homeScore": 0,
+      "awayScore": 0,
+      "predictionSource": "api",
       "homeEliminated": false,
       "awayEliminated": false,
       "hasPenalties": false,
@@ -155,217 +168,151 @@
       "awayPenaltyScore": null,
       "homeBadge": {
         "label": "F",
-        "logoPath": "/logos/france-2.png"
+        "logoPath": "/logos/fluminense.png"
       },
       "awayBadge": {
-        "label": "S",
-        "logoPath": "/logos/senegal-13.png"
+        "label": "RB",
+        "logoPath": "/logos/rb-bragantino.png"
       }
     },
     {
-      "fixtureId": 1539016,
-      "fixtureDateKey": "2026-06-17",
-      "homeTeam": "Iraq",
-      "awayTeam": "Norway",
+      "fixtureId": 1543919,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Santos",
+      "awayTeam": "Gremio",
       "homeScore": 0,
-      "awayScore": 2,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "I",
-        "logoPath": "/logos/iraq-1567.png"
-      },
-      "awayBadge": {
-        "label": "N",
-        "logoPath": "/logos/norway-1090.png"
-      }
-    },
-    {
-      "fixtureId": 1489381,
-      "fixtureDateKey": "2026-06-17",
-      "homeTeam": "Argentina",
-      "awayTeam": "Algeria",
-      "homeScore": 3,
-      "awayScore": 1,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "A",
-        "logoPath": "/logos/argentina-26.png"
-      },
-      "awayBadge": {
-        "label": "A",
-        "logoPath": "/logos/algeria-1532.png"
-      }
-    },
-    {
-      "fixtureId": 1489382,
-      "fixtureDateKey": "2026-06-17",
-      "homeTeam": "Austria",
-      "awayTeam": "Jordan",
-      "homeScore": 2,
       "awayScore": 0,
-      "predictionSource": "manual",
+      "predictionSource": "api",
       "homeEliminated": false,
       "awayEliminated": false,
       "hasPenalties": false,
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "A",
-        "logoPath": "/logos/austria-775.png"
+        "label": "S",
+        "logoPath": "/logos/santos.png"
       },
       "awayBadge": {
-        "label": "J",
-        "logoPath": "/logos/jordan-1548.png"
-      }
-    },
-    {
-      "fixtureId": 1539003,
-      "fixtureDateKey": "2026-06-18",
-      "homeTeam": "Portugal",
-      "awayTeam": "Congo DR",
-      "homeScore": 3,
-      "awayScore": 0,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "P",
-        "logoPath": "/logos/portugal-27.png"
-      },
-      "awayBadge": {
-        "label": "CD",
-        "logoPath": "/logos/congo-dr-1508.png"
-      }
-    },
-    {
-      "fixtureId": 1489384,
-      "fixtureDateKey": "2026-06-18",
-      "homeTeam": "England",
-      "awayTeam": "Croatia",
-      "homeScore": 1,
-      "awayScore": 1,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "E",
-        "logoPath": "/logos/england-10.png"
-      },
-      "awayBadge": {
-        "label": "C",
-        "logoPath": "/logos/croatia-3.png"
-      }
-    },
-    {
-      "fixtureId": 1489385,
-      "fixtureDateKey": "2026-06-18",
-      "homeTeam": "Ghana",
-      "awayTeam": "Panama",
-      "homeScore": 2,
-      "awayScore": 1,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
         "label": "G",
-        "logoPath": "/logos/ghana-1504.png"
-      },
-      "awayBadge": {
-        "label": "P",
-        "logoPath": "/logos/panama-11.png"
+        "logoPath": "/logos/gremio.png"
       }
     },
     {
-      "fixtureId": 1489386,
-      "fixtureDateKey": "2026-06-18",
-      "homeTeam": "Uzbekistan",
-      "awayTeam": "Colombia",
-      "homeScore": 1,
-      "awayScore": 2,
-      "predictionSource": "manual",
+      "fixtureId": 1543918,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Juventude",
+      "awayTeam": "Cruzeiro",
+      "homeScore": 0,
+      "awayScore": 0,
+      "predictionSource": "api",
       "homeEliminated": false,
       "awayEliminated": false,
       "hasPenalties": false,
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "U",
-        "logoPath": "/logos/uzbekistan-1568.png"
+        "label": "J",
+        "logoPath": "/logos/juventude-152.png"
       },
       "awayBadge": {
         "label": "C",
-        "logoPath": "/logos/colombia-8.png"
+        "logoPath": "/logos/cruzeiro.png"
+      }
+    },
+    {
+      "fixtureId": 1543920,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Vasco",
+      "awayTeam": "Flamengo",
+      "homeScore": 0,
+      "awayScore": 0,
+      "predictionSource": "api",
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "V",
+        "logoPath": "/logos/vasco-da-gama-133.png"
+      },
+      "awayBadge": {
+        "label": "F",
+        "logoPath": "/logos/flamengo.png"
+      }
+    },
+    {
+      "fixtureId": 1543915,
+      "fixtureDateKey": "2026-06-25",
+      "homeTeam": "Bahia",
+      "awayTeam": "Vitoria",
+      "homeScore": 0,
+      "awayScore": 0,
+      "predictionSource": "api",
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "B",
+        "logoPath": "/logos/bahia.png"
+      },
+      "awayBadge": {
+        "label": "V",
+        "logoPath": "/logos/vitoria.png"
       }
     }
   ],
-  "introTitle": "World Cup",
-  "introSubtitle": "Predictions - Group Stage - 1",
-  "hookText": "Lock in your picks for the last games of Round 1 of the World Cup",
+  "introTitle": "Brasileirão Sub-17",
+  "introSubtitle": "Palpites da Rodada 5",
+  "hookText": "Você crava esses placares?",
   "coldOpenData": {
     "matchRows": [
       {
-        "left": "SPAIN",
-        "center": "3 - 0",
-        "right": "CAPE VERDE ISLANDS"
+        "left": "AMERICA MG",
+        "center": "0 - 0",
+        "right": "SAO PAULO"
       },
       {
-        "left": "BELGIUM",
-        "center": "2 - 1",
-        "right": "EGYPT"
+        "left": "ATHLETICO PR",
+        "center": "0 - 0",
+        "right": "INTERNACIONAL"
       },
       {
-        "left": "SAUDI ARABIA",
-        "center": "0 - 2",
-        "right": "URUGUAY"
+        "left": "ATLETICO GO",
+        "center": "0 - 0",
+        "right": "FORTALEZA"
       },
       {
-        "left": "IRAN",
-        "center": "1 - 1",
-        "right": "NEW ZEALAND"
+        "left": "ATLÉTICO MG",
+        "center": "0 - 0",
+        "right": "PALMEIRAS"
       }
     ],
     "tableRows": [
       {
         "rank": 1,
-        "club": "SPAIN",
+        "club": "AMERICA MG",
         "pts": 22
       },
       {
         "rank": 2,
-        "club": "CAPE VERDE ISLANDS",
+        "club": "SAO PAULO",
         "pts": 20
       },
       {
         "rank": 3,
-        "club": "BELGIUM",
+        "club": "ATHLETICO PR",
         "pts": 18
       },
       {
         "rank": 4,
-        "club": "EGYPT",
+        "club": "INTERNACIONAL",
         "pts": 16
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "World Cup predictions"
+  "voiceoverText": "Fala Galera, pra vocês... os palpites do Brasileirão Sub-17."
 }

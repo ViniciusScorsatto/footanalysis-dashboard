@@ -10,6 +10,8 @@ type ResultRowProps = {
   accentColor?: string;
   channelProfile?: FootballChannelProfile;
   leagueId?: number;
+  density?: 'compact' | 'expanded';
+  fixtureCount?: number;
 };
 
 export const ResultRow = ({
@@ -19,6 +21,8 @@ export const ResultRow = ({
   accentColor = '#F0A500',
   channelProfile = 'pt',
   leagueId,
+  density = 'compact',
+  fixtureCount = 6,
 }: ResultRowProps) => {
   if (variant === 'results' || variant === 'next-games' || variant === 'predictions') {
     return (
@@ -29,6 +33,8 @@ export const ResultRow = ({
         accentColor={accentColor}
         channelProfile={channelProfile}
         leagueId={leagueId}
+        density={density}
+        fixtureCount={fixtureCount}
       />
     );
   }
@@ -41,6 +47,8 @@ const BrandedResultRow = ({
   accentColor,
   channelProfile,
   leagueId,
+  density,
+  fixtureCount,
 }: {
   fixture: FixtureCard;
   variant: 'results' | 'next-games' | 'predictions';
@@ -48,6 +56,8 @@ const BrandedResultRow = ({
   accentColor: string;
   channelProfile: FootballChannelProfile;
   leagueId?: number;
+  density: 'compact' | 'expanded';
+  fixtureCount: number;
 }) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -72,16 +82,31 @@ const BrandedResultRow = ({
   const anim = entranceStyle(frame, fps, rowEnterFrame);
   // Score pops in ~10 frames after the row starts entering (row is mostly visible by then).
   const scorePopStart = rowEnterFrame + 10;
+  const isExpanded = density === 'expanded';
+  const expandedRowHeight =
+    fixtureCount <= 1
+      ? 440
+      : fixtureCount === 2
+        ? 300
+        : fixtureCount === 3
+          ? 226
+          : fixtureCount === 4
+            ? 178
+            : 148;
+  const expandedBadgeSize =
+    fixtureCount <= 2 ? 124 : fixtureCount === 3 ? 106 : fixtureCount === 4 ? 92 : 82;
 
   return (
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: 'minmax(0, 1fr) 176px minmax(0, 1fr)',
+        gridTemplateColumns: isExpanded
+          ? 'minmax(0, 1fr) 160px minmax(0, 1fr)'
+          : 'minmax(0, 1fr) 118px minmax(0, 1fr)',
         alignItems: 'center',
-        minHeight: 104,
-        padding: '0 16px',
-        borderRadius: 24,
+        minHeight: isExpanded ? expandedRowHeight : 104,
+        padding: isExpanded ? '16px 24px' : '0 16px',
+        borderRadius: isExpanded ? 30 : 24,
         background: surfaceColor,
         border: isEnglish ? '1px solid #1e2a3a' : 'none',
         borderLeft: isEnglish
@@ -99,6 +124,8 @@ const BrandedResultRow = ({
         align="left"
         channelProfile={channelProfile}
         isEliminated={fixture.homeEliminated}
+        density={density}
+        badgeSize={isExpanded ? expandedBadgeSize : 72}
       />
       <BrandedScore
         homeScore={fixture.homeScore}
@@ -113,6 +140,8 @@ const BrandedResultRow = ({
         frame={frame}
         fps={fps}
         popStartFrame={scorePopStart}
+        density={density}
+        fixtureCount={fixtureCount}
       />
       <BrandedTeam
         badge={fixture.awayBadge}
@@ -120,6 +149,8 @@ const BrandedResultRow = ({
         align="right"
         channelProfile={channelProfile}
         isEliminated={fixture.awayEliminated}
+        density={density}
+        badgeSize={isExpanded ? expandedBadgeSize : 72}
       />
     </div>
   );
@@ -131,43 +162,81 @@ const BrandedTeam = ({
   align,
   channelProfile,
   isEliminated = false,
+  density = 'compact',
+  badgeSize = 72,
 }: {
   badge: FixtureCard['homeBadge'];
   team: string;
   align: 'left' | 'right';
   channelProfile: FootballChannelProfile;
   isEliminated?: boolean;
-}) => (
-  <div
-    style={{
-      minWidth: 0,
-      display: 'flex',
-      flexDirection: align === 'left' ? 'row' : 'row-reverse',
-      alignItems: 'center',
-      gap: 16,
-      opacity: isEliminated ? 0.55 : 1,
-    }}
-  >
-    <TeamBadge badge={badge} size={72} isEliminated={isEliminated} />
+  density?: 'compact' | 'expanded';
+  badgeSize?: number;
+}) => {
+  const isExpanded = density === 'expanded';
+  const fontSize = fitFixtureTeamFontSize(
+    team,
+    isExpanded ? 300 : 238,
+    isExpanded ? 38 : 34,
+    isExpanded ? 18 : 20
+  );
+
+  return (
     <div
       style={{
         minWidth: 0,
-        color: isEliminated ? '#7f8c99' : channelProfile === 'en' ? '#f0f4f8' : '#c0ccd8',
-        fontSize: 34,
-        lineHeight: 0.95,
-        fontWeight: 700,
-        letterSpacing: -0.8,
-        textAlign: align,
-        textTransform: 'uppercase',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
+        display: 'flex',
+        flexDirection: isExpanded ? 'column' : align === 'left' ? 'row' : 'row-reverse',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: isExpanded ? 14 : 10,
+        opacity: isEliminated ? 0.55 : 1,
       }}
     >
-      {team}
+      <TeamBadge badge={badge} size={badgeSize} isEliminated={isEliminated} />
+      <div
+        style={{
+          minWidth: 0,
+          width: '100%',
+          flex: isExpanded ? undefined : 1,
+          color: isEliminated ? '#7f8c99' : channelProfile === 'en' ? '#f0f4f8' : '#c0ccd8',
+          fontSize,
+          lineHeight: 0.95,
+          fontWeight: 700,
+          letterSpacing: 0,
+          textAlign: isExpanded ? 'center' : align,
+          textTransform: 'uppercase',
+          whiteSpace: 'nowrap',
+          overflow: 'visible',
+          textShadow: '0 3px 8px rgba(0,0,0,0.9), 0 0 10px rgba(255,255,255,0.16)',
+        }}
+      >
+        {team}
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
+const fitFixtureTeamFontSize = (team: string, targetWidth = 238, maxSize = 34, minSize = 20) => {
+  const weightedLength = [...team.trim().toUpperCase()].reduce((total, char) => {
+    if (char === ' ') {
+      return total + 0.38;
+    }
+    if ('1IÍÌÎÏL.'.includes(char)) {
+      return total + 0.42;
+    }
+    if ('MW@'.includes(char)) {
+      return total + 1.16;
+    }
+    if ('-–/'.includes(char)) {
+      return total + 0.5;
+    }
+    return total + 0.78;
+  }, 0);
+  const fitted = Math.floor(targetWidth / Math.max(1, weightedLength));
+
+  return Math.max(minSize, Math.min(maxSize, fitted));
+};
 
 const BrandedScore = ({
   homeScore,
@@ -182,6 +251,8 @@ const BrandedScore = ({
   frame,
   fps,
   popStartFrame,
+  density = 'compact',
+  fixtureCount = 6,
 }: {
   homeScore: number | null;
   awayScore: number | null;
@@ -195,6 +266,8 @@ const BrandedScore = ({
   frame: number;
   fps: number;
   popStartFrame: number;
+  density?: 'compact' | 'expanded';
+  fixtureCount?: number;
 }) => {
   const hasScore = homeScore !== null && awayScore !== null;
   const showPenaltyScore =
@@ -204,6 +277,9 @@ const BrandedScore = ({
   const pop = scorePopStyle(frame, fps, popStartFrame);
   const isEnglish = channelProfile === 'en';
   const isPrediction = variant === 'predictions';
+  const isExpanded = density === 'expanded';
+  const expandedScoreSize =
+    fixtureCount <= 2 ? 76 : fixtureCount === 3 ? 68 : fixtureCount === 4 ? 60 : 54;
   const scoreColor = isEnglish
     ? isEuropeanNight
       ? accentColor
@@ -211,27 +287,15 @@ const BrandedScore = ({
         ? accentColor
         : '#f0f4f8'
     : accentColor;
-  const scoreBackground = isEnglish
-    ? isPrediction
-      ? '#0f1318'
-      : '#0b0d12'
-    : '#1a1600';
-  const scoreBorder = isEnglish
-    ? `1px solid ${
-        isEuropeanNight || isPrediction ? `${accentColor}55` : '#1e2a3a'
-      }`
-    : `1px solid ${accentColor}44`;
-  const minWidth = isEnglish && isPrediction ? 148 : 136;
-
   return (
     <div
       style={{
         justifySelf: 'center',
-        minWidth,
-        padding: '12px 18px 10px',
-        borderRadius: 18,
-        background: scoreBackground,
-        border: scoreBorder,
+        minWidth: 100,
+        padding: 0,
+        borderRadius: 0,
+        background: 'transparent',
+        border: 'none',
         color: scoreColor,
         lineHeight: 1,
         fontWeight: 900,
@@ -241,13 +305,25 @@ const BrandedScore = ({
         alignItems: 'center',
         justifyContent: 'center',
         gap: showPenaltyScore ? 7 : 0,
+        textShadow: `0 0 18px ${accentColor}55, 0 8px 16px rgba(0,0,0,0.68)`,
         ...pop,
       }}
     >
       <span
         style={{
-          fontSize: hasScore ? (showPenaltyScore ? 46 : 56) : 38,
+          fontSize: isExpanded
+            ? hasScore
+              ? showPenaltyScore
+                ? Math.max(44, expandedScoreSize - 16)
+                : expandedScoreSize
+              : Math.max(46, expandedScoreSize - 10)
+            : hasScore
+              ? showPenaltyScore
+                ? 42
+                : 52
+              : 36,
           lineHeight: 0.92,
+          whiteSpace: 'nowrap',
         }}
       >
         {hasScore ? `${homeScore} – ${awayScore}` : 'VS'}

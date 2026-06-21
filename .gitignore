@@ -6,3 +6,7 @@ public/voiceovers/football/
 .analysis-frames/
 .qodo/
 *.log
+.DS_Store
+
+# Dashboard/render working state
+src/data/generated/current-job.football*.json

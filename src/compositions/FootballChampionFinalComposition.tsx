@@ -1,7 +1,18 @@
-import {AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Img, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {BrandMark} from '../components/BrandMark';
 import {CompetitionAccentRail} from '../components/CompetitionAccentRail';
-import {FootballColdOpen} from '../components/FootballColdOpen';
+import {
+  FootballShortOpening,
+  SHORT_MAIN_ENTRY_PREROLL_FRAMES,
+  SHORT_OPENING_DURATION_FRAMES,
+} from '../components/FootballShortOpening';
+import {
+  FootballShortBackdrop,
+  FootballShortFontFaces,
+  TEASER_HEADLINE_FONT,
+  TEASER_LABEL_FONT,
+  TEASER_NUMBER_FONT,
+} from '../components/FootballShortTeaser';
 import {SoundtrackBed} from '../components/SoundtrackBed';
 import {VoiceoverBed} from '../components/VoiceoverBed';
 import {accentWipeWidth, fadeInStyle, headerEntranceStyle} from '../lib/animations';
@@ -58,10 +69,10 @@ export const FootballChampionFinalComposition = ({
 }: FootballChampionFinalCompositionProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const mainStartFrame = Math.round(fps * 1.55);
-  const contentFrame = Math.max(0, frame - mainStartFrame);
+  const contentFrame =
+    Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
   const accentColor = leagueConfig?.accentColor ?? (channelProfile === 'en' ? '#0A84FF' : '#F0A500');
-  const mainOpacity = interpolate(frame, [mainStartFrame, mainStartFrame + 10], [0, 1], {
+  const mainOpacity = interpolate(contentFrame, [0, 10], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -75,19 +86,33 @@ export const FootballChampionFinalComposition = ({
       style={{
         overflow: 'hidden',
         color: '#f0f4f8',
-        fontFamily: '"Poppins", "Arial Narrow", sans-serif',
+        fontFamily: TEASER_NUMBER_FONT,
         background:
           `radial-gradient(circle at 50% 26%, ${accentColor}3d, transparent 29%), ` +
           `radial-gradient(circle at 82% 70%, ${accentColor}22, transparent 28%), #0b0d12`,
       }}
     >
+      <FootballShortFontFaces />
       <SoundtrackBed
         soundtrackPath={soundtrackPath}
         volume={soundtrackVolume}
         duckUntilSeconds={voiceoverPath ? 3.2 : 0}
       />
-      <VoiceoverBed voiceoverPath={voiceoverPath} />
-      <FootballColdOpen
+      <FootballShortBackdrop
+        template="champion-final"
+        accentColor={accentColor}
+        opacity={0.5}
+      />
+      <FootballShortOpening
+        template="champion-final"
+        channelProfile={channelProfile}
+        leagueName={leagueName}
+        titleLabel={titleLabel}
+        subtitleLabel={subtitleLabel}
+        seasonLabel={seasonLabel}
+        championTeam={championTeam}
+        championBadge={championBadge}
+        finalFixture={finalFixture}
         accentColor={accentColor}
         secondaryAccentColor={leagueConfig?.secondaryAccentColor}
         brandName={brandName}
@@ -97,6 +122,8 @@ export const FootballChampionFinalComposition = ({
         hookText={hookText}
         coldOpenData={coldOpenData}
       />
+      <Sequence from={SHORT_OPENING_DURATION_FRAMES}>
+      <VoiceoverBed voiceoverPath={voiceoverPath} />
       <AbsoluteFill style={{opacity: mainOpacity}}>
         <CompetitionAccentRail
           accentColor={accentColor}
@@ -132,6 +159,7 @@ export const FootballChampionFinalComposition = ({
                 border: `2px solid ${accentColor}`,
                 borderRadius: 999,
                 color: accentColor,
+                fontFamily: TEASER_LABEL_FONT,
                 fontSize: 25,
                 lineHeight: 1,
                 fontWeight: 800,
@@ -149,6 +177,7 @@ export const FootballChampionFinalComposition = ({
                 fontSize: 56,
                 lineHeight: 0.98,
                 fontWeight: 800,
+                fontFamily: TEASER_LABEL_FONT,
                 textTransform: 'uppercase',
               }}
             >
@@ -193,7 +222,8 @@ export const FootballChampionFinalComposition = ({
                 fontSize: 132,
                 lineHeight: 0.82,
                 fontWeight: 950,
-                letterSpacing: -6,
+                fontFamily: TEASER_HEADLINE_FONT,
+                letterSpacing: 0,
                 textTransform: 'uppercase',
                 textShadow: `0 14px 42px ${accentColor}35`,
               }}
@@ -207,6 +237,7 @@ export const FootballChampionFinalComposition = ({
                 fontSize: 62,
                 lineHeight: 0.94,
                 fontWeight: 900,
+                fontFamily: TEASER_HEADLINE_FONT,
                 textTransform: 'uppercase',
               }}
             >
@@ -256,6 +287,7 @@ export const FootballChampionFinalComposition = ({
           </footer>
         </div>
       </AbsoluteFill>
+      </Sequence>
     </AbsoluteFill>
   );
 };

@@ -525,6 +525,9 @@ Examples:
 - confronto direto
 - efeito na tabela
 - consequência do resultado previsto
+- que time tem histórico mais forte
+- considerar rodadas inicias x rodadas finais
+- considerar se o campeonato é pontos corridos (brasileirão por exemplo) ou mata-mata (copa do mundo)
 
 ## Angle
 

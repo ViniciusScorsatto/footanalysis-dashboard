@@ -1,11 +1,9 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {spawn} from 'node:child_process';
-import {projectRoot} from './lib/video-system.mjs';
+import {projectRoot, syncCurrentFootballJobDuration} from './lib/video-system.mjs';
 
-const currentJobPath = path.join(projectRoot, 'src', 'data', 'generated', 'current-job.football.json');
-const raw = await fs.readFile(currentJobPath, 'utf8');
-const job = JSON.parse(raw);
+const job = await syncCurrentFootballJobDuration();
 
 await fs.mkdir(path.join(projectRoot, 'out'), {recursive: true});
 

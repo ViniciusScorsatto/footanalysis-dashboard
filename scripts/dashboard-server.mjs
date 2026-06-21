@@ -19,6 +19,7 @@ import {
   loadFootballPredictionsLongJob,
   loadFootballRoundSummaryLongJob,
   loadTeamAccentColors,
+  loadWorldCupConfig,
   loadWorldCupTierlistTeams,
   prepareJob,
   prepareFootballPredictionsLongJob,
@@ -26,9 +27,10 @@ import {
   prepareFootballRoundSummaryLongJob,
   parseFootballRoundSummaryLongYaml,
   projectRoot,
+  syncCurrentFootballJobDuration,
   templates,
 } from './lib/video-system.mjs';
-import {getFootballHookOptions} from './lib/football-copy.mjs';
+import {getFootballCtaOptions, getFootballHookOptions} from './lib/football-copy.mjs';
 
 const dashboardDir = path.join(projectRoot, 'dashboard');
 const publicDir = path.join(projectRoot, 'public');
@@ -52,6 +54,7 @@ const contentTypes = {
   '.css': 'text/css; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
   '.png': 'image/png',
+  '.svg': 'image/svg+xml; charset=utf-8',
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.webp': 'image/webp',
@@ -311,6 +314,22 @@ const sendFootballLongformOptions = async (response) => {
   });
 };
 
+const sendFootballWorldCupGroups = async (response) => {
+  try {
+    const config = await loadWorldCupConfig();
+    sendJson(response, 200, {
+      ok: true,
+      competitionName: config.competitionName ?? '',
+      groups: config.groups ?? {},
+    });
+  } catch (error) {
+    sendJson(response, 500, {
+      ok: false,
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+};
+
 const sendFootballRoundSummaryLongformOptions = async (response) => {
   const currentJob = await loadFootballRoundSummaryLongJob().catch(() => null);
   const teamAccentColors = await loadTeamAccentColors();
@@ -565,6 +584,7 @@ const prepareFootballJob = async (body) =>
     groupLetter: body.groupLetter,
     competitionName: body.competitionName,
     ctaText: body.ctaText,
+    worldCupStandingEdits: body.worldCupStandingEdits,
     soundtrackPath: body.soundtrackPath,
     soundtrackVolume: body.soundtrackVolume,
     introTitle: body.introTitle,
@@ -1022,6 +1042,7 @@ const buildPublishingMetadata = (job) => {
     job.rows ?? job.standings ?? job.tableRows ?? job.entries ?? job.players ?? job.groups ?? [];
   const fixtures = job.fixtures ?? job.matches ?? job.nextMatches ?? job.results ?? [];
   const isPlayerFirstTemplate = job.template === 'top-scorers' || job.template === 'player-of-round';
+  const languageProfile = job.languageProfile === 'en' || job.channelProfile === 'en' ? 'en' : 'pt-br';
   const context = publishingTemplateContext[job.template] ?? {
     contentType: job.template ?? 'football_video',
     editorialAngle: 'football short video; use the current template and metadata to choose the strongest story.',
@@ -1036,7 +1057,7 @@ const buildPublishingMetadata = (job) => {
     formatGuidance: context.formatGuidance ?? '',
     compositionId: job.compositionId ?? '',
     channelProfile: job.channelProfile ?? '',
-    languageProfile: job.languageProfile ?? '',
+    languageProfile,
     leagueId: job.leagueId ?? '',
     leagueName: job.leagueName ?? job.competitionName ?? '',
     season: job.season ?? '',
@@ -1138,6 +1159,24 @@ const templateSectionMap = {
 };
 
 const compactPublishingTemplate = ({templateText, template, languageProfile}) => {
+  if (languageProfile === 'en') {
+    const englishTemplateText =
+      templateText
+        .split(/^# Legacy Format Coverage/m)[0]
+        ?.split(/^# Estrutura Universal/m)[0]
+        ?.trim() || templateText;
+    return [
+      'Language profile: en.',
+      'Write every title, description, YouTube tag, hashtag, CTA, and platform field in English only.',
+      'Never output Portuguese words or Brazilian Portuguese football terms in English-channel metadata.',
+      'Use comma-friendly YouTube tags without #. Tags must be English search keywords such as football, soccer, Premier League, predictions, results, fixtures, standings, analysis, and relevant team/league names.',
+      'Use the Foot Analysis EN compact brief below instead of the full template.',
+      englishTemplateText,
+    ]
+      .filter(Boolean)
+      .join('\n\n---\n\n');
+  }
+
   const titleRules = sectionBetween(templateText, /^## Regras do Título/m, /^# DESCRIÇÃO UNIVERSAL/m);
   const descriptionRules = sectionBetween(templateText, /^# DESCRIÇÃO UNIVERSAL/m, /^# BLOCOS DINÂMICOS POR FORMATO/m);
   const formatRules = sectionBetween(
@@ -1365,6 +1404,8 @@ const generatePublishingDraft = async ({job, extraContext, copyModelInstructions
   const prompt = [
     'Generate a publishing draft for a short football video.',
     'Return platform-specific copy only. Do not invent match facts beyond the metadata.',
+    'Match metadata.languageProfile exactly: when metadata.languageProfile is "en", every output field including YouTube tags must be English only; when it is "pt-br", use Brazilian Portuguese.',
+    'Do not mix languages inside tags. YouTube tags are plain search keywords, not translated labels from another channel.',
     'Prioritize native style for each platform and keep the user able to manually approve before posting.',
     'Use tags as comma-friendly keywords without #. Use hashtags with # when the platform field is named hashtags.',
     'For TikTok and Instagram, write the caption as one ready-to-paste field: description text followed by hashtags. Hashtags must include #.',
@@ -1451,6 +1492,8 @@ const generateYouTubePublishingDraft = async ({
   const model = resolvePublishingModel(requestedModel);
   const prompt = [
     'Generate YouTube publishing metadata for a LONG-FORM football video.',
+    'Match metadata.languageProfile exactly: when metadata.languageProfile is "en", title, description, and every tag must be English only; when it is "pt-br", use Brazilian Portuguese.',
+    'Do not mix languages inside tags. YouTube tags are plain search keywords, not translated labels from another channel.',
     'Treat this as a horizontal narrated YouTube video, not as a Short. The copy should be built for a full video watch session, search discovery, and viewer retention.',
     'Return only title, description, and tags for YouTube. Do not create copy for Shorts, TikTok, Instagram, Reddit, or X.',
     'Do not use short-form language such as "quick", "short", "60 seconds", "reel", "clip", or "#Shorts" in the title, description, tags, or anywhere else.',
@@ -1692,6 +1735,213 @@ const buildCtaGuidance = (metadata) => {
   };
 };
 
+const firstNonEmpty = (...values) =>
+  values
+    .flat()
+    .map((value) => String(value ?? '').trim())
+    .find(Boolean) ?? '';
+
+const compactArray = (values = [], limit = 5) =>
+  values
+    .map((value) => String(value ?? '').trim())
+    .filter(Boolean)
+    .slice(0, limit);
+
+const buildHookCtaEditorialBrief = (metadata, ctaGuidance) => {
+  const template = metadata.template;
+  const languageProfile = metadata.languageProfile === 'en' ? 'en' : 'pt-br';
+  const specific = metadata.templateSpecific ?? {};
+  const isEnglish = languageProfile === 'en';
+  const staleHooks = getFootballHookOptions(template, languageProfile);
+  const staleCtas = getFootballCtaOptions(template, languageProfile);
+  const hookMaxChars = isEnglish ? 54 : 58;
+  const ctaMaxChars = isEnglish ? 52 : 56;
+  const genericAvoid = isEnglish
+    ? [
+        'What do you think?',
+        'Comment below',
+        'Did your team deliver?',
+        'Which match is must-watch?',
+        'Who advances?',
+      ]
+    : [
+        'O que achou?',
+        'Comente abaixo',
+        'Seu time foi bem ou mal?',
+        'Qual jogo você vai assistir?',
+        'Quem avança?',
+      ];
+
+  const base = {
+    languageProfile,
+    hookMaxChars,
+    ctaMaxChars,
+    voiceoverMaxWords: 22,
+    rule: isEnglish
+      ? 'Pick one sharp editorial angle, use concrete names/numbers from metadata, and avoid placeholder-style copy.'
+      : 'Escolha um ângulo editorial forte, use nomes/números concretos do metadata e evite texto com cara de placeholder.',
+    bannedExactPhrases: [...new Set([...staleHooks, ...staleCtas, ...genericAvoid])],
+    ctaGoal: ctaGuidance.goal,
+    ctaPreferredShapes: ctaGuidance.preferred,
+    ctaAvoid: ctaGuidance.avoid,
+  };
+
+  if (template === 'results') {
+    const leadStory = firstNonEmpty(
+      specific.bigWins?.[0],
+      specific.surpriseCandidates?.[0],
+      specific.draws?.[0],
+      specific.resultStories?.[0]
+    );
+    return {
+      ...base,
+      coreStory: leadStory || metadata.fixtures?.[0] || metadata.leagueName,
+      mustUseFacts: compactArray([
+        leadStory,
+        specific.bigWins?.[0] ? `big win: ${specific.bigWins[0]}` : '',
+        specific.surpriseCandidates?.[0] ? `away/surprise angle: ${specific.surpriseCandidates[0]}` : '',
+        specific.eliminatedTeams?.length ? `eliminated/removed teams: ${specific.eliminatedTeams.join(', ')}` : '',
+      ]),
+      hookAngles: isEnglish
+        ? ['scoreline changed the round', 'winner gained pressure leverage', 'one result exposed a team']
+        : ['placar que muda a rodada', 'vencedor sai com moral/pressão', 'resultado que expõe um time'],
+      ctaAngles: isEnglish
+        ? ['ask who leaves stronger', 'ask which result changed the table', 'ask who is under pressure now']
+        : ['perguntar quem sai mais forte', 'perguntar qual resultado mudou a tabela', 'perguntar quem ficou pressionado'],
+    };
+  }
+
+  if (template === 'standings' || template === 'world-cup-group-standings') {
+    const leadStory = firstNonEmpty(
+      specific.leader,
+      specific.leaderGapToSecond !== undefined ? `leader gap: ${specific.leaderGapToSecond}` : '',
+      specific.closestChasers?.[0],
+      specific.relegationZone?.[0],
+      specific.topZone?.[0],
+      metadata.groupLabel
+    );
+    return {
+      ...base,
+      coreStory: leadStory || metadata.leagueName,
+      mustUseFacts: compactArray([
+        specific.standingsLabel || metadata.roundLabel,
+        specific.leader ? `leader: ${specific.leader}` : '',
+        specific.leaderGapToSecond !== undefined ? `gap to second: ${specific.leaderGapToSecond}` : '',
+        specific.closestChasers?.length ? `chasers: ${specific.closestChasers.slice(0, 3).join(' / ')}` : '',
+        specific.relegationZone?.length ? `danger zone: ${specific.relegationZone.slice(0, 3).join(' / ')}` : '',
+      ]),
+      hookAngles: isEnglish
+        ? ['leader has pressure behind them', 'qualification/table line is tight', 'one team is suddenly in danger']
+        : ['líder com pressão atrás', 'linha de vaga/tabela apertada', 'um time entrou em perigo'],
+      ctaAngles: isEnglish
+        ? ['ask who catches the leader', 'ask who takes the spot', 'ask who is most at risk']
+        : ['perguntar quem busca o líder', 'perguntar quem pega a vaga', 'perguntar quem está mais ameaçado'],
+    };
+  }
+
+  if (template === 'predictions' || template === 'next-games') {
+    const leadStory = firstNonEmpty(
+      specific.featuredFixture,
+      specific.upsetCandidates?.[0],
+      specific.tightGames?.[0],
+      specific.strongestPicks?.[0],
+      specific.priorityFixtures?.[0],
+      metadata.fixtures?.[0]
+    );
+    return {
+      ...base,
+      coreStory: leadStory || metadata.leagueName,
+      mustUseFacts: compactArray([
+        leadStory,
+        specific.upsetCandidates?.[0] ? `upset risk: ${specific.upsetCandidates[0]}` : '',
+        specific.tightGames?.length ? `tight games: ${specific.tightGames.slice(0, 2).join(' / ')}` : '',
+        specific.strongestPicks?.length ? `strong picks: ${specific.strongestPicks.slice(0, 2).join(' / ')}` : '',
+        specific.majorTeams?.length ? `major teams: ${specific.majorTeams.slice(0, 4).join(', ')}` : '',
+      ]),
+      hookAngles: isEnglish
+        ? ['one fixture carries the round', 'upset risk is visible', 'pressure game before kickoff']
+        : ['um confronto carrega a rodada', 'risco de zebra claro', 'jogo de pressão antes da bola rolar'],
+      ctaAngles: isEnglish
+        ? ['ask who needs the win most', 'ask where the upset is', 'ask which pick is safest']
+        : ['perguntar quem precisa vencer mais', 'perguntar onde vem a zebra', 'perguntar qual palpite é mais seguro'],
+    };
+  }
+
+  if (template === 'top-scorers') {
+    const leadStory = firstNonEmpty(specific.leader, specific.chasers?.[0], specific.topFive?.[0]);
+    return {
+      ...base,
+      coreStory: leadStory || metadata.leagueName,
+      mustUseFacts: compactArray([
+        specific.leader ? `leader: ${specific.leader}` : '',
+        specific.goalGapToSecond !== undefined ? `goal gap: ${specific.goalGapToSecond}` : '',
+        specific.chasers?.length ? `chasers: ${specific.chasers.slice(0, 4).join(' / ')}` : '',
+      ]),
+      hookAngles: isEnglish
+        ? ['scoring race pressure', 'leader being chased', 'goal gap can disappear']
+        : ['pressão na artilharia', 'líder sendo caçado', 'diferença de gols pode sumir'],
+      ctaAngles: isEnglish
+        ? ['ask who finishes top scorer', 'ask who catches the leader', 'ask who scores next']
+        : ['perguntar quem termina artilheiro', 'perguntar quem busca o líder', 'perguntar quem marca na próxima'],
+    };
+  }
+
+  if (template === 'relegation-line') {
+    const leadStory = firstNonEmpty(specific.safetyLine, specific.dangerTeams?.[0], specific.teamsNearSafety?.[0]);
+    return {
+      ...base,
+      coreStory: leadStory || metadata.leagueName,
+      mustUseFacts: compactArray([
+        specific.benchmarkPercentage ? `safety line: ${specific.benchmarkPercentage}%` : '',
+        specific.safetyLine,
+        specific.dangerTeams?.length ? `danger: ${specific.dangerTeams.slice(0, 4).join(' / ')}` : '',
+        specific.teamsNearSafety?.length ? `near safety: ${specific.teamsNearSafety.slice(0, 3).join(' / ')}` : '',
+      ]),
+      hookAngles: isEnglish
+        ? ['safety line pressure', 'team trapped below the line', 'escape race got tighter']
+        : ['pressão da linha de segurança', 'time preso abaixo da linha', 'briga pela fuga apertou'],
+      ctaAngles: isEnglish
+        ? ['ask who escapes', 'ask who drops', 'ask who reacts in time']
+        : ['perguntar quem escapa', 'perguntar quem cai', 'perguntar quem reage a tempo'],
+    };
+  }
+
+  if (template === 'championship-pace') {
+    const leadStory = firstNonEmpty(
+      specific.leadingPaceTeams?.[0],
+      specific.teamsAboveChampionLine?.[0],
+      specific.closestToLine?.[0]
+    );
+    return {
+      ...base,
+      coreStory: leadStory || metadata.leagueName,
+      mustUseFacts: compactArray([
+        specific.benchmarkPercentage ? `champion benchmark: ${specific.benchmarkPercentage}%` : '',
+        specific.leadingPaceTeams?.length ? `leaders: ${specific.leadingPaceTeams.slice(0, 4).join(' / ')}` : '',
+        specific.closestToLine?.length ? `near line: ${specific.closestToLine.slice(0, 3).join(' / ')}` : '',
+      ]),
+      hookAngles: isEnglish
+        ? ['title pace benchmark', 'leader can sustain or fall', 'chaser near the line']
+        : ['linha de ritmo de campeão', 'líder sustenta ou cai', 'perseguidor perto da linha'],
+      ctaAngles: isEnglish
+        ? ['ask who sustains title pace', 'ask who catches the leader', 'ask who is real contender']
+        : ['perguntar quem sustenta ritmo de título', 'perguntar quem busca o líder', 'perguntar quem é candidato real'],
+    };
+  }
+
+  return {
+    ...base,
+    coreStory: firstNonEmpty(metadata.summaryRows?.[0], metadata.fixtures?.[0], metadata.leagueName, metadata.contentType),
+    mustUseFacts: compactArray([metadata.summaryRows?.[0], metadata.summaryRows?.[1], metadata.fixtures?.[0]]),
+    hookAngles: isEnglish
+      ? ['specific consequence', 'pressure point', 'race-changing detail']
+      : ['consequência específica', 'ponto de pressão', 'detalhe que muda a disputa'],
+    ctaAngles: isEnglish
+      ? ['ask about the direct consequence', 'ask who benefits', 'ask who is under pressure']
+      : ['perguntar sobre a consequência direta', 'perguntar quem se beneficia', 'perguntar quem ficou pressionado'],
+  };
+};
+
 const generateHookCtaSuggestion = async ({job, preparedJob, target}) => {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
@@ -1705,6 +1955,7 @@ const generateHookCtaSuggestion = async ({job, preparedJob, target}) => {
   const formMetadata = buildPublishingMetadata(job ?? {});
   const preparedMetadata = preparedJob ? buildPublishingMetadata(preparedJob) : null;
   const ctaGuidance = buildCtaGuidance(metadata);
+  const editorialBrief = buildHookCtaEditorialBrief(metadata, ctaGuidance);
   const publishingTemplate = await loadPublishingTemplate(metadata.languageProfile);
   const compactTemplate = compactPublishingTemplate({
     templateText: publishingTemplate.templateText,
@@ -1730,15 +1981,21 @@ const generateHookCtaSuggestion = async ({job, preparedJob, target}) => {
     'Use the Foot Analysis content system from the Markdown template.',
     'Use prepared video metadata as the primary factual source when it is present. Use current form metadata for the latest selected template, league, language, and manual overrides.',
     'Do not invent match facts beyond the metadata. If the metadata is incomplete, write a consequence-driven line that fits the selected template, league, round, and competition.',
-    'Hook text must be a first-frame curiosity line: short, consequence-driven, and direct.',
+    'First choose ONE editorial angle from the Editorial brief. Every field must point to that same angle, but with different wording and function.',
+    'Use at least one concrete team, player, fixture, scoreline, ranking, percentage, points total, group, or table-line fact from Editorial brief.mustUseFacts when any exist.',
+    'Hook text must be a first-frame curiosity line: short, consequence-driven, direct, and specific. Do not make it a question unless the selected target is hookText and a question is clearly stronger.',
     'CTA text must be one specific comment question derived from the exact same core story as the hookText and voiceoverText.',
-    'CTA text must use the CTA guidance below as its source of truth. Prefer one of the preferred CTA shapes unless metadata strongly supports a better specific question.',
+    'CTA text must use the CTA guidance and Editorial brief as its source of truth. Prefer one preferred shape, then add the concrete team/fixture/table-line detail.',
     'CTA text must be tied to the exact competition/league in Effective video metadata. Never mention or imply another competition.',
-    'Never use generic CTA questions like "O que achou?", "Gostou do vídeo?", "Comente abaixo", "What do you think?", or "Comment below".',
+    'Never output any phrase from Editorial brief.bannedExactPhrases. Those are stale dashboard defaults or weak generic CTAs.',
+    'Do not use vague words without context: "rodada", "tabela", "jogo", "disputa", "pressure", "race", or "spot" must be attached to a named team/player/fixture/line when metadata has one.',
+    'Do not write the same idea three times. hookText creates curiosity, ctaText asks for a comment, voiceoverText explains the consequence in one sentence.',
+    'Avoid clickbait that could fit any video. If the line would still work after replacing the league with another league, rewrite it with a concrete fact.',
     'Voiceover text is only the script text. Do not generate audio or TTS instructions.',
     'Voiceover text must fit in an 8-second short video: one speakable sentence, maximum 22 words, no hashtags, no bullet points, no stage directions.',
     'Voiceover text must follow the formula: consequence, one stat or evidence point, then pressure/question setup.',
     'Match the languageProfile exactly: pt-br outputs in Brazilian Portuguese; en outputs in English.',
+    `Editorial brief JSON:\n${JSON.stringify(editorialBrief, null, 2)}`,
     `Compact master publishing template (${publishingTemplate.name}):\n${compactTemplate}`,
     `CTA guidance JSON:\n${JSON.stringify(ctaGuidance, null, 2)}`,
     `Effective video metadata JSON:\n${JSON.stringify(metadata, null, 2)}`,
@@ -2596,6 +2853,7 @@ const runRender = async (compositionId, outputName) => {
   const npxCommand = process.platform === 'win32' ? 'npx.cmd' : 'npx';
 
   await fs.mkdir(path.join(projectRoot, 'out'), {recursive: true});
+  await syncCurrentFootballJobDuration();
 
   return new Promise((resolve, reject) => {
     const child = spawn(
@@ -2812,6 +3070,11 @@ const server = http.createServer(async (request, response) => {
 
   if (request.method === 'GET' && url.pathname === '/api/football/result-fixtures') {
     await sendFootballResultFixtures(response, url);
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/football/world-cup-groups') {
+    await sendFootballWorldCupGroups(response);
     return;
   }
 
@@ -3303,6 +3566,7 @@ const server = http.createServer(async (request, response) => {
     '/audio/',
     '/backgrounds/',
     '/branding/',
+    '/fonts/',
     '/logos/',
     '/voiceovers/',
   ];

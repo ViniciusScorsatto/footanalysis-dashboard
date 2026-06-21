@@ -1,7 +1,18 @@
-import {AbsoluteFill, Img, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Img, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {BrandMark} from '../components/BrandMark';
 import {CompetitionAccentRail} from '../components/CompetitionAccentRail';
-import {FootballColdOpen} from '../components/FootballColdOpen';
+import {
+  FootballShortOpening,
+  SHORT_MAIN_ENTRY_PREROLL_FRAMES,
+  SHORT_OPENING_DURATION_FRAMES,
+} from '../components/FootballShortOpening';
+import {
+  FootballShortBackdrop,
+  FootballShortFontFaces,
+  TEASER_HEADLINE_FONT,
+  TEASER_LABEL_FONT,
+  TEASER_NUMBER_FONT,
+} from '../components/FootballShortTeaser';
 import {SoundtrackBed} from '../components/SoundtrackBed';
 import {VoiceoverBed} from '../components/VoiceoverBed';
 import type {
@@ -61,12 +72,15 @@ export const FootballContinentalGroupsComposition = ({
 }: FootballContinentalGroupsCompositionProps) => {
   const frame = useCurrentFrame();
   const {durationInFrames} = useVideoConfig();
+  const contentFrame =
+    Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
+  const contentDurationInFrames = Math.max(1, durationInFrames - SHORT_OPENING_DURATION_FRAMES);
   const accentColor = leagueConfig?.accentColor ?? '#F0A500';
   const pages = chunkGroups(groups, GROUPS_PER_PAGE);
   const activePageIndex =
     pages.length <= 1
       ? 0
-      : Math.min(Math.floor((frame / durationInFrames) * pages.length), pages.length - 1);
+      : Math.min(Math.floor((contentFrame / contentDurationInFrames) * pages.length), pages.length - 1);
   const activeGroups = pages[activePageIndex] ?? [];
 
   return (
@@ -75,20 +89,27 @@ export const FootballContinentalGroupsComposition = ({
         overflow: 'hidden',
         color: '#ffffff',
         background: '#0b0d12',
-        fontFamily: '"Barlow Condensed", "Arial Narrow", sans-serif',
+        fontFamily: TEASER_NUMBER_FONT,
       }}
     >
+      <FootballShortFontFaces />
       <SoundtrackBed
         soundtrackPath={soundtrackPath}
         volume={soundtrackVolume}
         duckUntilSeconds={voiceoverPath ? 3.2 : 0}
       />
-      <VoiceoverBed voiceoverPath={voiceoverPath} />
-      <CompetitionAccentRail
+      <FootballShortBackdrop
+        template="continental-groups-standings"
         accentColor={accentColor}
-        secondaryAccentColor={leagueConfig?.secondaryAccentColor}
+        opacity={0.5}
       />
-      <FootballColdOpen
+      <FootballShortOpening
+        template="continental-groups-standings"
+        channelProfile={languageProfile === 'en' ? 'en' : 'pt'}
+        leagueName={leagueName}
+        titleLabel={titleLabel}
+        subtitleLabel={subtitleLabel}
+        groups={groups}
         accentColor={accentColor}
         secondaryAccentColor={leagueConfig?.secondaryAccentColor}
         brandName={brandName}
@@ -99,25 +120,31 @@ export const FootballContinentalGroupsComposition = ({
         coldOpenData={coldOpenData}
       />
 
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: 6,
-          background: accentColor,
-        }}
-      />
+      <Sequence from={SHORT_OPENING_DURATION_FRAMES}>
+        <VoiceoverBed voiceoverPath={voiceoverPath} />
+        <CompetitionAccentRail
+          accentColor={accentColor}
+          secondaryAccentColor={leagueConfig?.secondaryAccentColor}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: 6,
+            background: accentColor,
+          }}
+        />
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          padding: '40px 28px 136px 72px',
-        }}
-      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            padding: '40px 28px 136px 72px',
+          }}
+        >
         <div
           style={{
             display: 'flex',
@@ -135,7 +162,7 @@ export const FootballContinentalGroupsComposition = ({
                 background: '#0f1318',
                 borderLeft: `8px solid ${accentColor}`,
                 color: accentColor,
-                fontFamily: '"Barlow", "Arial", sans-serif',
+                fontFamily: TEASER_LABEL_FONT,
                 fontSize: 20,
                 lineHeight: 1,
                 fontWeight: 600,
@@ -151,7 +178,8 @@ export const FootballContinentalGroupsComposition = ({
                 fontSize: 86,
                 lineHeight: 0.92,
                 fontWeight: 900,
-                letterSpacing: -2.4,
+                fontFamily: TEASER_HEADLINE_FONT,
+                letterSpacing: 0,
                 textTransform: 'uppercase',
                 color: accentColor,
               }}
@@ -165,6 +193,7 @@ export const FootballContinentalGroupsComposition = ({
                 fontSize: 42,
                 lineHeight: 1,
                 fontWeight: 600,
+                fontFamily: TEASER_LABEL_FONT,
                 textTransform: 'uppercase',
               }}
             >
@@ -295,7 +324,8 @@ export const FootballContinentalGroupsComposition = ({
           )}
           <BrandMark brandName={brandName} brandLogoPath={brandLogoPath} />
         </div>
-      </div>
+        </div>
+      </Sequence>
     </AbsoluteFill>
   );
 };

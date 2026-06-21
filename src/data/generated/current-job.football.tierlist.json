@@ -3,39 +3,39 @@
   "template": "tierlist",
   "leagueId": 1,
   "season": 2026,
-  "leagueName": "World Cup 2026",
-  "channelProfile": "en",
-  "languageProfile": "en",
+  "leagueName": "Copa do Mundo 2026",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Champions - The Anthem plays.mp3",
-  "soundtrackLabel": "Champions - The Anthem Plays",
-  "soundtrackVolume": 0.2,
-  "outputName": "world-cup-2026-2026-tierlist-en.mp4",
-  "durationInFrames": 270,
+  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
+  "soundtrackLabel": "Gol de Arena",
+  "soundtrackVolume": 0.35,
+  "outputName": "copa-do-mundo-2026-2026-tierlist-pt-br.mp4",
+  "durationInFrames": 360,
   "compositionId": "FootballTierlistShort",
   "leagueConfig": {
     "leagueId": 1,
-    "leagueName": "World Cup 2026",
-    "accentColor": "#0A84FF",
-    "secondaryAccentColor": "#C8A84B"
+    "leagueName": "Copa do Mundo 2026",
+    "accentColor": "#FEDF00",
+    "secondaryAccentColor": "#009B3A"
   },
   "titleLabel": "Tierlist",
-  "subtitleLabel": "World Cup Tierlist",
+  "subtitleLabel": "Favoritos da Copa",
   "topScorerPrediction": "Julian Alvarez",
   "bestPlayerPrediction": "Michael Olise",
-  "ctaText": "Do you agree with this list?",
+  "ctaText": "Concorda com essa lista?",
   "tiers": [
     {
       "key": "champion",
-      "label": "Champion",
+      "label": "Campeão",
       "accentColor": "#FEDF00",
       "entries": [
         {
-          "team": "Spain",
+          "team": "Espanha",
           "sourceTeam": "Spain",
           "badge": {
-            "label": "S",
+            "label": "E",
             "imagePath": "/logos/spain-9.png"
           }
         }
@@ -43,19 +43,19 @@
     },
     {
       "key": "favorites",
-      "label": "Favorites",
+      "label": "Favoritos",
       "accentColor": "#009B3A",
       "entries": [
         {
-          "team": "Netherlands",
+          "team": "Holanda",
           "sourceTeam": "Netherlands",
           "badge": {
-            "label": "N",
+            "label": "H",
             "imagePath": "/logos/netherlands-1118.png"
           }
         },
         {
-          "team": "France",
+          "team": "França",
           "sourceTeam": "France",
           "badge": {
             "label": "F",
@@ -74,11 +74,11 @@
     },
     {
       "key": "deep-run",
-      "label": "Deep Run",
+      "label": "Vão Longe",
       "accentColor": "#0A84FF",
       "entries": [
         {
-          "team": "Brazil",
+          "team": "Brasil",
           "sourceTeam": "Brazil",
           "badge": {
             "label": "B",
@@ -94,10 +94,10 @@
           }
         },
         {
-          "team": "Germany",
+          "team": "Alemanha",
           "sourceTeam": "Germany",
           "badge": {
-            "label": "G",
+            "label": "A",
             "imagePath": "/logos/germany-25.png"
           }
         },
@@ -110,7 +110,7 @@
           }
         },
         {
-          "team": "Norway",
+          "team": "Noruega",
           "sourceTeam": "Norway",
           "badge": {
             "label": "N",
@@ -121,11 +121,11 @@
     },
     {
       "key": "dark-horses",
-      "label": "Dark Horses",
+      "label": "Zebras",
       "accentColor": "#8E44AD",
       "entries": [
         {
-          "team": "Morocco",
+          "team": "Marrocos",
           "sourceTeam": "Morocco",
           "badge": {
             "label": "M",
@@ -133,7 +133,7 @@
           }
         },
         {
-          "team": "Japan",
+          "team": "Japão",
           "sourceTeam": "Japan",
           "badge": {
             "label": "J",
@@ -141,7 +141,7 @@
           }
         },
         {
-          "team": "Paraguay",
+          "team": "Paraguai",
           "sourceTeam": "Paraguay",
           "badge": {
             "label": "P",
@@ -152,19 +152,19 @@
     },
     {
       "key": "group-stage-exit",
-      "label": "Group Stage Exit",
+      "label": "Cai na Fase de Grupos",
       "accentColor": "#C86430",
       "entries": [
         {
-          "team": "USA",
+          "team": "EUA",
           "sourceTeam": "USA",
           "badge": {
-            "label": "U",
+            "label": "E",
             "imagePath": "/logos/usa-2384.png"
           }
         },
         {
-          "team": "Sweden",
+          "team": "Suécia",
           "sourceTeam": "Sweden",
           "badge": {
             "label": "S",
@@ -172,15 +172,15 @@
           }
         },
         {
-          "team": "Cote d'Ivoire",
-          "sourceTeam": "Cote d'Ivoire",
+          "team": "C. do Marfim",
+          "sourceTeam": "Ivory Coast",
           "badge": {
-            "label": "CD",
+            "label": "CDM",
             "imagePath": "/logos/ivory-coast-1501.png"
           }
         },
         {
-          "team": "Uruguay",
+          "team": "Uruguai",
           "sourceTeam": "Uruguay",
           "badge": {
             "label": "U",
@@ -191,11 +191,11 @@
     },
     {
       "key": "disappointment",
-      "label": "Disappointment",
+      "label": "Decepção",
       "accentColor": "#E74C3C",
       "entries": [
         {
-          "team": "Belgium",
+          "team": "Bélgica",
           "sourceTeam": "Belgium",
           "badge": {
             "label": "B",
@@ -203,15 +203,15 @@
           }
         },
         {
-          "team": "England",
+          "team": "Inglaterra",
           "sourceTeam": "England",
           "badge": {
-            "label": "E",
+            "label": "I",
             "imagePath": "/logos/england-10.png"
           }
         },
         {
-          "team": "Mexico",
+          "team": "México",
           "sourceTeam": "Mexico",
           "badge": {
             "label": "M",
@@ -222,9 +222,11 @@
     }
   ],
   "dataSource": "api",
-  "introTitle": "World Cup 2026",
-  "introSubtitle": "World Cup Tierlist",
-  "hookText": "My World Cup tierlist",
-  "voiceoverEnabled": false,
-  "voiceoverText": "World Cup 2026 favorites tierlist"
+  "introTitle": "Copa do Mundo 2026",
+  "introSubtitle": "Favoritos da Copa",
+  "hookText": "Minha tierlist da Copa",
+  "voiceoverEnabled": true,
+  "voiceoverText": "Fala Galera, minha tierlist da Copa... e aí...vocês concordam?",
+  "voiceoverPath": "/voiceovers/football/pt-br-d1c4cbb8f695569c.mp3",
+  "voiceoverLabel": "Fala Galera, minha tierlist da Copa... e aí...vocês concordam?"
 }

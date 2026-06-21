@@ -25,8 +25,10 @@ const footballPredictionsLongJobFile = path.join(
 );
 const leagueConfigDir = path.join(projectRoot, 'config', 'leagues');
 const teamNameAliasesFile = path.join(projectRoot, 'config', 'football-team-name-aliases.json');
+const teamLogoOverridesFile = path.join(projectRoot, 'config', 'football-team-logo-overrides.json');
 const teamAccentColorsFile = path.join(projectRoot, 'config', 'football-team-accent-colors.json');
 const worldCupConfigFile = path.join(projectRoot, 'config', 'world-cup', 'groups.json');
+const shortDurationsFile = path.join(projectRoot, 'config', 'football-short-durations.json');
 
 export {footballLanguageProfiles};
 
@@ -108,7 +110,46 @@ const getLongformSoundtrackPath = ({soundtrackPath, channelProfile}) => {
   }
   return requested || defaultFootballSoundtrack?.value;
 };
-const FOOTBALL_DURATION_IN_FRAMES = 270;
+const shortDurationsConfig = JSON.parse(fsSync.readFileSync(shortDurationsFile, 'utf8'));
+const positiveFrameCount = (value, fallback) =>
+  typeof value === 'number' && Number.isFinite(value) && value > 0 ? Math.round(value) : fallback;
+const FOOTBALL_SHORT_OPENING_FRAMES =
+  positiveFrameCount(shortDurationsConfig?.opening?.teaserFrames, 60) +
+  positiveFrameCount(shortDurationsConfig?.opening?.introFrames, 45);
+const FOOTBALL_SHORT_DEFAULT_CONTENT_FRAMES = positiveFrameCount(
+  shortDurationsConfig?.defaultContentFrames,
+  345
+);
+const FOOTBALL_SHORT_MINIMUM_TOTAL_FRAMES = positiveFrameCount(
+  shortDurationsConfig?.minimumTotalFrames,
+  360
+);
+const shortContentFramesByComposition = shortDurationsConfig?.contentFramesByComposition ?? {};
+
+export const getFootballShortDurationInFrames = (compositionId) =>
+  Math.max(
+    FOOTBALL_SHORT_MINIMUM_TOTAL_FRAMES,
+    FOOTBALL_SHORT_OPENING_FRAMES +
+      positiveFrameCount(
+        shortContentFramesByComposition?.[compositionId],
+        FOOTBALL_SHORT_DEFAULT_CONTENT_FRAMES
+      )
+  );
+
+export const isFootballShortComposition = (compositionId) =>
+  typeof compositionId === 'string' &&
+  Object.prototype.hasOwnProperty.call(shortContentFramesByComposition, compositionId);
+
+export const normalizeFootballShortJobDuration = (job) => {
+  if (!job || !isFootballShortComposition(job.compositionId)) {
+    return job;
+  }
+
+  return {
+    ...job,
+    durationInFrames: getFootballShortDurationInFrames(job.compositionId),
+  };
+};
 const execFileAsync = promisify(execFile);
 
 export const templates = [
@@ -572,12 +613,25 @@ const getTemplateJobFile = (template) =>
   path.join(generatedDir, `current-job.football.${template}.json`);
 
 const writeFootballJobFiles = async (job) => {
-  const payload = `${JSON.stringify(job, null, 2)}\n`;
+  const normalizedJob = normalizeFootballShortJobDuration(job);
+  const payload = `${JSON.stringify(normalizedJob, null, 2)}\n`;
   await fs.writeFile(currentJobFile, payload, 'utf8');
-  await fs.writeFile(getTemplateJobFile(job.template), payload, 'utf8');
+  await fs.writeFile(getTemplateJobFile(normalizedJob.template), payload, 'utf8');
 };
 
-const loadWorldCupConfig = async () => readJsonFile(worldCupConfigFile);
+export const syncCurrentFootballJobDuration = async () => {
+  const job = await readJsonFile(currentJobFile);
+  const normalizedJob = normalizeFootballShortJobDuration(job);
+
+  if (normalizedJob === job || normalizedJob.durationInFrames === job.durationInFrames) {
+    return normalizedJob;
+  }
+
+  await writeFootballJobFiles(normalizedJob);
+  return normalizedJob;
+};
+
+export const loadWorldCupConfig = async () => readJsonFile(worldCupConfigFile);
 
 const normalizeGroupName = (value) =>
   String(value ?? '')
@@ -688,16 +742,32 @@ const normalizeTeamAliasKey = (value) =>
     .trim();
 
 const getWorldCupGroupKey = (groupName) => {
-  const match = String(groupName ?? '').match(/group\s+([a-z])/i);
+  const matches = [...String(groupName ?? '').matchAll(/group\s+([a-l])/gi)];
+  const match = matches.at(-1);
   return match ? match[1].toUpperCase() : null;
 };
 
 const getWorldCupStandingTeamKey = (row) =>
   row?.team?.id ? `id:${row.team.id}` : `name:${normalizeGroupName(row?.team?.name)}`;
 
+const dedupeWorldCupStandingRows = (groupRows = []) => {
+  const seen = new Set();
+  return (groupRows ?? []).filter((row) => {
+    const key = getWorldCupStandingTeamKey(row);
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
+};
+
 const getBestWorldCupThirdPlaceKeys = (standingsGroups) => {
   const thirdPlaceRows = (standingsGroups ?? [])
-    .map((groupRows) => (groupRows ?? []).find((row) => row?.rank === 3) ?? groupRows?.[2])
+    .map((groupRows) => {
+      const uniqueRows = dedupeWorldCupStandingRows(groupRows);
+      return uniqueRows.find((row) => row?.rank === 3) ?? uniqueRows?.[2];
+    })
     .filter((row) => row && Number(row?.all?.played ?? 0) > 0);
 
   return new Set(
@@ -770,6 +840,64 @@ const loadTeamNameAliases = async () => {
   } catch {
     return {global: {}, leagues: {}};
   }
+};
+
+const normalizePublicLogoPath = (value) => {
+  const normalized = String(value ?? '').trim();
+  if (!normalized) {
+    return undefined;
+  }
+
+  return normalized.startsWith('/') ? normalized : `/${normalized}`;
+};
+
+const loadTeamLogoOverrides = async () => {
+  try {
+    const overridesConfig = await readJsonFile(teamLogoOverridesFile);
+    const normalizeOverrideMap = (overrides = {}) =>
+      Object.fromEntries(
+        Object.entries(overrides)
+          .map(([key, value]) => [normalizeTeamAliasKey(key), normalizePublicLogoPath(value)])
+          .filter(([, value]) => Boolean(value))
+      );
+
+    return {
+      global: normalizeOverrideMap(overridesConfig.global),
+      leagues: Object.fromEntries(
+        Object.entries(overridesConfig.leagues ?? {}).map(([leagueId, overrides]) => [
+          leagueId,
+          normalizeOverrideMap(overrides),
+        ])
+      ),
+    };
+  } catch {
+    return {global: {}, leagues: {}};
+  }
+};
+
+let teamLogoOverridesCache;
+
+const getTeamLogoOverrides = async () => {
+  if (!teamLogoOverridesCache) {
+    teamLogoOverridesCache = await loadTeamLogoOverrides();
+  }
+
+  return teamLogoOverridesCache;
+};
+
+const resolveTeamLogoOverride = ({apiTeamName, displayTeamName, leagueId, logoOverrides}) => {
+  const leagueOverrides = logoOverrides?.leagues?.[String(leagueId)] ?? {};
+  const globalOverrides = logoOverrides?.global ?? {};
+  const keys = [displayTeamName, apiTeamName].map(normalizeTeamAliasKey).filter(Boolean);
+
+  for (const key of keys) {
+    const override = leagueOverrides[key] ?? globalOverrides[key];
+    if (override) {
+      return override;
+    }
+  }
+
+  return undefined;
 };
 
 export const loadTeamAccentColors = async () => {
@@ -1132,7 +1260,20 @@ const resolveTeamLogo = async ({
   displayTeamName,
   leagueId,
   aliasesConfig,
+  logoOverrides,
 }) => {
+  const effectiveLogoOverrides = logoOverrides ?? (await getTeamLogoOverrides());
+  const logoOverride = resolveTeamLogoOverride({
+    apiTeamName,
+    displayTeamName,
+    leagueId,
+    logoOverrides: effectiveLogoOverrides,
+  });
+
+  if (logoOverride) {
+    return logoOverride;
+  }
+
   const youthProfessionalLogo = findYouthProfessionalLogo({
     apiTeamName,
     displayTeamName,
@@ -2079,7 +2220,7 @@ const buildTopScorersJob = async ({
         `${sanitize(finalLeagueName)}-${
           languageProfile === 'en' ? 'top-scorers' : 'artilheiros'
         }-${languageProfile}.mp4`,
-      durationInFrames: FOOTBALL_DURATION_IN_FRAMES,
+      durationInFrames: getFootballShortDurationInFrames('FootballTopScorersShort'),
       channelProfile,
       languageProfile,
       soundtrackPath,
@@ -2264,7 +2405,7 @@ const buildPlayerOfRoundJob = async ({
             ? `-${sanitize(normalizedMatchDates.length <= 2 ? normalizedMatchDates.join('-') : `${normalizedMatchDates.length}-dates`)}`
             : ''
         }-${languageProfile}.mp4`,
-      durationInFrames: FOOTBALL_DURATION_IN_FRAMES,
+      durationInFrames: getFootballShortDurationInFrames('FootballPlayerOfRoundShort'),
       channelProfile,
       languageProfile,
       soundtrackPath,
@@ -2434,6 +2575,10 @@ const buildPaceJob = async ({
       ? '*teams with games in hand'
       : '*times com jogos a menos'
     : undefined;
+  const compositionId =
+    template === 'championship-pace'
+      ? 'FootballChampionshipPaceShort'
+      : 'FootballRelegationLineShort';
 
   return {
     ...makeBaseJob({
@@ -2445,16 +2590,13 @@ const buildPaceJob = async ({
       outputName:
         outputName?.trim() ||
         `${sanitize(finalLeagueName)}-${template}-${languageProfile}.mp4`,
-      durationInFrames: FOOTBALL_DURATION_IN_FRAMES,
+      durationInFrames: getFootballShortDurationInFrames(compositionId),
       channelProfile,
       languageProfile,
       soundtrackPath,
       soundtrackVolume,
     }),
-    compositionId:
-      template === 'championship-pace'
-        ? 'FootballChampionshipPaceShort'
-        : 'FootballRelegationLineShort',
+    compositionId,
     leagueConfig,
     titleLabel,
     subtitleLabel,
@@ -2571,6 +2713,53 @@ const formatWorldCupDateLabel = (isoDate, languageProfile) => {
   return `${monthDay} • ${time} (UTC)`;
 };
 
+const getWorldCupMatchKey = (homeTeam, awayTeam) =>
+  `${normalizeGroupName(homeTeam)}::${normalizeGroupName(awayTeam)}`;
+
+const parseOptionalInteger = (value) => {
+  if (value === null || value === undefined || value === '') {
+    return null;
+  }
+
+  const normalized = Number(value);
+  return Number.isFinite(normalized) ? Math.round(normalized) : null;
+};
+
+const applyWorldCupStandingEdits = (rows, edits = []) => {
+  if (!Array.isArray(edits) || edits.length === 0) {
+    return rows;
+  }
+
+  const editsByTeam = new Map(
+    edits
+      .map((edit) => {
+        const teamKey = normalizeGroupName(edit?.team);
+        return teamKey ? [teamKey, edit] : null;
+      })
+      .filter(Boolean)
+  );
+
+  return rows
+    .map((row) => {
+      const edit = editsByTeam.get(normalizeGroupName(row.team));
+      if (!edit) {
+        return row;
+      }
+
+      const rank = parseOptionalInteger(edit.rank);
+      const points = parseOptionalInteger(edit.points);
+      const goalDifference = parseOptionalInteger(edit.goalDifference);
+
+      return {
+        ...row,
+        rank: rank ?? row.rank,
+        points: points ?? row.points,
+        goalDifference: goalDifference ?? row.goalDifference,
+      };
+    })
+    .sort((left, right) => left.rank - right.rank);
+};
+
 const buildWorldCupGroupJob = async ({
   apiKey,
   apiHost,
@@ -2583,6 +2772,7 @@ const buildWorldCupGroupJob = async ({
   competitionName,
   roundLabel,
   ctaText,
+  worldCupStandingEdits,
   soundtrackPath,
   soundtrackVolume,
   leagueName,
@@ -2593,8 +2783,15 @@ const buildWorldCupGroupJob = async ({
   const worldCupConfig = await loadWorldCupConfig().catch(() => ({groups: {}}));
   const normalizedGroupLetter = String(groupLetter ?? 'A').trim().toUpperCase();
   const fallbackGroup = worldCupConfig.groups?.[normalizedGroupLetter];
+  const fallbackTeamFlags = new Map(
+    [
+      ...(fallbackGroup?.teams ?? []).map((team) => [normalizeGroupName(team.name), team.flag]),
+      ...(fallbackGroup?.standings ?? []).map((row) => [normalizeGroupName(row.team), row.flag]),
+    ].filter((entry) => entry[0] && entry[1])
+  );
   const fallbackFlags = new Map(
     [
+      ...fallbackTeamFlags,
       ...(fallbackGroup?.standings ?? []).map((row) => [normalizeGroupName(row.team), row.flag]),
       ...(fallbackGroup?.nextMatches ?? []).flatMap((match) => [
         [normalizeGroupName(match.homeTeam), match.homeFlag],
@@ -2607,14 +2804,25 @@ const buildWorldCupGroupJob = async ({
     ].filter((entry) => entry[0] && entry[1])
   );
 
-  let rows = fallbackGroup?.teams?.map((team, index) => ({
-    rank: index + 1,
-    team: translateWorldCupCountryName(team.name, languageProfile),
-    played: 0,
-    goalDifference: 0,
-    points: 0,
-    badge: {label: team.flag},
-  })) ?? [];
+  const fallbackStandingsRows =
+    fallbackGroup?.standings?.length
+      ? fallbackGroup.standings
+      : fallbackGroup?.teams?.map((team, index) => ({
+          rank: index + 1,
+          team: team.name,
+          goalDifference: 0,
+          points: 0,
+          flag: team.flag,
+        })) ?? [];
+
+  let rows = fallbackStandingsRows.map((row, index) => ({
+    rank: row.rank ?? index + 1,
+    team: translateWorldCupCountryName(row.team, languageProfile),
+    played: row.played ?? 0,
+    goalDifference: row.goalDifference ?? 0,
+    points: row.points ?? 0,
+    badge: {label: row.flag ?? fallbackTeamFlags.get(normalizeGroupName(row.team)) ?? initials(row.team)},
+  }));
 
   let nextMatches = fallbackGroup?.nextMatches?.map((match) => ({
     homeTeam: translateWorldCupCountryName(match.homeTeam, languageProfile),
@@ -2652,8 +2860,9 @@ const buildWorldCupGroupJob = async ({
     });
 
     if (selectedGroupRows?.length) {
+      const uniqueSelectedGroupRows = dedupeWorldCupStandingRows(selectedGroupRows);
       rows = await Promise.all(
-        selectedGroupRows.slice(0, 4).map(async (row) => ({
+        uniqueSelectedGroupRows.slice(0, 4).map(async (row) => ({
           rank: row.rank,
           team: translateWorldCupCountryName(row.team?.name ?? 'TBC', languageProfile),
           played: row.all?.played ?? 0,
@@ -2681,7 +2890,7 @@ const buildWorldCupGroupJob = async ({
     );
     const groupTeams = new Set(
       selectedGroupRows?.length
-        ? selectedGroupRows.map((row) => normalizeGroupName(row.team?.name))
+        ? dedupeWorldCupStandingRows(selectedGroupRows).map((row) => normalizeGroupName(row.team?.name))
         : [...fallbackGroupTeams]
     );
     if (groupTeams.size > 0) {
@@ -2708,9 +2917,6 @@ const buildWorldCupGroupJob = async ({
         })
         .sort((a, b) => (a.fixture?.timestamp ?? 0) - (b.fixture?.timestamp ?? 0))
         .slice(0, 2);
-
-      lastResults = [];
-      nextMatches = [];
 
       if (finishedFixtures.length > 0) {
         lastResults = await Promise.all(
@@ -2784,6 +2990,17 @@ const buildWorldCupGroupJob = async ({
     }
   }
 
+  if (lastResults.length > 0 && nextMatches.length > 0) {
+    const completedMatchKeys = new Set(
+      lastResults.map((match) => getWorldCupMatchKey(match.homeTeam, match.awayTeam))
+    );
+    nextMatches = nextMatches.filter(
+      (match) => !completedMatchKeys.has(getWorldCupMatchKey(match.homeTeam, match.awayTeam))
+    );
+  }
+
+  rows = applyWorldCupStandingEdits(rows, worldCupStandingEdits);
+
   const finalCompetitionName = detectedCompetitionName || copy.worldCup.title(season);
   const groupMatchSectionMode =
     lastResults.length === 0 ? 'next-only' : nextMatches.length === 0 ? 'results-only' : 'mixed';
@@ -2796,7 +3013,7 @@ const buildWorldCupGroupJob = async ({
       leagueName: finalCompetitionName,
       brandName,
       outputName: outputName?.trim() || copy.worldCup.output(season, normalizedGroupLetter),
-      durationInFrames: FOOTBALL_DURATION_IN_FRAMES,
+      durationInFrames: getFootballShortDurationInFrames('FootballWorldCupGroupShort'),
       channelProfile,
       languageProfile,
       soundtrackPath,
@@ -2867,7 +3084,7 @@ const buildWorldCupKnockoutJob = async ({
       leagueName: copy.worldCup.title(season),
       brandName,
       outputName: outputName?.trim() || copy.worldCup.knockoutOutput(season),
-      durationInFrames: FOOTBALL_DURATION_IN_FRAMES,
+      durationInFrames: getFootballShortDurationInFrames('FootballWorldCupKnockoutShort'),
       channelProfile,
       languageProfile,
       soundtrackPath,
@@ -3107,7 +3324,7 @@ const buildTierlistJob = async ({
       outputName:
         outputName?.trim() ||
         `${sanitize(finalLeagueName)}-${isEnglish ? 'tierlist' : 'favoritos'}-${languageProfile}.mp4`,
-      durationInFrames: FOOTBALL_DURATION_IN_FRAMES,
+      durationInFrames: getFootballShortDurationInFrames('FootballTierlistShort'),
       channelProfile,
       languageProfile,
       soundtrackPath,
@@ -3198,7 +3415,7 @@ const buildContinentalGroupsJob = async ({
       outputName:
         outputName?.trim() ||
         `${sanitize(finalLeagueName)}-${languageProfile === 'en' ? 'group-standings' : 'grupos'}-${languageProfile}.mp4`,
-      durationInFrames: FOOTBALL_DURATION_IN_FRAMES,
+      durationInFrames: getFootballShortDurationInFrames('FootballContinentalGroupsShort'),
       channelProfile,
       languageProfile,
       soundtrackPath,
@@ -3976,6 +4193,7 @@ export const prepareJob = async ({
   groupLetter,
   competitionName,
   ctaText,
+  worldCupStandingEdits,
   soundtrackPath,
   soundtrackVolume,
   introTitle,
@@ -4009,6 +4227,7 @@ export const prepareJob = async ({
       competitionName,
       roundLabel,
       ctaText,
+      worldCupStandingEdits,
       soundtrackPath,
       soundtrackVolume,
       leagueName,
@@ -4209,7 +4428,7 @@ export const prepareJob = async ({
         leagueName: finalLeagueName,
         brandName,
         outputName: outputName?.trim() || `${sanitize(finalLeagueName)}-standings.mp4`,
-        durationInFrames: FOOTBALL_DURATION_IN_FRAMES,
+        durationInFrames: getFootballShortDurationInFrames('FootballStandingsShort'),
         channelProfile,
         languageProfile,
         soundtrackPath,
@@ -4277,7 +4496,7 @@ export const prepareJob = async ({
           `${sanitize(finalLeagueName)}-${
             languageProfile === 'en' ? 'final-verdict' : 'resumo-final'
           }.mp4`,
-        durationInFrames: FOOTBALL_DURATION_IN_FRAMES,
+        durationInFrames: getFootballShortDurationInFrames('FootballSeasonFinalVerdictShort'),
         channelProfile,
         languageProfile,
         soundtrackPath,
@@ -4375,6 +4594,12 @@ export const prepareJob = async ({
   const dateOutputSlug = normalizedMatchDates.length
     ? sanitize(normalizedMatchDates.length <= 2 ? normalizedMatchDates.join('-') : `${normalizedMatchDates.length}-dates`)
     : '';
+  const compositionId =
+    template === 'results'
+      ? 'FootballResultsShort'
+      : template === 'next-games'
+        ? 'FootballNextGamesShort'
+        : 'FootballPredictionsShort';
   const baseJob = {
     ...makeBaseJob({
       template,
@@ -4387,18 +4612,13 @@ export const prepareJob = async ({
         `${sanitize(finalLeagueName)}-${template}-${sanitize(detectedRound)}${
           dateOutputSlug ? `-${dateOutputSlug}` : ''
         }.mp4`,
-      durationInFrames: FOOTBALL_DURATION_IN_FRAMES,
+      durationInFrames: getFootballShortDurationInFrames(compositionId),
       channelProfile,
       languageProfile,
       soundtrackPath,
       soundtrackVolume,
     }),
-    compositionId:
-      template === 'results'
-        ? 'FootballResultsShort'
-        : template === 'next-games'
-          ? 'FootballNextGamesShort'
-          : 'FootballPredictionsShort',
+    compositionId,
     leagueConfig,
     round: detectedRound,
     matchDate: normalizedMatchDate || undefined,
@@ -4433,7 +4653,7 @@ export const prepareJob = async ({
           `${sanitize(finalLeagueName)}-${languageProfile === 'en' ? 'champions' : 'campeao'}-${sanitize(
             detectedRound
           )}.mp4`,
-        durationInFrames: FOOTBALL_DURATION_IN_FRAMES,
+        durationInFrames: getFootballShortDurationInFrames('FootballChampionFinalShort'),
         channelProfile,
         languageProfile,
         soundtrackPath,

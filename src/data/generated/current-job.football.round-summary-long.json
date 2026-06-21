@@ -12,11 +12,11 @@
   "soundtrackPath": "/audio/football/foot-analysis-whistle.mp3",
   "soundtrackLabel": "Foot Analysis Whistle",
   "soundtrackVolume": 0.35,
-  "outputName": "premier-league-matchday-30-resumo-longform.mp4",
-  "durationInFrames": 1312,
+  "outputName": "premier-league-matchday-1-2025-08-18-2025-08-19-resumo-longform.mp4",
+  "durationInFrames": 2028,
   "dataSource": "api",
-  "title": "Matchday 30 Round Summary",
-  "roundLabel": "Matchday 30",
+  "title": "Matchday 1 Round Summary - 2 dates",
+  "roundLabel": "Matchday 1",
   "openingLines": [
     "The matchday is complete, and the scorelines only tell part of the story.",
     "Let us go match by match through the goals, cards, numbers, and decisive moments."
@@ -28,34 +28,84 @@
   "voiceoverEnabled": true,
   "matches": [
     {
-      "id": "burnley-bournemouth-1",
-      "fixtureId": 1379261,
-      "homeTeam": "Burnley",
-      "awayTeam": "Bournemouth",
+      "id": "chelsea-c-palace-1",
+      "fixtureId": 1378976,
+      "homeTeam": "Chelsea",
+      "awayTeam": "C. Palace",
       "homeScore": 0,
       "awayScore": 0,
-      "fixtureDateLabel": "2026-03-15",
-      "venueLabel": "Turf Moor",
+      "fixtureDateLabel": "2025-08-18",
+      "venueLabel": "Stamford Bridge",
       "statusLabel": "FT",
-      "voiceover": "Burnley and Bournemouth finished 0 to 0.\nUse this space to narrate the match overview: context, turning point, and what the numbers say.",
-      "voiceoverPath": "/voiceovers/football/en-94d05bed0003b543.mp3",
+      "voiceover": "Chelsea and C. Palace finished 0 to 0.\nUse this space to narrate the match overview: context, turning point, and what the numbers say.",
+      "voiceoverPath": "/voiceovers/football/en-c823bc8614dd2549.mp3",
       "durationInFrames": 340,
       "homeBadge": {
-        "label": "BURN",
-        "logoPath": "/logos/burnley-44.png",
-        "accentColor": "#6C1D45"
+        "label": "CHEL",
+        "logoPath": "/logos/chelsea-49.png",
+        "accentColor": "#034694"
       },
       "awayBadge": {
-        "label": "BOUR",
-        "logoPath": "/logos/bournemouth-35.png",
-        "accentColor": "#3498DB"
+        "label": "CP",
+        "logoPath": "/logos/crystal-palace-52.png",
+        "accentColor": "#1ABC9C"
       },
       "events": [
         {
-          "minute": 75,
+          "minute": 14,
           "extraMinute": 0,
-          "team": "Burnley",
-          "player": "Hannibal Mejbri",
+          "team": "Crystal Palace",
+          "player": "Eberechi Eze",
+          "assist": null,
+          "type": "var",
+          "detail": "Goal cancelled",
+          "side": "away"
+        },
+        {
+          "minute": 24,
+          "extraMinute": 0,
+          "team": "Chelsea",
+          "player": "Reece James",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        },
+        {
+          "minute": 28,
+          "extraMinute": 0,
+          "team": "Crystal Palace",
+          "player": "Daniel Muñoz",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 33,
+          "extraMinute": 0,
+          "team": "Crystal Palace",
+          "player": "Jean-Philippe Mateta",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 49,
+          "extraMinute": 0,
+          "team": "Crystal Palace",
+          "player": "Will Hughes",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 74,
+          "extraMinute": 0,
+          "team": "Chelsea",
+          "player": "Estêvão",
           "assist": null,
           "type": "card",
           "detail": "Yellow Card",
@@ -65,37 +115,37 @@
       "keyStats": [
         {
           "label": "On target",
+          "homeValue": "3",
+          "awayValue": "4"
+        },
+        {
+          "label": "Shots",
+          "homeValue": "19",
+          "awayValue": "11"
+        },
+        {
+          "label": "Possession",
+          "homeValue": "72%",
+          "awayValue": "28%"
+        },
+        {
+          "label": "Corners",
+          "homeValue": "11",
+          "awayValue": "2"
+        },
+        {
+          "label": "Fouls",
+          "homeValue": "10",
+          "awayValue": "12"
+        },
+        {
+          "label": "Yellow cards",
           "homeValue": "2",
           "awayValue": "3"
         },
         {
-          "label": "Shots",
-          "homeValue": "15",
-          "awayValue": "22"
-        },
-        {
-          "label": "Possession",
-          "homeValue": "38%",
-          "awayValue": "62%"
-        },
-        {
-          "label": "Corners",
-          "homeValue": "5",
-          "awayValue": "8"
-        },
-        {
-          "label": "Fouls",
-          "homeValue": "11",
-          "awayValue": "5"
-        },
-        {
-          "label": "Yellow cards",
-          "homeValue": "1",
-          "awayValue": "0"
-        },
-        {
           "label": "Saves",
-          "homeValue": "2",
+          "homeValue": "4",
           "awayValue": "2"
         }
       ],
@@ -104,105 +154,125 @@
       ]
     },
     {
-      "id": "sunderland-brighton-2",
-      "fixtureId": 1379267,
-      "homeTeam": "Sunderland",
-      "awayTeam": "Brighton",
-      "homeScore": 0,
+      "id": "nott-forest-brentford-2",
+      "fixtureId": 1378972,
+      "homeTeam": "Nott Forest",
+      "awayTeam": "Brentford",
+      "homeScore": 3,
       "awayScore": 1,
-      "fixtureDateLabel": "2026-03-15",
-      "venueLabel": "Stadium of Light",
+      "fixtureDateLabel": "2025-08-18",
+      "venueLabel": "City Ground",
       "statusLabel": "FT",
-      "voiceover": "Sunderland and Brighton finished 0 to 1.\nUse this space to narrate the match overview: context, turning point, and what the numbers say.",
-      "voiceoverPath": "/voiceovers/football/en-06c38ab6da2ae09b.mp3",
+      "voiceover": "Nott Forest and Brentford finished 3 to 1.\nUse this space to narrate the match overview: context, turning point, and what the numbers say.",
+      "voiceoverPath": "/voiceovers/football/en-8cedf86b132646b4.mp3",
       "durationInFrames": 340,
       "homeBadge": {
-        "label": "SUND",
-        "logoPath": "/logos/sunderland-746.png",
-        "accentColor": "#2E86DE"
+        "label": "NF",
+        "logoPath": "/logos/nottingham-forest-65.png",
+        "accentColor": "#E67E22"
       },
       "awayBadge": {
-        "label": "BRIG",
-        "logoPath": "/logos/brighton-51.png",
-        "accentColor": "#0057B8"
+        "label": "BREN",
+        "logoPath": "/logos/brentford-55.png",
+        "accentColor": "#E30613"
       },
       "events": [
         {
-          "minute": 50,
+          "minute": 5,
           "extraMinute": 0,
-          "team": "Sunderland",
-          "player": "Chris Rigg",
-          "assist": null,
-          "type": "var",
-          "detail": "Goal cancelled",
-          "side": "home"
-        },
-        {
-          "minute": 51,
-          "extraMinute": 0,
-          "team": "Brighton",
-          "player": "Diego Gómez",
-          "assist": null,
-          "type": "card",
-          "detail": "Yellow Card",
-          "side": "away"
-        },
-        {
-          "minute": 58,
-          "extraMinute": 0,
-          "team": "Brighton",
-          "player": "Y. Minteh",
+          "team": "Nottingham Forest",
+          "player": "C. Wood",
           "assist": null,
           "type": "goal",
           "detail": "Normal Goal",
-          "side": "away"
+          "side": "home"
         },
         {
-          "minute": 74,
+          "minute": 42,
           "extraMinute": 0,
-          "team": "Brighton",
-          "player": "Yankuba Minteh",
+          "team": "Nottingham Forest",
+          "player": "D. Ndoye",
+          "assist": "M. Gibbs-White",
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "home"
+        },
+        {
+          "minute": 45,
+          "extraMinute": 0,
+          "team": "Nottingham Forest",
+          "player": "C. Wood",
+          "assist": "E. Anderson",
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "home"
+        },
+        {
+          "minute": 52,
+          "extraMinute": 0,
+          "team": "Brentford",
+          "player": "Nathan Collins",
           "assist": null,
           "type": "card",
           "detail": "Yellow Card",
           "side": "away"
         },
         {
-          "minute": 75,
+          "minute": 53,
           "extraMinute": 0,
-          "team": "Sunderland",
-          "player": "Granit Xhaka",
+          "team": "Nottingham Forest",
+          "player": "Neco Williams",
           "assist": null,
           "type": "card",
           "detail": "Yellow Card",
           "side": "home"
+        },
+        {
+          "minute": 78,
+          "extraMinute": 0,
+          "team": "Brentford",
+          "player": "I. Thiago",
+          "assist": null,
+          "type": "penalty",
+          "detail": "Penalty",
+          "side": "away"
+        },
+        {
+          "minute": 90,
+          "extraMinute": 0,
+          "team": "Brentford",
+          "player": "Aaron Hickey",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
         }
       ],
       "keyStats": [
         {
           "label": "On target",
-          "homeValue": "4",
-          "awayValue": "4"
+          "homeValue": "5",
+          "awayValue": "3"
         },
         {
           "label": "Shots",
-          "homeValue": "14",
-          "awayValue": "12"
+          "homeValue": "11",
+          "awayValue": "10"
         },
         {
           "label": "Possession",
-          "homeValue": "48%",
-          "awayValue": "52%"
+          "homeValue": "54%",
+          "awayValue": "46%"
         },
         {
           "label": "Corners",
-          "homeValue": "7",
-          "awayValue": "3"
+          "homeValue": "5",
+          "awayValue": "5"
         },
         {
           "label": "Fouls",
           "homeValue": "7",
-          "awayValue": "12"
+          "awayValue": "15"
         },
         {
           "label": "Yellow cards",
@@ -211,13 +281,237 @@
         },
         {
           "label": "Saves",
-          "homeValue": "3",
-          "awayValue": "3"
+          "homeValue": "2",
+          "awayValue": "2"
         }
       ],
       "highlights": [
-        "Brighton venceu pelo placar de 0 a 1.",
-        "Gols de Y. Minteh."
+        "Nott Forest venceu pelo placar de 3 a 1.",
+        "Gols de C. Wood, D. Ndoye, C. Wood, I. Thiago."
+      ]
+    },
+    {
+      "id": "man-united-arsenal-3",
+      "fixtureId": 1378977,
+      "homeTeam": "Man United",
+      "awayTeam": "Arsenal",
+      "homeScore": 0,
+      "awayScore": 1,
+      "fixtureDateLabel": "2025-08-18",
+      "venueLabel": "Old Trafford",
+      "statusLabel": "FT",
+      "voiceover": "Man United and Arsenal finished 0 to 1.\nUse this space to narrate the match overview: context, turning point, and what the numbers say.",
+      "voiceoverPath": "/voiceovers/football/en-0f356544ba03aba9.mp3",
+      "durationInFrames": 340,
+      "homeBadge": {
+        "label": "MU",
+        "logoPath": "/logos/manchester-united-33.png",
+        "accentColor": "#F39C12"
+      },
+      "awayBadge": {
+        "label": "ARSE",
+        "logoPath": "/logos/arsenal-42.png",
+        "accentColor": "#EF0107"
+      },
+      "events": [
+        {
+          "minute": 13,
+          "extraMinute": 0,
+          "team": "Arsenal",
+          "player": "R. Calafiori",
+          "assist": null,
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "away"
+        },
+        {
+          "minute": 42,
+          "extraMinute": 0,
+          "team": "Arsenal",
+          "player": "Riccardo Calafiori",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 85,
+          "extraMinute": 0,
+          "team": "Manchester United",
+          "player": "Patrick Dorgu",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        },
+        {
+          "minute": 85,
+          "extraMinute": 0,
+          "team": "Arsenal",
+          "player": "David Raya",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 90,
+          "extraMinute": 3,
+          "team": "Arsenal",
+          "player": "Myles Lewis-Skelly",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 90,
+          "extraMinute": 1,
+          "team": "Arsenal",
+          "player": "Jurriën Timber",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        }
+      ],
+      "keyStats": [
+        {
+          "label": "On target",
+          "homeValue": "7",
+          "awayValue": "3"
+        },
+        {
+          "label": "Shots",
+          "homeValue": "22",
+          "awayValue": "9"
+        },
+        {
+          "label": "Possession",
+          "homeValue": "61%",
+          "awayValue": "39%"
+        },
+        {
+          "label": "Corners",
+          "homeValue": "3",
+          "awayValue": "4"
+        },
+        {
+          "label": "Fouls",
+          "homeValue": "10",
+          "awayValue": "19"
+        },
+        {
+          "label": "Yellow cards",
+          "homeValue": "1",
+          "awayValue": "4"
+        },
+        {
+          "label": "Saves",
+          "homeValue": "2",
+          "awayValue": "7"
+        }
+      ],
+      "highlights": [
+        "Arsenal venceu pelo placar de 0 a 1.",
+        "Gols de R. Calafiori."
+      ]
+    },
+    {
+      "id": "leeds-everton-4",
+      "fixtureId": 1378978,
+      "homeTeam": "Leeds",
+      "awayTeam": "Everton",
+      "homeScore": 1,
+      "awayScore": 0,
+      "fixtureDateLabel": "2025-08-19",
+      "venueLabel": "Elland Road",
+      "statusLabel": "FT",
+      "voiceover": "Leeds and Everton finished 1 to 0.\nUse this space to narrate the match overview: context, turning point, and what the numbers say.",
+      "voiceoverPath": "/voiceovers/football/en-fc15595fa06cad2e.mp3",
+      "durationInFrames": 340,
+      "homeBadge": {
+        "label": "LEED",
+        "logoPath": "/logos/leeds-63.png",
+        "accentColor": "#1ABC9C"
+      },
+      "awayBadge": {
+        "label": "EVER",
+        "logoPath": "/logos/everton-45.png",
+        "accentColor": "#003399"
+      },
+      "events": [
+        {
+          "minute": 56,
+          "extraMinute": 0,
+          "team": "Everton",
+          "player": "Tim Iroegbunam",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 63,
+          "extraMinute": 0,
+          "team": "Everton",
+          "player": "Carlos Alcaraz",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 84,
+          "extraMinute": 0,
+          "team": "Leeds",
+          "player": "L. Nmecha",
+          "assist": null,
+          "type": "penalty",
+          "detail": "Penalty",
+          "side": "home"
+        }
+      ],
+      "keyStats": [
+        {
+          "label": "On target",
+          "homeValue": "3",
+          "awayValue": "1"
+        },
+        {
+          "label": "Shots",
+          "homeValue": "21",
+          "awayValue": "7"
+        },
+        {
+          "label": "Possession",
+          "homeValue": "54%",
+          "awayValue": "46%"
+        },
+        {
+          "label": "Corners",
+          "homeValue": "7",
+          "awayValue": "2"
+        },
+        {
+          "label": "Fouls",
+          "homeValue": "6",
+          "awayValue": "8"
+        },
+        {
+          "label": "Yellow cards",
+          "homeValue": "0",
+          "awayValue": "2"
+        },
+        {
+          "label": "Saves",
+          "homeValue": "1",
+          "awayValue": "2"
+        }
+      ],
+      "highlights": [
+        "Leeds venceu pelo placar de 1 a 0.",
+        "Gols de L. Nmecha."
       ]
     }
   ]
