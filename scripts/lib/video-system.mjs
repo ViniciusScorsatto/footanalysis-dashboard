@@ -631,7 +631,7 @@ export const syncCurrentFootballJobDuration = async () => {
   return normalizedJob;
 };
 
-const loadWorldCupConfig = async () => readJsonFile(worldCupConfigFile);
+export const loadWorldCupConfig = async () => readJsonFile(worldCupConfigFile);
 
 const normalizeGroupName = (value) =>
   String(value ?? '')
@@ -2716,6 +2716,50 @@ const formatWorldCupDateLabel = (isoDate, languageProfile) => {
 const getWorldCupMatchKey = (homeTeam, awayTeam) =>
   `${normalizeGroupName(homeTeam)}::${normalizeGroupName(awayTeam)}`;
 
+const parseOptionalInteger = (value) => {
+  if (value === null || value === undefined || value === '') {
+    return null;
+  }
+
+  const normalized = Number(value);
+  return Number.isFinite(normalized) ? Math.round(normalized) : null;
+};
+
+const applyWorldCupStandingEdits = (rows, edits = []) => {
+  if (!Array.isArray(edits) || edits.length === 0) {
+    return rows;
+  }
+
+  const editsByTeam = new Map(
+    edits
+      .map((edit) => {
+        const teamKey = normalizeGroupName(edit?.team);
+        return teamKey ? [teamKey, edit] : null;
+      })
+      .filter(Boolean)
+  );
+
+  return rows
+    .map((row) => {
+      const edit = editsByTeam.get(normalizeGroupName(row.team));
+      if (!edit) {
+        return row;
+      }
+
+      const rank = parseOptionalInteger(edit.rank);
+      const points = parseOptionalInteger(edit.points);
+      const goalDifference = parseOptionalInteger(edit.goalDifference);
+
+      return {
+        ...row,
+        rank: rank ?? row.rank,
+        points: points ?? row.points,
+        goalDifference: goalDifference ?? row.goalDifference,
+      };
+    })
+    .sort((left, right) => left.rank - right.rank);
+};
+
 const buildWorldCupGroupJob = async ({
   apiKey,
   apiHost,
@@ -2728,6 +2772,7 @@ const buildWorldCupGroupJob = async ({
   competitionName,
   roundLabel,
   ctaText,
+  worldCupStandingEdits,
   soundtrackPath,
   soundtrackVolume,
   leagueName,
@@ -2953,6 +2998,8 @@ const buildWorldCupGroupJob = async ({
       (match) => !completedMatchKeys.has(getWorldCupMatchKey(match.homeTeam, match.awayTeam))
     );
   }
+
+  rows = applyWorldCupStandingEdits(rows, worldCupStandingEdits);
 
   const finalCompetitionName = detectedCompetitionName || copy.worldCup.title(season);
   const groupMatchSectionMode =
@@ -4146,6 +4193,7 @@ export const prepareJob = async ({
   groupLetter,
   competitionName,
   ctaText,
+  worldCupStandingEdits,
   soundtrackPath,
   soundtrackVolume,
   introTitle,
@@ -4179,6 +4227,7 @@ export const prepareJob = async ({
       competitionName,
       roundLabel,
       ctaText,
+      worldCupStandingEdits,
       soundtrackPath,
       soundtrackVolume,
       leagueName,

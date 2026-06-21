@@ -3,21 +3,21 @@
   "template": "world-cup-group-standings",
   "leagueId": 1,
   "season": 2026,
-  "leagueName": "World Cup 2026",
+  "leagueName": "Copa do Mundo 2026",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/É Gol, É Gol.mp3",
-  "soundtrackLabel": "É Gol, É Gol",
+  "soundtrackPath": "/audio/football/Estádio Vai Ferver.mp3",
+  "soundtrackLabel": "Estádio Vai Ferver",
   "soundtrackVolume": 0.25,
-  "outputName": "world-cup-2026-grupo-j-pt-br.mp4",
+  "outputName": "copa-do-mundo-2026-grupo-f-pt-br.mp4",
   "durationInFrames": 360,
   "compositionId": "FootballWorldCupGroupShort",
-  "competitionName": "World Cup 2026",
-  "groupLetter": "J",
-  "titleLabel": "World Cup 2026",
-  "groupLabel": "Grupo J",
+  "competitionName": "Copa do Mundo 2026",
+  "groupLetter": "F",
+  "titleLabel": "Copa do Mundo 2026",
+  "groupLabel": "Grupo F",
   "tableLabels": {
     "pos": "Pos",
     "team": "Equipe",
@@ -28,147 +28,147 @@
     "direct": "1º e 2º avançam",
     "bestThird": "8 melhores terceiros"
   },
-  "lastResultsLabel": "Últimos Resultados - Grupo J",
-  "nextMatchesLabel": "Próximos Jogos - Grupo J",
+  "lastResultsLabel": "Últimos Resultados - Grupo F",
+  "nextMatchesLabel": "Próximos Jogos - Grupo F",
   "groupMatchSectionMode": "mixed",
-  "ctaText": "Quem avança?",
+  "ctaText": "Quem muda a disputa pela vaga no Grupo F?",
   "rows": [
     {
       "rank": 1,
-      "team": "Argentina",
-      "played": 1,
-      "goalDifference": 3,
-      "points": 3,
+      "team": "Holanda",
+      "played": 2,
+      "goalDifference": 4,
+      "points": 4,
       "qualifiesAsBestThird": false,
       "badge": {
-        "label": "🇦🇷",
-        "imagePath": "/logos/argentina-26.png"
+        "label": "🇳🇱",
+        "imagePath": "/logos/netherlands-1118.png"
       }
     },
     {
       "rank": 2,
-      "team": "Áustria",
-      "played": 1,
-      "goalDifference": 2,
-      "points": 3,
+      "team": "Japão",
+      "played": 2,
+      "goalDifference": 4,
+      "points": 4,
       "qualifiesAsBestThird": false,
       "badge": {
-        "label": "🇦🇹",
-        "imagePath": "/logos/austria-775.png"
+        "label": "🇯🇵",
+        "imagePath": "/logos/japan-12.png"
       }
     },
     {
       "rank": 3,
-      "team": "Jordânia",
-      "played": 1,
-      "goalDifference": -2,
-      "points": 0,
-      "qualifiesAsBestThird": false,
+      "team": "Suécia",
+      "played": 2,
+      "goalDifference": 0,
+      "points": 3,
+      "qualifiesAsBestThird": true,
       "badge": {
-        "label": "🇯🇴",
-        "imagePath": "/logos/jordan-1548.png"
+        "label": "S",
+        "imagePath": "/logos/sweden-5.png"
       }
     },
     {
       "rank": 4,
-      "team": "Argélia",
-      "played": 1,
-      "goalDifference": -3,
+      "team": "Tunísia",
+      "played": 2,
+      "goalDifference": -8,
       "points": 0,
       "qualifiesAsBestThird": false,
       "badge": {
-        "label": "🇩🇿",
-        "imagePath": "/logos/algeria-1532.png"
+        "label": "🇹🇳",
+        "imagePath": "/logos/tunisia-28.png"
       }
     }
   ],
   "lastResults": [
     {
-      "homeTeam": "Áustria",
-      "awayTeam": "Jordânia",
-      "homeScore": 3,
-      "awayScore": 1,
+      "homeTeam": "Tunísia",
+      "awayTeam": "Japão",
+      "homeScore": 0,
+      "awayScore": 4,
       "homeBadge": {
-        "label": "🇦🇹",
-        "imagePath": "/logos/austria-775.png"
+        "label": "🇹🇳",
+        "imagePath": "/logos/tunisia-28.png"
       },
       "awayBadge": {
-        "label": "🇯🇴",
-        "imagePath": "/logos/jordan-1548.png"
+        "label": "🇯🇵",
+        "imagePath": "/logos/japan-12.png"
       },
-      "dateLabel": "17 de jun • 01:00 (BRT)"
+      "dateLabel": "21 de jun • 01:00 (BRT)"
     },
     {
-      "homeTeam": "Argentina",
-      "awayTeam": "Argélia",
-      "homeScore": 3,
-      "awayScore": 0,
+      "homeTeam": "Holanda",
+      "awayTeam": "Suécia",
+      "homeScore": 5,
+      "awayScore": 1,
       "homeBadge": {
-        "label": "🇦🇷",
-        "imagePath": "/logos/argentina-26.png"
+        "label": "🇳🇱",
+        "imagePath": "/logos/netherlands-1118.png"
       },
       "awayBadge": {
-        "label": "🇩🇿",
-        "imagePath": "/logos/algeria-1532.png"
+        "label": "S",
+        "imagePath": "/logos/sweden-5.png"
       },
-      "dateLabel": "16 de jun • 22:00 (BRT)"
+      "dateLabel": "20 de jun • 14:00 (BRT)"
     }
   ],
   "nextMatches": [
     {
-      "homeTeam": "Argentina",
-      "awayTeam": "Áustria",
+      "homeTeam": "Japão",
+      "awayTeam": "Suécia",
       "homeBadge": {
-        "label": "🇦🇷",
-        "imagePath": "/logos/argentina-26.png"
+        "label": "🇯🇵",
+        "imagePath": "/logos/japan-12.png"
       },
       "awayBadge": {
-        "label": "🇦🇹",
-        "imagePath": "/logos/austria-775.png"
+        "label": "S",
+        "imagePath": "/logos/sweden-5.png"
       },
-      "dateLabel": "22 de jun • 14:00 (BRT)"
+      "dateLabel": "25 de jun • 20:00 (BRT)"
     },
     {
-      "homeTeam": "Jordânia",
-      "awayTeam": "Argélia",
+      "homeTeam": "Tunísia",
+      "awayTeam": "Holanda",
       "homeBadge": {
-        "label": "🇯🇴",
-        "imagePath": "/logos/jordan-1548.png"
+        "label": "🇹🇳",
+        "imagePath": "/logos/tunisia-28.png"
       },
       "awayBadge": {
-        "label": "🇩🇿",
-        "imagePath": "/logos/algeria-1532.png"
+        "label": "🇳🇱",
+        "imagePath": "/logos/netherlands-1118.png"
       },
-      "dateLabel": "23 de jun • 00:00 (BRT)"
+      "dateLabel": "25 de jun • 20:00 (BRT)"
     }
   ],
   "introTitle": "Copa do Mundo 2026",
-  "introSubtitle": "Grupo J",
-  "hookText": "Quem sai desse grupo?",
+  "introSubtitle": "Grupo F",
+  "hookText": "Holanda e Japão pressionam agora no Grupo F da Copa do Mundo 2026!",
   "coldOpenData": {
     "tableRows": [
       {
         "rank": 1,
-        "club": "ARGENTINA",
-        "pts": 3
+        "club": "HOLANDA",
+        "pts": 4
       },
       {
         "rank": 2,
-        "club": "ÁUSTRIA",
-        "pts": 3
+        "club": "JAPÃO",
+        "pts": 4
       },
       {
         "rank": 3,
-        "club": "JORDÂNIA",
-        "pts": 0
+        "club": "SUÉCIA",
+        "pts": 3
       },
       {
         "rank": 4,
-        "club": "ARGÉLIA",
+        "club": "TUNÍSIA",
         "pts": 0
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "Argentina e Áustria começam na liderança com 3 pontos cada; quem garante classificação na Copa do Mundo 2026?"
+  "voiceoverText": "Holanda e Japão lideram o Grupo F com 4 pontos cada, pressionando a Suécia na Copa do Mundo 2026."
 }

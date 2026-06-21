@@ -42,6 +42,10 @@ const standingsEditorField = document.getElementById('standings-editor-field');
 const standingsEditorStatus = document.getElementById('standings-editor-status');
 const standingsEditorList = document.getElementById('standings-editor-list');
 const reloadStandingsButton = document.getElementById('reload-standings-button');
+const worldCupStandingsEditorField = document.getElementById('world-cup-standings-editor-field');
+const worldCupStandingsEditorStatus = document.getElementById('world-cup-standings-editor-status');
+const worldCupStandingsEditorList = document.getElementById('world-cup-standings-editor-list');
+const reloadWorldCupStandingsButton = document.getElementById('reload-world-cup-standings-button');
 const seasonVerdictEditorField = document.getElementById('season-verdict-editor-field');
 const seasonVerdictEditorStatus = document.getElementById('season-verdict-editor-status');
 const seasonVerdictEditorList = document.getElementById('season-verdict-editor-list');
@@ -278,9 +282,11 @@ let hasCustomLeagueTitle = false;
 let currentPredictionFixtures = [];
 let currentResultFixtures = [];
 let currentStandingRows = [];
+let currentWorldCupStandingRows = [];
 let currentChampionFinalRows = [];
 let currentSeasonVerdictRows = [];
 let currentTierlistTeams = [];
+let cachedWorldCupGroups = null;
 let lastPreparedJob = null;
 let currentPublishingDraft = null;
 let activePublishingPlatform = 'youtube';
@@ -651,6 +657,9 @@ const buildJobPayloadFromForm = () => {
   }
   if (templateSelect.value === 'standings') {
     payload.standingEdits = getStandingEdits();
+  }
+  if (templateSelect.value === WORLD_CUP_TEMPLATE) {
+    payload.worldCupStandingEdits = getWorldCupStandingEdits();
   }
   if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     payload.seasonFinalVerdictEdits = getSeasonFinalVerdictEdits();
@@ -1878,6 +1887,145 @@ const getStandingEdits = () => {
   });
 };
 
+const getWorldCupGroups = async () => {
+  if (cachedWorldCupGroups) {
+    return cachedWorldCupGroups;
+  }
+
+  const response = await fetch(`${apiBase}/world-cup-groups`);
+  const data = await response.json();
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.error || 'Could not load World Cup groups.');
+  }
+
+  cachedWorldCupGroups = data.groups ?? {};
+  return cachedWorldCupGroups;
+};
+
+const getWorldCupGroupRowsFromConfig = (groups, groupLetter) => {
+  const group = groups?.[groupLetter] ?? {};
+  const standingsRows = group.standings?.length
+    ? group.standings
+    : (group.teams ?? []).map((team, index) => ({
+        rank: index + 1,
+        team: team.name,
+        flag: team.flag,
+        goalDifference: 0,
+        points: 0,
+      }));
+
+  return standingsRows.map((row, index) => ({
+    rank: row.rank ?? index + 1,
+    team: row.team ?? row.name ?? `Team ${index + 1}`,
+    points: row.points ?? 0,
+    goalDifference: row.goalDifference ?? 0,
+    badge: {label: row.flag ?? ''},
+  }));
+};
+
+const renderWorldCupStandingsEditor = (rows = []) => {
+  currentWorldCupStandingRows = rows;
+
+  if (!rows.length) {
+    worldCupStandingsEditorList.innerHTML = '';
+    return;
+  }
+
+  worldCupStandingsEditorList.innerHTML = rows
+    .map((row) => {
+      const logoSource = row.badge?.logoPath ?? row.badge?.imagePath;
+      const badgeHtml = logoSource
+        ? `<img src="${escapeHtml(logoSource)}" alt="" />`
+        : `<span class="season-verdict-fallback-badge">${escapeHtml(row.badge?.label ?? '')}</span>`;
+
+      return `
+        <div class="standings-editor-row world-cup-standings-editor-row editor-row" data-team="${escapeHtml(row.team)}">
+          <div class="standings-editor-team">
+            ${badgeHtml}
+            <strong>${escapeHtml(row.team)}</strong>
+          </div>
+          <label>
+            POS
+            <input type="number" min="1" step="1" data-field="rank" value="${row.rank}" />
+          </label>
+          <label>
+            PTS
+            <input type="number" min="0" step="1" data-field="points" value="${row.points}" />
+          </label>
+          <label>
+            GD
+            <input type="number" step="1" data-field="goalDifference" value="${row.goalDifference}" />
+          </label>
+        </div>
+      `;
+    })
+    .join('');
+};
+
+const getWorldCupStandingEdits = () =>
+  currentWorldCupStandingRows.map((row) => {
+    const rowElement = worldCupStandingsEditorList.querySelector(
+      `.world-cup-standings-editor-row[data-team="${CSS.escape(row.team)}"]`
+    );
+    const getValue = (field) => rowElement?.querySelector(`[data-field="${field}"]`)?.value ?? '';
+
+    return {
+      team: row.team,
+      rank: getValue('rank'),
+      points: getValue('points'),
+      goalDifference: getValue('goalDifference'),
+    };
+  });
+
+const loadWorldCupStandingsEditor = async ({preferPrepared = false} = {}) => {
+  const template = templateSelect.value;
+  const groupLetter = (form.elements.groupLetter.value || 'A').toUpperCase();
+
+  if (template !== WORLD_CUP_TEMPLATE) {
+    setNoticeStatus(worldCupStandingsEditorStatus, 'Select World Cup Group Standings to edit the table.', 'info');
+    renderWorldCupStandingsEditor([]);
+    return;
+  }
+
+  if (
+    preferPrepared &&
+    lastPreparedJob?.template === WORLD_CUP_TEMPLATE &&
+    lastPreparedJob.groupLetter === groupLetter &&
+    Array.isArray(lastPreparedJob.rows) &&
+    lastPreparedJob.rows.length
+  ) {
+    renderWorldCupStandingsEditor(lastPreparedJob.rows);
+    setNoticeStatus(
+      worldCupStandingsEditorStatus,
+      `Loaded prepared Group ${groupLetter} table. Edit and prepare again to override.`,
+      'success'
+    );
+    return;
+  }
+
+  try {
+    reloadWorldCupStandingsButton.disabled = true;
+    setNoticeStatus(worldCupStandingsEditorStatus, `Loading Group ${groupLetter} teams…`, 'warning');
+    const groups = await getWorldCupGroups();
+    const rows = getWorldCupGroupRowsFromConfig(groups, groupLetter);
+    renderWorldCupStandingsEditor(rows);
+    setNoticeStatus(
+      worldCupStandingsEditorStatus,
+      rows.length
+        ? `Loaded Group ${groupLetter}. Edit POS, PTS and GD before preparing.`
+        : `No teams configured for Group ${groupLetter}.`,
+      rows.length ? 'success' : 'warning'
+    );
+  } catch (error) {
+    renderWorldCupStandingsEditor([]);
+    setNoticeStatus(worldCupStandingsEditorStatus, 'Could not load World Cup group table.', 'error');
+    log(error instanceof Error ? error.message : String(error));
+  } finally {
+    reloadWorldCupStandingsButton.disabled = false;
+  }
+};
+
 const renderChampionFinalOptions = (rows = [], selectedRank = championFinalSelect.value) => {
   currentChampionFinalRows = rows;
   championFinalSelect.innerHTML = [
@@ -2559,6 +2707,15 @@ const renderCurrentJob = (job) => {
       ? `Prepared preview with champion: ${champion}.`
       : 'Prepared preview.';
   }
+
+  if (job.template === WORLD_CUP_TEMPLATE && worldCupStandingsEditorStatus) {
+    renderWorldCupStandingsEditor(job.rows ?? []);
+    setNoticeStatus(
+      worldCupStandingsEditorStatus,
+      `Prepared Group ${job.groupLetter} table. Edit POS, PTS and GD, then prepare again to override.`,
+      'success'
+    );
+  }
 };
 
 const updateLocalizedDefaults = () => {
@@ -2626,6 +2783,7 @@ const applyTemplateHints = () => {
   predictionEditorField.hidden = template !== 'predictions';
   resultEditorField.hidden = template !== 'results' && template !== CHAMPION_FINAL_TEMPLATE;
   standingsEditorField.hidden = template !== 'standings';
+  worldCupStandingsEditorField.hidden = template !== WORLD_CUP_TEMPLATE;
   seasonVerdictEditorField.hidden = template !== SEASON_FINAL_VERDICT_TEMPLATE;
   tierlistEditorField.hidden = template !== TIERLIST_TEMPLATE;
   dataSection.hidden = !visibleFields.round && !visibleFields.matchDate;
@@ -2634,6 +2792,7 @@ const applyTemplateHints = () => {
     template !== 'results' &&
     template !== CHAMPION_FINAL_TEMPLATE &&
     template !== 'standings' &&
+    template !== WORLD_CUP_TEMPLATE &&
     template !== SEASON_FINAL_VERDICT_TEMPLATE &&
     template !== TIERLIST_TEMPLATE;
   leagueOverrideFields.hidden = !visibleFields.leagueOverrides;
@@ -2970,6 +3129,8 @@ const loadOptions = async () => {
     await loadSeasonFinalVerdictEditor();
   } else if (form.elements.template.value === TIERLIST_TEMPLATE) {
     await loadTierlistTeams();
+  } else if (form.elements.template.value === WORLD_CUP_TEMPLATE) {
+    await loadWorldCupStandingsEditor({preferPrepared: true});
   }
   log('Football dashboard ready.', true);
 };
@@ -2993,6 +3154,9 @@ presetSelect.addEventListener('change', async () => {
   }
   if (templateSelect.value === TIERLIST_TEMPLATE) {
     await loadTierlistTeams();
+  }
+  if (templateSelect.value === WORLD_CUP_TEMPLATE) {
+    await loadWorldCupStandingsEditor();
   }
   if (templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
     await loadChampionFinalOptions();
@@ -3026,6 +3190,8 @@ channelProfileSelect.addEventListener('change', async () => {
     await loadSeasonFinalVerdictEditor();
   } else if (templateSelect.value === TIERLIST_TEMPLATE) {
     await loadTierlistTeams();
+  } else if (templateSelect.value === WORLD_CUP_TEMPLATE) {
+    await loadWorldCupStandingsEditor();
   }
 });
 
@@ -3046,6 +3212,7 @@ templateSelect.addEventListener('change', async () => {
     await loadPredictionFixtures();
     renderResultEditor([]);
     renderStandingsEditor([]);
+    renderWorldCupStandingsEditor([]);
     renderSeasonVerdictEditor([]);
     renderTierlistEditor([]);
   } else if (templateSelect.value === 'results' || templateSelect.value === CHAMPION_FINAL_TEMPLATE) {
@@ -3055,12 +3222,14 @@ templateSelect.addEventListener('change', async () => {
     }
     renderPredictionEditor([]);
     renderStandingsEditor([]);
+    renderWorldCupStandingsEditor([]);
     renderSeasonVerdictEditor([]);
     renderTierlistEditor([]);
   } else if (templateSelect.value === 'standings') {
     await loadStandingsEditor();
     renderPredictionEditor([]);
     renderResultEditor([]);
+    renderWorldCupStandingsEditor([]);
     renderSeasonVerdictEditor([]);
     renderTierlistEditor([]);
   } else if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
@@ -3068,17 +3237,27 @@ templateSelect.addEventListener('change', async () => {
     renderPredictionEditor([]);
     renderResultEditor([]);
     renderStandingsEditor([]);
+    renderWorldCupStandingsEditor([]);
     renderTierlistEditor([]);
   } else if (templateSelect.value === TIERLIST_TEMPLATE) {
     await loadTierlistTeams();
     renderPredictionEditor([]);
     renderResultEditor([]);
     renderStandingsEditor([]);
+    renderWorldCupStandingsEditor([]);
     renderSeasonVerdictEditor([]);
+  } else if (templateSelect.value === WORLD_CUP_TEMPLATE) {
+    await loadWorldCupStandingsEditor();
+    renderPredictionEditor([]);
+    renderResultEditor([]);
+    renderStandingsEditor([]);
+    renderSeasonVerdictEditor([]);
+    renderTierlistEditor([]);
   } else {
     renderPredictionEditor([]);
     renderResultEditor([]);
     renderStandingsEditor([]);
+    renderWorldCupStandingsEditor([]);
     renderSeasonVerdictEditor([]);
     renderTierlistEditor([]);
   }
@@ -3102,6 +3281,8 @@ languageProfileSelect.addEventListener('change', () => {
     loadSeasonFinalVerdictEditor();
   } else if (templateSelect.value === TIERLIST_TEMPLATE) {
     loadTierlistTeams();
+  } else if (templateSelect.value === WORLD_CUP_TEMPLATE) {
+    loadWorldCupStandingsEditor();
   }
 });
 generateShortCopyButton?.addEventListener('click', generateShortCopy);
@@ -3140,6 +3321,9 @@ form.elements.groupLetter.addEventListener('change', () => {
   syncOutputNameFromSelections();
   syncIntroPlaceholders();
   updateDashboardMeta();
+  if (templateSelect.value === WORLD_CUP_TEMPLATE) {
+    loadWorldCupStandingsEditor();
+  }
 });
 form.elements.leagueId.addEventListener('change', async () => {
   syncSeasonFromContext();
@@ -3158,6 +3342,9 @@ form.elements.leagueId.addEventListener('change', async () => {
   }
   if (templateSelect.value === TIERLIST_TEMPLATE) {
     await loadTierlistTeams();
+  }
+  if (templateSelect.value === WORLD_CUP_TEMPLATE) {
+    await loadWorldCupStandingsEditor();
   }
 });
 form.elements.leagueName.addEventListener('input', () => {
@@ -3181,6 +3368,9 @@ form.elements.season.addEventListener('change', async () => {
   }
   if (templateSelect.value === TIERLIST_TEMPLATE) {
     await loadTierlistTeams();
+  }
+  if (templateSelect.value === WORLD_CUP_TEMPLATE) {
+    await loadWorldCupStandingsEditor();
   }
 });
 form.elements.season.addEventListener('input', () => {
@@ -3214,6 +3404,7 @@ applyPreviewButton.addEventListener('click', updatePreview);
 reloadPredictionsButton.addEventListener('click', loadPredictionFixtures);
 reloadResultsButton.addEventListener('click', loadResultFixturesForEditor);
 reloadStandingsButton.addEventListener('click', loadStandingsEditor);
+reloadWorldCupStandingsButton.addEventListener('click', () => loadWorldCupStandingsEditor());
 reloadSeasonVerdictButton.addEventListener('click', loadSeasonFinalVerdictEditor);
 reloadTierlistButton.addEventListener('click', loadTierlistTeams);
 reloadChampionFinalButton.addEventListener('click', loadChampionFinalOptions);
