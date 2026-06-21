@@ -1,9 +1,11 @@
 import {Sequence} from 'remotion';
 import {FootballColdOpen} from './FootballColdOpen';
 import {
-  FootballShortTeaser,
   SHORT_INTRO_DURATION_FRAMES,
   SHORT_TEASER_DURATION_FRAMES,
+} from './FootballShortTeaserKit';
+import {
+  FootballShortTeaser,
 } from './FootballShortTeaser';
 import type {FootballColdOpenData, TeamBadge} from '../lib/types';
 import type {ComponentProps} from 'react';

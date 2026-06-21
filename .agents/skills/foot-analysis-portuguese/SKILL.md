@@ -34,12 +34,12 @@ different **soul**:
 | Primary accent | Gold `#F0A500` | Electric Blue `#0A84FF` |
 | Competitions | Brazilian leagues | European leagues |
 | Palette feel | Warm · high energy | Cool · premium data |
-| Match card style | Hot pink separators | Dark slate cards |
+| Match card style | Warm dark cards + gold emphasis | Cool dark cards + blue emphasis |
 | Base | Black + Gold | Black + Blue |
 
-**What is identical:** Poppins font family, card anatomy, base 8px spacing grid, form dot
-colors, logo rules, hierarchy system (leader/mid/danger/faded), 1080×1920px canvas, 18px
-minimum font floor.
+**What is identical:** local Teaser typography package, card anatomy, base 8px spacing grid,
+form dot colors, logo rules, hierarchy system (leader/mid/danger/faded), 1080×1920px canvas,
+18px minimum font floor.
 
 ---
 
@@ -76,27 +76,31 @@ LOSS      #E74C3C   Red            — form dot L (same as DANGER)
 
 ## 3. Typography
 
-**Two fonts only. Never mix others.**
+**Use the local Teaser typography package. Never introduce remote font dependencies.**
 
-- `Poppins Bold` — everything that commands attention (headlines, team names, scores, stats)
-- `Poppins Regular / Medium` — everything that communicates data (labels, meta, body)
+- `Orbitron Teaser` — hero titles, template titles, big editorial statements
+- `Oxanium Teaser` — scores, points, ranks, team names, key stats
+- `Audiowide Teaser` — competition chips, section labels, compact metadata
+
+These fonts are shipped in `public/fonts/` and loaded by `FootballShortFontFaces`.
+Poppins and Barlow are not the Shorts default.
 
 ### Scale (1080×1920px canvas)
 
-| Role | Size | Weight | Case | Color |
-|---|---|---|---|---|
-| Hero / main title | 96px | 900 | UPPERCASE | White |
-| Competition headline | 56px | 700 | UPPERCASE | White |
-| Club / player name | 34px | 700 | UPPERCASE | White |
-| Score / key stat | 56px | 900 | — | Gold `#F0A500` |
-| Label / meta | 20px | 600 | UPPERCASE | Slate `#3a5060` |
-| Disclaimer | 18px | 400 | Sentence case | Muted |
+| Role | Font | Size | Weight | Case | Color |
+|---|---|---|---|---|---|
+| Hero / main title | Orbitron Teaser | 84-132px | 900-950 | UPPERCASE | White or Gold |
+| Competition headline | Orbitron Teaser | 56-96px | 900 | UPPERCASE | White or Gold |
+| Club / player name | Oxanium Teaser | 30-44px | 700-950 | UPPERCASE | White |
+| Score / key stat | Oxanium Teaser | 44-98px | 900-950 | — | Gold `#F0A500` |
+| Label / meta | Audiowide Teaser | 18-25px | 600-900 | UPPERCASE | Slate `#3a5060` |
+| Disclaimer | Audiowide Teaser or compact system text | 18px | 400-800 | Sentence case | Muted |
 | **MINIMUM anywhere** | **18px** | — | — | — |
 
 ### Four rules
 
-1. **Max 2 font weights per card** — Bold for headline, Regular or Medium for data
-2. **Bold = command, Regular = inform** — fast-read = Bold, careful-read = Regular
+1. **Max 3 font families per Short** — Orbitron, Oxanium, Audiowide
+2. **Orbitron = command, Oxanium = facts, Audiowide = labels** — each family has one job
 3. **Uppercase for identity, mixed case for data** — PALMEIRAS is the brand, "19 pts" is the fact
 4. **Size gap creates hierarchy** — the jump from name to score tells a story before you read it
 
@@ -137,9 +141,9 @@ Every single card follows this exact order, no exceptions:
 ┌─────────────────────────────────────┐
 │ ████ competition accent stripe      │  ← only place the competition color lives
 │                                     │
-│  COMPETITION · BRASILEIRAO          │  ← 9px, Poppins Regular, SLATE
-│  CARD TITLE                         │  ← 20px, Poppins Bold, WHITE, uppercase
-│  Rodada X · Season                  │  ← 8px, Poppins Regular, SLATE
+│  COMPETITION · BRASILEIRAO          │  ← Audiowide Teaser, SLATE
+│  CARD TITLE                         │  ← Orbitron Teaser, WHITE/GOLD, uppercase
+│  Rodada X · Season                  │  ← Audiowide Teaser, SLATE
 │ ─────────────────────────────────── │
 │  [data body — see templates below]  │
 │                                     │
@@ -161,8 +165,8 @@ Row structure: [POS]  [TEAM NAME]  [PTS]
 ```
 
 - Position number color = zone color (gold/green/silver/red)
-- Team name = White, Poppins Bold, uppercase
-- Points = same color as position number, Poppins Bold, right-aligned
+- Team name = White, Oxanium Teaser, uppercase
+- Points = same color as position number, Oxanium Teaser, right-aligned
 - Row background = zone tint color
 
 **Legend strip at bottom:**
@@ -190,9 +194,9 @@ Row structure: [RANK]  [PLAYER NAME]  [CLUB SHORT]  [GOALS]
 ```
 
 - Rank 1 gets gold treatment (gold number, warm tint background)
-- Player name = White, Poppins Bold
-- Club abbreviation = Slate, Poppins Regular, small
-- Goals = Gold (rank 1) or Silver (others), Poppins Bold, right-aligned
+- Player name = White, Oxanium Teaser
+- Club abbreviation = Slate, Audiowide Teaser, small
+- Goals = Gold (rank 1) or Silver (others), Oxanium Teaser, right-aligned
 - Optional: player photo on right side, shoulder crop, dark overlay on left half
 
 **Example:**
@@ -213,12 +217,12 @@ Used for: match predictions before each rodada.
 Row structure: [HOME TEAM]  [PREDICTED SCORE]  [AWAY TEAM]
 ```
 
-- Home team left-aligned, Away team right-aligned, both Poppins Bold uppercase
-- Predicted score centered, Poppins Bold, Gold `#F0A500`
+- Home team left-aligned, Away team right-aligned, both Oxanium Teaser uppercase
+- Predicted score centered, Oxanium Teaser, Gold `#F0A500`
 - Row background alternates between SURFACE and CARD for readability
 - **Mandatory disclaimer** on every palpites card (legal protection, never remove):
   `"Os palpites têm caráter exclusivamente recreativo."`
-- Disclaimer: 18px minimum, Poppins Regular, Muted color
+- Disclaimer: 18px minimum, Audiowide Teaser or compact system text, Muted color
 
 **CTA rule for palpites:** Always forced-choice, never vague.
 - DO: `"Comenta teu placar no JOGO 1"`
@@ -229,10 +233,12 @@ Row structure: [HOME TEAM]  [PREDICTED SCORE]  [AWAY TEAM]
 ## 9. Do & Don't
 
 ### DO
-- Background: Solid `#0b0d12` only. No blurred stadium photos, no gradients.
+- Background: Pitch Black `#0b0d12` foundation with approved local Teaser backdrops only.
+  Keep data rows/cards dark enough for instant readability.
 - Logo: Bottom-right, same size, every card, every platform.
 - Accent: Competition stripe and key stat colors only — never fills whole background.
-- Font weights: Max 2 per card.
+- Typography: keep the three Teaser roles clear — Orbitron for commands, Oxanium for facts,
+  Audiowide for labels.
 - Form dots: Green = W, Gray = D, Red = L. Always this order, never swap.
 - Player photo: Artilheiros cards only. Right side. Shoulder crop. Dark overlay on left half.
 - Disclaimer: On every palpites card. Legal protection. Never remove it.
@@ -242,8 +248,8 @@ Row structure: [HOME TEAM]  [PREDICTED SCORE]  [AWAY TEAM]
 - Never use Electric Blue `#0A84FF` (English channel accent) on Portuguese channel cards.
 - Never more than 2 accent colors on one card.
 - Never move logo from bottom-right.
-- Never use a blurred or colored photo as card background.
-- Never 4+ font style combinations on one card.
+- Never add ad hoc blurred/colored photos. Use only approved local Teaser backdrops.
+- Never add a fourth font family to Shorts.
 - Never go below 18px font size.
 - Never apply Copa do Mundo tri-color to any domestic or continental competition.
 - Never use vague CTA — "comenta aí" has no clear action, no engagement.
@@ -311,7 +317,7 @@ When generating HTML/CSS for cards, use these exact values:
 --sul-am:     #1ABC9C;
 ```
 
-Font stack: `'Poppins', 'Liberation Sans', sans-serif`
+Shorts font package: `Orbitron Teaser`, `Oxanium Teaser`, `Audiowide Teaser`
 
 ---
 
@@ -322,7 +328,7 @@ Before outputting any card visual, verify:
 - [ ] Background is `#0b0d12` — no exceptions
 - [ ] Top stripe is the correct competition accent color
 - [ ] Competition badge text is in SLATE, uppercase
-- [ ] Title is Poppins Bold, WHITE, uppercase
+- [ ] Title is Orbitron Teaser, WHITE/GOLD, uppercase
 - [ ] Leader row has warm green tint `#0b1409` + gold number + gold points
 - [ ] Relegation rows have red tint `#140808` + red number + red points
 - [ ] Mid-table rows are neutral SURFACE with SILVER text
@@ -331,5 +337,5 @@ Before outputting any card visual, verify:
 - [ ] Logo appears bottom-right
 - [ ] No electric blue `#0A84FF` anywhere (that's the English channel)
 - [ ] No pink/magenta anywhere (old style, replaced)
-- [ ] Font is Poppins (not Inter, not Roboto, not system font)
+- [ ] Fonts use the local Teaser package, not Poppins/Barlow/Inter/Roboto
 - [ ] Never below 18px font size

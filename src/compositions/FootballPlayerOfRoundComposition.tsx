@@ -12,7 +12,7 @@ import {
   TEASER_HEADLINE_FONT,
   TEASER_LABEL_FONT,
   TEASER_NUMBER_FONT,
-} from '../components/FootballShortTeaser';
+} from '../components/FootballShortTeaserKit';
 import {SoundtrackBed} from '../components/SoundtrackBed';
 import {VoiceoverBed} from '../components/VoiceoverBed';
 import {fadeInStyle, footerStartFrame, headerEntranceStyle, rowStartFrame} from '../lib/animations';

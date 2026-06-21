@@ -1,6 +1,24 @@
 import {AbsoluteFill, Img, staticFile, useCurrentFrame} from 'remotion';
 import type React from 'react';
 import {BrandMark} from './BrandMark';
+import {
+  FootballShortBackdrop,
+  FootballShortFontFaces,
+  SHORT_INTRO_DURATION_FRAMES,
+  SHORT_TEASER_DURATION_FRAMES,
+  TEASER_HEADLINE_EFFECT,
+  TEASER_HEADLINE_FONT,
+  TEASER_LABEL_FONT,
+  TEASER_NUMBER_EFFECT,
+  TEASER_NUMBER_FONT,
+  pickFootballShortBackground,
+} from './FootballShortTeaserKit';
+import type {FootballShortTeaserVariant} from './FootballShortTeaserKit';
+import {
+  normalizeTeamKey,
+  orderFixtureTeaserItems,
+  teamAccentColor,
+} from './footballShortTeamVisuals';
 import type {
   ContinentalGroupStandingsGroup,
   FixtureCard,
@@ -18,72 +36,10 @@ import type {
   WorldCupKnockoutMatch,
   WorldCupNextMatch,
 } from '../lib/types';
-import {FOOTBALL_SHORT_INTRO_FRAMES, FOOTBALL_SHORT_TEASER_FRAMES} from '../lib/football-short-durations';
-
-export const SHORT_TEASER_DURATION_FRAMES = FOOTBALL_SHORT_TEASER_FRAMES;
-export const SHORT_INTRO_DURATION_FRAMES = FOOTBALL_SHORT_INTRO_FRAMES;
-
-export const TEASER_HEADLINE_FONT = '"Orbitron Teaser", "Arial Black", "Impact", sans-serif';
-export const TEASER_NUMBER_FONT = '"Oxanium Teaser", "Arial Black", "Impact", sans-serif';
-export const TEASER_LABEL_FONT = '"Audiowide Teaser", "Orbitron Teaser", "Arial Black", sans-serif';
-const TEASER_HEADLINE_EFFECT: React.CSSProperties = {
-  fontFamily: TEASER_HEADLINE_FONT,
-  letterSpacing: 0,
-  WebkitTextStroke: '1px rgba(5,8,6,0.72)',
-};
-const TEASER_NUMBER_EFFECT: React.CSSProperties = {
-  fontFamily: TEASER_NUMBER_FONT,
-  letterSpacing: 0,
-  WebkitTextStroke: '2px rgba(5,8,6,0.78)',
-};
-
-const TEASER_BACKGROUNDS = {
-  stadiumLights: 'backgrounds/teaser-stadium-lights.png',
-  goalPitch: 'backgrounds/teaser-goal-pitch.png',
-  arenaPerspective: 'backgrounds/teaser-arena-perspective.png',
-  techBall: 'backgrounds/teaser-tech-ball.png',
-} as const;
-
-export const FootballShortFontFaces = () => (
-  <style>
-    {`
-      @font-face {
-        font-family: "Orbitron Teaser";
-        src: url("${staticFile('fonts/Orbitron-Black.ttf')}") format("truetype");
-        font-weight: 900;
-        font-style: normal;
-      }
-      @font-face {
-        font-family: "Orbitron Teaser";
-        src: url("${staticFile('fonts/Orbitron-ExtraBold.ttf')}") format("truetype");
-        font-weight: 800;
-        font-style: normal;
-      }
-      @font-face {
-        font-family: "Oxanium Teaser";
-        src: url("${staticFile('fonts/Oxanium-ExtraBold.ttf')}") format("truetype");
-        font-weight: 900;
-        font-style: normal;
-      }
-      @font-face {
-        font-family: "Oxanium Teaser";
-        src: url("${staticFile('fonts/Oxanium-Bold.ttf')}") format("truetype");
-        font-weight: 700;
-        font-style: normal;
-      }
-      @font-face {
-        font-family: "Audiowide Teaser";
-        src: url("${staticFile('fonts/Audiowide-Regular.ttf')}") format("truetype");
-        font-weight: 900;
-        font-style: normal;
-      }
-    `}
-  </style>
-);
 
 type FootballShortTeaserProps = {
   template: FootballVideoTemplate;
-  variant?: 'results' | 'next-games' | 'predictions' | 'championship' | 'relegation';
+  variant?: FootballShortTeaserVariant;
   channelProfile?: FootballChannelProfile;
   leagueName: string;
   roundLabel?: string;
@@ -149,120 +105,6 @@ const shortTeam = (value: string) =>
     .replace(/\s+/g, ' ')
     .trim()
     .slice(0, 18);
-
-const normalizeTeamKey = (value: string) =>
-  value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/\b(fc|sc|ec|afc|club|futebol clube|esporte clube|da gama)\b/g, '')
-    .replace(/[^a-z0-9]+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-
-const MAJOR_TEAM_PRIORITY: Record<string, number> = {
-  flamengo: 100,
-  palmeiras: 98,
-  corinthians: 96,
-  'sao paulo': 94,
-  santos: 92,
-  vasco: 90,
-  botafogo: 88,
-  gremio: 86,
-  internacional: 84,
-  cruzeiro: 82,
-  'atletico mg': 80,
-  fluminense: 78,
-  bahia: 74,
-  fortaleza: 72,
-  sport: 70,
-  vitoria: 68,
-  ceara: 66,
-  brazil: 64,
-  brasil: 64,
-  argentina: 63,
-  france: 62,
-  franca: 62,
-  germany: 61,
-  alemanha: 61,
-  spain: 60,
-  espanha: 60,
-  portugal: 59,
-  england: 58,
-  inglaterra: 58,
-  italy: 57,
-  italia: 57,
-  netherlands: 56,
-  holanda: 56,
-  uruguay: 55,
-  uruguai: 55,
-  belgium: 54,
-  belgica: 54,
-};
-
-const teamPriority = (team: string) => {
-  const key = normalizeTeamKey(team);
-  return MAJOR_TEAM_PRIORITY[key] ?? 0;
-};
-
-const fixtureTeamPriority = (fixture: FixtureCard) =>
-  Math.max(teamPriority(fixture.homeTeam), teamPriority(fixture.awayTeam));
-
-const fixtureResultScore = (fixture: FixtureCard) => {
-  const margin =
-    fixture.homeScore === null || fixture.awayScore === null
-      ? 0
-      : Math.abs(fixture.homeScore - fixture.awayScore);
-  const totalGoals =
-    fixture.homeScore === null || fixture.awayScore === null ? 0 : fixture.homeScore + fixture.awayScore;
-
-  return margin * 100 + totalGoals * 8 + fixtureTeamPriority(fixture);
-};
-
-const orderFixtureTeaserItems = (
-  fixtures: FixtureCard[],
-  variant: FootballShortTeaserProps['variant'],
-) => {
-  const sorted = fixtures
-    .map((fixture, index) => ({
-      fixture,
-      index,
-      priority:
-        variant === 'results'
-          ? fixtureResultScore(fixture)
-          : fixtureTeamPriority(fixture) * 100 + (hasScore(fixture) ? 12 : 0),
-    }))
-    .sort((left, right) => right.priority - left.priority || left.index - right.index);
-
-  return sorted.map((item) => item.fixture);
-};
-
-const TEAM_ACCENT_COLORS: Record<string, string> = {
-  palmeiras: '#27AE60',
-  flamengo: '#E3222A',
-  sport: '#C8102E',
-  crb: '#E30613',
-  nautico: '#D71920',
-  goias: '#009B3A',
-  ceara: '#111111',
-  'botafogo sp': '#E3222A',
-  botafogo: '#f0f4f8',
-  cruzeiro: '#1E5AA8',
-  gremio: '#00AEEF',
-  internacional: '#E30613',
-  corinthians: '#f0f4f8',
-  santos: '#f0f4f8',
-  'sao paulo': '#D71920',
-  vasco: '#f0f4f8',
-  bahia: '#1E5AA8',
-  'atletico mg': '#f0f4f8',
-  fluminense: '#7F1734',
-  vitoria: '#E3222A',
-  fortaleza: '#0057B8',
-};
-
-const teamAccentColor = (team: string, badge: TeamBadge | undefined, fallback: string) =>
-  badge?.accentColor ?? TEAM_ACCENT_COLORS[normalizeTeamKey(team)] ?? fallback;
 
 const getRankName = (row?: StandingRow | WorldCupGroupRow | PaceEntry) =>
   text('team' in (row ?? {}) ? row?.team : '');
@@ -1410,89 +1252,6 @@ const accentRgba = (accentColor: string, opacity: number) => {
   const rgb = hexToRgb(accentColor);
   return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})`;
 };
-
-export const pickFootballShortBackground = (
-  template: FootballVideoTemplate,
-  variant?: FootballShortTeaserProps['variant'],
-) => {
-  if (variant === 'results') return TEASER_BACKGROUNDS.stadiumLights;
-  if (variant === 'next-games') return TEASER_BACKGROUNDS.goalPitch;
-  if (variant === 'predictions') return TEASER_BACKGROUNDS.techBall;
-  if (template === 'standings' || template === 'world-cup-group-standings') return TEASER_BACKGROUNDS.arenaPerspective;
-  if (template === 'top-scorers' || template === 'player-of-round') return TEASER_BACKGROUNDS.techBall;
-  if (template === 'championship-pace' || template === 'champion-final' || template === 'season-final-verdict') {
-    return TEASER_BACKGROUNDS.stadiumLights;
-  }
-  if (template === 'relegation-line') return TEASER_BACKGROUNDS.arenaPerspective;
-  return TEASER_BACKGROUNDS.goalPitch;
-};
-
-const TeaserBackdrop = ({
-  backgroundPath,
-  accentColor,
-  intensity = 1,
-}: {
-  backgroundPath: string;
-  accentColor: string;
-  intensity?: number;
-}) => (
-  <>
-    <Img
-      src={staticFile(backgroundPath)}
-      style={{
-        position: 'absolute',
-        inset: 0,
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        opacity: 0.82,
-        filter: 'contrast(1.08) brightness(0.78)',
-      }}
-    />
-    <div
-      style={{
-        position: 'absolute',
-        inset: 0,
-        background:
-          `radial-gradient(circle at 50% 38%, ${accentRgba(accentColor, 0.26 * intensity)}, transparent 31%), ` +
-          `radial-gradient(circle at 50% 78%, ${accentRgba(accentColor, 0.18 * intensity)}, transparent 30%), ` +
-          'linear-gradient(180deg, rgba(2,4,7,0.34), rgba(2,4,7,0.1) 44%, rgba(2,4,7,0.74))',
-        mixBlendMode: 'screen',
-        opacity: 0.72,
-      }}
-    />
-    <div
-      style={{
-        position: 'absolute',
-        inset: 0,
-        background:
-          'linear-gradient(180deg, rgba(3,5,8,0.18), rgba(3,5,8,0.06) 44%, rgba(3,5,8,0.58)), radial-gradient(circle at 50% 50%, transparent 38%, rgba(0,0,0,0.52))',
-      }}
-    />
-  </>
-);
-
-export const FootballShortBackdrop = ({
-  template,
-  variant,
-  accentColor,
-  opacity = 0.5,
-  intensity = 0.72,
-}: {
-  template: FootballVideoTemplate;
-  variant?: FootballShortTeaserProps['variant'];
-  accentColor: string;
-  opacity?: number;
-  intensity?: number;
-}) => (
-  <AbsoluteFill style={{pointerEvents: 'none', opacity}}>
-    <TeaserBackdrop
-      backgroundPath={pickFootballShortBackground(template, variant)}
-      accentColor={accentColor}
-      intensity={intensity}
-    />
-  </AbsoluteFill>
-);
 
 const StandingsTeaserPoster = ({
   rows,
