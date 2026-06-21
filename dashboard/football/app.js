@@ -1,3 +1,14 @@
+import {
+  buildStudioPreviewUrl,
+  copyText,
+  escapeHtml,
+  formDataToObject,
+  normalizeSelectedDates,
+  normalizeStudioUrl,
+  setNoticeStatus,
+  slugifyOutputPart,
+} from './helpers.js';
+
 const form = document.getElementById('job-form');
 const presetSelect = document.getElementById('preset');
 const templateSelect = document.getElementById('template');
@@ -263,14 +274,6 @@ const templateFieldVisibility = {
 
 const getSelectedOptionLabel = (selectElement) =>
   selectElement?.selectedOptions?.[0]?.textContent?.trim() ?? '';
-
-const escapeHtml = (value) =>
-  String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
 
 let lastAutoOutputName = '';
 let lastAutoWorldCupCompetitionName = '';
@@ -588,14 +591,6 @@ const setBusy = (busy) => {
   renderButton.disabled = busy;
 };
 
-const setNoticeStatus = (element, message, tone = 'info') => {
-  if (!element) return;
-  element.textContent = message;
-  element.classList.add('notice');
-  element.classList.remove('info', 'success', 'warning', 'error');
-  element.classList.add(tone);
-};
-
 const startYouTubeOAuth = async (channel) => {
   try {
     setNoticeStatus(settingsStatus, `Preparing YouTube ${channel.toUpperCase()} consent link…`, 'warning');
@@ -632,10 +627,8 @@ const log = (message, replace = false) => {
   logOutput.scrollTop = logOutput.scrollHeight;
 };
 
-const formDataToObject = () => Object.fromEntries(new FormData(form).entries());
-
 const buildJobPayloadFromForm = () => {
-  const payload = formDataToObject();
+  const payload = formDataToObject(form);
   // languageProfile select is disabled in UI, so inject it explicitly.
   payload.languageProfile = languageProfileSelect.value || getChannelLanguageProfile();
   payload.channelProfile = channelProfileSelect.value || getCurrentChannelProfile();
@@ -669,25 +662,6 @@ const buildJobPayloadFromForm = () => {
   }
 
   return payload;
-};
-
-const slugifyOutputPart = (value) =>
-  String(value ?? '')
-    .trim()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-
-const normalizeSelectedDates = (value) => {
-  const rawValues = Array.isArray(value)
-    ? value
-    : String(value ?? '')
-        .split(',')
-        .map((item) => item.trim());
-
-  return [...new Set(rawValues.map((item) => String(item).trim()).filter(Boolean))];
 };
 
 const getSelectedMatchDates = () => normalizeSelectedDates(matchDateSelect.value);
@@ -1084,24 +1058,6 @@ const setRenderDownload = (job, render) => {
 };
 
 const joinList = (value) => (Array.isArray(value) ? value.join(', ') : String(value ?? ''));
-
-const copyText = async (value) => {
-  const text = String(value ?? '');
-  if (navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(text);
-    return;
-  }
-
-  const textarea = document.createElement('textarea');
-  textarea.value = text;
-  textarea.setAttribute('readonly', '');
-  textarea.style.position = 'fixed';
-  textarea.style.opacity = '0';
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand('copy');
-  textarea.remove();
-};
 
 const stripYouTubeCouponBlock = (description) => {
   const lines = String(description ?? '').replace(/\r\n/g, '\n').split('\n');
@@ -2485,41 +2441,19 @@ const loadResultFixturesForEditor = async () => {
   }
 };
 
-const normalizeStudioUrl = (value) => {
-  const trimmed = value.trim();
-  return trimmed || 'http://127.0.0.1:3000';
-};
-
-const buildStudioPreviewUrl = () => {
+const getStudioPreviewUrl = () => {
   const studioUrl = normalizeStudioUrl(studioUrlInput.value);
   const compositionId = templateCompositionMap[templateSelect.value];
-  const refreshToken = Date.now().toString();
   const knownCompositionIds = new Set(Object.values(templateCompositionMap).filter(Boolean));
 
-  try {
-    const url = new URL(studioUrl);
-    const pathParts = url.pathname.split('/').filter(Boolean);
-    if (pathParts.length && knownCompositionIds.has(decodeURIComponent(pathParts[pathParts.length - 1]))) {
-      pathParts.pop();
-    }
-    const cleanPath = pathParts.length ? `/${pathParts.map(encodeURIComponent).join('/')}` : '';
-    url.pathname = compositionId ? `${cleanPath}/${encodeURIComponent(compositionId)}` : cleanPath || '/';
-    url.searchParams.set('codexPreviewTs', refreshToken);
-    return url.toString();
-  } catch {
-    if (!compositionId) {
-      return `${studioUrl}${studioUrl.includes('?') ? '&' : '?'}codexPreviewTs=${refreshToken}`;
-    }
-
-    return `${studioUrl.replace(/\/+$/, '')}/${encodeURIComponent(compositionId)}?codexPreviewTs=${refreshToken}`;
-  }
+  return buildStudioPreviewUrl({studioUrl, compositionId, knownCompositionIds});
 };
 
 const updatePreview = () => {
   const studioUrl = normalizeStudioUrl(studioUrlInput.value);
   studioUrlInput.value = studioUrl;
   localStorage.setItem(STUDIO_URL_KEY, studioUrl);
-  const previewUrl = buildStudioPreviewUrl();
+  const previewUrl = getStudioPreviewUrl();
   previewFrame.src = 'about:blank';
   window.setTimeout(() => {
     previewFrame.src = previewUrl;
