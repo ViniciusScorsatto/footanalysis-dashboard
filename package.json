@@ -10,7 +10,8 @@
     "studio": "remotion studio src/index.ts",
     "build": "remotion bundle src/index.ts",
     "render": "SPORT=football node --env-file=.env scripts/render-current-job.mjs",
-    "verify:short-endframes": "node scripts/verify-short-endframes.mjs"
+    "verify:short-endframes": "node scripts/verify-short-endframes.mjs",
+    "verify:current-job-stills": "node scripts/verify-current-job-stills.mjs"
   },
   "dependencies": {
     "@remotion/player": "^4.0.271",

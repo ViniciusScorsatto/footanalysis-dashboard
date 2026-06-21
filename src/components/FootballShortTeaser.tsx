@@ -2,7 +2,6 @@ import {AbsoluteFill, Img, staticFile, useCurrentFrame} from 'remotion';
 import type React from 'react';
 import {BrandMark} from './BrandMark';
 import {
-  FootballShortBackdrop,
   FootballShortFontFaces,
   SHORT_INTRO_DURATION_FRAMES,
   SHORT_TEASER_DURATION_FRAMES,
@@ -11,6 +10,7 @@ import {
   TEASER_LABEL_FONT,
   TEASER_NUMBER_EFFECT,
   TEASER_NUMBER_FONT,
+  TeaserBackdrop,
   pickFootballShortBackground,
 } from './FootballShortTeaserKit';
 import type {FootballShortTeaserVariant} from './FootballShortTeaserKit';

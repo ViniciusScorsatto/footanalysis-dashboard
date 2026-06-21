@@ -119,7 +119,7 @@ const accentRgba = (accentColor: string, opacity: number) => {
   return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})`;
 };
 
-const TeaserBackdrop = ({
+export const TeaserBackdrop = ({
   backgroundPath,
   accentColor,
   intensity = 1,
