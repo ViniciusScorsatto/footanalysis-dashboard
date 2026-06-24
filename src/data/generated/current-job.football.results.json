@@ -1,9 +1,9 @@
 {
   "sport": "football",
   "template": "results",
-  "leagueId": 740,
+  "leagueId": 72,
   "season": 2026,
-  "leagueName": "Brasileirão Sub-20",
+  "leagueName": "Brasileirão Série B",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
@@ -11,45 +11,141 @@
   "soundtrackPath": "/audio/football/É Gol, É Gol.mp3",
   "soundtrackLabel": "É Gol, É Gol",
   "soundtrackVolume": 0.25,
-  "outputName": "brasileirao-sub-20-2026-resultados-pt-br.mp4",
+  "outputName": "brasileirao-serie-b-2026-resultados-regular-season-14-pt-br.mp4",
   "durationInFrames": 360,
   "compositionId": "FootballResultsShort",
   "leagueConfig": {
-    "leagueId": 740,
-    "accentColor": "#E67E22",
+    "leagueId": 72,
+    "accentColor": "#2E86DE",
     "standings": {
       "safeArea": {
-        "left": 40,
-        "right": 120
+        "left": 68,
+        "right": 104
       },
       "zones": [
         {
-          "key": "champion",
-          "label": "Campeão",
+          "key": "acesso-direto",
+          "label": "Acesso direto",
           "start": 1,
-          "end": 1
+          "end": 2,
+          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(101, 227, 133, 0.64)"
         },
         {
-          "key": "relegation",
+          "key": "playoffs-acesso",
+          "label": "Playoffs de acesso",
+          "start": 3,
+          "end": 6,
+          "fill": "linear-gradient(90deg, rgba(240, 165, 0, 0.88), rgba(240, 165, 0, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(240, 165, 0, 0.52)"
+        },
+        {
+          "key": "rebaixamento",
           "label": "Rebaixamento",
-          "start": 18,
-          "end": 20
+          "start": 17,
+          "end": 20,
+          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 102, 102, 0.56)"
         }
       ]
     },
-    "leagueName": "Brasileirão Sub-20"
+    "leagueName": "Brasileirão Série B"
   },
-  "round": "Regular Season - 17",
-  "roundLabel": "Rodada 17",
-  "ctaText": "Palmeiras atropela América Mineiro por 7 a 1 e muda o rumo da rodada!",
+  "round": "Regular Season - 14",
+  "roundLabel": "Rodada 14",
+  "ctaText": "Quem sai mais forte: Vila Nova ou Novorizontino?",
   "fixtures": [
     {
-      "fixtureId": 1526183,
-      "fixtureDateKey": "2026-06-20",
-      "homeTeam": "Avaí",
-      "awayTeam": "Juventude",
+      "fixtureId": 1520738,
+      "fixtureDateKey": "2026-06-18",
+      "homeTeam": "Sport",
+      "awayTeam": "Atlético-GO",
       "homeScore": 1,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "S",
+        "logoPath": "/logos/sport-recife-123.png"
+      },
+      "awayBadge": {
+        "label": "A",
+        "logoPath": "/logos/atletico-goianiense-144.png"
+      }
+    },
+    {
+      "fixtureId": 1520735,
+      "fixtureDateKey": "2026-06-20",
+      "homeTeam": "Londrina",
+      "awayTeam": "Athletic Club",
+      "homeScore": 2,
+      "awayScore": 0,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "L",
+        "logoPath": "/logos/londrina-148.png"
+      },
+      "awayBadge": {
+        "label": "AC",
+        "logoPath": "/logos/athletic-club-13975.png"
+      }
+    },
+    {
+      "fixtureId": 1520732,
+      "fixtureDateKey": "2026-06-20",
+      "homeTeam": "Ceara",
+      "awayTeam": "Botafogo SP",
+      "homeScore": 0,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "C",
+        "logoPath": "/logos/ceara-129.png"
+      },
+      "awayBadge": {
+        "label": "BS",
+        "logoPath": "/logos/botafogo-sp-2618.png"
+      }
+    },
+    {
+      "fixtureId": 1520739,
+      "fixtureDateKey": "2026-06-20",
+      "homeTeam": "Vila Nova",
+      "awayTeam": "Náutico",
+      "homeScore": 4,
       "awayScore": 3,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "VN",
+        "logoPath": "/logos/vila-nova-142.png"
+      },
+      "awayBadge": {
+        "label": "N",
+        "logoPath": "/logos/nautico-recife-755.png"
+      }
+    },
+    {
+      "fixtureId": 1520731,
+      "fixtureDateKey": "2026-06-21",
+      "homeTeam": "Avai",
+      "awayTeam": "Cuiaba",
+      "homeScore": 1,
+      "awayScore": 0,
       "homeEliminated": false,
       "awayEliminated": false,
       "hasPenalties": false,
@@ -60,100 +156,16 @@
         "logoPath": "/logos/avai-145.png"
       },
       "awayBadge": {
-        "label": "J",
-        "logoPath": "/logos/juventude-152.png"
-      }
-    },
-    {
-      "fixtureId": 1526190,
-      "fixtureDateKey": "2026-06-20",
-      "homeTeam": "São Paulo",
-      "awayTeam": "Flamengo",
-      "homeScore": 1,
-      "awayScore": 1,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "SP",
-        "logoPath": "/logos/sao-paulo.png"
-      },
-      "awayBadge": {
-        "label": "F",
-        "logoPath": "/logos/flamengo.png"
-      }
-    },
-    {
-      "fixtureId": 1526191,
-      "fixtureDateKey": "2026-06-20",
-      "homeTeam": "Vasco da Gama",
-      "awayTeam": "RB Bragantino",
-      "homeScore": 0,
-      "awayScore": 1,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "VDG",
-        "logoPath": "/logos/vasco-da-gama.png"
-      },
-      "awayBadge": {
-        "label": "RB",
-        "logoPath": "/logos/rb-bragantino.png"
-      }
-    },
-    {
-      "fixtureId": 1526184,
-      "fixtureDateKey": "2026-06-20",
-      "homeTeam": "Cruzeiro",
-      "awayTeam": "Corinthians",
-      "homeScore": 1,
-      "awayScore": 2,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
         "label": "C",
-        "logoPath": "/logos/cruzeiro.png"
-      },
-      "awayBadge": {
-        "label": "C",
-        "logoPath": "/logos/corinthians.png"
+        "logoPath": "/logos/cuiaba-1193.png"
       }
     },
     {
-      "fixtureId": 1526186,
-      "fixtureDateKey": "2026-06-20",
-      "homeTeam": "Fluminense",
-      "awayTeam": "Athletico PR",
-      "homeScore": 0,
-      "awayScore": 0,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "F",
-        "logoPath": "/logos/fluminense.png"
-      },
-      "awayBadge": {
-        "label": "AP",
-        "logoPath": "/logos/atletico-paranaense.png"
-      }
-    },
-    {
-      "fixtureId": 1526187,
-      "fixtureDateKey": "2026-06-20",
-      "homeTeam": "Grêmio",
+      "fixtureId": 1520733,
+      "fixtureDateKey": "2026-06-21",
+      "homeTeam": "CRB",
       "awayTeam": "Fortaleza",
-      "homeScore": 2,
+      "homeScore": 1,
       "awayScore": 1,
       "homeEliminated": false,
       "awayEliminated": false,
@@ -161,8 +173,8 @@
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "G",
-        "logoPath": "/logos/gremio.png"
+        "label": "C",
+        "logoPath": "/logos/crb-146.png"
       },
       "awayBadge": {
         "label": "F",
@@ -170,10 +182,52 @@
       }
     },
     {
-      "fixtureId": 1526189,
-      "fixtureDateKey": "2026-06-20",
-      "homeTeam": "Santos",
-      "awayTeam": "Bahia",
+      "fixtureId": 1520737,
+      "fixtureDateKey": "2026-06-21",
+      "homeTeam": "São Bernardo",
+      "awayTeam": "Juventude",
+      "homeScore": 0,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "SB",
+        "logoPath": "/logos/sao-bernardo-7865.png"
+      },
+      "awayBadge": {
+        "label": "J",
+        "logoPath": "/logos/juventude-152.png"
+      }
+    },
+    {
+      "fixtureId": 1520734,
+      "fixtureDateKey": "2026-06-21",
+      "homeTeam": "Goias",
+      "awayTeam": "Operario-PR",
+      "homeScore": 0,
+      "awayScore": 3,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "G",
+        "logoPath": "/logos/goias-151.png"
+      },
+      "awayBadge": {
+        "label": "O",
+        "logoPath": "/logos/operario-pr-1223.png"
+      }
+    },
+    {
+      "fixtureId": 1520736,
+      "fixtureDateKey": "2026-06-22",
+      "homeTeam": "Ponte Preta",
+      "awayTeam": "Novorizontino",
       "homeScore": 0,
       "awayScore": 2,
       "homeEliminated": false,
@@ -182,62 +236,20 @@
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "S",
-        "logoPath": "/logos/santos.png"
+        "label": "PP",
+        "logoPath": "/logos/ponte-preta-139.png"
       },
       "awayBadge": {
-        "label": "B",
-        "logoPath": "/logos/bahia.png"
+        "label": "N",
+        "logoPath": "/logos/novorizontino.svg"
       }
     },
     {
-      "fixtureId": 1526192,
-      "fixtureDateKey": "2026-06-20",
-      "homeTeam": "Vitória",
-      "awayTeam": "Botafogo",
-      "homeScore": 2,
-      "awayScore": 0,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "V",
-        "logoPath": "/logos/vitoria.png"
-      },
-      "awayBadge": {
-        "label": "B",
-        "logoPath": "/logos/botafogo.png"
-      }
-    },
-    {
-      "fixtureId": 1526188,
-      "fixtureDateKey": "2026-06-20",
-      "homeTeam": "Palmeiras",
-      "awayTeam": "América Mineiro",
-      "homeScore": 7,
-      "awayScore": 1,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "P",
-        "logoPath": "/logos/palmeiras.png"
-      },
-      "awayBadge": {
-        "label": "AM",
-        "logoPath": "/logos/america-mineiro-125.png"
-      }
-    },
-    {
-      "fixtureId": 1526185,
-      "fixtureDateKey": "2026-06-20",
-      "homeTeam": "Cuiabá",
+      "fixtureId": 1520730,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "América-MG",
       "awayTeam": "Criciuma",
-      "homeScore": 2,
+      "homeScore": 0,
       "awayScore": 1,
       "homeEliminated": false,
       "awayEliminated": false,
@@ -245,8 +257,8 @@
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "C",
-        "logoPath": "/logos/cuiaba-1193.png"
+        "label": "A",
+        "logoPath": "/logos/america-mineiro-125.png"
       },
       "awayBadge": {
         "label": "C",
@@ -254,55 +266,55 @@
       }
     }
   ],
-  "introTitle": "Brasileirão Sub-20",
-  "introSubtitle": "Rodada 17",
-  "hookText": "Palmeiras atropela América Mineiro por 7 a 1 e muda o rumo da rodada!",
+  "introTitle": "Brasileirão Série B",
+  "introSubtitle": "Rodada 14",
+  "hookText": "Vila Nova vence por 4 a 3 e sacode a briga pela liderança!",
   "coldOpenData": {
     "matchRows": [
       {
-        "left": "AVAÍ",
-        "center": "1 - 3",
-        "right": "JUVENTUDE"
-      },
-      {
-        "left": "SÃO PAULO",
+        "left": "SPORT",
         "center": "1 - 1",
-        "right": "FLAMENGO"
+        "right": "ATLÉTICO-GO"
       },
       {
-        "left": "VASCO DA GAMA",
+        "left": "LONDRINA",
+        "center": "2 - 0",
+        "right": "ATHLETIC CLUB"
+      },
+      {
+        "left": "CEARA",
         "center": "0 - 1",
-        "right": "RB BRAGANTINO"
+        "right": "BOTAFOGO SP"
       },
       {
-        "left": "CRUZEIRO",
-        "center": "1 - 2",
-        "right": "CORINTHIANS"
+        "left": "VILA NOVA",
+        "center": "4 - 3",
+        "right": "NÁUTICO"
       }
     ],
     "tableRows": [
       {
         "rank": 1,
-        "club": "AVAÍ",
+        "club": "SPORT",
         "pts": 22
       },
       {
         "rank": 2,
-        "club": "JUVENTUDE",
+        "club": "ATLÉTICO-GO",
         "pts": 20
       },
       {
         "rank": 3,
-        "club": "SÃO PAULO",
+        "club": "LONDRINA",
         "pts": 18
       },
       {
         "rank": 4,
-        "club": "FLAMENGO",
+        "club": "ATHLETIC CLUB",
         "pts": 16
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "Palmeiras dominou com 7 a 1 no América Mineiro, aumentando sua moral no Brasileirão Sub-20: quem sai mais forte?"
+  "voiceoverText": "A vitória do Vila Nova por 4 a 3 sobre Náutico acirrou a disputa pela liderança, enquanto Novorizontino também garantiu vitória importante."
 }

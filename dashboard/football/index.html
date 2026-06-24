@@ -47,6 +47,37 @@
             <p>Authorize the English TikTok account with video upload access.</p>
             <button type="button" class="btn btn-secondary tiktok-oauth-button" data-channel="en">Generate EN Refresh Token</button>
           </section>
+          <section class="settings-card short-durations-card">
+            <div class="settings-card-header">
+              <div>
+                <h3>Short durations</h3>
+                <p>Edit content frames by template. Teaser, intro, default and minimum stay read-only.</p>
+              </div>
+              <span class="status-chip neutral" id="short-durations-fps">30 fps</span>
+            </div>
+            <div class="short-duration-meta" id="short-duration-meta"></div>
+            <div class="short-duration-table-shell">
+              <table class="short-duration-table">
+                <thead>
+                  <tr>
+                    <th>Template</th>
+                    <th>Content</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody id="short-duration-list">
+                  <tr>
+                    <td colspan="3">Load durations to edit.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="settings-actions">
+              <button type="button" id="save-short-durations-button" class="btn btn-primary btn-compact">Save durations</button>
+              <button type="button" id="reload-short-durations-button" class="btn btn-secondary btn-compact">Reload</button>
+            </div>
+            <p class="settings-status notice info" id="short-durations-status">Durations are stored in config/football-short-durations.json.</p>
+          </section>
         </div>
         <p class="settings-status notice info" id="settings-status">Client credentials are read from your local .env.</p>
       </section>
@@ -280,6 +311,24 @@
                 Intro title
                 <input type="text" name="introTitle" placeholder="Auto" />
               </label>
+              <div class="two-up">
+                <label>
+                  Priorizar time(s)
+                  <input
+                    type="text"
+                    name="aiPriorityTeams"
+                    placeholder="Ex: Algeria, Jordan ou Palmeiras"
+                  />
+                </label>
+                <label>
+                  Ângulo editorial
+                  <input
+                    type="text"
+                    name="aiEditorialAngle"
+                    placeholder="Ex: focar na reação da Argélia e pressão no grupo"
+                  />
+                </label>
+              </div>
               <div id="cta-field" hidden>
                 <label>
                   CTA text

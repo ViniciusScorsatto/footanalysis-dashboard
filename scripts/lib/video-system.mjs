@@ -110,35 +110,87 @@ const getLongformSoundtrackPath = ({soundtrackPath, channelProfile}) => {
   }
   return requested || defaultFootballSoundtrack?.value;
 };
-const shortDurationsConfig = JSON.parse(fsSync.readFileSync(shortDurationsFile, 'utf8'));
 const positiveFrameCount = (value, fallback) =>
   typeof value === 'number' && Number.isFinite(value) && value > 0 ? Math.round(value) : fallback;
-const FOOTBALL_SHORT_OPENING_FRAMES =
-  positiveFrameCount(shortDurationsConfig?.opening?.teaserFrames, 60) +
-  positiveFrameCount(shortDurationsConfig?.opening?.introFrames, 45);
-const FOOTBALL_SHORT_DEFAULT_CONTENT_FRAMES = positiveFrameCount(
-  shortDurationsConfig?.defaultContentFrames,
-  345
-);
-const FOOTBALL_SHORT_MINIMUM_TOTAL_FRAMES = positiveFrameCount(
-  shortDurationsConfig?.minimumTotalFrames,
-  360
-);
-const shortContentFramesByComposition = shortDurationsConfig?.contentFramesByComposition ?? {};
 
-export const getFootballShortDurationInFrames = (compositionId) =>
-  Math.max(
-    FOOTBALL_SHORT_MINIMUM_TOTAL_FRAMES,
-    FOOTBALL_SHORT_OPENING_FRAMES +
-      positiveFrameCount(
-        shortContentFramesByComposition?.[compositionId],
-        FOOTBALL_SHORT_DEFAULT_CONTENT_FRAMES
-      )
+export const loadFootballShortDurationsConfig = () =>
+  JSON.parse(fsSync.readFileSync(shortDurationsFile, 'utf8'));
+
+export const getFootballShortDurationParts = (
+  compositionId,
+  config = loadFootballShortDurationsConfig()
+) => {
+  const teaserFrames = positiveFrameCount(config?.opening?.teaserFrames, 60);
+  const introFrames = positiveFrameCount(config?.opening?.introFrames, 45);
+  const openingFrames = teaserFrames + introFrames;
+  const minimumTotalFrames = positiveFrameCount(config?.minimumTotalFrames, 360);
+  const defaultContentFrames = positiveFrameCount(config?.defaultContentFrames, 345);
+  const contentFrames = positiveFrameCount(
+    config?.contentFramesByComposition?.[compositionId],
+    defaultContentFrames
   );
 
-export const isFootballShortComposition = (compositionId) =>
-  typeof compositionId === 'string' &&
-  Object.prototype.hasOwnProperty.call(shortContentFramesByComposition, compositionId);
+  return {
+    teaserFrames,
+    introFrames,
+    openingFrames,
+    minimumTotalFrames,
+    defaultContentFrames,
+    contentFrames,
+    totalFrames: Math.max(minimumTotalFrames, openingFrames + contentFrames),
+  };
+};
+
+export const getFootballShortDurationInFrames = (compositionId) =>
+  getFootballShortDurationParts(compositionId).totalFrames;
+
+export const isFootballShortComposition = (compositionId) => {
+  const config = loadFootballShortDurationsConfig();
+  return (
+    typeof compositionId === 'string' &&
+    Object.prototype.hasOwnProperty.call(config?.contentFramesByComposition ?? {}, compositionId)
+  );
+};
+
+export const saveFootballShortContentDurations = async (contentFramesByComposition) => {
+  const config = loadFootballShortDurationsConfig();
+  const existing = config?.contentFramesByComposition ?? {};
+  const updates = contentFramesByComposition ?? {};
+  const unknownCompositionIds = Object.keys(updates).filter(
+    (compositionId) => !Object.prototype.hasOwnProperty.call(existing, compositionId)
+  );
+
+  if (unknownCompositionIds.length > 0) {
+    throw new Error(`Unknown short composition: ${unknownCompositionIds.join(', ')}`);
+  }
+
+  const nextContentFramesByComposition = {};
+  for (const compositionId of Object.keys(existing)) {
+    const rawValue = Object.prototype.hasOwnProperty.call(updates, compositionId)
+      ? updates[compositionId]
+      : existing[compositionId];
+    const frameCount = Number(rawValue);
+    if (!Number.isInteger(frameCount) || frameCount <= 0) {
+      throw new Error(`${compositionId} must be a positive integer frame count.`);
+    }
+    nextContentFramesByComposition[compositionId] = frameCount;
+  }
+
+  const nextConfig = {
+    ...config,
+    contentFramesByComposition: nextContentFramesByComposition,
+  };
+  await fs.writeFile(shortDurationsFile, `${JSON.stringify(nextConfig, null, 2)}\n`, 'utf8');
+  return nextConfig;
+};
+
+export const summarizeFootballShortDurations = (config = loadFootballShortDurationsConfig()) =>
+  Object.fromEntries(
+    Object.keys(config?.contentFramesByComposition ?? {}).map((compositionId) => [
+      compositionId,
+      getFootballShortDurationParts(compositionId, config),
+    ])
+  );
 
 export const normalizeFootballShortJobDuration = (job) => {
   if (!job || !isFootballShortComposition(job.compositionId)) {
@@ -169,6 +221,23 @@ export const templates = [
   {value: 'world-cup-group-standings', label: 'World Cup Group Standings'},
   {value: 'world-cup-knockout', label: 'World Cup Knockout'},
 ];
+
+export const footballShortTemplateCompositionMap = {
+  results: 'FootballResultsShort',
+  'next-games': 'FootballNextGamesShort',
+  predictions: 'FootballPredictionsShort',
+  standings: 'FootballStandingsShort',
+  'season-final-verdict': 'FootballSeasonFinalVerdictShort',
+  'champion-final': 'FootballChampionFinalShort',
+  'top-scorers': 'FootballTopScorersShort',
+  'player-of-round': 'FootballPlayerOfRoundShort',
+  'championship-pace': 'FootballChampionshipPaceShort',
+  'relegation-line': 'FootballRelegationLineShort',
+  tierlist: 'FootballTierlistShort',
+  'continental-groups-standings': 'FootballContinentalGroupsShort',
+  'world-cup-group-standings': 'FootballWorldCupGroupShort',
+  'world-cup-knockout': 'FootballWorldCupKnockoutShort',
+};
 
 export const leaguePresets = [
   {label: 'Brasileirão Série A', leagueId: 71, channels: ['pt']},
@@ -762,11 +831,61 @@ const dedupeWorldCupStandingRows = (groupRows = []) => {
   });
 };
 
+const collectWorldCupStandingGroups = (standingsGroups) => {
+  const groupsByKey = new Map();
+
+  const addRow = (row, fallbackGroupKey = null) => {
+    if (!row || typeof row !== 'object') {
+      return;
+    }
+
+    const groupKey = getWorldCupGroupKey(row.group) ?? fallbackGroupKey;
+    if (!groupKey) {
+      return;
+    }
+
+    const groupRows = groupsByKey.get(groupKey) ?? [];
+    groupRows.push(row);
+    groupsByKey.set(groupKey, groupRows);
+  };
+
+  const visit = (node, fallbackGroupKey = null) => {
+    if (!node) {
+      return;
+    }
+
+    if (Array.isArray(node)) {
+      const groupKey =
+        node.map((child) => getWorldCupGroupKey(child?.group)).find(Boolean) ?? fallbackGroupKey;
+      node.forEach((child) => visit(child, groupKey));
+      return;
+    }
+
+    addRow(node, fallbackGroupKey);
+  };
+
+  visit(standingsGroups);
+
+  return new Map(
+    [...groupsByKey.entries()].map(([groupKey, groupRows]) => [
+      groupKey,
+      dedupeWorldCupStandingRows(groupRows).sort((left, right) => {
+        const rankGap = Number(left?.rank ?? 999) - Number(right?.rank ?? 999);
+        if (rankGap !== 0) {
+          return rankGap;
+        }
+
+        return getWorldCupStandingTeamKey(left).localeCompare(getWorldCupStandingTeamKey(right));
+      }),
+    ])
+  );
+};
+
 const getBestWorldCupThirdPlaceKeys = (standingsGroups) => {
-  const thirdPlaceRows = (standingsGroups ?? [])
+  const groupedStandings = [...collectWorldCupStandingGroups(standingsGroups).values()];
+  const thirdPlaceRows = groupedStandings
     .map((groupRows) => {
-      const uniqueRows = dedupeWorldCupStandingRows(groupRows);
-      return uniqueRows.find((row) => row?.rank === 3) ?? uniqueRows?.[2];
+      return groupRows.find((row) => row?.rank === 3) ?? groupRows?.[2];
     })
     .filter((row) => row && Number(row?.all?.played ?? 0) > 0);
 
@@ -2760,6 +2879,131 @@ const applyWorldCupStandingEdits = (rows, edits = []) => {
     .sort((left, right) => left.rank - right.rank);
 };
 
+const getFixtureGoals = (fixture) => {
+  const home =
+    fixture?.goals?.home ??
+    fixture?.score?.fulltime?.home ??
+    fixture?.score?.extratime?.home ??
+    null;
+  const away =
+    fixture?.goals?.away ??
+    fixture?.score?.fulltime?.away ??
+    fixture?.score?.extratime?.away ??
+    null;
+
+  return {
+    home: Number.isFinite(Number(home)) ? Number(home) : null,
+    away: Number.isFinite(Number(away)) ? Number(away) : null,
+  };
+};
+
+const getWorldCupTeamStatAliases = (teamName, languageProfile) =>
+  [
+    normalizeGroupName(teamName),
+    normalizeGroupName(translateWorldCupCountryName(teamName, languageProfile)),
+  ].filter(Boolean);
+
+const calculateWorldCupFixtureStats = (fixtures, languageProfile) => {
+  const statsByTeam = new Map();
+
+  const ensureStats = (teamName) => {
+    const aliases = getWorldCupTeamStatAliases(teamName, languageProfile);
+    const existing = aliases.map((alias) => statsByTeam.get(alias)).find(Boolean);
+    const stats =
+      existing ?? {
+        played: 0,
+        points: 0,
+        goalDifference: 0,
+        goalsFor: 0,
+        goalsAgainst: 0,
+      };
+
+    aliases.forEach((alias) => statsByTeam.set(alias, stats));
+    return stats;
+  };
+
+  (fixtures ?? []).forEach((fixture) => {
+    if (!FINISHED_STATUSES.has(fixture?.fixture?.status?.short)) {
+      return;
+    }
+
+    const {home, away} = getFixtureGoals(fixture);
+    if (home === null || away === null) {
+      return;
+    }
+
+    const homeStats = ensureStats(fixture.teams?.home?.name ?? '');
+    const awayStats = ensureStats(fixture.teams?.away?.name ?? '');
+
+    homeStats.played += 1;
+    awayStats.played += 1;
+    homeStats.goalsFor += home;
+    homeStats.goalsAgainst += away;
+    awayStats.goalsFor += away;
+    awayStats.goalsAgainst += home;
+    homeStats.goalDifference = homeStats.goalsFor - homeStats.goalsAgainst;
+    awayStats.goalDifference = awayStats.goalsFor - awayStats.goalsAgainst;
+
+    if (home > away) {
+      homeStats.points += 3;
+    } else if (away > home) {
+      awayStats.points += 3;
+    } else {
+      homeStats.points += 1;
+      awayStats.points += 1;
+    }
+  });
+
+  return statsByTeam;
+};
+
+const reconcileWorldCupRowsWithFixtures = (rows, fixtures, languageProfile) => {
+  const statsByTeam = calculateWorldCupFixtureStats(fixtures, languageProfile);
+  if (statsByTeam.size === 0) {
+    return rows;
+  }
+
+  const updatedRows = rows.map((row) => {
+    const stats = statsByTeam.get(normalizeGroupName(row.team));
+    if (!stats || stats.played === 0) {
+      return row;
+    }
+
+    return {
+      ...row,
+      played: stats.played,
+      points: stats.points,
+      goalDifference: stats.goalDifference,
+      goalsFor: stats.goalsFor,
+    };
+  });
+
+  return updatedRows
+    .sort((left, right) => {
+      const pointsGap = Number(right.points ?? 0) - Number(left.points ?? 0);
+      if (pointsGap !== 0) {
+        return pointsGap;
+      }
+
+      const goalDifferenceGap =
+        Number(right.goalDifference ?? 0) - Number(left.goalDifference ?? 0);
+      if (goalDifferenceGap !== 0) {
+        return goalDifferenceGap;
+      }
+
+      const goalsForGap = Number(right.goalsFor ?? 0) - Number(left.goalsFor ?? 0);
+      if (goalsForGap !== 0) {
+        return goalsForGap;
+      }
+
+      return Number(left.rank ?? 999) - Number(right.rank ?? 999);
+    })
+    .map((row, index) => ({
+      ...row,
+      rank: index + 1,
+    }));
+};
+
 const buildWorldCupGroupJob = async ({
   apiKey,
   apiHost,
@@ -2843,6 +3087,7 @@ const buildWorldCupGroupJob = async ({
   })) ?? [];
 
   let detectedCompetitionName = competitionName?.trim() || copy.worldCup.title(season);
+  const warnings = [];
 
   if (apiKey) {
     const standingsPayload = await fetchJson(
@@ -2852,17 +3097,15 @@ const buildWorldCupGroupJob = async ({
     );
 
     const league = standingsPayload.response?.[0]?.league;
-    const allGroups = Array.isArray(league?.standings) ? league.standings : [];
-    const bestThirdPlaceKeys = getBestWorldCupThirdPlaceKeys(allGroups);
-    const selectedGroupRows = allGroups.find((groupRows) => {
-      const groupName = groupRows?.[0]?.group;
-      return getWorldCupGroupKey(groupName) === normalizedGroupLetter;
-    });
+    const rawStandingsGroups = Array.isArray(league?.standings) ? league.standings : [];
+    const groupedStandings = collectWorldCupStandingGroups(rawStandingsGroups);
+    const apiGroupKeys = [...groupedStandings.keys()];
+    const bestThirdPlaceKeys = getBestWorldCupThirdPlaceKeys(rawStandingsGroups);
+    const selectedGroupRows = groupedStandings.get(normalizedGroupLetter) ?? [];
 
-    if (selectedGroupRows?.length) {
-      const uniqueSelectedGroupRows = dedupeWorldCupStandingRows(selectedGroupRows);
+    if (selectedGroupRows.length > 0) {
       rows = await Promise.all(
-        uniqueSelectedGroupRows.slice(0, 4).map(async (row) => ({
+        selectedGroupRows.slice(0, 4).map(async (row) => ({
           rank: row.rank,
           team: translateWorldCupCountryName(row.team?.name ?? 'TBC', languageProfile),
           played: row.all?.played ?? 0,
@@ -2881,6 +3124,12 @@ const buildWorldCupGroupJob = async ({
           },
         }))
       );
+    } else {
+      warnings.push(
+        `World Cup standings API did not return Group ${normalizedGroupLetter}. Available groups: ${
+          apiGroupKeys.length > 0 ? apiGroupKeys.join(', ') : 'none'
+        }. Using fallback group data.`
+      );
     }
 
     const fallbackGroupTeams = new Set(
@@ -2889,8 +3138,8 @@ const buildWorldCupGroupJob = async ({
       )
     );
     const groupTeams = new Set(
-      selectedGroupRows?.length
-        ? dedupeWorldCupStandingRows(selectedGroupRows).map((row) => normalizeGroupName(row.team?.name))
+      selectedGroupRows.length > 0
+        ? selectedGroupRows.map((row) => normalizeGroupName(row.team?.name))
         : [...fallbackGroupTeams]
     );
     if (groupTeams.size > 0) {
@@ -2905,8 +3154,12 @@ const buildWorldCupGroupJob = async ({
         return groupTeams.has(homeName) && groupTeams.has(awayName);
       });
 
-      const finishedFixtures = groupFixtures
-        .filter((fixture) => FINISHED_STATUSES.has(fixture.fixture?.status?.short))
+      const completedGroupFixtures = groupFixtures.filter((fixture) =>
+        FINISHED_STATUSES.has(fixture.fixture?.status?.short)
+      );
+      rows = reconcileWorldCupRowsWithFixtures(rows, completedGroupFixtures, languageProfile);
+
+      const finishedFixtures = completedGroupFixtures
         .sort((a, b) => (b.fixture?.timestamp ?? 0) - (a.fixture?.timestamp ?? 0))
         .slice(0, 2);
 
@@ -3030,6 +3283,7 @@ const buildWorldCupGroupJob = async ({
     nextMatchesLabel: copy.worldCup.nextMatches(normalizedGroupLetter),
     groupMatchSectionMode,
     ctaText: ctaText?.trim() || copy.worldCup.cta,
+    warnings: warnings.length > 0 ? warnings : undefined,
     rows,
     lastResults,
     nextMatches,
@@ -4173,6 +4427,44 @@ export const prepareFootballRoundSummaryLongJob = async ({
 export const loadCurrentJob = async () => {
   const raw = await fs.readFile(currentJobFile, 'utf8');
   return JSON.parse(raw);
+};
+
+export const prepareWorldCupGroupStandingsPreview = async ({
+  apiKey,
+  apiHost,
+  season,
+  brandName,
+  outputName,
+  channelProfile,
+  languageProfile,
+  groupLetter,
+  competitionName,
+  roundLabel,
+  ctaText,
+  worldCupStandingEdits,
+  soundtrackPath,
+  soundtrackVolume,
+  leagueName,
+}) => {
+  const job = await buildWorldCupGroupJob({
+    apiKey,
+    apiHost,
+    season,
+    brandName,
+    outputName,
+    channelProfile,
+    languageProfile,
+    groupLetter,
+    competitionName,
+    roundLabel,
+    ctaText,
+    worldCupStandingEdits,
+    soundtrackPath,
+    soundtrackVolume,
+    leagueName,
+  });
+
+  return {job};
 };
 
 export const prepareJob = async ({

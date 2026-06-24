@@ -11,10 +11,10 @@ export const HEADER_STAGGER_FRAMES = 7;
 
 /**
  * Frame at which the first data row starts animating.
- * Enforces the brand's 0.8s title-hold rule: header settles ~frame 29,
- * then 24 frames (~0.8s) of silence before data appears.
+ * Content compositions preroll their headers; data should follow almost
+ * immediately so the main section never holds on an empty body.
  */
-export const ROWS_START_FRAME = 48;
+export const ROWS_START_FRAME = 10;
 
 /** Frames between each successive row: 200ms at 30fps. */
 export const ROW_STAGGER_FRAMES = 6;

@@ -11,13 +11,13 @@
   "soundtrackPath": "/audio/football/Estádio Vai Ferver.mp3",
   "soundtrackLabel": "Estádio Vai Ferver",
   "soundtrackVolume": 0.25,
-  "outputName": "copa-do-mundo-2026-grupo-f-pt-br.mp4",
+  "outputName": "copa-do-mundo-2026-grupo-l-pt-br.mp4",
   "durationInFrames": 360,
   "compositionId": "FootballWorldCupGroupShort",
   "competitionName": "Copa do Mundo 2026",
-  "groupLetter": "F",
+  "groupLetter": "L",
   "titleLabel": "Copa do Mundo 2026",
-  "groupLabel": "Grupo F",
+  "groupLabel": "Grupo L",
   "tableLabels": {
     "pos": "Pos",
     "team": "Equipe",
@@ -28,147 +28,151 @@
     "direct": "1º e 2º avançam",
     "bestThird": "8 melhores terceiros"
   },
-  "lastResultsLabel": "Últimos Resultados - Grupo F",
-  "nextMatchesLabel": "Próximos Jogos - Grupo F",
+  "lastResultsLabel": "Últimos Resultados - Grupo L",
+  "nextMatchesLabel": "Próximos Jogos - Grupo L",
   "groupMatchSectionMode": "mixed",
-  "ctaText": "Quem muda a disputa pela vaga no Grupo F?",
+  "ctaText": "Inglaterra e Gana com 4 pontos no Grupo L, Croácia na cola!",
   "rows": [
     {
       "rank": 1,
-      "team": "Holanda",
+      "team": "Inglaterra",
       "played": 2,
-      "goalDifference": 4,
+      "goalDifference": 2,
       "points": 4,
       "qualifiesAsBestThird": false,
       "badge": {
-        "label": "🇳🇱",
-        "imagePath": "/logos/netherlands-1118.png"
-      }
+        "label": "🏴",
+        "imagePath": "/logos/england-10.png"
+      },
+      "goalsFor": 4
     },
     {
       "rank": 2,
-      "team": "Japão",
+      "team": "Gana",
       "played": 2,
-      "goalDifference": 4,
+      "goalDifference": 1,
       "points": 4,
       "qualifiesAsBestThird": false,
       "badge": {
-        "label": "🇯🇵",
-        "imagePath": "/logos/japan-12.png"
-      }
+        "label": "🇬🇭",
+        "imagePath": "/logos/ghana-1504.png"
+      },
+      "goalsFor": 1
     },
     {
       "rank": 3,
-      "team": "Suécia",
+      "team": "Croácia",
       "played": 2,
-      "goalDifference": 0,
+      "goalDifference": -1,
       "points": 3,
       "qualifiesAsBestThird": true,
       "badge": {
-        "label": "S",
-        "imagePath": "/logos/sweden-5.png"
-      }
+        "label": "🇭🇷",
+        "imagePath": "/logos/croatia-3.png"
+      },
+      "goalsFor": 3
     },
     {
       "rank": 4,
-      "team": "Tunísia",
+      "team": "Panamá",
       "played": 2,
-      "goalDifference": -8,
+      "goalDifference": -2,
       "points": 0,
       "qualifiesAsBestThird": false,
       "badge": {
-        "label": "🇹🇳",
-        "imagePath": "/logos/tunisia-28.png"
-      }
+        "label": "🇵🇦",
+        "imagePath": "/logos/panama-11.png"
+      },
+      "goalsFor": 0
     }
   ],
   "lastResults": [
     {
-      "homeTeam": "Tunísia",
-      "awayTeam": "Japão",
+      "homeTeam": "Panamá",
+      "awayTeam": "Croácia",
       "homeScore": 0,
-      "awayScore": 4,
-      "homeBadge": {
-        "label": "🇹🇳",
-        "imagePath": "/logos/tunisia-28.png"
-      },
-      "awayBadge": {
-        "label": "🇯🇵",
-        "imagePath": "/logos/japan-12.png"
-      },
-      "dateLabel": "21 de jun • 01:00 (BRT)"
-    },
-    {
-      "homeTeam": "Holanda",
-      "awayTeam": "Suécia",
-      "homeScore": 5,
       "awayScore": 1,
       "homeBadge": {
-        "label": "🇳🇱",
-        "imagePath": "/logos/netherlands-1118.png"
+        "label": "🇵🇦",
+        "imagePath": "/logos/panama-11.png"
       },
       "awayBadge": {
-        "label": "S",
-        "imagePath": "/logos/sweden-5.png"
+        "label": "🇭🇷",
+        "imagePath": "/logos/croatia-3.png"
       },
-      "dateLabel": "20 de jun • 14:00 (BRT)"
+      "dateLabel": "23 de jun • 20:00 (BRT)"
+    },
+    {
+      "homeTeam": "Inglaterra",
+      "awayTeam": "Gana",
+      "homeScore": 0,
+      "awayScore": 0,
+      "homeBadge": {
+        "label": "🏴",
+        "imagePath": "/logos/england-10.png"
+      },
+      "awayBadge": {
+        "label": "🇬🇭",
+        "imagePath": "/logos/ghana-1504.png"
+      },
+      "dateLabel": "23 de jun • 17:00 (BRT)"
     }
   ],
   "nextMatches": [
     {
-      "homeTeam": "Japão",
-      "awayTeam": "Suécia",
+      "homeTeam": "Croácia",
+      "awayTeam": "Gana",
       "homeBadge": {
-        "label": "🇯🇵",
-        "imagePath": "/logos/japan-12.png"
+        "label": "🇭🇷",
+        "imagePath": "/logos/croatia-3.png"
       },
       "awayBadge": {
-        "label": "S",
-        "imagePath": "/logos/sweden-5.png"
+        "label": "🇬🇭",
+        "imagePath": "/logos/ghana-1504.png"
       },
-      "dateLabel": "25 de jun • 20:00 (BRT)"
+      "dateLabel": "27 de jun • 18:00 (BRT)"
     },
     {
-      "homeTeam": "Tunísia",
-      "awayTeam": "Holanda",
+      "homeTeam": "Panamá",
+      "awayTeam": "Inglaterra",
       "homeBadge": {
-        "label": "🇹🇳",
-        "imagePath": "/logos/tunisia-28.png"
+        "label": "🇵🇦",
+        "imagePath": "/logos/panama-11.png"
       },
       "awayBadge": {
-        "label": "🇳🇱",
-        "imagePath": "/logos/netherlands-1118.png"
+        "label": "🏴",
+        "imagePath": "/logos/england-10.png"
       },
-      "dateLabel": "25 de jun • 20:00 (BRT)"
+      "dateLabel": "27 de jun • 18:00 (BRT)"
     }
   ],
   "introTitle": "Copa do Mundo 2026",
-  "introSubtitle": "Grupo F",
-  "hookText": "Holanda e Japão pressionam agora no Grupo F da Copa do Mundo 2026!",
+  "introSubtitle": "Grupo L",
+  "hookText": "Inglaterra e Gana com 4 pontos no Grupo L, Croácia na cola!",
   "coldOpenData": {
     "tableRows": [
       {
         "rank": 1,
-        "club": "HOLANDA",
+        "club": "INGLATERRA",
         "pts": 4
       },
       {
         "rank": 2,
-        "club": "JAPÃO",
+        "club": "GANA",
         "pts": 4
       },
       {
         "rank": 3,
-        "club": "SUÉCIA",
+        "club": "CROÁCIA",
         "pts": 3
       },
       {
         "rank": 4,
-        "club": "TUNÍSIA",
+        "club": "PANAMÁ",
         "pts": 0
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "Holanda e Japão lideram o Grupo F com 4 pontos cada, pressionando a Suécia na Copa do Mundo 2026."
+  "voiceoverText": "No Grupo L da Copa do Mundo 2026, Inglaterra e Gana lideram com 4 pontos, quem ganha vantagem na próxima rodada?"
 }
