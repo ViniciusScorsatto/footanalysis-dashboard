@@ -4,148 +4,43 @@
   "compositionId": "FootballPredictionsLong",
   "leagueId": 1,
   "season": 2026,
-  "leagueName": "World Cup",
-  "channelProfile": "en",
-  "languageProfile": "en",
+  "leagueName": "Copa do Mundo",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/foot-analysis-whistle.mp3",
-  "soundtrackLabel": "Foot Analysis Whistle",
+  "soundtrackPath": "/audio/football/gol-na-pressao.mp3",
+  "soundtrackLabel": "Gol na Pressão",
   "soundtrackVolume": 0.3,
-  "outputName": "world-cup-group-stage-2-3-dates-predictions-longform.mp4",
-  "durationInFrames": 10262,
+  "outputName": "copa-do-mundo-group-stage-3-2026-06-26-2026-06-27-palpites-longform.mp4",
+  "durationInFrames": 10322,
   "dataSource": "sample",
-  "title": "Predictions for Round 2",
-  "roundLabel": "Matchday 2",
+  "title": "Palpites da Group Stage - 3",
+  "roundLabel": "Group Stage - 3",
   "openingLines": [
-    "Round 2 and a few teams could already move very close to qualification.",
-    "Now let us go game by game with the scorelines I would call."
+    "Ultimos jogos da Fase de Grupos da Copa do Mundo",
+    "Agora vamos para os palpites, jogo por jogo"
   ],
   "introDurationInFrames": 298,
   "outroDurationInFrames": 298,
   "transitionDurationInFrames": 18,
-  "disclaimer": "Predictions are for entertainment purposes only.",
+  "disclaimer": "Os palpites têm caráter exclusivamente recreativo.",
   "voiceoverEnabled": true,
   "matches": [
     {
-      "id": "spain-saudi-arabia-1",
-      "homeTeam": "Spain",
-      "awayTeam": "Saudi Arabia",
-      "predictedScore": "2-0",
-      "homeScore": 2,
-      "awayScore": 0,
-      "voiceover": "Spain dropped points in a 0 to 0 draw against Cape Verde, so they need an immediate response.\nSaudi Arabia drew 1 to 1 with Uruguay and showed they can compete, but they should struggle against a more technical side.\nSpain needs the win to take control of the group, so I expect them to dominate, but not by a huge scoreline.\nMy prediction is 2-0 Spain.",
-      "voiceoverPath": "/voiceovers/football/en-e39bf7ea7bcd1414.mp3",
-      "durationInFrames": 900,
-      "homeBadge": {
-        "label": "SPAI",
-        "logoPath": "/logos/spain-9.png",
-        "accentColor": "#AA151B"
-      },
-      "awayBadge": {
-        "label": "SA",
-        "logoPath": "/logos/saudi-arabia-23.png",
-        "accentColor": "#F39C12"
-      }
-    },
-    {
-      "id": "belgium-iran-2",
-      "homeTeam": "Belgium",
-      "awayTeam": "Iran",
+      "id": "senegal-iraque-1",
+      "homeTeam": "Senegal",
+      "awayTeam": "Iraque",
       "predictedScore": "2-1",
       "homeScore": 2,
       "awayScore": 1,
-      "voiceover": "Belgium drew 1 to 1 with Egypt and cannot afford to drop more points here.\nIran comes from a 2 to 2 draw against New Zealand, showing attacking strength but also defensive problems.\nThis should be a dangerous game, but Belgium still has more quality to decide it in key moments.\nMy prediction is 2-1 Belgium.",
-      "voiceoverPath": "/voiceovers/football/en-16cc659f71c85628.mp3",
-      "durationInFrames": 780,
+      "voiceover": "Senegal chega zerado, mas enfrentou França e Noruega, dois adversários muito fortes nas primeiras rodadas.\nO Iraque também perdeu os dois jogos e sofreu sete gols, então essa é a chance de Senegal transformar qualidade em resultado.\nO Iraque deve competir, mas Senegal tem mais força física e mais ameaça ofensiva.\nMeu palpite é 2 a 1 Senegal.",
+      "voiceoverPath": "/voiceovers/football/pt-br-19224ebbd3f89685.mp3",
+      "durationInFrames": 810,
       "homeBadge": {
-        "label": "BELG",
-        "logoPath": "/logos/belgium-1.png",
-        "accentColor": "#C0392B"
-      },
-      "awayBadge": {
-        "label": "IRAN",
-        "logoPath": "/logos/iran-22.png",
-        "accentColor": "#E74C3C"
-      }
-    },
-    {
-      "id": "uruguay-cape-verde-3",
-      "homeTeam": "Uruguay",
-      "awayTeam": "Cape Verde",
-      "predictedScore": "2-0",
-      "homeScore": 2,
-      "awayScore": 0,
-      "voiceover": "Uruguay drew 1 to 1 with Saudi Arabia and now needs to recover the points lost in the opening round.\nCape Verde held Spain to a 0 to 0 draw, so this is not a match to underestimate.\nEven so, Uruguay has more physical strength, more experience, and more match-winning quality.\nMy prediction is 2-0 Uruguay.",
-      "voiceoverPath": "/voiceovers/football/en-571c89dd0c43e725.mp3",
-      "durationInFrames": 780,
-      "homeBadge": {
-        "label": "URUG",
-        "logoPath": "/logos/uruguay-7.png",
-        "accentColor": "#27AE60"
-      },
-      "awayBadge": {
-        "label": "CV",
-        "logoPath": "/logos/cape-verde-islands-1533.png",
-        "accentColor": "#C0392B"
-      }
-    },
-    {
-      "id": "new-zealand-egypt-4",
-      "homeTeam": "New Zealand",
-      "awayTeam": "Egypt",
-      "predictedScore": "1-2",
-      "homeScore": 1,
-      "awayScore": 2,
-      "voiceover": "New Zealand drew 2 to 2 with Iran and showed they can be competitive in this group.\nEgypt also drew in the opening round, holding Belgium to a 1 to 1 result, which was a very strong performance.\nBecause of the level of the opponent they faced and the need to win, I see Egypt as a slight favorite.\nMy prediction is 2-1 Egypt.",
-      "voiceoverPath": "/voiceovers/football/en-b7af1d29737f97cd.mp3",
-      "durationInFrames": 870,
-      "homeBadge": {
-        "label": "NZ",
-        "logoPath": "/logos/new-zealand-4673.png",
-        "accentColor": "#3498DB"
-      },
-      "awayBadge": {
-        "label": "EGYP",
-        "logoPath": "/logos/egypt-32.png",
-        "accentColor": "#E74C3C"
-      }
-    },
-    {
-      "id": "argentina-austria-5",
-      "homeTeam": "Argentina",
-      "awayTeam": "Austria",
-      "predictedScore": "2-1",
-      "homeScore": 2,
-      "awayScore": 1,
-      "voiceover": "Argentina started very strongly, beating Algeria 3 to 0 and confirming their status as one of the favorites.\nAustria also had a good start, beating Jordan 3 to 1, so this becomes a direct fight for the top of the group.\nAustria arrives with confidence, but Argentina has more quality and experience to win a tight match.\nMy prediction is 2-1 Argentina.",
-      "voiceoverPath": "/voiceovers/football/en-efa7c2d825ec15c3.mp3",
-      "durationInFrames": 840,
-      "homeBadge": {
-        "label": "ARGE",
-        "logoPath": "/logos/argentina-26.png",
-        "accentColor": "#6CACE4"
-      },
-      "awayBadge": {
-        "label": "AUST",
-        "logoPath": "/logos/austria-775.png",
-        "accentColor": "#C0392B"
-      }
-    },
-    {
-      "id": "france-iraq-6",
-      "homeTeam": "France",
-      "awayTeam": "Iraq",
-      "predictedScore": "3-0",
-      "homeScore": 3,
-      "awayScore": 0,
-      "voiceover": "France beat Senegal 3 to 1 in the opening round and already showed strength against a difficult opponent.\nIraq lost 4 to 1 to Norway and comes into this match under pressure after struggling a lot defensively.\nBecause of the technical gap and what both teams showed in the first round, France should control this game comfortably.\nMy prediction is 3-0 France.",
-      "voiceoverPath": "/voiceovers/football/en-6b60ea8ec1506a30.mp3",
-      "durationInFrames": 840,
-      "homeBadge": {
-        "label": "FRAN",
-        "logoPath": "/logos/france-2.png",
-        "accentColor": "#0055A4"
+        "label": "SENE",
+        "logoPath": "/logos/senegal-13.png",
+        "accentColor": "#00853F"
       },
       "awayBadge": {
         "label": "IRAQ",
@@ -154,61 +49,187 @@
       }
     },
     {
-      "id": "norway-senegal-7",
-      "homeTeam": "Norway",
-      "awayTeam": "Senegal",
+      "id": "noruega-franca-2",
+      "homeTeam": "Noruega",
+      "awayTeam": "França",
       "predictedScore": "2-2",
       "homeScore": 2,
       "awayScore": 2,
-      "voiceover": "Norway started very well, beating Iraq 4 to 1 and showing major attacking power.\nSenegal lost 3 to 1 to France, but they faced one of the strongest teams in the tournament.\nThis looks like an open game, with Norway full of confidence and Senegal needing a reaction.\nMy prediction is 2-2 draw.",
-      "voiceoverPath": "/voiceovers/football/en-e0f73ff19a123339.mp3",
-      "durationInFrames": 750,
+      "voiceover": "Noruega e França chegam com seis pontos, então esse jogo vale a liderança do grupo.\nA França mostrou força, mas a Noruega também impressionou no ataque, com sete gols em dois jogos.\nComo os dois times já estão em situação confortável, vejo um jogo mais aberto do que cauteloso.\nMeu palpite é 2 a 2 empate.",
+      "voiceoverPath": "/voiceovers/football/pt-br-075f508b35c39730.mp3",
+      "durationInFrames": 780,
       "homeBadge": {
-        "label": "NORW",
+        "label": "NORU",
         "logoPath": "/logos/norway-1090.png",
         "accentColor": "#8E44AD"
       },
       "awayBadge": {
-        "label": "SENE",
-        "logoPath": "/logos/senegal-13.png",
-        "accentColor": "#00853F"
+        "label": "FRAN",
+        "logoPath": "/logos/france-2.png",
+        "accentColor": "#0055A4"
       }
     },
     {
-      "id": "jordan-algeria-8",
-      "homeTeam": "Jordan",
-      "awayTeam": "Algeria",
+      "id": "uruguai-espanha-3",
+      "homeTeam": "Uruguai",
+      "awayTeam": "Espanha",
       "predictedScore": "1-2",
       "homeScore": 1,
       "awayScore": 2,
-      "voiceover": "Jordan lost 3 to 1 to Austria and already comes into this match under pressure to stay alive.\nAlgeria also lost in the opening round, but they faced Argentina, one of the favorites to win the World Cup.\nBased on individual quality and the context from the first round, Algeria looks better prepared to bounce back.\nMy prediction is 2-1 Algeria.",
-      "voiceoverPath": "/voiceovers/football/en-0668035c83408b0d.mp3",
-      "durationInFrames": 840,
+      "voiceover": "O Uruguai ainda está invicto, mas dois empates deixam o time precisando de resultado para ficar tranquilo.\nA Espanha se recuperou depois do empate contra Cabo Verde e agora lidera o grupo com bom saldo.\nO Uruguai deve dificultar, mas a Espanha tem mais controle e mais qualidade técnica nos momentos decisivos.\nMeu palpite é 2 a 1 Espanha.",
+      "voiceoverPath": "/voiceovers/football/pt-br-1a7afcef806a71ce.mp3",
+      "durationInFrames": 810,
       "homeBadge": {
-        "label": "JORD",
-        "logoPath": "/logos/jordan-1548.png",
+        "label": "URUG",
+        "logoPath": "/logos/uruguay-7.png",
         "accentColor": "#27AE60"
       },
       "awayBadge": {
-        "label": "ALGE",
-        "logoPath": "/logos/algeria-1532.png",
-        "accentColor": "#1ABC9C"
+        "label": "ESPA",
+        "logoPath": "/logos/spain-9.png",
+        "accentColor": "#AA151B"
       }
     },
     {
-      "id": "portugal-uzbekistan-9",
-      "homeTeam": "Portugal",
-      "awayTeam": "Uzbekistan",
-      "predictedScore": "2-0",
+      "id": "cabo-verde-arabia-saudita-4",
+      "homeTeam": "Cabo Verde",
+      "awayTeam": "Arábia Saudita",
+      "predictedScore": "1-1",
+      "homeScore": 1,
+      "awayScore": 1,
+      "voiceover": "Cabo Verde segue invicto depois de dois empates e já mostrou que consegue travar seleções mais fortes.\nA Arábia Saudita tem apenas um ponto, mas ainda está viva e precisa atacar esse jogo.\nEsse confronto tem cara de sobrevivência, com os dois times capazes de marcar, mas sem domínio claro.\nMeu palpite é 1 a 1 empate.",
+      "voiceoverPath": "/voiceovers/football/pt-br-66e599aeaa5f5466.mp3",
+      "durationInFrames": 780,
+      "homeBadge": {
+        "label": "CV",
+        "logoPath": "/logos/cape-verde-islands-1533.png",
+        "accentColor": "#C0392B"
+      },
+      "awayBadge": {
+        "label": "AS",
+        "logoPath": "/logos/saudi-arabia-23.png",
+        "accentColor": "#F39C12"
+      }
+    },
+    {
+      "id": "egito-ira-5",
+      "homeTeam": "Egito",
+      "awayTeam": "Irã",
+      "predictedScore": "2-1",
       "homeScore": 2,
-      "awayScore": 0,
-      "voiceover": "Portugal drew 1 to 1 with Congo and needs to show a better response in this second match.\nUzbekistan lost 3 to 1 to Colombia and also comes in needing points.\nPortugal still has the stronger squad, more control, and more options to decide the game.\nMy prediction is 2-0 Portugal.",
-      "voiceoverPath": "/voiceovers/football/en-535fbb5139a642e6.mp3",
+      "awayScore": 1,
+      "voiceover": "O Egito lidera o grupo com quatro pontos e pode confirmar a classificação com uma vitória.\nO Irã ainda está invicto com dois empates, mas ainda não conseguiu transformar boas atuações em vitória.\nO Egito foi mais eficiente até agora, e em um grupo tão apertado isso pode decidir o jogo.\nMeu palpite é 2 a 1 Egito.",
+      "voiceoverPath": "/voiceovers/football/pt-br-1f412ee11bd3439b.mp3",
+      "durationInFrames": 810,
+      "homeBadge": {
+        "label": "EGIT",
+        "logoPath": "/logos/egypt-32.png",
+        "accentColor": "#E74C3C"
+      },
+      "awayBadge": {
+        "label": "IRÃ",
+        "logoPath": "/logos/iran-22.png",
+        "accentColor": "#E74C3C"
+      }
+    },
+    {
+      "id": "nova-zelandia-belgica-6",
+      "homeTeam": "Nova Zelândia",
+      "awayTeam": "Bélgica",
+      "predictedScore": "1-2",
+      "homeScore": 1,
+      "awayScore": 2,
+      "voiceover": "A Nova Zelândia tem apenas um ponto e precisa de um grande resultado para continuar viva.\nA Bélgica empatou os dois jogos e chega muito pressionada para finalmente vencer.\nMesmo sem convencer até aqui, a Bélgica ainda tem mais qualidade individual para decidir esse jogo.\nMeu palpite é 2 a 1 Bélgica.",
+      "voiceoverPath": "/voiceovers/football/pt-br-a201aaefd6f744c2.mp3",
       "durationInFrames": 720,
       "homeBadge": {
+        "label": "NZ",
+        "logoPath": "/logos/new-zealand-4673.png",
+        "accentColor": "#3498DB"
+      },
+      "awayBadge": {
+        "label": "BÉLG",
+        "logoPath": "/logos/belgium-1.png",
+        "accentColor": "#C0392B"
+      }
+    },
+    {
+      "id": "croacia-gana-7",
+      "homeTeam": "Croácia",
+      "awayTeam": "Gana",
+      "predictedScore": "1-0",
+      "homeScore": 1,
+      "awayScore": 0,
+      "voiceover": "A Croácia chega com três pontos e sabe que esse jogo é praticamente uma decisão pela classificação.\nGana está à frente com quatro pontos e pode jogar de forma mais segura, mas isso também dá um alvo claro para a Croácia.\nEspero um jogo tático e apertado, decidido pela experiência croata.\nMeu palpite é 1 a 0 Croácia.",
+      "voiceoverPath": "/voiceovers/football/pt-br-51a5437b9b963100.mp3",
+      "durationInFrames": 810,
+      "homeBadge": {
+        "label": "CROÁ",
+        "logoPath": "/logos/croatia-3.png",
+        "accentColor": "#2E86DE"
+      },
+      "awayBadge": {
+        "label": "GANA",
+        "logoPath": "/logos/ghana-1504.png",
+        "accentColor": "#F39C12"
+      }
+    },
+    {
+      "id": "panama-inglaterra-8",
+      "homeTeam": "Panamá",
+      "awayTeam": "Inglaterra",
+      "predictedScore": "0-3",
+      "homeScore": 0,
+      "awayScore": 3,
+      "voiceover": "O Panamá perdeu os dois jogos e ainda não marcou gol no torneio.\nA Inglaterra lidera o grupo com quatro pontos e já mostrou força ofensiva, principalmente na vitória por 4 a 2 contra a Croácia.\nEsse é o tipo de jogo em que a Inglaterra deve controlar o ritmo e confirmar a classificação com autoridade.\nMeu palpite é 3 a 0 Inglaterra.",
+      "voiceoverPath": "/voiceovers/football/pt-br-c270dfcfd504172b.mp3",
+      "durationInFrames": 870,
+      "homeBadge": {
+        "label": "PANA",
+        "logoPath": "/logos/panama-11.png",
+        "accentColor": "#005293"
+      },
+      "awayBadge": {
+        "label": "INGL",
+        "logoPath": "/logos/england-10.png",
+        "accentColor": "#CF142B"
+      }
+    },
+    {
+      "id": "colombia-portugal-9",
+      "homeTeam": "Colômbia",
+      "awayTeam": "Portugal",
+      "predictedScore": "1-1",
+      "homeScore": 1,
+      "awayScore": 1,
+      "voiceover": "A Colômbia está perfeita até aqui, com seis pontos em dois jogos e controle do grupo.\nPortugal tem quatro pontos e um saldo forte, então o empate também deixa a seleção em ótima situação.\nComo os dois chegam confortáveis, vejo um jogo equilibrado, sem necessidade de forçar demais.\nMeu palpite é 1 a 1 empate.",
+      "voiceoverPath": "/voiceovers/football/pt-br-1e2a86e7afbf398c.mp3",
+      "durationInFrames": 750,
+      "homeBadge": {
+        "label": "COLÔ",
+        "logoPath": "/logos/colombia-8.png",
+        "accentColor": "#FCD116"
+      },
+      "awayBadge": {
         "label": "PORT",
         "logoPath": "/logos/portugal-27.png",
         "accentColor": "#006600"
+      }
+    },
+    {
+      "id": "congo-uzbequistao-10",
+      "homeTeam": "Congo",
+      "awayTeam": "Uzbequistão",
+      "predictedScore": "2-1",
+      "homeScore": 2,
+      "awayScore": 1,
+      "voiceover": "O Congo ainda tem chance depois de ter arrancado um ponto contra Portugal, mas precisa vencer aqui.\nO Uzbequistão perdeu os dois jogos, sofreu oito gols e teve muita dificuldade defensiva.\nO Congo deve ser mais agressivo e tem o suficiente para terminar o grupo com vitória.\nMeu palpite é 2 a 1 Congo.",
+      "voiceoverPath": "/voiceovers/football/pt-br-9e335ee2566c643c.mp3",
+      "durationInFrames": 750,
+      "homeBadge": {
+        "label": "CONG",
+        "logoPath": "/logos/congo-dr-1508.png",
+        "accentColor": "#E67E22"
       },
       "awayBadge": {
         "label": "UZBE",
@@ -217,66 +238,45 @@
       }
     },
     {
-      "id": "england-ghana-10",
-      "homeTeam": "England",
-      "awayTeam": "Ghana",
-      "predictedScore": "2-1",
-      "homeScore": 2,
-      "awayScore": 1,
-      "voiceover": "England had a very strong opening match, beating Croatia 4 to 2.\nGhana also started with a win, but it was a more controlled 1 to 0 result against Panama.\nEngland comes in with more attacking power, but Ghana has already shown they can compete and make the game difficult.\nMy prediction is 2-1 England.",
-      "voiceoverPath": "/voiceovers/football/en-e0b3782a7fc18c8a.mp3",
+      "id": "argelia-austria-11",
+      "homeTeam": "Argélia",
+      "awayTeam": "Áustria",
+      "predictedScore": "1-2",
+      "homeScore": 1,
+      "awayScore": 2,
+      "voiceover": "Argélia e Áustria chegam com três pontos, então esse é um confronto direto pela segunda vaga atrás da Argentina.\nA Argélia reagiu depois de perder para a Argentina, mas a Áustria pareceu mais consistente ao longo dos dois primeiros jogos.\nEm uma partida de muita pressão, confio um pouco mais na organização e eficiência da Áustria.\nMeu palpite é 2 a 1 Áustria.",
+      "voiceoverPath": "/voiceovers/football/pt-br-f4dc1461f69b19ea.mp3",
+      "durationInFrames": 870,
+      "homeBadge": {
+        "label": "ARGÉ",
+        "logoPath": "/logos/algeria-1532.png",
+        "accentColor": "#1ABC9C"
+      },
+      "awayBadge": {
+        "label": "ÁUST",
+        "logoPath": "/logos/austria-775.png",
+        "accentColor": "#C0392B"
+      }
+    },
+    {
+      "id": "jordania-argentina-12",
+      "homeTeam": "Jordânia",
+      "awayTeam": "Argentina",
+      "predictedScore": "0-3",
+      "homeScore": 0,
+      "awayScore": 3,
+      "voiceover": "A Jordânia perdeu os dois jogos e já sofreu cinco gols na competição.\nA Argentina tem seis pontos, cinco gols marcados e ainda não sofreu gol no grupo.\nMesmo com possível rotação, a Argentina tem qualidade demais e deve fechar a fase de grupos com outra vitória forte.\nMeu palpite é 3 a 0 Argentina.",
+      "voiceoverPath": "/voiceovers/football/pt-br-9fd8853ce2b27138.mp3",
       "durationInFrames": 750,
       "homeBadge": {
-        "label": "ENGL",
-        "logoPath": "/logos/england-10.png",
-        "accentColor": "#CF142B"
+        "label": "JORD",
+        "logoPath": "/logos/jordan-1548.png",
+        "accentColor": "#27AE60"
       },
       "awayBadge": {
-        "label": "GHAN",
-        "logoPath": "/logos/ghana-1504.png",
-        "accentColor": "#F39C12"
-      }
-    },
-    {
-      "id": "panama-croatia-11",
-      "homeTeam": "Panama",
-      "awayTeam": "Croatia",
-      "predictedScore": "0-2",
-      "homeScore": 0,
-      "awayScore": 2,
-      "voiceover": "Panama lost 1 to 0 to Ghana and now needs points against a stronger opponent.\nCroatia lost 4 to 2 to England, but still showed they can compete and score goals.\nBecause of their experience and need to react, Croatia should control this match better.\nMy prediction is 2-0 Croatia.",
-      "voiceoverPath": "/voiceovers/football/en-872a9498789ed2aa.mp3",
-      "durationInFrames": 690,
-      "homeBadge": {
-        "label": "PANA",
-        "logoPath": "/logos/panama-11.png",
-        "accentColor": "#005293"
-      },
-      "awayBadge": {
-        "label": "CROA",
-        "logoPath": "/logos/croatia-3.png",
-        "accentColor": "#2E86DE"
-      }
-    },
-    {
-      "id": "colombia-congo-12",
-      "homeTeam": "Colombia",
-      "awayTeam": "Congo",
-      "predictedScore": "2-1",
-      "homeScore": 2,
-      "awayScore": 1,
-      "voiceover": "Colombia started very well, beating Uzbekistan 3 to 1 and taking control of the group.\nCongo drew 1 to 1 with Portugal, a result that showed real competitiveness.\nEven with Congo coming from a big draw, Colombia looks stronger to win another tight match.\nMy prediction is 2-1 Colombia.",
-      "voiceoverPath": "/voiceovers/football/en-7a21b9d66a666b8a.mp3",
-      "durationInFrames": 690,
-      "homeBadge": {
-        "label": "COLO",
-        "logoPath": "/logos/colombia-8.png",
-        "accentColor": "#FCD116"
-      },
-      "awayBadge": {
-        "label": "CONG",
-        "logoPath": "/logos/congo-dr-1508.png",
-        "accentColor": "#E67E22"
+        "label": "ARGE",
+        "logoPath": "/logos/argentina-26.png",
+        "accentColor": "#6CACE4"
       }
     }
   ]

@@ -9,8 +9,8 @@
   "contentFramesByComposition": {
     "FootballResultsShort": 255,
     "FootballNextGamesShort": 255,
-    "FootballPredictionsShort": 255,
-    "FootballStandingsShort": 315,
+    "FootballPredictionsShort": 405,
+    "FootballStandingsShort": 405,
     "FootballSeasonFinalVerdictShort": 255,
     "FootballChampionFinalShort": 255,
     "FootballTopScorersShort": 255,
@@ -19,7 +19,7 @@
     "FootballRelegationLineShort": 255,
     "FootballContinentalGroupsShort": 255,
     "FootballTierlistShort": 255,
-    "FootballWorldCupGroupShort": 255,
+    "FootballWorldCupGroupShort": 345,
     "FootballWorldCupKnockoutShort": 255
   }
 }

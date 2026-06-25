@@ -51,23 +51,29 @@ Always maintain clearspace equal to the height of the "FA" mark on **all four si
 
 ## 03 — Typography
 
-**Two fonts only. Never mix others in.**
+**Shorts use the local Teaser typography package. Do not introduce remote font dependencies.**
 
-- **Display font:** Barlow Condensed — for everything that commands attention
-- **Data font:** Barlow — for everything that communicates information
+- **Headline font:** Orbitron Teaser — hero titles, template titles, big editorial statements
+- **Number font:** Oxanium Teaser — scores, points, ranks, team names, key stats
+- **Label font:** Audiowide Teaser — competition chips, section labels, compact metadata
 
-> ⚠️ **Render server note:** Barlow and Barlow Condensed are not system fonts and may not be available on headless Linux render servers. They must be loaded via `@remotion/google-fonts` before the render pipeline is considered production-safe. Until then, the Arial Narrow fallback will be used on the server. This is tracked as a known issue.
+These fonts are shipped in `public/fonts/` and loaded by `FootballShortFontFaces` in
+`src/components/FootballShortTeaserKit.tsx`. This is the production-safe source of truth for Shorts.
+Barlow and Poppins are not the default Shorts typography.
+
+Longform compositions may keep the quieter Poppins/system stack for dense narrated layouts.
+Thumbnail compositions may use heavier thumbnail-specific display stacks when needed for CTR.
 
 ### Type Scale (video canvas — 1080×1920px)
 
 | Role | Font | Size | Weight | Color | Transform |
 |---|---|---|---|---|---|
-| Hero Title | Barlow Condensed | 96px | 900 | Gold (`#F0A500`) | UPPERCASE |
-| Competition Badge | Barlow | 20px | 600 | Gold | UPPERCASE · letter-spacing 2px |
-| Round / Subtitle | Barlow Condensed | 56px | 600 | Slate (`#3a5060`) | UPPERCASE |
-| Team Name | Barlow Condensed | 34px | 700 | Ice White (`#c0ccd8`) | UPPERCASE |
-| Score / Stat | Barlow Condensed | 56px | 900 | Gold | — |
-| Label / Meta | Barlow | 20px | 600 | Slate | UPPERCASE · letter-spacing 2px |
+| Hero Title | Orbitron Teaser | 84-132px | 900-950 | Gold (`#F0A500`) or channel accent | UPPERCASE |
+| Competition Badge | Audiowide Teaser | 20-25px | 800-900 | Competition accent | UPPERCASE · letter-spacing 2px |
+| Round / Subtitle | Audiowide Teaser | 34-56px | 600-900 | Slate (`#3a5060`) | UPPERCASE |
+| Team Name | Oxanium Teaser | 30-44px | 700-950 | Ice White (`#c0ccd8`) | UPPERCASE |
+| Score / Stat | Oxanium Teaser | 44-98px | 900-950 | Gold or competition accent | — |
+| Label / Meta | Audiowide Teaser | 18-22px | 600-900 | Slate | UPPERCASE · letter-spacing 2px |
 
 > Note: The original brand guide type scale was authored for static social graphics. The video canvas sizes above are the calibrated equivalents at 1080×1920px at 30fps.
 
@@ -104,8 +110,8 @@ Every piece of content uses one of three templates. The structure never changes 
 
 **Template anatomy — always in this exact order, top to bottom:**
 1. Competition badge (accent color, UPPERCASE label)
-2. Content type headline (Barlow Condensed 900, Gold)
-3. Round / date subtitle (Barlow Condensed 600, Slate)
+2. Content type headline (Orbitron Teaser 900, Gold or channel accent)
+3. Round / date subtitle (Audiowide Teaser 600-900, Slate)
 4. Data body (rows, table, or list)
 5. Logo mark — **bottom-right, always, appears last**
 
@@ -124,8 +130,8 @@ Every piece of content uses one of three templates. The structure never changes 
 - Format: match rows, score format (Team A  3 × 1  Team B)
 - Score in Gold, teams in Ice White
 - Predictions show "VS" instead of score
-- Results: dark solid background only — no photos, no stadium images
-- Predictions: atmospheric blue gradient with stadium lights effect (exception to no-photo rule, this is an art direction choice)
+- Results/predictions: Pitch Black foundation with approved local Teaser backdrops only
+- Match rows/cards must remain dark and high-contrast above the backdrop
 
 ---
 
@@ -163,16 +169,19 @@ Every piece of content uses one of three templates. The structure never changes 
 ## 07 — Do & Don't
 
 ### DO
-- Use **one background style** — solid dark `#0b0d12` only for data templates. No blurred photos, no stadium aerials, no gradients behind data.
+- Use **one background foundation** — Pitch Black `#0b0d12` with approved local Teaser backdrops.
+  Keep the data layer dark enough that the backdrop never competes with the numbers.
 - Place the **logo bottom-right** on every single piece of content. Same size. Same position. Every time.
 - Use the **competition accent color only on the title strip and key accents** — not as a full background fill.
-- Keep **maximum 2 font weights** visible per card — 900 for headline, 600 or 700 for data.
+- Keep the **three Teaser font roles** clear — Orbitron for commands, Oxanium for facts,
+  Audiowide for labels.
 - Include a **teaser CTA in every description** — "Próxima rodada sexta" or "Palpites completos no link da bio."
 
 ### DON'T
 - **Never use more than 2 accent colors** on a single card. Brand gold + competition accent. That's it.
 - **Never change the logo position** between cards.
-- **Never put a blurred stadium photo** as the background of a data card. It competes with the data and loses every time. (Predictions template is an intentional exception.)
+- **Never add ad hoc blurred stadium photos** or external background art. Use only approved
+  local Teaser backdrops and preserve data readability.
 - **Never mix Série A gold with Série B blue** on the same card unless explicitly comparing the two competitions.
 - **Never use the World Cup tri-color treatment** for any Brazilian domestic competition, even Copa do Brasil.
 - **Never scale the logo smaller than 80px wide** on a 1080px canvas.
@@ -224,8 +233,9 @@ Ice white (text) .... #c0ccd8
 Slate (meta) ........ #3a5060
 Muted (borders) ..... #1e2a34
 
-Display font ........ Barlow Condensed
-Data font ........... Barlow
+Headline font ....... Orbitron Teaser
+Number/team font .... Oxanium Teaser
+Label font .......... Audiowide Teaser
 
 Logo position ....... Bottom-right, always, appears last
 Spacing base ........ 8px grid
@@ -245,3 +255,4 @@ Loss ................ #E74C3C
 | 2026-04-16 | Added Implementation section with exact frame counts, code constants, and render server font warning | Foot Analysis |
 | 2026-04-16 | Corrected round/subtitle type role: color → Slate (#3a5060), weight → 600 (was white/700 in code) | Foot Analysis |
 | 2026-04-16 | Confirmed Results template background = solid dark only (no backgroundImagePath in Results jobs) | Foot Analysis |
+| 2026-06-21 | Resolved typography divergence: Shorts source of truth is the local Orbitron/Oxanium/Audiowide Teaser package; Barlow/Poppins are no longer documented as the Shorts default | Codex |

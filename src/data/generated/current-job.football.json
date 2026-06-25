@@ -1,174 +1,308 @@
 {
   "sport": "football",
-  "template": "world-cup-group-standings",
-  "leagueId": 1,
+  "template": "results",
+  "leagueId": 1128,
   "season": 2026,
-  "leagueName": "Copa do Mundo 2026",
+  "leagueName": "Brasileirão Sub-17",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Estádio Vai Ferver.mp3",
-  "soundtrackLabel": "Estádio Vai Ferver",
+  "soundtrackPath": "/audio/football/É Gol, É Gol.mp3",
+  "soundtrackLabel": "É Gol, É Gol",
   "soundtrackVolume": 0.25,
-  "outputName": "copa-do-mundo-2026-grupo-f-pt-br.mp4",
+  "outputName": "brasileirao-sub-17-2026-resultados-pt-br.mp4",
   "durationInFrames": 360,
-  "compositionId": "FootballWorldCupGroupShort",
-  "competitionName": "Copa do Mundo 2026",
-  "groupLetter": "F",
-  "titleLabel": "Copa do Mundo 2026",
-  "groupLabel": "Grupo F",
-  "tableLabels": {
-    "pos": "Pos",
-    "team": "Equipe",
-    "gd": "SG",
-    "pts": "Pts"
+  "compositionId": "FootballResultsShort",
+  "leagueConfig": {
+    "leagueId": 1128,
+    "accentColor": "#E67E22",
+    "standings": {
+      "safeArea": {
+        "left": 40,
+        "right": 120
+      },
+      "zones": [
+        {
+          "key": "champion",
+          "label": "Campeão",
+          "start": 1,
+          "end": 1
+        },
+        {
+          "key": "relegation",
+          "label": "Rebaixamento",
+          "start": 18,
+          "end": 20
+        }
+      ]
+    },
+    "leagueName": "Brasileirão Sub-17"
   },
-  "qualificationLegend": {
-    "direct": "1º e 2º avançam",
-    "bestThird": "8 melhores terceiros"
-  },
-  "lastResultsLabel": "Últimos Resultados - Grupo F",
-  "nextMatchesLabel": "Próximos Jogos - Grupo F",
-  "groupMatchSectionMode": "mixed",
-  "ctaText": "Quem muda a disputa pela vaga no Grupo F?",
-  "rows": [
+  "round": "Regular Season - 5",
+  "roundLabel": "Rodada 5",
+  "ctaText": "Qual foi o melhor jogo?",
+  "fixtures": [
     {
-      "rank": 1,
-      "team": "Holanda",
-      "played": 2,
-      "goalDifference": 4,
-      "points": 4,
-      "qualifiesAsBestThird": false,
-      "badge": {
-        "label": "🇳🇱",
-        "imagePath": "/logos/netherlands-1118.png"
-      }
-    },
-    {
-      "rank": 2,
-      "team": "Japão",
-      "played": 2,
-      "goalDifference": 4,
-      "points": 4,
-      "qualifiesAsBestThird": false,
-      "badge": {
-        "label": "🇯🇵",
-        "imagePath": "/logos/japan-12.png"
-      }
-    },
-    {
-      "rank": 3,
-      "team": "Suécia",
-      "played": 2,
-      "goalDifference": 0,
-      "points": 3,
-      "qualifiesAsBestThird": true,
-      "badge": {
-        "label": "S",
-        "imagePath": "/logos/sweden-5.png"
-      }
-    },
-    {
-      "rank": 4,
-      "team": "Tunísia",
-      "played": 2,
-      "goalDifference": -8,
-      "points": 0,
-      "qualifiesAsBestThird": false,
-      "badge": {
-        "label": "🇹🇳",
-        "imagePath": "/logos/tunisia-28.png"
-      }
-    }
-  ],
-  "lastResults": [
-    {
-      "homeTeam": "Tunísia",
-      "awayTeam": "Japão",
+      "fixtureId": 1543911,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "America MG",
+      "awayTeam": "Sao Paulo",
       "homeScore": 0,
+      "awayScore": 0,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "AM",
+        "logoPath": "/logos/america-mineiro-125.png"
+      },
+      "awayBadge": {
+        "label": "SP",
+        "logoPath": "/logos/sao-paulo.png"
+      }
+    },
+    {
+      "fixtureId": 1543912,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Athletico PR",
+      "awayTeam": "Internacional",
+      "homeScore": 3,
+      "awayScore": 2,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "AP",
+        "logoPath": "/logos/atletico-paranaense.png"
+      },
+      "awayBadge": {
+        "label": "I",
+        "logoPath": "/logos/internacional.png"
+      }
+    },
+    {
+      "fixtureId": 1543913,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Atletico GO",
+      "awayTeam": "Fortaleza",
+      "homeScore": 0,
+      "awayScore": 2,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "AG",
+        "logoPath": "/logos/atletico-go-u17-24470.png"
+      },
+      "awayBadge": {
+        "label": "F",
+        "logoPath": "/logos/fortaleza-ec-154.png"
+      }
+    },
+    {
+      "fixtureId": 1543914,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Atlético MG",
+      "awayTeam": "Palmeiras",
+      "homeScore": 3,
       "awayScore": 4,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "🇹🇳",
-        "imagePath": "/logos/tunisia-28.png"
+        "label": "AM",
+        "logoPath": "/logos/atletico-mg.png"
       },
       "awayBadge": {
-        "label": "🇯🇵",
-        "imagePath": "/logos/japan-12.png"
-      },
-      "dateLabel": "21 de jun • 01:00 (BRT)"
+        "label": "P",
+        "logoPath": "/logos/palmeiras.png"
+      }
     },
     {
-      "homeTeam": "Holanda",
-      "awayTeam": "Suécia",
-      "homeScore": 5,
+      "fixtureId": 1543916,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Corinthians",
+      "awayTeam": "Botafogo",
+      "homeScore": 4,
+      "awayScore": 0,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "C",
+        "logoPath": "/logos/corinthians.png"
+      },
+      "awayBadge": {
+        "label": "B",
+        "logoPath": "/logos/botafogo.png"
+      }
+    },
+    {
+      "fixtureId": 1543917,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Fluminense",
+      "awayTeam": "RB Bragantino",
+      "homeScore": 2,
+      "awayScore": 0,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "F",
+        "logoPath": "/logos/fluminense.png"
+      },
+      "awayBadge": {
+        "label": "RB",
+        "logoPath": "/logos/rb-bragantino.png"
+      }
+    },
+    {
+      "fixtureId": 1543919,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Santos",
+      "awayTeam": "Gremio",
+      "homeScore": 0,
       "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "🇳🇱",
-        "imagePath": "/logos/netherlands-1118.png"
+        "label": "S",
+        "logoPath": "/logos/santos.png"
       },
       "awayBadge": {
-        "label": "S",
-        "imagePath": "/logos/sweden-5.png"
-      },
-      "dateLabel": "20 de jun • 14:00 (BRT)"
-    }
-  ],
-  "nextMatches": [
-    {
-      "homeTeam": "Japão",
-      "awayTeam": "Suécia",
-      "homeBadge": {
-        "label": "🇯🇵",
-        "imagePath": "/logos/japan-12.png"
-      },
-      "awayBadge": {
-        "label": "S",
-        "imagePath": "/logos/sweden-5.png"
-      },
-      "dateLabel": "25 de jun • 20:00 (BRT)"
+        "label": "G",
+        "logoPath": "/logos/gremio.png"
+      }
     },
     {
-      "homeTeam": "Tunísia",
-      "awayTeam": "Holanda",
+      "fixtureId": 1543918,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Juventude",
+      "awayTeam": "Cruzeiro",
+      "homeScore": 2,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "🇹🇳",
-        "imagePath": "/logos/tunisia-28.png"
+        "label": "J",
+        "logoPath": "/logos/juventude-152.png"
       },
       "awayBadge": {
-        "label": "🇳🇱",
-        "imagePath": "/logos/netherlands-1118.png"
+        "label": "C",
+        "logoPath": "/logos/cruzeiro.png"
+      }
+    },
+    {
+      "fixtureId": 1543920,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Vasco",
+      "awayTeam": "Flamengo",
+      "homeScore": 1,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "V",
+        "logoPath": "/logos/vasco-da-gama-133.png"
       },
-      "dateLabel": "25 de jun • 20:00 (BRT)"
+      "awayBadge": {
+        "label": "F",
+        "logoPath": "/logos/flamengo.png"
+      }
+    },
+    {
+      "fixtureId": 1543915,
+      "fixtureDateKey": "2026-06-25",
+      "homeTeam": "Bahia",
+      "awayTeam": "Vitoria",
+      "homeScore": null,
+      "awayScore": null,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "B",
+        "logoPath": "/logos/bahia.png"
+      },
+      "awayBadge": {
+        "label": "V",
+        "logoPath": "/logos/vitoria.png"
+      }
     }
   ],
-  "introTitle": "Copa do Mundo 2026",
-  "introSubtitle": "Grupo F",
-  "hookText": "Holanda e Japão pressionam agora no Grupo F da Copa do Mundo 2026!",
+  "introTitle": "Brasileirão Sub-17",
+  "introSubtitle": "Rodada 5",
+  "hookText": "Olha o que aconteceu na rodada",
   "coldOpenData": {
+    "matchRows": [
+      {
+        "left": "AMERICA MG",
+        "center": "0 - 0",
+        "right": "SAO PAULO"
+      },
+      {
+        "left": "ATHLETICO PR",
+        "center": "3 - 2",
+        "right": "INTERNACIONAL"
+      },
+      {
+        "left": "ATLETICO GO",
+        "center": "0 - 2",
+        "right": "FORTALEZA"
+      },
+      {
+        "left": "ATLÉTICO MG",
+        "center": "3 - 4",
+        "right": "PALMEIRAS"
+      }
+    ],
     "tableRows": [
       {
         "rank": 1,
-        "club": "HOLANDA",
-        "pts": 4
+        "club": "AMERICA MG",
+        "pts": 22
       },
       {
         "rank": 2,
-        "club": "JAPÃO",
-        "pts": 4
+        "club": "SAO PAULO",
+        "pts": 20
       },
       {
         "rank": 3,
-        "club": "SUÉCIA",
-        "pts": 3
+        "club": "ATHLETICO PR",
+        "pts": 18
       },
       {
         "rank": 4,
-        "club": "TUNÍSIA",
-        "pts": 0
+        "club": "INTERNACIONAL",
+        "pts": 16
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "Holanda e Japão lideram o Grupo F com 4 pontos cada, pressionando a Suécia na Copa do Mundo 2026."
+  "voiceoverText": "Fala Galera, pra vocês... os últimos resultados do Brasileirão Sub-17."
 }

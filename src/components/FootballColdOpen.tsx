@@ -1,5 +1,6 @@
 import {AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {FootballShortBackdrop} from './FootballShortTeaser';
+import {FootballShortBackdrop} from './FootballShortTeaserKit';
+import type {FootballShortTeaserVariant} from './FootballShortTeaserKit';
 import type {FootballColdOpenData, FootballVideoTemplate} from '../lib/types';
 
 type FootballColdOpenProps = {
@@ -13,7 +14,7 @@ type FootballColdOpenProps = {
   coldOpenData?: FootballColdOpenData;
   startSettled?: boolean;
   template?: FootballVideoTemplate;
-  variant?: 'results' | 'next-games' | 'predictions' | 'championship' | 'relegation';
+  variant?: FootballShortTeaserVariant;
 };
 
 export const FootballColdOpen = ({

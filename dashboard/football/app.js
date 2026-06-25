@@ -1,3 +1,14 @@
+import {
+  buildStudioPreviewUrl,
+  copyText,
+  escapeHtml,
+  formDataToObject,
+  normalizeSelectedDates,
+  normalizeStudioUrl,
+  setNoticeStatus,
+  slugifyOutputPart,
+} from './helpers.js';
+
 const form = document.getElementById('job-form');
 const presetSelect = document.getElementById('preset');
 const templateSelect = document.getElementById('template');
@@ -18,6 +29,12 @@ const renderButton = document.getElementById('render-button');
 const settingsToggleButton = document.getElementById('settings-toggle-button');
 const settingsPanel = document.getElementById('settings-panel');
 const settingsStatus = document.getElementById('settings-status');
+const shortDurationsFps = document.getElementById('short-durations-fps');
+const shortDurationMeta = document.getElementById('short-duration-meta');
+const shortDurationList = document.getElementById('short-duration-list');
+const saveShortDurationsButton = document.getElementById('save-short-durations-button');
+const reloadShortDurationsButton = document.getElementById('reload-short-durations-button');
+const shortDurationsStatus = document.getElementById('short-durations-status');
 const logOutput = document.getElementById('log-output');
 const currentJobRoot = document.getElementById('current-job');
 const renderDownloadRoot = document.getElementById('render-download');
@@ -264,14 +281,6 @@ const templateFieldVisibility = {
 const getSelectedOptionLabel = (selectElement) =>
   selectElement?.selectedOptions?.[0]?.textContent?.trim() ?? '';
 
-const escapeHtml = (value) =>
-  String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-
 let lastAutoOutputName = '';
 let lastAutoWorldCupCompetitionName = '';
 let lastAutoWorldCupGroupLabel = '';
@@ -287,6 +296,7 @@ let currentChampionFinalRows = [];
 let currentSeasonVerdictRows = [];
 let currentTierlistTeams = [];
 let cachedWorldCupGroups = null;
+const cachedWorldCupStandingsPreview = new Map();
 let lastPreparedJob = null;
 let currentPublishingDraft = null;
 let activePublishingPlatform = 'youtube';
@@ -588,14 +598,6 @@ const setBusy = (busy) => {
   renderButton.disabled = busy;
 };
 
-const setNoticeStatus = (element, message, tone = 'info') => {
-  if (!element) return;
-  element.textContent = message;
-  element.classList.add('notice');
-  element.classList.remove('info', 'success', 'warning', 'error');
-  element.classList.add(tone);
-};
-
 const startYouTubeOAuth = async (channel) => {
   try {
     setNoticeStatus(settingsStatus, `Preparing YouTube ${channel.toUpperCase()} consent link…`, 'warning');
@@ -626,16 +628,114 @@ const startTikTokOAuth = async (channel) => {
   }
 };
 
+const renderShortDurations = (durations) => {
+  const items = durations?.items ?? [];
+  shortDurationsFps.textContent = `${durations?.fps ?? 30} fps`;
+  shortDurationMeta.innerHTML = `
+    <span>Teaser: <strong>${escapeHtml(durations?.opening?.teaserFrames ?? '')}</strong></span>
+    <span>Intro: <strong>${escapeHtml(durations?.opening?.introFrames ?? '')}</strong></span>
+    <span>Minimum: <strong>${escapeHtml(durations?.minimumTotalFrames ?? '')}</strong></span>
+    <span>Default content: <strong>${escapeHtml(durations?.defaultContentFrames ?? '')}</strong></span>
+  `;
+
+  if (!items.length) {
+    shortDurationList.innerHTML = '<tr><td colspan="3">No short templates found.</td></tr>';
+    return;
+  }
+
+  shortDurationList.innerHTML = items
+    .map(
+      (item) => `
+        <tr>
+          <td>
+            <div class="short-duration-template">
+              <strong>${escapeHtml(item.label)}</strong>
+              <span>${escapeHtml(item.compositionId)}</span>
+            </div>
+          </td>
+          <td>
+            <input
+              type="number"
+              class="short-duration-input"
+              data-composition-id="${escapeHtml(item.compositionId)}"
+              min="1"
+              step="1"
+              value="${escapeHtml(item.contentFrames)}"
+              aria-label="${escapeHtml(item.label)} content frames"
+            />
+          </td>
+          <td class="short-duration-total">${escapeHtml(item.totalFrames)}</td>
+        </tr>
+      `
+    )
+    .join('');
+};
+
+const loadShortDurations = async () => {
+  try {
+    saveShortDurationsButton.disabled = true;
+    reloadShortDurationsButton.disabled = true;
+    setNoticeStatus(shortDurationsStatus, 'Loading short durations…', 'warning');
+    const response = await fetch(`${apiBase}/short-durations`);
+    const data = await response.json();
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not load short durations.');
+    }
+    renderShortDurations(data.durations);
+    setNoticeStatus(shortDurationsStatus, 'Durations loaded from config/football-short-durations.json.', 'success');
+  } catch (error) {
+    setNoticeStatus(shortDurationsStatus, error instanceof Error ? error.message : String(error), 'error');
+  } finally {
+    saveShortDurationsButton.disabled = false;
+    reloadShortDurationsButton.disabled = false;
+  }
+};
+
+const collectShortDurationUpdates = () => {
+  const updates = {};
+  for (const input of shortDurationList.querySelectorAll('.short-duration-input')) {
+    const rawValue = input.value.trim();
+    const numericValue = Number(rawValue);
+    if (!rawValue || !Number.isInteger(numericValue) || numericValue <= 0) {
+      throw new Error('All content frame values must be positive integers.');
+    }
+    updates[input.dataset.compositionId] = numericValue;
+  }
+  return updates;
+};
+
+const saveShortDurations = async () => {
+  try {
+    saveShortDurationsButton.disabled = true;
+    reloadShortDurationsButton.disabled = true;
+    setNoticeStatus(shortDurationsStatus, 'Saving short durations…', 'warning');
+    const response = await fetch(`${apiBase}/short-durations`, {
+      method: 'PUT',
+      headers: {'content-type': 'application/json'},
+      body: JSON.stringify({contentFramesByComposition: collectShortDurationUpdates()}),
+    });
+    const data = await response.json();
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not save short durations.');
+    }
+    renderShortDurations(data.durations);
+    setNoticeStatus(shortDurationsStatus, data.message || 'Short durations saved.', 'success');
+  } catch (error) {
+    setNoticeStatus(shortDurationsStatus, error instanceof Error ? error.message : String(error), 'error');
+  } finally {
+    saveShortDurationsButton.disabled = false;
+    reloadShortDurationsButton.disabled = false;
+  }
+};
+
 const log = (message, replace = false) => {
   const timestamp = new Date().toLocaleTimeString();
   logOutput.textContent = replace ? `[${timestamp}] ${message}` : `${logOutput.textContent}\n[${timestamp}] ${message}`;
   logOutput.scrollTop = logOutput.scrollHeight;
 };
 
-const formDataToObject = () => Object.fromEntries(new FormData(form).entries());
-
 const buildJobPayloadFromForm = () => {
-  const payload = formDataToObject();
+  const payload = formDataToObject(form);
   // languageProfile select is disabled in UI, so inject it explicitly.
   payload.languageProfile = languageProfileSelect.value || getChannelLanguageProfile();
   payload.channelProfile = channelProfileSelect.value || getCurrentChannelProfile();
@@ -669,25 +769,6 @@ const buildJobPayloadFromForm = () => {
   }
 
   return payload;
-};
-
-const slugifyOutputPart = (value) =>
-  String(value ?? '')
-    .trim()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-
-const normalizeSelectedDates = (value) => {
-  const rawValues = Array.isArray(value)
-    ? value
-    : String(value ?? '')
-        .split(',')
-        .map((item) => item.trim());
-
-  return [...new Set(rawValues.map((item) => String(item).trim()).filter(Boolean))];
 };
 
 const getSelectedMatchDates = () => normalizeSelectedDates(matchDateSelect.value);
@@ -1085,24 +1166,6 @@ const setRenderDownload = (job, render) => {
 
 const joinList = (value) => (Array.isArray(value) ? value.join(', ') : String(value ?? ''));
 
-const copyText = async (value) => {
-  const text = String(value ?? '');
-  if (navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(text);
-    return;
-  }
-
-  const textarea = document.createElement('textarea');
-  textarea.value = text;
-  textarea.setAttribute('readonly', '');
-  textarea.style.position = 'fixed';
-  textarea.style.opacity = '0';
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand('copy');
-  textarea.remove();
-};
-
 const stripYouTubeCouponBlock = (description) => {
   const lines = String(description ?? '').replace(/\r\n/g, '\n').split('\n');
   const startIndex = lines.findIndex((line) => {
@@ -1312,8 +1375,8 @@ const renderPublishingDraft = (draft) => {
                     <label class="publishing-field">
                       <span>Privacy</span>
                       <select id="youtube-privacy-status">
-                        <option value="private" selected>Private</option>
-                        <option value="unlisted">Unlisted</option>
+                        <option value="private">Private</option>
+                        <option value="unlisted" selected>Unlisted</option>
                         <option value="public">Public</option>
                       </select>
                     </label>
@@ -1478,7 +1541,7 @@ const uploadYouTubeDraft = async () => {
   }
 
   const privacyStatus =
-    document.getElementById('youtube-privacy-status')?.value ?? 'private';
+    document.getElementById('youtube-privacy-status')?.value ?? 'unlisted';
   const notifySubscribers =
     document.getElementById('youtube-notify-subscribers')?.checked ?? false;
   const hasPaidProductPlacement =
@@ -1903,6 +1966,44 @@ const getWorldCupGroups = async () => {
   return cachedWorldCupGroups;
 };
 
+const getWorldCupStandingsPreview = async ({force = false} = {}) => {
+  const groupLetter = (form.elements.groupLetter.value || 'A').toUpperCase().slice(0, 1);
+  const season = form.elements.season.value || '2026';
+  const languageProfile = languageProfileSelect.value || getChannelLanguageProfile();
+  const channelProfile = channelProfileSelect.value || getCurrentChannelProfile();
+  const cacheKey = [season, groupLetter, languageProfile, channelProfile].join(':');
+
+  if (!force && cachedWorldCupStandingsPreview.has(cacheKey)) {
+    return cachedWorldCupStandingsPreview.get(cacheKey);
+  }
+
+  const params = new URLSearchParams({
+    season,
+    groupLetter,
+    languageProfile,
+    channelProfile,
+  });
+
+  const competitionName = form.elements.leagueName.value.trim();
+  const roundLabel = form.elements.roundLabel.value.trim();
+  if (competitionName) {
+    params.set('competitionName', competitionName);
+  }
+  if (roundLabel) {
+    params.set('roundLabel', roundLabel);
+  }
+
+  const response = await fetch(`${apiBase}/world-cup-standings-preview?${params.toString()}`);
+  const data = await response.json();
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.error || 'Could not load World Cup standings from API.');
+  }
+
+  cachedWorldCupStandingsPreview.set(cacheKey, data);
+  return data;
+};
+
 const getWorldCupGroupRowsFromConfig = (groups, groupLetter) => {
   const group = groups?.[groupLetter] ?? {};
   const standingsRows = group.standings?.length
@@ -1964,21 +2065,33 @@ const renderWorldCupStandingsEditor = (rows = []) => {
 };
 
 const getWorldCupStandingEdits = () =>
-  currentWorldCupStandingRows.map((row) => {
-    const rowElement = worldCupStandingsEditorList.querySelector(
-      `.world-cup-standings-editor-row[data-team="${CSS.escape(row.team)}"]`
-    );
-    const getValue = (field) => rowElement?.querySelector(`[data-field="${field}"]`)?.value ?? '';
+  currentWorldCupStandingRows
+    .map((row) => {
+      const rowElement = worldCupStandingsEditorList.querySelector(
+        `.world-cup-standings-editor-row[data-team="${CSS.escape(row.team)}"]`
+      );
+      const getValue = (field) => rowElement?.querySelector(`[data-field="${field}"]`)?.value ?? '';
 
-    return {
-      team: row.team,
-      rank: getValue('rank'),
-      points: getValue('points'),
-      goalDifference: getValue('goalDifference'),
-    };
-  });
+      const rank = getValue('rank');
+      const points = getValue('points');
+      const goalDifference = getValue('goalDifference');
+      const changed =
+        String(row.rank) !== String(rank) ||
+        String(row.points) !== String(points) ||
+        String(row.goalDifference) !== String(goalDifference);
 
-const loadWorldCupStandingsEditor = async ({preferPrepared = false} = {}) => {
+      return changed
+        ? {
+            team: row.team,
+            rank,
+            points,
+            goalDifference,
+          }
+        : null;
+    })
+    .filter(Boolean);
+
+const loadWorldCupStandingsEditor = async ({preferPrepared = false, force = false} = {}) => {
   const template = templateSelect.value;
   const groupLetter = (form.elements.groupLetter.value || 'A').toUpperCase();
 
@@ -2006,21 +2119,40 @@ const loadWorldCupStandingsEditor = async ({preferPrepared = false} = {}) => {
 
   try {
     reloadWorldCupStandingsButton.disabled = true;
-    setNoticeStatus(worldCupStandingsEditorStatus, `Loading Group ${groupLetter} teams…`, 'warning');
-    const groups = await getWorldCupGroups();
-    const rows = getWorldCupGroupRowsFromConfig(groups, groupLetter);
+    setNoticeStatus(worldCupStandingsEditorStatus, `Loading Group ${groupLetter} table from API…`, 'warning');
+    const preview = await getWorldCupStandingsPreview({force});
+    const rows = preview.rows ?? [];
     renderWorldCupStandingsEditor(rows);
     setNoticeStatus(
       worldCupStandingsEditorStatus,
       rows.length
-        ? `Loaded Group ${groupLetter}. Edit POS, PTS and GD before preparing.`
-        : `No teams configured for Group ${groupLetter}.`,
+        ? `Loaded Group ${groupLetter} from API. Edit POS, PTS and GD only if you need a manual override.`
+        : `API returned no Group ${groupLetter} rows.`,
       rows.length ? 'success' : 'warning'
     );
   } catch (error) {
-    renderWorldCupStandingsEditor([]);
-    setNoticeStatus(worldCupStandingsEditorStatus, 'Could not load World Cup group table.', 'error');
     log(error instanceof Error ? error.message : String(error));
+    try {
+      setNoticeStatus(
+        worldCupStandingsEditorStatus,
+        `API unavailable for Group ${groupLetter}; loading local fallback…`,
+        'warning'
+      );
+      const groups = await getWorldCupGroups();
+      const rows = getWorldCupGroupRowsFromConfig(groups, groupLetter);
+      renderWorldCupStandingsEditor(rows);
+      setNoticeStatus(
+        worldCupStandingsEditorStatus,
+        rows.length
+          ? `Loaded Group ${groupLetter} from local fallback. Prepare will still use the API unless you edit POS, PTS or GD.`
+          : `No teams configured for Group ${groupLetter}.`,
+        rows.length ? 'warning' : 'error'
+      );
+    } catch (fallbackError) {
+      renderWorldCupStandingsEditor([]);
+      setNoticeStatus(worldCupStandingsEditorStatus, 'Could not load World Cup group table.', 'error');
+      log(fallbackError instanceof Error ? fallbackError.message : String(fallbackError));
+    }
   } finally {
     reloadWorldCupStandingsButton.disabled = false;
   }
@@ -2485,41 +2617,19 @@ const loadResultFixturesForEditor = async () => {
   }
 };
 
-const normalizeStudioUrl = (value) => {
-  const trimmed = value.trim();
-  return trimmed || 'http://127.0.0.1:3000';
-};
-
-const buildStudioPreviewUrl = () => {
+const getStudioPreviewUrl = () => {
   const studioUrl = normalizeStudioUrl(studioUrlInput.value);
   const compositionId = templateCompositionMap[templateSelect.value];
-  const refreshToken = Date.now().toString();
   const knownCompositionIds = new Set(Object.values(templateCompositionMap).filter(Boolean));
 
-  try {
-    const url = new URL(studioUrl);
-    const pathParts = url.pathname.split('/').filter(Boolean);
-    if (pathParts.length && knownCompositionIds.has(decodeURIComponent(pathParts[pathParts.length - 1]))) {
-      pathParts.pop();
-    }
-    const cleanPath = pathParts.length ? `/${pathParts.map(encodeURIComponent).join('/')}` : '';
-    url.pathname = compositionId ? `${cleanPath}/${encodeURIComponent(compositionId)}` : cleanPath || '/';
-    url.searchParams.set('codexPreviewTs', refreshToken);
-    return url.toString();
-  } catch {
-    if (!compositionId) {
-      return `${studioUrl}${studioUrl.includes('?') ? '&' : '?'}codexPreviewTs=${refreshToken}`;
-    }
-
-    return `${studioUrl.replace(/\/+$/, '')}/${encodeURIComponent(compositionId)}?codexPreviewTs=${refreshToken}`;
-  }
+  return buildStudioPreviewUrl({studioUrl, compositionId, knownCompositionIds});
 };
 
 const updatePreview = () => {
   const studioUrl = normalizeStudioUrl(studioUrlInput.value);
   studioUrlInput.value = studioUrl;
   localStorage.setItem(STUDIO_URL_KEY, studioUrl);
-  const previewUrl = buildStudioPreviewUrl();
+  const previewUrl = getStudioPreviewUrl();
   previewFrame.src = 'about:blank';
   window.setTimeout(() => {
     previewFrame.src = previewUrl;
@@ -3053,6 +3163,8 @@ const loadOptions = async () => {
     form.elements.competitionName.value = currentJob.competitionName ?? '';
     form.elements.ctaText.value = currentJob.ctaText ?? '';
     form.elements.introTitle.value = currentJob.introTitle ?? '';
+    form.elements.aiPriorityTeams.value = currentJob.aiPriorityTeams ?? '';
+    form.elements.aiEditorialAngle.value = currentJob.aiEditorialAngle ?? '';
     form.elements.hookText.value = currentJob.hookText ?? '';
     form.elements.voiceoverText.value = currentJob.voiceoverText ?? '';
     form.elements.topScorerPrediction.value = currentJob.topScorerPrediction ?? '';
@@ -3086,6 +3198,8 @@ const loadOptions = async () => {
     form.elements.competitionName.value = '';
     form.elements.ctaText.value = '';
     form.elements.introTitle.value = '';
+    form.elements.aiPriorityTeams.value = '';
+    form.elements.aiEditorialAngle.value = '';
     form.elements.hookText.value = '';
     form.elements.voiceoverText.value = '';
     form.elements.topScorerPrediction.value = '';
@@ -3110,6 +3224,7 @@ const loadOptions = async () => {
   syncOutputNameFromSelections();
   renderCurrentJob(currentJob);
   updateDashboardMeta();
+  loadShortDurations();
   const savedStudioUrl = localStorage.getItem(STUDIO_URL_KEY) || 'http://127.0.0.1:3000';
   studioUrlInput.value = savedStudioUrl;
   updatePreview();
@@ -3404,13 +3519,20 @@ applyPreviewButton.addEventListener('click', updatePreview);
 reloadPredictionsButton.addEventListener('click', loadPredictionFixtures);
 reloadResultsButton.addEventListener('click', loadResultFixturesForEditor);
 reloadStandingsButton.addEventListener('click', loadStandingsEditor);
-reloadWorldCupStandingsButton.addEventListener('click', () => loadWorldCupStandingsEditor());
+reloadWorldCupStandingsButton.addEventListener('click', () =>
+  loadWorldCupStandingsEditor({force: true})
+);
 reloadSeasonVerdictButton.addEventListener('click', loadSeasonFinalVerdictEditor);
 reloadTierlistButton.addEventListener('click', loadTierlistTeams);
 reloadChampionFinalButton.addEventListener('click', loadChampionFinalOptions);
 settingsToggleButton.addEventListener('click', () => {
   settingsPanel.hidden = !settingsPanel.hidden;
+  if (!settingsPanel.hidden) {
+    loadShortDurations();
+  }
 });
+saveShortDurationsButton.addEventListener('click', saveShortDurations);
+reloadShortDurationsButton.addEventListener('click', loadShortDurations);
 document.querySelectorAll('.youtube-oauth-button').forEach((button) => {
   button.addEventListener('click', () => startYouTubeOAuth(button.dataset.channel ?? 'pt'));
 });
