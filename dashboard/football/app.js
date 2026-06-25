@@ -1375,8 +1375,8 @@ const renderPublishingDraft = (draft) => {
                     <label class="publishing-field">
                       <span>Privacy</span>
                       <select id="youtube-privacy-status">
-                        <option value="private" selected>Private</option>
-                        <option value="unlisted">Unlisted</option>
+                        <option value="private">Private</option>
+                        <option value="unlisted" selected>Unlisted</option>
                         <option value="public">Public</option>
                       </select>
                     </label>
@@ -1541,7 +1541,7 @@ const uploadYouTubeDraft = async () => {
   }
 
   const privacyStatus =
-    document.getElementById('youtube-privacy-status')?.value ?? 'private';
+    document.getElementById('youtube-privacy-status')?.value ?? 'unlisted';
   const notifySubscribers =
     document.getElementById('youtube-notify-subscribers')?.checked ?? false;
   const hasPaidProductPlacement =

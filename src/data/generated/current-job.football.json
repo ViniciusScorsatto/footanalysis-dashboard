@@ -1,327 +1,308 @@
 {
   "sport": "football",
-  "template": "standings",
-  "leagueId": 72,
+  "template": "results",
+  "leagueId": 1128,
   "season": 2026,
-  "leagueName": "Brasileirão Série B",
+  "leagueName": "Brasileirão Sub-17",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Estádio Vai Ferver.mp3",
-  "soundtrackLabel": "Estádio Vai Ferver",
+  "soundtrackPath": "/audio/football/É Gol, É Gol.mp3",
+  "soundtrackLabel": "É Gol, É Gol",
   "soundtrackVolume": 0.25,
-  "outputName": "brasileirao-serie-b-2026-classificacao-pt-br.mp4",
-  "durationInFrames": 510,
-  "compositionId": "FootballStandingsShort",
+  "outputName": "brasileirao-sub-17-2026-resultados-pt-br.mp4",
+  "durationInFrames": 360,
+  "compositionId": "FootballResultsShort",
   "leagueConfig": {
-    "leagueId": 72,
-    "accentColor": "#2E86DE",
+    "leagueId": 1128,
+    "accentColor": "#E67E22",
     "standings": {
       "safeArea": {
-        "left": 68,
-        "right": 104
+        "left": 40,
+        "right": 120
       },
       "zones": [
         {
-          "key": "acesso-direto",
-          "label": "Acesso direto",
+          "key": "champion",
+          "label": "Campeão",
           "start": 1,
-          "end": 2,
-          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(101, 227, 133, 0.64)"
+          "end": 1
         },
         {
-          "key": "playoffs-acesso",
-          "label": "Playoffs de acesso",
-          "start": 3,
-          "end": 6,
-          "fill": "linear-gradient(90deg, rgba(240, 165, 0, 0.88), rgba(240, 165, 0, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(240, 165, 0, 0.52)"
-        },
-        {
-          "key": "rebaixamento",
+          "key": "relegation",
           "label": "Rebaixamento",
-          "start": 17,
-          "end": 20,
-          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 102, 102, 0.56)"
+          "start": 18,
+          "end": 20
         }
       ]
     },
-    "leagueName": "Brasileirão Série B"
+    "leagueName": "Brasileirão Sub-17"
   },
-  "standingsLabel": "Rodada 14",
-  "ctaText": "Quem vai garantir uma vaga entre os líderes da Série B?",
-  "rows": [
+  "round": "Regular Season - 5",
+  "roundLabel": "Rodada 5",
+  "ctaText": "Qual foi o melhor jogo?",
+  "fixtures": [
     {
-      "rank": 1,
-      "team": "Vila Nova",
-      "played": 14,
-      "points": 28,
-      "goalDifference": 7,
-      "form": "WLWWW",
-      "badge": {
-        "label": "VN",
-        "logoPath": "/logos/vila-nova-142.png"
+      "fixtureId": 1543911,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "America MG",
+      "awayTeam": "Sao Paulo",
+      "homeScore": 0,
+      "awayScore": 0,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "AM",
+        "logoPath": "/logos/america-mineiro-125.png"
+      },
+      "awayBadge": {
+        "label": "SP",
+        "logoPath": "/logos/sao-paulo.png"
       }
     },
     {
-      "rank": 2,
-      "team": "São Bernardo",
-      "played": 14,
-      "points": 25,
-      "goalDifference": 9,
-      "form": "LDWDW",
-      "badge": {
-        "label": "SB",
-        "logoPath": "/logos/sao-bernardo-7865.png"
+      "fixtureId": 1543912,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Athletico PR",
+      "awayTeam": "Internacional",
+      "homeScore": 3,
+      "awayScore": 2,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "AP",
+        "logoPath": "/logos/atletico-paranaense.png"
+      },
+      "awayBadge": {
+        "label": "I",
+        "logoPath": "/logos/internacional.png"
       }
     },
     {
-      "rank": 3,
-      "team": "Sport",
-      "played": 14,
-      "points": 25,
-      "goalDifference": 8,
-      "form": "DDDWW",
-      "badge": {
-        "label": "S",
-        "logoPath": "/logos/sport-recife-123.png"
-      }
-    },
-    {
-      "rank": 4,
-      "team": "Novorizontino",
-      "played": 14,
-      "points": 24,
-      "goalDifference": 9,
-      "form": "WDWDW",
-      "badge": {
-        "label": "N",
-        "logoPath": "/logos/novorizontino.svg"
-      }
-    },
-    {
-      "rank": 5,
-      "team": "Criciuma",
-      "played": 14,
-      "points": 24,
-      "goalDifference": 5,
-      "form": "WDWWD",
-      "badge": {
-        "label": "C",
-        "logoPath": "/logos/criciuma-140.png"
-      }
-    },
-    {
-      "rank": 6,
-      "team": "Juventude",
-      "played": 14,
-      "points": 22,
-      "goalDifference": 6,
-      "form": "WWLWL",
-      "badge": {
-        "label": "J",
-        "logoPath": "/logos/juventude-152.png"
-      }
-    },
-    {
-      "rank": 7,
-      "team": "Operario-PR",
-      "played": 14,
-      "points": 22,
-      "goalDifference": 1,
-      "form": "WLWWD",
-      "badge": {
-        "label": "O",
-        "logoPath": "/logos/operario-pr-1223.png"
-      }
-    },
-    {
-      "rank": 8,
-      "team": "Fortaleza",
-      "played": 14,
-      "points": 22,
-      "goalDifference": 1,
-      "form": "DLWLW",
-      "badge": {
+      "fixtureId": 1543913,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Atletico GO",
+      "awayTeam": "Fortaleza",
+      "homeScore": 0,
+      "awayScore": 2,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "AG",
+        "logoPath": "/logos/atletico-go-u17-24470.png"
+      },
+      "awayBadge": {
         "label": "F",
         "logoPath": "/logos/fortaleza-ec-154.png"
       }
     },
     {
-      "rank": 9,
-      "team": "Náutico",
-      "played": 14,
-      "points": 20,
-      "goalDifference": 3,
-      "form": "LDLLW",
-      "badge": {
-        "label": "N",
-        "logoPath": "/logos/nautico-recife-755.png"
+      "fixtureId": 1543914,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Atlético MG",
+      "awayTeam": "Palmeiras",
+      "homeScore": 3,
+      "awayScore": 4,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "AM",
+        "logoPath": "/logos/atletico-mg.png"
+      },
+      "awayBadge": {
+        "label": "P",
+        "logoPath": "/logos/palmeiras.png"
       }
     },
     {
-      "rank": 10,
-      "team": "Cuiaba",
-      "played": 14,
-      "points": 19,
-      "goalDifference": 2,
-      "form": "LWWWL",
-      "badge": {
+      "fixtureId": 1543916,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Corinthians",
+      "awayTeam": "Botafogo",
+      "homeScore": 4,
+      "awayScore": 0,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
         "label": "C",
-        "logoPath": "/logos/cuiaba-1193.png"
+        "logoPath": "/logos/corinthians.png"
+      },
+      "awayBadge": {
+        "label": "B",
+        "logoPath": "/logos/botafogo.png"
       }
     },
     {
-      "rank": 11,
-      "team": "Athletic Club",
-      "played": 14,
-      "points": 19,
-      "goalDifference": 0,
-      "form": "LDDWW",
-      "badge": {
-        "label": "AC",
-        "logoPath": "/logos/athletic-club-13975.png"
+      "fixtureId": 1543917,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Fluminense",
+      "awayTeam": "RB Bragantino",
+      "homeScore": 2,
+      "awayScore": 0,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "F",
+        "logoPath": "/logos/fluminense.png"
+      },
+      "awayBadge": {
+        "label": "RB",
+        "logoPath": "/logos/rb-bragantino.png"
       }
     },
     {
-      "rank": 12,
-      "team": "Goias",
-      "played": 14,
-      "points": 18,
-      "goalDifference": -8,
-      "form": "LDLDW",
-      "badge": {
+      "fixtureId": 1543919,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Santos",
+      "awayTeam": "Gremio",
+      "homeScore": 0,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "S",
+        "logoPath": "/logos/santos.png"
+      },
+      "awayBadge": {
         "label": "G",
-        "logoPath": "/logos/goias-151.png"
+        "logoPath": "/logos/gremio.png"
       }
     },
     {
-      "rank": 13,
-      "team": "Atlético-GO",
-      "played": 14,
-      "points": 18,
-      "goalDifference": 0,
-      "form": "DDWDL",
-      "badge": {
-        "label": "A",
-        "logoPath": "/logos/atletico-goianiense-144.png"
-      }
-    },
-    {
-      "rank": 14,
-      "team": "Ceara",
-      "played": 14,
-      "points": 17,
-      "goalDifference": -1,
-      "form": "LDWLL",
-      "badge": {
+      "fixtureId": 1543918,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Juventude",
+      "awayTeam": "Cruzeiro",
+      "homeScore": 2,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "J",
+        "logoPath": "/logos/juventude-152.png"
+      },
+      "awayBadge": {
         "label": "C",
-        "logoPath": "/logos/ceara-129.png"
+        "logoPath": "/logos/cruzeiro.png"
       }
     },
     {
-      "rank": 15,
-      "team": "Botafogo SP",
-      "played": 14,
-      "points": 16,
-      "goalDifference": 1,
-      "form": "WWLDL",
-      "badge": {
-        "label": "BS",
-        "logoPath": "/logos/botafogo-sp-2618.png"
+      "fixtureId": 1543920,
+      "fixtureDateKey": "2026-06-23",
+      "homeTeam": "Vasco",
+      "awayTeam": "Flamengo",
+      "homeScore": 1,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "V",
+        "logoPath": "/logos/vasco-da-gama-133.png"
+      },
+      "awayBadge": {
+        "label": "F",
+        "logoPath": "/logos/flamengo.png"
       }
     },
     {
-      "rank": 16,
-      "team": "CRB",
-      "played": 14,
-      "points": 16,
-      "goalDifference": -1,
-      "form": "DDLLW",
-      "badge": {
-        "label": "C",
-        "logoPath": "/logos/crb-146.png"
-      }
-    },
-    {
-      "rank": 17,
-      "team": "Londrina",
-      "played": 14,
-      "points": 14,
-      "goalDifference": -5,
-      "form": "WWLLL",
-      "badge": {
-        "label": "L",
-        "logoPath": "/logos/londrina-148.png"
-      }
-    },
-    {
-      "rank": 18,
-      "team": "Avai",
-      "played": 14,
-      "points": 13,
-      "goalDifference": -5,
-      "form": "WLLLL",
-      "badge": {
-        "label": "A",
-        "logoPath": "/logos/avai-145.png"
-      }
-    },
-    {
-      "rank": 19,
-      "team": "Ponte Preta",
-      "played": 14,
-      "points": 8,
-      "goalDifference": -17,
-      "form": "LLLDL",
-      "badge": {
-        "label": "PP",
-        "logoPath": "/logos/ponte-preta-139.png"
-      }
-    },
-    {
-      "rank": 20,
-      "team": "América-MG",
-      "played": 14,
-      "points": 6,
-      "goalDifference": -15,
-      "form": "LWLLL",
-      "badge": {
-        "label": "A",
-        "logoPath": "/logos/america-mineiro-125.png"
+      "fixtureId": 1543915,
+      "fixtureDateKey": "2026-06-25",
+      "homeTeam": "Bahia",
+      "awayTeam": "Vitoria",
+      "homeScore": null,
+      "awayScore": null,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "B",
+        "logoPath": "/logos/bahia.png"
+      },
+      "awayBadge": {
+        "label": "V",
+        "logoPath": "/logos/vitoria.png"
       }
     }
   ],
-  "introTitle": "Brasileirão Série B",
-  "introSubtitle": "Rodada 14",
-  "hookText": "Vila Nova lidera a Série B com 3 pontos de vantagem na rodada 14.",
+  "introTitle": "Brasileirão Sub-17",
+  "introSubtitle": "Rodada 5",
+  "hookText": "Olha o que aconteceu na rodada",
   "coldOpenData": {
+    "matchRows": [
+      {
+        "left": "AMERICA MG",
+        "center": "0 - 0",
+        "right": "SAO PAULO"
+      },
+      {
+        "left": "ATHLETICO PR",
+        "center": "3 - 2",
+        "right": "INTERNACIONAL"
+      },
+      {
+        "left": "ATLETICO GO",
+        "center": "0 - 2",
+        "right": "FORTALEZA"
+      },
+      {
+        "left": "ATLÉTICO MG",
+        "center": "3 - 4",
+        "right": "PALMEIRAS"
+      }
+    ],
     "tableRows": [
       {
         "rank": 1,
-        "club": "VILA NOVA",
-        "pts": 28
+        "club": "AMERICA MG",
+        "pts": 22
       },
       {
         "rank": 2,
-        "club": "SÃO BERNARDO",
-        "pts": 25
+        "club": "SAO PAULO",
+        "pts": 20
       },
       {
         "rank": 3,
-        "club": "SPORT",
-        "pts": 25
+        "club": "ATHLETICO PR",
+        "pts": 18
       },
       {
         "rank": 4,
-        "club": "NOVORIZONTINO",
-        "pts": 24
+        "club": "INTERNACIONAL",
+        "pts": 16
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "Na 14ª rodada, Vila Nova lidera com 28 pontos, três à frente do São Bernardo e Sport na luta pelo acesso."
+  "voiceoverText": "Fala Galera, pra vocês... os últimos resultados do Brasileirão Sub-17."
 }

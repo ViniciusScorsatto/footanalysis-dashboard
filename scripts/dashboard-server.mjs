@@ -2721,7 +2721,7 @@ const uploadYouTubeVideo = async ({job, body, uploadMode = 'shorts'}) => {
       categoryId: '17',
     },
     status: {
-      privacyStatus: allowedPrivacyStatuses.has(privacyStatus) ? privacyStatus : 'private',
+      privacyStatus: allowedPrivacyStatuses.has(privacyStatus) ? privacyStatus : 'unlisted',
       selfDeclaredMadeForKids: false,
       containsSyntheticMedia: false,
     },

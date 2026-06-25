@@ -3157,6 +3157,11 @@ const buildWorldCupGroupJob = async ({
       const completedGroupFixtures = groupFixtures.filter((fixture) =>
         FINISHED_STATUSES.has(fixture.fixture?.status?.short)
       );
+      const completedGroupFixtureKeys = new Set(
+        completedGroupFixtures.map((fixture) =>
+          getWorldCupMatchKey(fixture.teams?.home?.name, fixture.teams?.away?.name)
+        )
+      );
       rows = reconcileWorldCupRowsWithFixtures(rows, completedGroupFixtures, languageProfile);
 
       const finishedFixtures = completedGroupFixtures
@@ -3166,80 +3171,81 @@ const buildWorldCupGroupJob = async ({
       const upcomingFixtures = groupFixtures
         .filter((fixture) => {
           const status = fixture.fixture?.status?.short;
-          return UPCOMING_STATUSES.has(status);
+          return (
+            UPCOMING_STATUSES.has(status) &&
+            !completedGroupFixtureKeys.has(
+              getWorldCupMatchKey(fixture.teams?.home?.name, fixture.teams?.away?.name)
+            )
+          );
         })
         .sort((a, b) => (a.fixture?.timestamp ?? 0) - (b.fixture?.timestamp ?? 0))
         .slice(0, 2);
 
-      if (finishedFixtures.length > 0) {
-        lastResults = await Promise.all(
-          finishedFixtures.map(async (fixture) => ({
-            homeTeam: translateWorldCupCountryName(
-              fixture.teams?.home?.name ?? 'TBC',
-              languageProfile
-            ),
-            awayTeam: translateWorldCupCountryName(
-              fixture.teams?.away?.name ?? 'TBC',
-              languageProfile
-            ),
-            homeScore: fixture.goals?.home ?? fixture.score?.fulltime?.home ?? null,
-            awayScore: fixture.goals?.away ?? fixture.score?.fulltime?.away ?? null,
-            homeBadge: {
-              label:
-                fallbackFlags.get(normalizeGroupName(fixture.teams?.home?.name)) ??
-                initials(fixture.teams?.home?.name ?? 'TBC'),
-              imagePath:
-                fixture.teams?.home?.id && fixture.teams?.home?.logo
-                  ? await downloadLogo(fixture.teams.home.logo, fixture.teams.home.name)
-                  : undefined,
-            },
-            awayBadge: {
-              label:
-                fallbackFlags.get(normalizeGroupName(fixture.teams?.away?.name)) ??
-                initials(fixture.teams?.away?.name ?? 'TBC'),
-              imagePath:
-                fixture.teams?.away?.id && fixture.teams?.away?.logo
-                  ? await downloadLogo(fixture.teams.away.logo, fixture.teams.away.name)
-                  : undefined,
-            },
-            dateLabel: formatWorldCupDateLabel(fixture.fixture?.date, languageProfile),
-          }))
-        );
-      }
+      lastResults = await Promise.all(
+        finishedFixtures.map(async (fixture) => ({
+          homeTeam: translateWorldCupCountryName(
+            fixture.teams?.home?.name ?? 'TBC',
+            languageProfile
+          ),
+          awayTeam: translateWorldCupCountryName(
+            fixture.teams?.away?.name ?? 'TBC',
+            languageProfile
+          ),
+          homeScore: fixture.goals?.home ?? fixture.score?.fulltime?.home ?? null,
+          awayScore: fixture.goals?.away ?? fixture.score?.fulltime?.away ?? null,
+          homeBadge: {
+            label:
+              fallbackFlags.get(normalizeGroupName(fixture.teams?.home?.name)) ??
+              initials(fixture.teams?.home?.name ?? 'TBC'),
+            imagePath:
+              fixture.teams?.home?.id && fixture.teams?.home?.logo
+                ? await downloadLogo(fixture.teams.home.logo, fixture.teams.home.name)
+                : undefined,
+          },
+          awayBadge: {
+            label:
+              fallbackFlags.get(normalizeGroupName(fixture.teams?.away?.name)) ??
+              initials(fixture.teams?.away?.name ?? 'TBC'),
+            imagePath:
+              fixture.teams?.away?.id && fixture.teams?.away?.logo
+                ? await downloadLogo(fixture.teams.away.logo, fixture.teams.away.name)
+                : undefined,
+          },
+          dateLabel: formatWorldCupDateLabel(fixture.fixture?.date, languageProfile),
+        }))
+      );
 
-      if (upcomingFixtures.length > 0) {
-        nextMatches = await Promise.all(
-          upcomingFixtures.map(async (fixture) => ({
-            homeTeam: translateWorldCupCountryName(
-              fixture.teams?.home?.name ?? 'TBC',
-              languageProfile
-            ),
-            awayTeam: translateWorldCupCountryName(
-              fixture.teams?.away?.name ?? 'TBC',
-              languageProfile
-            ),
-            homeBadge: {
-              label:
-                fallbackFlags.get(normalizeGroupName(fixture.teams?.home?.name)) ??
-                initials(fixture.teams?.home?.name ?? 'TBC'),
-              imagePath:
-                fixture.teams?.home?.id && fixture.teams?.home?.logo
-                  ? await downloadLogo(fixture.teams.home.logo, fixture.teams.home.name)
-                  : undefined,
-            },
-            awayBadge: {
-              label:
-                fallbackFlags.get(normalizeGroupName(fixture.teams?.away?.name)) ??
-                initials(fixture.teams?.away?.name ?? 'TBC'),
-              imagePath:
-                fixture.teams?.away?.id && fixture.teams?.away?.logo
-                  ? await downloadLogo(fixture.teams.away.logo, fixture.teams.away.name)
-                  : undefined,
-            },
-            dateLabel: formatWorldCupDateLabel(fixture.fixture?.date, languageProfile),
-          }))
-        );
-      }
+      nextMatches = await Promise.all(
+        upcomingFixtures.map(async (fixture) => ({
+          homeTeam: translateWorldCupCountryName(
+            fixture.teams?.home?.name ?? 'TBC',
+            languageProfile
+          ),
+          awayTeam: translateWorldCupCountryName(
+            fixture.teams?.away?.name ?? 'TBC',
+            languageProfile
+          ),
+          homeBadge: {
+            label:
+              fallbackFlags.get(normalizeGroupName(fixture.teams?.home?.name)) ??
+              initials(fixture.teams?.home?.name ?? 'TBC'),
+            imagePath:
+              fixture.teams?.home?.id && fixture.teams?.home?.logo
+                ? await downloadLogo(fixture.teams.home.logo, fixture.teams.home.name)
+                : undefined,
+          },
+          awayBadge: {
+            label:
+              fallbackFlags.get(normalizeGroupName(fixture.teams?.away?.name)) ??
+              initials(fixture.teams?.away?.name ?? 'TBC'),
+            imagePath:
+              fixture.teams?.away?.id && fixture.teams?.away?.logo
+                ? await downloadLogo(fixture.teams.away.logo, fixture.teams.away.name)
+                : undefined,
+          },
+          dateLabel: formatWorldCupDateLabel(fixture.fixture?.date, languageProfile),
+        }))
+      );
     }
   }
 

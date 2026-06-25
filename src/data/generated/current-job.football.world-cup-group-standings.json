@@ -8,16 +8,16 @@
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Estádio Vai Ferver.mp3",
-  "soundtrackLabel": "Estádio Vai Ferver",
+  "soundtrackPath": "/audio/football/É Gol, É Gol.mp3",
+  "soundtrackLabel": "É Gol, É Gol",
   "soundtrackVolume": 0.25,
-  "outputName": "copa-do-mundo-2026-grupo-l-pt-br.mp4",
-  "durationInFrames": 360,
+  "outputName": "copa-do-mundo-2026-grupo-c-pt-br.mp4",
+  "durationInFrames": 450,
   "compositionId": "FootballWorldCupGroupShort",
   "competitionName": "Copa do Mundo 2026",
-  "groupLetter": "L",
+  "groupLetter": "C",
   "titleLabel": "Copa do Mundo 2026",
-  "groupLabel": "Grupo L",
+  "groupLabel": "Grupo C",
   "tableLabels": {
     "pos": "Pos",
     "team": "Equipe",
@@ -28,151 +28,124 @@
     "direct": "1º e 2º avançam",
     "bestThird": "8 melhores terceiros"
   },
-  "lastResultsLabel": "Últimos Resultados - Grupo L",
-  "nextMatchesLabel": "Próximos Jogos - Grupo L",
-  "groupMatchSectionMode": "mixed",
-  "ctaText": "Inglaterra e Gana com 4 pontos no Grupo L, Croácia na cola!",
+  "lastResultsLabel": "Últimos Resultados - Grupo C",
+  "nextMatchesLabel": "Próximos Jogos - Grupo C",
+  "groupMatchSectionMode": "results-only",
+  "ctaText": "BRASIL e Marrocos no mata-mata.. Escócia sonha mas vai ser difícil!",
   "rows": [
     {
       "rank": 1,
-      "team": "Inglaterra",
-      "played": 2,
-      "goalDifference": 2,
-      "points": 4,
+      "team": "Brasil",
+      "played": 3,
+      "goalDifference": 6,
+      "points": 7,
       "qualifiesAsBestThird": false,
       "badge": {
-        "label": "🏴",
-        "imagePath": "/logos/england-10.png"
+        "label": "🇧🇷",
+        "imagePath": "/logos/brazil-6.png"
       },
-      "goalsFor": 4
+      "goalsFor": 7
     },
     {
       "rank": 2,
-      "team": "Gana",
-      "played": 2,
-      "goalDifference": 1,
-      "points": 4,
+      "team": "Marrocos",
+      "played": 3,
+      "goalDifference": 3,
+      "points": 7,
       "qualifiesAsBestThird": false,
       "badge": {
-        "label": "🇬🇭",
-        "imagePath": "/logos/ghana-1504.png"
+        "label": "🇲🇦",
+        "imagePath": "/logos/morocco-31.png"
+      },
+      "goalsFor": 6
+    },
+    {
+      "rank": 3,
+      "team": "Escócia",
+      "played": 3,
+      "goalDifference": -3,
+      "points": 3,
+      "qualifiesAsBestThird": true,
+      "badge": {
+        "label": "🏴",
+        "imagePath": "/logos/scotland-1108.png"
       },
       "goalsFor": 1
     },
     {
-      "rank": 3,
-      "team": "Croácia",
-      "played": 2,
-      "goalDifference": -1,
-      "points": 3,
-      "qualifiesAsBestThird": true,
-      "badge": {
-        "label": "🇭🇷",
-        "imagePath": "/logos/croatia-3.png"
-      },
-      "goalsFor": 3
-    },
-    {
       "rank": 4,
-      "team": "Panamá",
-      "played": 2,
-      "goalDifference": -2,
+      "team": "Haiti",
+      "played": 3,
+      "goalDifference": -6,
       "points": 0,
       "qualifiesAsBestThird": false,
       "badge": {
-        "label": "🇵🇦",
-        "imagePath": "/logos/panama-11.png"
+        "label": "🇭🇹",
+        "imagePath": "/logos/haiti-2386.png"
       },
-      "goalsFor": 0
+      "goalsFor": 2
     }
   ],
   "lastResults": [
     {
-      "homeTeam": "Panamá",
-      "awayTeam": "Croácia",
-      "homeScore": 0,
-      "awayScore": 1,
+      "homeTeam": "Marrocos",
+      "awayTeam": "Haiti",
+      "homeScore": 4,
+      "awayScore": 2,
       "homeBadge": {
-        "label": "🇵🇦",
-        "imagePath": "/logos/panama-11.png"
+        "label": "🇲🇦",
+        "imagePath": "/logos/morocco-31.png"
       },
       "awayBadge": {
-        "label": "🇭🇷",
-        "imagePath": "/logos/croatia-3.png"
+        "label": "🇭🇹",
+        "imagePath": "/logos/haiti-2386.png"
       },
-      "dateLabel": "23 de jun • 20:00 (BRT)"
+      "dateLabel": "24 de jun • 19:00 (BRT)"
     },
     {
-      "homeTeam": "Inglaterra",
-      "awayTeam": "Gana",
+      "homeTeam": "Escócia",
+      "awayTeam": "Brasil",
       "homeScore": 0,
-      "awayScore": 0,
+      "awayScore": 3,
       "homeBadge": {
         "label": "🏴",
-        "imagePath": "/logos/england-10.png"
+        "imagePath": "/logos/scotland-1108.png"
       },
       "awayBadge": {
-        "label": "🇬🇭",
-        "imagePath": "/logos/ghana-1504.png"
+        "label": "🇧🇷",
+        "imagePath": "/logos/brazil-6.png"
       },
-      "dateLabel": "23 de jun • 17:00 (BRT)"
+      "dateLabel": "24 de jun • 19:00 (BRT)"
     }
   ],
-  "nextMatches": [
-    {
-      "homeTeam": "Croácia",
-      "awayTeam": "Gana",
-      "homeBadge": {
-        "label": "🇭🇷",
-        "imagePath": "/logos/croatia-3.png"
-      },
-      "awayBadge": {
-        "label": "🇬🇭",
-        "imagePath": "/logos/ghana-1504.png"
-      },
-      "dateLabel": "27 de jun • 18:00 (BRT)"
-    },
-    {
-      "homeTeam": "Panamá",
-      "awayTeam": "Inglaterra",
-      "homeBadge": {
-        "label": "🇵🇦",
-        "imagePath": "/logos/panama-11.png"
-      },
-      "awayBadge": {
-        "label": "🏴",
-        "imagePath": "/logos/england-10.png"
-      },
-      "dateLabel": "27 de jun • 18:00 (BRT)"
-    }
-  ],
+  "nextMatches": [],
   "introTitle": "Copa do Mundo 2026",
-  "introSubtitle": "Grupo L",
-  "hookText": "Inglaterra e Gana com 4 pontos no Grupo L, Croácia na cola!",
+  "introSubtitle": "Grupo C",
+  "hookText": "BRASIL e Marrocos no mata-mata.. Escócia sonha mas vai ser difícil!",
   "coldOpenData": {
     "tableRows": [
       {
         "rank": 1,
-        "club": "INGLATERRA",
-        "pts": 4
+        "club": "BRASIL",
+        "pts": 7
       },
       {
         "rank": 2,
-        "club": "GANA",
-        "pts": 4
+        "club": "MARROCOS",
+        "pts": 7
       },
       {
         "rank": 3,
-        "club": "CROÁCIA",
+        "club": "ESCÓCIA",
         "pts": 3
       },
       {
         "rank": 4,
-        "club": "PANAMÁ",
+        "club": "HAITI",
         "pts": 0
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "No Grupo L da Copa do Mundo 2026, Inglaterra e Gana lideram com 4 pontos, quem ganha vantagem na próxima rodada?"
+  "voiceoverText": "No Grupo A da Copa do Mundo 2026, a liderança está ameaçada com a disputa cada vez mais acirrada."
 }
