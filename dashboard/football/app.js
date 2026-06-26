@@ -17,6 +17,7 @@ const languageProfileSelect = document.getElementById('language-profile');
 const roundSelect = document.getElementById('round-select');
 const matchDateSelect = document.getElementById('match-date-select');
 const matchDateOptions = document.getElementById('match-date-options');
+const matchDateSummary = document.getElementById('match-date-summary');
 const generateShortCopyButton = document.getElementById('generate-short-copy-button');
 const hookCtaStatus = document.getElementById('hook-cta-status');
 const soundtrackSelect = document.getElementById('soundtrack-select');
@@ -303,6 +304,47 @@ let activePublishingPlatform = 'youtube';
 let allLeaguePresets = [];
 let allChannelProfiles = [];
 let availableMatchDates = [];
+
+const formatMatchDateParts = (dateValue) => {
+  const [year, month, day] = String(dateValue).split('-').map(Number);
+
+  if (!year || !month || !day) {
+    return {
+      title: String(dateValue),
+      meta: 'Match date',
+    };
+  }
+
+  const locale = languageProfileSelect.value === 'en' ? 'en-US' : 'pt-BR';
+  const date = new Date(Date.UTC(year, month - 1, day, 12));
+  const weekday = new Intl.DateTimeFormat(locale, {weekday: 'short', timeZone: 'UTC'})
+    .format(date)
+    .replace('.', '');
+  const monthName = new Intl.DateTimeFormat(locale, {month: 'short', timeZone: 'UTC'})
+    .format(date)
+    .replace('.', '');
+
+  return {
+    title: locale === 'en-US' ? `${monthName} ${day}` : `${String(day).padStart(2, '0')} ${monthName}`,
+    meta: weekday,
+  };
+};
+
+const describeMatchDateSelection = (selectedDates) => {
+  if (availableMatchDates.length === 0) {
+    return 'Round dates will appear after choosing a round.';
+  }
+
+  if (selectedDates.length === 0) {
+    return `All ${availableMatchDates.length} date${availableMatchDates.length === 1 ? '' : 's'} selected`;
+  }
+
+  if (selectedDates.length === 1) {
+    return `1 date selected: ${selectedDates[0]}`;
+  }
+
+  return `${selectedDates.length} dates selected`;
+};
 const EUROPEAN_LEAGUE_IDS = new Set([39, 40, 140, 135, 78, 61, 2, 3]);
 const UPCOMING_FIXTURE_TEMPLATES = new Set([NEXT_GAMES_TEMPLATE, 'predictions']);
 
@@ -1154,7 +1196,7 @@ const setRenderDownload = (job, render) => {
     .join('/')}`;
   renderDownloadRoot.innerHTML = `
     <div class="job-status-line job-render-line">
-      <span class="status-chip success">render</span>
+      <span class="ds-chip ds-chip--success status-chip success">render</span>
       <div class="job-status-copy">
         <strong>Render ready</strong>
         <span>${escapeHtml(job.outputName)}</span>
@@ -1244,7 +1286,7 @@ const updatePublishingMetadata = (job) => {
   ].filter(Boolean);
 
   publishingMetadataRoot.innerHTML = chips
-    .map((chip) => `<span class="status-chip neutral">${escapeHtml(chip)}</span>`)
+    .map((chip) => `<span class="ds-chip ds-chip--neutral status-chip neutral">${escapeHtml(chip)}</span>`)
     .join('');
 };
 
@@ -1255,10 +1297,10 @@ const draftField = ({platform, label, key, value, multiline = true}) => {
     ? `<textarea data-platform="${platform}" data-key="${key}" rows="4">${escapedValue}</textarea>`
     : `<input data-platform="${platform}" data-key="${key}" type="text" value="${escapedValue}" />`;
   return `
-    <label class="publishing-field">
+    <label class="ds-field publishing-field">
       <span>${escapeHtml(label)}</span>
       ${control}
-      <button type="button" class="copy-field-button btn btn-secondary btn-compact" data-copy-value="${escapeHtml(fieldValue)}">Copy</button>
+      <button type="button" class="copy-field-button ds-button ds-button--secondary ds-button--compact btn btn-secondary btn-compact" data-copy-value="${escapeHtml(fieldValue)}">Copy</button>
     </label>
   `;
 };
@@ -1361,7 +1403,7 @@ const renderPublishingDraft = (draft) => {
           >
             <div class="publishing-card-header">
               <h3>${escapeHtml(card.label)}</h3>
-              <span class="status-chip neutral">draft</span>
+              <span class="ds-chip ds-chip--neutral status-chip neutral">draft</span>
             </div>
             ${card.fields
               .map(([label, key, value, multiline]) =>
@@ -1371,8 +1413,8 @@ const renderPublishingDraft = (draft) => {
             ${
               card.key === 'youtube'
                 ? `
-                  <div class="youtube-upload-box notice info">
-                    <label class="publishing-field">
+                  <div class="youtube-upload-box ds-notice ds-notice--info notice info">
+                    <label class="ds-field publishing-field">
                       <span>Privacy</span>
                       <select id="youtube-privacy-status">
                         <option value="private">Private</option>
@@ -1392,15 +1434,15 @@ const renderPublishingDraft = (draft) => {
                       <input type="checkbox" id="youtube-channel-footer" />
                       <span>Include Foot Analysis channel description</span>
                     </label>
-                    <button type="button" id="upload-youtube-button" class="btn btn-secondary">Upload to YouTube</button>
-                    <p id="youtube-upload-status" class="publishing-status notice info">Upload uses the rendered MP4 and keeps manual review in YouTube Studio.</p>
+                    <button type="button" id="upload-youtube-button" class="ds-button ds-button--secondary btn btn-secondary">Upload to YouTube</button>
+                    <p id="youtube-upload-status" class="publishing-status ds-notice ds-notice--info notice info">Upload uses the rendered MP4 and keeps manual review in YouTube Studio.</p>
                   </div>
                 `
                 : card.key === 'tiktok'
                   ? `
-                    <div class="youtube-upload-box notice info">
-                      <button type="button" id="upload-tiktok-button" class="btn btn-secondary">Upload to TikTok Inbox</button>
-                      <p id="tiktok-upload-status" class="publishing-status notice info">TikTok upload sends the rendered MP4 to your inbox/draft flow. Copy the caption and finish in TikTok.</p>
+                    <div class="youtube-upload-box ds-notice ds-notice--info notice info">
+                      <button type="button" id="upload-tiktok-button" class="ds-button ds-button--secondary btn btn-secondary">Upload to TikTok Inbox</button>
+                      <p id="tiktok-upload-status" class="publishing-status ds-notice ds-notice--info notice info">TikTok upload sends the rendered MP4 to your inbox/draft flow. Copy the caption and finish in TikTok.</p>
                     </div>
                   `
                 : ''
@@ -1683,7 +1725,6 @@ const renderPredictionEditor = (fixtures = []) => {
 
   predictionEditorList.innerHTML = fixtures
     .map((fixture, index) => {
-      const sourceLabel = fixture.predictionSource === 'api' ? 'API' : 'Manual';
       return `
         <div class="prediction-card editor-row fixture-editor-row">
           <label class="prediction-team">
@@ -1709,10 +1750,9 @@ const renderPredictionEditor = (fixtures = []) => {
             value="${fixture.awayScore ?? ''}"
             aria-label="${fixture.awayTeam} score"
           />
-          <label class="prediction-team" style="justify-content:flex-end;text-align:right;">
+          <label class="prediction-team prediction-team-away">
             <span>${escapeHtml(fixture.awayTeam)}</span>
           </label>
-          <div class="prediction-source status-chip neutral" style="grid-column:1 / -1;">${index + 1}. ${sourceLabel}</div>
         </div>
       `;
     })
@@ -1749,9 +1789,6 @@ const renderResultEditor = (fixtures = []) => {
       return `
         <div class="prediction-card editor-row fixture-editor-row">
           <div class="prediction-team-block">
-            <label class="prediction-team">
-              <span>${escapeHtml(fixture.homeTeam)}</span>
-            </label>
             <label class="eliminated-toggle">
               <input
                 type="checkbox"
@@ -1761,6 +1798,9 @@ const renderResultEditor = (fixtures = []) => {
                 ${fixture.homeEliminated ? 'checked' : ''}
               />
               <span>Elim.</span>
+            </label>
+            <label class="prediction-team">
+              <span>${escapeHtml(fixture.homeTeam)}</span>
             </label>
           </div>
           <input
@@ -1786,7 +1826,7 @@ const renderResultEditor = (fixtures = []) => {
             aria-label="${escapeHtml(fixture.awayTeam)} score"
           />
           <div class="prediction-team-block align-right">
-            <label class="prediction-team" style="justify-content:flex-end;text-align:right;">
+            <label class="prediction-team prediction-team-away">
               <span>${escapeHtml(fixture.awayTeam)}</span>
             </label>
             <label class="eliminated-toggle align-right">
@@ -2736,7 +2776,7 @@ const renderCurrentJob = (job) => {
     updatePublishingMetadata(null);
     templateChip.textContent = 'no job';
     currentJobRoot.innerHTML =
-      '<div class="empty-state command-empty-state"><span class="status-chip neutral">no job</span><strong>No prepared job yet</strong><span>Prepare a preview after choosing template, league, season, and round.</span></div>';
+      '<div class="empty-state command-empty-state"><span class="ds-chip ds-chip--neutral status-chip neutral">no job</span><strong>No prepared job yet</strong><span>Prepare a preview after choosing template, league, season, and round.</span></div>';
     if (dashboardQuickStatus) {
       dashboardQuickStatus.textContent = 'Choose a template, league, and round/date. Then prepare a preview job.';
     }
@@ -2799,14 +2839,14 @@ const renderCurrentJob = (job) => {
 
   currentJobRoot.innerHTML = `
     <div class="job-status-line">
-      <span class="status-chip success">ready</span>
+      <span class="ds-chip ds-chip--success status-chip success">ready</span>
       <div class="job-status-copy">
         <strong>${escapeHtml(job.leagueName)} • ${escapeHtml(templateLabel)}</strong>
         <span>${escapeHtml(titleLine)} • ${escapeHtml(detailLine)} • ${escapeHtml(job.outputName)}</span>
       </div>
       <div class="job-status-meta">
-        <span class="status-chip neutral">${escapeHtml(job.languageProfile ?? 'pt-br')}</span>
-        <span class="status-chip neutral">${escapeHtml(job.brandName)}</span>
+        <span class="ds-chip ds-chip--neutral status-chip neutral">${escapeHtml(job.languageProfile ?? 'pt-br')}</span>
+        <span class="ds-chip ds-chip--neutral status-chip neutral">${escapeHtml(job.brandName)}</span>
       </div>
     </div>
   `;
@@ -2967,11 +3007,14 @@ const setSelectedMatchDates = (dates) => {
 
   matchDateOptions.querySelectorAll('[data-date]').forEach((button) => {
     const dateValue = button.dataset.date ?? '';
-    button.classList.toggle(
-      'active',
-      dateValue ? selectedDates.includes(dateValue) : selectedDates.length === 0
-    );
+    const isActive = dateValue ? selectedDates.includes(dateValue) : selectedDates.length === 0;
+    button.classList.toggle('active', isActive);
+    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
   });
+
+  if (matchDateSummary) {
+    matchDateSummary.textContent = describeMatchDateSelection(selectedDates);
+  }
 };
 
 const setMatchDateOptions = (dates, selectedDates = '') => {
@@ -2981,13 +3024,19 @@ const setMatchDateOptions = (dates, selectedDates = '') => {
   );
 
   matchDateOptions.innerHTML = [
-    '<button type="button" class="date-pill" data-date="">All dates in this round</button>',
-    ...availableMatchDates.map(
-      (dateValue) =>
-        `<button type="button" class="date-pill" data-date="${escapeHtml(dateValue)}">${escapeHtml(
-          dateValue
-        )}</button>`
-    ),
+    `<button type="button" class="date-pill date-pill-all" data-date="" aria-pressed="false">
+      <span class="date-pill-title">All</span>
+      <span class="date-pill-meta">round</span>
+    </button>`,
+    ...availableMatchDates.map((dateValue) => {
+      const {title, meta} = formatMatchDateParts(dateValue);
+      return `<button type="button" class="date-pill" data-date="${escapeHtml(
+        dateValue
+      )}" aria-label="${escapeHtml(`Select ${dateValue}`)}" aria-pressed="false">
+        <span class="date-pill-title">${escapeHtml(title)}</span>
+        <span class="date-pill-meta">${escapeHtml(meta)}</span>
+      </button>`;
+    }),
   ].join('');
   setSelectedMatchDates(selectedDateList);
 };

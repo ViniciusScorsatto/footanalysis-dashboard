@@ -11,49 +11,49 @@
       <nav class="top-nav dashboard-top-nav">
         <a class="back-link" href="/">All dashboards</a>
         <div class="dashboard-status">
-          <button type="button" class="settings-button btn btn-secondary btn-compact" id="settings-toggle-button">Settings</button>
-          <span class="status-chip neutral">Football</span>
-          <span class="status-chip neutral" id="job-template-chip">loading</span>
-          <span class="status-chip ready" id="dashboard-channel-chip">channel</span>
+          <button type="button" class="settings-button ds-button ds-button--secondary ds-button--compact btn btn-secondary btn-compact" id="settings-toggle-button">Settings</button>
+          <span class="ds-chip ds-chip--neutral status-chip neutral">Football</span>
+          <span class="ds-chip ds-chip--neutral status-chip neutral" id="job-template-chip">loading</span>
+          <span class="ds-chip ds-chip--ready status-chip ready" id="dashboard-channel-chip">channel</span>
         </div>
       </nav>
 
-      <section class="panel settings-panel" id="settings-panel" hidden>
-        <div class="panel-header">
+      <section class="ds-panel panel settings-panel" id="settings-panel" hidden>
+        <div class="ds-panel__header panel-header">
           <div>
             <h2>Settings</h2>
             <p class="panel-subtitle">Generate platform refresh tokens for each channel. Consent screens open in a new tab.</p>
           </div>
-          <span class="status-chip neutral">OAuth</span>
+          <span class="ds-chip ds-chip--neutral status-chip neutral">OAuth</span>
         </div>
         <div class="settings-grid">
-          <section class="settings-card">
+          <section class="ds-card settings-card">
             <h3>YouTube PT</h3>
             <p>Authorize the Portuguese channel and copy the generated env lines.</p>
-            <button type="button" class="btn btn-secondary youtube-oauth-button" data-channel="pt">Generate PT Refresh Token</button>
+            <button type="button" class="ds-button ds-button--secondary btn btn-secondary youtube-oauth-button" data-channel="pt">Generate PT Refresh Token</button>
           </section>
-          <section class="settings-card">
+          <section class="ds-card settings-card">
             <h3>YouTube EN</h3>
             <p>Authorize the English channel and copy the generated env lines.</p>
-            <button type="button" class="btn btn-secondary youtube-oauth-button" data-channel="en">Generate EN Refresh Token</button>
+            <button type="button" class="ds-button ds-button--secondary btn btn-secondary youtube-oauth-button" data-channel="en">Generate EN Refresh Token</button>
           </section>
-          <section class="settings-card">
+          <section class="ds-card settings-card">
             <h3>TikTok PT</h3>
             <p>Authorize the Portuguese TikTok account with video upload access.</p>
-            <button type="button" class="btn btn-secondary tiktok-oauth-button" data-channel="pt">Generate PT Refresh Token</button>
+            <button type="button" class="ds-button ds-button--secondary btn btn-secondary tiktok-oauth-button" data-channel="pt">Generate PT Refresh Token</button>
           </section>
-          <section class="settings-card">
+          <section class="ds-card settings-card">
             <h3>TikTok EN</h3>
             <p>Authorize the English TikTok account with video upload access.</p>
-            <button type="button" class="btn btn-secondary tiktok-oauth-button" data-channel="en">Generate EN Refresh Token</button>
+            <button type="button" class="ds-button ds-button--secondary btn btn-secondary tiktok-oauth-button" data-channel="en">Generate EN Refresh Token</button>
           </section>
-          <section class="settings-card short-durations-card">
+          <section class="ds-card settings-card short-durations-card">
             <div class="settings-card-header">
               <div>
                 <h3>Short durations</h3>
                 <p>Edit content frames by template. Teaser, intro, default and minimum stay read-only.</p>
               </div>
-              <span class="status-chip neutral" id="short-durations-fps">30 fps</span>
+              <span class="ds-chip ds-chip--neutral status-chip neutral" id="short-durations-fps">30 fps</span>
             </div>
             <div class="short-duration-meta" id="short-duration-meta"></div>
             <div class="short-duration-table-shell">
@@ -73,13 +73,13 @@
               </table>
             </div>
             <div class="settings-actions">
-              <button type="button" id="save-short-durations-button" class="btn btn-primary btn-compact">Save durations</button>
-              <button type="button" id="reload-short-durations-button" class="btn btn-secondary btn-compact">Reload</button>
+              <button type="button" id="save-short-durations-button" class="ds-button ds-button--primary ds-button--compact btn btn-primary btn-compact">Save durations</button>
+              <button type="button" id="reload-short-durations-button" class="ds-button ds-button--secondary ds-button--compact btn btn-secondary btn-compact">Reload</button>
             </div>
-            <p class="settings-status notice info" id="short-durations-status">Durations are stored in config/football-short-durations.json.</p>
+            <p class="settings-status ds-notice ds-notice--info notice info" id="short-durations-status">Durations are stored in config/football-short-durations.json.</p>
           </section>
         </div>
-        <p class="settings-status notice info" id="settings-status">Client credentials are read from your local .env.</p>
+        <p class="settings-status ds-notice ds-notice--info notice info" id="settings-status">Client credentials are read from your local .env.</p>
       </section>
 
       <form id="job-form" class="football-workspace-form">
@@ -90,11 +90,11 @@
           </div>
 
           <div class="command-fields">
-            <label class="command-field">
+            <label class="ds-field command-field">
               Template
               <select name="template" id="template"></select>
             </label>
-            <label class="command-field">
+            <label class="ds-field command-field">
               Channel
               <select name="channelProfile" id="channel-profile"></select>
             </label>
@@ -102,26 +102,37 @@
               Language profile
               <select name="languageProfile" id="language-profile"></select>
             </label>
-            <label class="command-field" id="league-preset-field">
+            <label class="ds-field command-field" id="league-preset-field">
               League
               <select name="preset" id="preset"></select>
             </label>
-            <label class="command-field command-field-season">
+            <label class="ds-field command-field command-field-season">
               Season
               <input type="number" name="season" required />
             </label>
             <div class="command-data-fields" id="data-section">
-              <label class="command-field" id="round-field">
+              <label class="ds-field command-field" id="round-field">
                 Round
                 <select name="round" id="round-select">
                   <option value="">Leave blank to auto-detect</option>
                 </select>
               </label>
-              <label class="command-field command-date-field" id="match-date-field">
+              <label class="ds-field command-field command-date-field" id="match-date-field">
                 Match date
                 <input type="hidden" name="matchDate" id="match-date-select" />
-                <div id="match-date-options" class="match-date-options" role="group" aria-label="Match dates">
-                  <button type="button" class="date-pill active" data-date="">All dates in this round</button>
+                <div class="match-date-picker">
+                  <div
+                    id="match-date-options"
+                    class="match-date-options"
+                    role="group"
+                    aria-label="Match dates"
+                  >
+                    <button type="button" class="date-pill date-pill-all active" data-date="" aria-pressed="true">
+                      <span class="date-pill-title">All</span>
+                      <span class="date-pill-meta">round</span>
+                    </button>
+                  </div>
+                  <span id="match-date-summary" class="match-date-summary">All dates selected</span>
                 </div>
               </label>
             </div>
@@ -133,19 +144,19 @@
           </div>
 
           <div class="command-actions">
-            <button type="button" id="prepare-button" class="btn btn-primary">Prepare Preview</button>
-            <button type="button" id="render-button" class="btn btn-secondary">Render MP4</button>
+            <button type="button" id="prepare-button" class="ds-button ds-button--primary btn btn-primary">Prepare Preview</button>
+            <button type="button" id="render-button" class="ds-button ds-button--secondary btn btn-secondary">Render MP4</button>
           </div>
         </section>
 
         <section class="production-grid">
-          <section class="panel form-panel compact-form-panel">
-            <div class="panel-header">
+          <section class="ds-panel panel form-panel compact-form-panel">
+            <div class="ds-panel__header panel-header">
               <h2>Job Details</h2>
-              <span class="status-chip neutral">Advanced fields</span>
+              <span class="ds-chip ds-chip--neutral status-chip neutral">Advanced fields</span>
             </div>
 
-          <section class="form-section" id="editor-section">
+          <section class="ds-section form-section" id="editor-section">
             <div class="section-title">
               <span>Editors</span>
             </div>
@@ -155,9 +166,9 @@
                   <strong>Auto + edit predictions</strong>
                   <p>Scores are prefilled from the API when available. Adjust any match before preparing.</p>
                 </div>
-                <button type="button" id="reload-predictions-button" class="btn btn-secondary btn-compact">Reload picks</button>
+                <button type="button" id="reload-predictions-button" class="ds-button ds-button--secondary ds-button--compact btn btn-secondary btn-compact">Reload picks</button>
               </div>
-              <div id="prediction-editor-status" class="prediction-editor-status notice info">Select a round to load fixtures.</div>
+              <div id="prediction-editor-status" class="prediction-editor-status ds-notice ds-notice--info notice info">Select a round to load fixtures.</div>
               <div id="prediction-editor-list" class="prediction-editor-list"></div>
             </section>
 
@@ -167,9 +178,9 @@
                   <strong>Override results</strong>
                   <p>Scores are loaded from the API. Edit any fixture where the API is returning wrong data.</p>
                 </div>
-                <button type="button" id="reload-results-button" class="btn btn-secondary btn-compact">Reload scores</button>
+                <button type="button" id="reload-results-button" class="ds-button ds-button--secondary ds-button--compact btn btn-secondary btn-compact">Reload scores</button>
               </div>
-              <div id="result-editor-status" class="prediction-editor-status notice info">Select a round to load fixtures.</div>
+              <div id="result-editor-status" class="prediction-editor-status ds-notice ds-notice--info notice info">Select a round to load fixtures.</div>
               <div id="result-editor-list" class="prediction-editor-list"></div>
             </section>
 
@@ -179,9 +190,9 @@
                   <strong>Override standings</strong>
                   <p>Preloaded from the API. Edit positions and table data before preparing the video.</p>
                 </div>
-                <button type="button" id="reload-standings-button" class="btn btn-secondary btn-compact">Reload table</button>
+                <button type="button" id="reload-standings-button" class="ds-button ds-button--secondary ds-button--compact btn btn-secondary btn-compact">Reload table</button>
               </div>
-              <div id="standings-editor-status" class="prediction-editor-status notice info">Choose a league and season.</div>
+              <div id="standings-editor-status" class="prediction-editor-status ds-notice ds-notice--info notice info">Choose a league and season.</div>
               <div id="standings-editor-list" class="prediction-editor-list"></div>
             </section>
 
@@ -191,9 +202,9 @@
                   <strong>World Cup table overrides</strong>
                   <p>Edit position, points and goal difference when the API table is behind.</p>
                 </div>
-                <button type="button" id="reload-world-cup-standings-button" class="btn btn-secondary btn-compact">Reload group</button>
+                <button type="button" id="reload-world-cup-standings-button" class="ds-button ds-button--secondary ds-button--compact btn btn-secondary btn-compact">Reload group</button>
               </div>
-              <div id="world-cup-standings-editor-status" class="prediction-editor-status notice info">Choose a World Cup group.</div>
+              <div id="world-cup-standings-editor-status" class="prediction-editor-status ds-notice ds-notice--info notice info">Choose a World Cup group.</div>
               <div id="world-cup-standings-editor-list" class="prediction-editor-list"></div>
             </section>
 
@@ -203,9 +214,9 @@
                   <strong>Season Wrap-up overrides</strong>
                   <p>Move teams manually after playoffs or hide anything you do not want in the final video.</p>
                 </div>
-                <button type="button" id="reload-season-verdict-button" class="btn btn-secondary btn-compact">Reload table</button>
+                <button type="button" id="reload-season-verdict-button" class="ds-button ds-button--secondary ds-button--compact btn btn-secondary btn-compact">Reload table</button>
               </div>
-              <div id="season-verdict-editor-status" class="prediction-editor-status notice info">Choose a league and season.</div>
+              <div id="season-verdict-editor-status" class="prediction-editor-status ds-notice ds-notice--info notice info">Choose a league and season.</div>
               <div id="season-verdict-editor-list" class="prediction-editor-list"></div>
             </section>
 
@@ -215,9 +226,9 @@
                   <strong>Tierlist selections</strong>
                   <p>Pick the World Cup teams for each tier. The same selections feed PT and EN.</p>
                 </div>
-                <button type="button" id="reload-tierlist-button" class="btn btn-secondary btn-compact">Reload teams</button>
+                <button type="button" id="reload-tierlist-button" class="ds-button ds-button--secondary ds-button--compact btn btn-secondary btn-compact">Reload teams</button>
               </div>
-              <div id="tierlist-editor-status" class="prediction-editor-status notice info">Choose Tierlist to load teams.</div>
+              <div id="tierlist-editor-status" class="prediction-editor-status ds-notice ds-notice--info notice info">Choose Tierlist to load teams.</div>
               <div class="tierlist-manual-fields">
                 <label>
                   Manual - Artilheiro
@@ -232,7 +243,7 @@
             </section>
           </section>
 
-          <section class="form-section">
+          <section class="ds-section form-section">
             <div class="section-title">
               <span>Content</span>
             </div>
@@ -279,11 +290,11 @@
                     <option value="">Auto pela final selecionada</option>
                   </select>
                 </label>
-                <button type="button" id="reload-champion-final-button" class="btn btn-secondary">
+                <button type="button" id="reload-champion-final-button" class="ds-button ds-button--secondary btn btn-secondary">
                   Carregar tabela
                 </button>
               </div>
-              <p id="champion-final-status" class="prediction-editor-status notice info">
+              <p id="champion-final-status" class="prediction-editor-status ds-notice ds-notice--info notice info">
                 Auto usa o placar, pênaltis ou o time eliminado na final.
               </p>
               <input type="hidden" name="includeFinalResult" value="false" />
@@ -299,7 +310,7 @@
             </label>
           </section>
 
-          <details class="form-section compact-details" id="intro-voiceover-field">
+          <details class="ds-section form-section compact-details" id="intro-voiceover-field">
             <summary>Intro + Narração</summary>
             <div class="details-body">
               <input type="hidden" name="voiceoverEnabled" value="false" />
@@ -345,15 +356,15 @@
                   <input type="text" name="voiceoverText" placeholder="Auto or generate 8s script" />
                 </label>
               </div>
-              <button type="button" id="generate-short-copy-button" class="btn btn-secondary">Generate Hook + CTA + Voiceover</button>
-              <p id="hook-cta-status" class="prediction-editor-status notice info">
+              <button type="button" id="generate-short-copy-button" class="ds-button ds-button--secondary btn btn-secondary">Generate Hook + CTA + Voiceover</button>
+              <p id="hook-cta-status" class="prediction-editor-status ds-notice ds-notice--info notice info">
                 OpenAI usa o template Markdown e o contexto atual do template para sugerir Hook, CTA e texto de voice-over.
               </p>
               <p>A voz é gerada com Google Text-to-Speech e reutilizada quando o mesmo texto já existe no cache.</p>
             </div>
           </details>
 
-          <details class="form-section compact-details">
+          <details class="ds-section form-section compact-details">
             <summary>Advanced</summary>
             <div class="details-body">
               <div id="league-core-fields">
@@ -397,18 +408,18 @@
           </section>
 
           <aside class="preview-rail">
-            <section class="panel preview-panel">
-              <div class="panel-header">
+            <section class="ds-panel panel preview-panel">
+              <div class="ds-panel__header panel-header">
                 <h2>Video Preview</h2>
-                <span class="status-chip neutral">9:16</span>
+                <span class="ds-chip ds-chip--neutral status-chip neutral">9:16</span>
               </div>
               <div class="preview-toolbar">
-                <label class="preview-url-field">
+                <label class="ds-field preview-url-field">
                   Studio URL
                   <input type="url" id="studio-url" placeholder="http://127.0.0.1:3000" />
                 </label>
                 <div class="preview-actions">
-                  <button type="button" id="apply-preview-button" class="btn btn-secondary">Load</button>
+                  <button type="button" id="apply-preview-button" class="ds-button ds-button--secondary btn btn-secondary">Load</button>
                   <a id="open-preview-link" class="preview-link" href="#" target="_blank" rel="noreferrer">Open Studio</a>
                 </div>
               </div>
@@ -420,25 +431,27 @@
         </section>
       </form>
 
-      <section class="panel publishing-panel">
-        <div class="panel-header">
+      <section class="ds-panel panel publishing-panel">
+        <div class="ds-panel__header panel-header">
           <div>
             <h2>Publishing Draft</h2>
             <p class="panel-subtitle">Generate platform copy from the current video metadata, edit it, then copy each field when you are ready.</p>
           </div>
-          <span class="status-chip neutral" id="publishing-model-chip">manual approval</span>
+          <div class="publishing-header-controls">
+            <label class="publishing-model-field">
+              OpenAI model
+              <select id="publishing-openai-model">
+                <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+                <option value="gpt-4.1" selected>gpt-4.1</option>
+                <option value="gpt-4o">gpt-4o</option>
+                <option value="gpt-5-mini">gpt-5-mini</option>
+              </select>
+            </label>
+            <span class="ds-chip ds-chip--neutral status-chip neutral" id="publishing-model-chip">manual approval</span>
+          </div>
         </div>
 
         <div class="publishing-context-grid">
-          <label>
-            OpenAI model
-            <select id="publishing-openai-model">
-              <option value="gpt-4.1-mini">gpt-4.1-mini</option>
-              <option value="gpt-4.1" selected>gpt-4.1</option>
-              <option value="gpt-4o">gpt-4o</option>
-              <option value="gpt-5-mini">gpt-5-mini</option>
-            </select>
-          </label>
           <label>
             Extra copy instructions
             <textarea
@@ -458,16 +471,16 @@
         </div>
 
         <div class="publishing-actions">
-          <button type="button" id="generate-publishing-button" class="btn btn-secondary">Generate Draft</button>
-          <button type="button" id="copy-publishing-json-button" class="btn btn-secondary" disabled>Copy JSON</button>
-          <p id="publishing-status" class="publishing-status notice info">Prepare or render a job, then generate the publishing draft.</p>
+          <button type="button" id="generate-publishing-button" class="ds-button ds-button--secondary btn btn-secondary">Generate Draft</button>
+          <button type="button" id="copy-publishing-json-button" class="ds-button ds-button--secondary btn btn-secondary" disabled>Copy JSON</button>
+          <p id="publishing-status" class="publishing-status ds-notice ds-notice--info notice info">Prepare or render a job, then generate the publishing draft.</p>
         </div>
 
         <div id="publishing-metadata" class="publishing-metadata"></div>
         <div id="publishing-draft-root" class="publishing-draft-grid"></div>
       </section>
 
-      <details class="panel log-panel compact-details">
+      <details class="ds-panel panel log-panel compact-details">
         <summary>Activity</summary>
         <pre id="log-output" class="log-surface">Loading dashboard…</pre>
       </details>
