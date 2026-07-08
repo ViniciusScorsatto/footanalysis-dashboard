@@ -490,29 +490,31 @@ Write around one table consequence:
 
 ## Informações importantes
 
-- resultado que muda tabela
+- placar/resultado em si
 - vitória fora de casa
 - tropeço de favorito
 - sequência de vitórias/derrotas
-- impacto em título, vaga, acesso ou rebaixamento
+- classificação, título, vaga, acesso ou rebaixamento somente se esses dados estiverem explicitamente no metadata
 
 ## Angle
 
 Do not summarize all results equally.
 
-Choose the result with the biggest consequence.
+Choose the strongest result story from the scoreline itself: big win, away win, draw, upset, clean sheet, or explicit elimination/qualification flag.
+
+Do not infer table movement, title race, relegation, promotion, qualification, points, or "mudou a tabela" from a results-only payload.
 
 Examples:
 
 - "Vitória surpreende e deixa a final aberta"
-- "Flamengo aproveita tropeço do líder"
-- "Corinthians respira com resultado direto"
+- "Flamengo vence fora e marca a rodada"
+- "Corinthians faz o placar mais forte"
 
 ## CTA
 
-- Quem sai mais forte da rodada?
-- Quem sentiu mais a pressão?
-- Quem ainda briga?
+- Qual placar mais chamou atenção?
+- Quem fez o resultado mais forte?
+- Quem sai mais forte do jogo?
 
 ---
 

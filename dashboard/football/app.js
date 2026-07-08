@@ -60,6 +60,10 @@ const standingsEditorField = document.getElementById('standings-editor-field');
 const standingsEditorStatus = document.getElementById('standings-editor-status');
 const standingsEditorList = document.getElementById('standings-editor-list');
 const reloadStandingsButton = document.getElementById('reload-standings-button');
+const topScorersEditorField = document.getElementById('top-scorers-editor-field');
+const topScorersEditorStatus = document.getElementById('top-scorers-editor-status');
+const topScorersEditorList = document.getElementById('top-scorers-editor-list');
+const reloadTopScorersButton = document.getElementById('reload-top-scorers-button');
 const worldCupStandingsEditorField = document.getElementById('world-cup-standings-editor-field');
 const worldCupStandingsEditorStatus = document.getElementById('world-cup-standings-editor-status');
 const worldCupStandingsEditorList = document.getElementById('world-cup-standings-editor-list');
@@ -296,6 +300,7 @@ let currentWorldCupStandingRows = [];
 let currentChampionFinalRows = [];
 let currentSeasonVerdictRows = [];
 let currentTierlistTeams = [];
+let currentTopScorerEntries = [];
 let cachedWorldCupGroups = null;
 const cachedWorldCupStandingsPreview = new Map();
 let lastPreparedJob = null;
@@ -799,6 +804,9 @@ const buildJobPayloadFromForm = () => {
   }
   if (templateSelect.value === 'standings') {
     payload.standingEdits = getStandingEdits();
+  }
+  if (templateSelect.value === TOP_SCORERS_TEMPLATE) {
+    payload.topScorerEdits = getTopScorerEdits();
   }
   if (templateSelect.value === WORLD_CUP_TEMPLATE) {
     payload.worldCupStandingEdits = getWorldCupStandingEdits();
@@ -1990,6 +1998,141 @@ const getStandingEdits = () => {
   });
 };
 
+const renderTopScorersEditor = (entries = []) => {
+  currentTopScorerEntries = entries;
+
+  if (!entries.length) {
+    topScorersEditorList.innerHTML = '';
+    return;
+  }
+
+  topScorersEditorList.innerHTML = entries
+    .map((entry, index) => {
+      const logoSource = entry.badge?.logoPath ?? entry.badge?.imagePath;
+      const badgeHtml = logoSource
+        ? `<img src="${escapeHtml(logoSource)}" alt="" />`
+        : `<span class="season-verdict-fallback-badge">${escapeHtml(entry.badge?.label ?? '')}</span>`;
+
+      return `
+        <div class="top-scorers-editor-row editor-row" data-index="${index}">
+          <div class="top-scorers-editor-player">
+            ${badgeHtml}
+            <div>
+              <strong>${escapeHtml(entry.playerName)}</strong>
+              <span>${escapeHtml(entry.team)}</span>
+            </div>
+          </div>
+          <label>
+            Rank
+            <input type="number" min="1" max="20" step="1" data-field="rank" value="${entry.rank ?? index + 1}" />
+          </label>
+          <label>
+            Player
+            <input type="text" data-field="playerName" value="${escapeHtml(entry.playerName ?? '')}" />
+          </label>
+          <label>
+            Team
+            <input type="text" data-field="team" value="${escapeHtml(entry.team ?? '')}" />
+          </label>
+          <label>
+            Goals
+            <input type="number" min="0" step="1" data-field="goals" value="${entry.goals ?? 0}" />
+          </label>
+          <label>
+            Ast
+            <input type="number" min="0" step="1" data-field="assists" value="${entry.assists ?? ''}" />
+          </label>
+        </div>
+      `;
+    })
+    .join('');
+};
+
+const getTopScorerEdits = () => {
+  return currentTopScorerEntries
+    .map((entry, index) => {
+      const rowElement = topScorersEditorList.querySelector(
+        `.top-scorers-editor-row[data-index="${index}"]`
+      );
+      if (!rowElement) return null;
+      const getValue = (field) => rowElement.querySelector(`[data-field="${field}"]`)?.value ?? '';
+
+      return {
+        rank: Number(getValue('rank') || entry.rank || index + 1),
+        playerName: getValue('playerName').trim(),
+        team: getValue('team').trim(),
+        goals: Number(getValue('goals') || 0),
+        assists: getValue('assists') === '' ? null : Number(getValue('assists')),
+      };
+    })
+    .filter((entry) => entry && entry.playerName && entry.team);
+};
+
+const loadTopScorersEditor = async ({preferPrepared = false} = {}) => {
+  const template = templateSelect.value;
+  const leagueIdValue = form.elements.leagueId.value.trim();
+  const seasonValue = form.elements.season.value.trim();
+  const leagueId = Number(leagueIdValue);
+  const season = Number(seasonValue);
+
+  if (template !== TOP_SCORERS_TEMPLATE) {
+    setNoticeStatus(topScorersEditorStatus, 'Select Top Scorers to load API scorers.', 'info');
+    renderTopScorersEditor([]);
+    return;
+  }
+
+  if (
+    preferPrepared &&
+    lastPreparedJob?.template === TOP_SCORERS_TEMPLATE &&
+    Array.isArray(lastPreparedJob.entries) &&
+    lastPreparedJob.entries.length > 0
+  ) {
+    renderTopScorersEditor(lastPreparedJob.entries);
+    setNoticeStatus(
+      topScorersEditorStatus,
+      `Loaded ${lastPreparedJob.entries.length} prepared scorers. Edit and prepare again to keep overrides.`,
+      'success'
+    );
+    return;
+  }
+
+  if (!leagueIdValue || !seasonValue || !Number.isFinite(leagueId) || !Number.isFinite(season)) {
+    setNoticeStatus(topScorersEditorStatus, 'Choose a league and season to load top scorers.', 'warning');
+    renderTopScorersEditor([]);
+    return;
+  }
+
+  try {
+    reloadTopScorersButton.disabled = true;
+    setNoticeStatus(topScorersEditorStatus, 'Loading top scorers from API…', 'warning');
+    const params = new URLSearchParams({
+      leagueId: String(leagueId),
+      season: String(season),
+    });
+    const response = await fetch(`${apiBase}/top-scorers-editor?${params.toString()}`);
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not load top scorers.');
+    }
+
+    renderTopScorersEditor(data.entries ?? []);
+    setNoticeStatus(
+      topScorersEditorStatus,
+      data.entries?.length
+        ? `Loaded ${data.entries.length} scorers from API. Edit only what needs correction.`
+        : 'No top scorers found.',
+      data.entries?.length ? 'success' : 'warning'
+    );
+  } catch (error) {
+    renderTopScorersEditor([]);
+    setNoticeStatus(topScorersEditorStatus, 'Could not load top scorers.', 'error');
+    log(error instanceof Error ? error.message : String(error));
+  } finally {
+    reloadTopScorersButton.disabled = false;
+  }
+};
+
 const getWorldCupGroups = async () => {
   if (cachedWorldCupGroups) {
     return cachedWorldCupGroups;
@@ -2933,6 +3076,7 @@ const applyTemplateHints = () => {
   predictionEditorField.hidden = template !== 'predictions';
   resultEditorField.hidden = template !== 'results' && template !== CHAMPION_FINAL_TEMPLATE;
   standingsEditorField.hidden = template !== 'standings';
+  topScorersEditorField.hidden = template !== TOP_SCORERS_TEMPLATE;
   worldCupStandingsEditorField.hidden = template !== WORLD_CUP_TEMPLATE;
   seasonVerdictEditorField.hidden = template !== SEASON_FINAL_VERDICT_TEMPLATE;
   tierlistEditorField.hidden = template !== TIERLIST_TEMPLATE;
@@ -2942,6 +3086,7 @@ const applyTemplateHints = () => {
     template !== 'results' &&
     template !== CHAMPION_FINAL_TEMPLATE &&
     template !== 'standings' &&
+    template !== TOP_SCORERS_TEMPLATE &&
     template !== WORLD_CUP_TEMPLATE &&
     template !== SEASON_FINAL_VERDICT_TEMPLATE &&
     template !== TIERLIST_TEMPLATE;
@@ -3082,7 +3227,7 @@ const loadRoundDates = async (preferredDate = form.elements.matchDate.value) => 
         String(leagueId)
       )}&season=${encodeURIComponent(String(season))}&round=${encodeURIComponent(
         roundValue
-      )}&languageProfile=${encodeURIComponent(languageProfile)}`
+      )}&template=${encodeURIComponent(template)}&languageProfile=${encodeURIComponent(languageProfile)}`
     );
     const data = await response.json();
 
@@ -3289,6 +3434,8 @@ const loadOptions = async () => {
     }
   } else if (form.elements.template.value === 'standings') {
     await loadStandingsEditor();
+  } else if (form.elements.template.value === TOP_SCORERS_TEMPLATE) {
+    await loadTopScorersEditor({preferPrepared: true});
   } else if (form.elements.template.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     await loadSeasonFinalVerdictEditor();
   } else if (form.elements.template.value === TIERLIST_TEMPLATE) {
@@ -3312,6 +3459,9 @@ presetSelect.addEventListener('change', async () => {
   await loadRounds('');
   if (templateSelect.value === 'standings') {
     await loadStandingsEditor();
+  }
+  if (templateSelect.value === TOP_SCORERS_TEMPLATE) {
+    await loadTopScorersEditor();
   }
   if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     await loadSeasonFinalVerdictEditor();
@@ -3350,6 +3500,8 @@ channelProfileSelect.addEventListener('change', async () => {
     }
   } else if (templateSelect.value === 'standings') {
     await loadStandingsEditor();
+  } else if (templateSelect.value === TOP_SCORERS_TEMPLATE) {
+    await loadTopScorersEditor();
   } else if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     await loadSeasonFinalVerdictEditor();
   } else if (templateSelect.value === TIERLIST_TEMPLATE) {
@@ -3376,6 +3528,7 @@ templateSelect.addEventListener('change', async () => {
     await loadPredictionFixtures();
     renderResultEditor([]);
     renderStandingsEditor([]);
+    renderTopScorersEditor([]);
     renderWorldCupStandingsEditor([]);
     renderSeasonVerdictEditor([]);
     renderTierlistEditor([]);
@@ -3386,6 +3539,7 @@ templateSelect.addEventListener('change', async () => {
     }
     renderPredictionEditor([]);
     renderStandingsEditor([]);
+    renderTopScorersEditor([]);
     renderWorldCupStandingsEditor([]);
     renderSeasonVerdictEditor([]);
     renderTierlistEditor([]);
@@ -3393,6 +3547,15 @@ templateSelect.addEventListener('change', async () => {
     await loadStandingsEditor();
     renderPredictionEditor([]);
     renderResultEditor([]);
+    renderTopScorersEditor([]);
+    renderWorldCupStandingsEditor([]);
+    renderSeasonVerdictEditor([]);
+    renderTierlistEditor([]);
+  } else if (templateSelect.value === TOP_SCORERS_TEMPLATE) {
+    await loadTopScorersEditor();
+    renderPredictionEditor([]);
+    renderResultEditor([]);
+    renderStandingsEditor([]);
     renderWorldCupStandingsEditor([]);
     renderSeasonVerdictEditor([]);
     renderTierlistEditor([]);
@@ -3401,6 +3564,7 @@ templateSelect.addEventListener('change', async () => {
     renderPredictionEditor([]);
     renderResultEditor([]);
     renderStandingsEditor([]);
+    renderTopScorersEditor([]);
     renderWorldCupStandingsEditor([]);
     renderTierlistEditor([]);
   } else if (templateSelect.value === TIERLIST_TEMPLATE) {
@@ -3408,6 +3572,7 @@ templateSelect.addEventListener('change', async () => {
     renderPredictionEditor([]);
     renderResultEditor([]);
     renderStandingsEditor([]);
+    renderTopScorersEditor([]);
     renderWorldCupStandingsEditor([]);
     renderSeasonVerdictEditor([]);
   } else if (templateSelect.value === WORLD_CUP_TEMPLATE) {
@@ -3415,12 +3580,14 @@ templateSelect.addEventListener('change', async () => {
     renderPredictionEditor([]);
     renderResultEditor([]);
     renderStandingsEditor([]);
+    renderTopScorersEditor([]);
     renderSeasonVerdictEditor([]);
     renderTierlistEditor([]);
   } else {
     renderPredictionEditor([]);
     renderResultEditor([]);
     renderStandingsEditor([]);
+    renderTopScorersEditor([]);
     renderWorldCupStandingsEditor([]);
     renderSeasonVerdictEditor([]);
     renderTierlistEditor([]);
@@ -3441,6 +3608,8 @@ languageProfileSelect.addEventListener('change', () => {
     }
   } else if (templateSelect.value === 'standings') {
     loadStandingsEditor();
+  } else if (templateSelect.value === TOP_SCORERS_TEMPLATE) {
+    loadTopScorersEditor();
   } else if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     loadSeasonFinalVerdictEditor();
   } else if (templateSelect.value === TIERLIST_TEMPLATE) {
@@ -3501,6 +3670,9 @@ form.elements.leagueId.addEventListener('change', async () => {
   if (templateSelect.value === 'standings') {
     await loadStandingsEditor();
   }
+  if (templateSelect.value === TOP_SCORERS_TEMPLATE) {
+    await loadTopScorersEditor();
+  }
   if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     await loadSeasonFinalVerdictEditor();
   }
@@ -3526,6 +3698,9 @@ form.elements.season.addEventListener('change', async () => {
   updateDashboardMeta();
   if (templateSelect.value === 'standings') {
     await loadStandingsEditor();
+  }
+  if (templateSelect.value === TOP_SCORERS_TEMPLATE) {
+    await loadTopScorersEditor();
   }
   if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     await loadSeasonFinalVerdictEditor();
@@ -3568,6 +3743,7 @@ applyPreviewButton.addEventListener('click', updatePreview);
 reloadPredictionsButton.addEventListener('click', loadPredictionFixtures);
 reloadResultsButton.addEventListener('click', loadResultFixturesForEditor);
 reloadStandingsButton.addEventListener('click', loadStandingsEditor);
+reloadTopScorersButton.addEventListener('click', loadTopScorersEditor);
 reloadWorldCupStandingsButton.addEventListener('click', () =>
   loadWorldCupStandingsEditor({force: true})
 );
@@ -3640,6 +3816,9 @@ const submitJob = async (endpoint, actionLabel, options = {}) => {
     }
 
     renderCurrentJob(data.job);
+    if (data.job?.template === TOP_SCORERS_TEMPLATE) {
+      renderTopScorersEditor(data.job.entries ?? []);
+    }
     setRenderDownload(data.job, data.render);
     updatePreview();
     if (silent && templateSelect.value === TIERLIST_TEMPLATE) {

@@ -22,6 +22,7 @@ import {
   loadFootballPredictionsLongJob,
   loadFootballRoundSummaryLongJob,
   loadTeamAccentColors,
+  loadTopScorersEditor,
   loadWorldCupConfig,
   loadWorldCupTierlistTeams,
   prepareJob,
@@ -477,6 +478,7 @@ const sendFootballRoundDates = async (response, url) => {
     const leagueId = Number(url.searchParams.get('leagueId'));
     const season = Number(url.searchParams.get('season'));
     const round = url.searchParams.get('round') ?? '';
+    const template = url.searchParams.get('template') ?? '';
     const languageProfile = url.searchParams.get('languageProfile') ?? 'pt-br';
     const dates = await loadRoundDates({
       apiKey: process.env.FOOTBALL_API_KEY,
@@ -484,6 +486,7 @@ const sendFootballRoundDates = async (response, url) => {
       leagueId,
       season,
       round,
+      template,
       languageProfile,
     });
 
@@ -620,6 +623,30 @@ const sendFootballStandingsEditor = async (response, url) => {
   }
 };
 
+const sendFootballTopScorersEditor = async (response, url) => {
+  try {
+    const leagueId = Number(url.searchParams.get('leagueId'));
+    const season = Number(url.searchParams.get('season'));
+    const data = await loadTopScorersEditor({
+      apiKey: process.env.FOOTBALL_API_KEY,
+      apiHost: process.env.FOOTBALL_API_HOST,
+      leagueId,
+      season,
+    });
+
+    sendJson(response, 200, {
+      ok: true,
+      ...data,
+    });
+  } catch (error) {
+    sendJson(response, 500, {
+      ok: false,
+      error: error instanceof Error ? error.message : String(error),
+      entries: [],
+    });
+  }
+};
+
 const sendFootballSeasonFinalVerdictEditor = async (response, url) => {
   try {
     const leagueId = Number(url.searchParams.get('leagueId'));
@@ -706,6 +733,7 @@ const prepareFootballJob = async (body) =>
     standingEdits: body.standingEdits,
     seasonFinalVerdictEdits: body.seasonFinalVerdictEdits,
     tierlistSelections: body.tierlistSelections,
+    topScorerEdits: body.topScorerEdits,
     topScorerPrediction: body.topScorerPrediction,
     bestPlayerPrediction: body.bestPlayerPrediction,
   });
@@ -845,7 +873,7 @@ const publishingTemplateContext = {
   },
   results: {
     contentType: 'round_results',
-    editorialAngle: 'latest match results; focus on scorelines, surprises, big wins, and what changed after the round.',
+    editorialAngle: 'latest match results only; focus on scorelines, draws, away wins, big wins, eliminations explicitly present in metadata, and standout results. Do not infer standings, title race, relegation, qualification, points, or table movement unless standings/table data is explicitly present.',
   },
   'next-games': {
     contentType: 'upcoming_fixtures',
@@ -863,7 +891,7 @@ const publishingTemplateContext = {
   'round-summary-long': {
     contentType: 'longform_round_summary',
     editorialAngle: 'long-form horizontal YouTube round recap; focus on results, decisive moments, scorelines, standout matches, and what the round changed.',
-    formatGuidance: 'This is a narrated horizontal long-form YouTube video, not a Short. Write metadata for viewers who may watch several minutes. Lead with how the round played out: key results, who gained ground, who dropped points, standout scorelines, pressure changes, and table/story impact. Do not describe the video structure; describe the round itself.',
+    formatGuidance: 'This is a narrated horizontal long-form YouTube video, not a Short. Write metadata for viewers who may watch several minutes. Lead with how the round played out: key results, standout scorelines, decisive moments, and the clearest result story. Only mention who gained ground, dropped points, pressure changes, or table/story impact when the metadata includes standings/table context that proves it. Do not describe the video structure; describe the round itself.',
   },
   tierlist: {
     contentType: 'favorite_tierlist',
@@ -1521,6 +1549,8 @@ const generatePublishingDraft = async ({job, extraContext, copyModelInstructions
     'For TikTok and Instagram, write the caption as one ready-to-paste field: description text followed by hashtags. Hashtags must include #.',
     'Do not copy metadata.hookText, metadata.ctaText, or metadata.voiceoverText verbatim. Those fields may be dashboard placeholders. Rewrite them using the master template unless they are already specific and consequence-driven.',
     'Respect metadata.contentType and metadata.editorialAngle. For relegation_battle, do not describe the video as a general league table; make the safety line, danger zone, and escape pressure the central story.',
+    'For round_results, treat "results" as scoreline/result context only. If metadata.summaryRows is empty, do not mention standings, table position, leader, title race, relegation, promotion, qualification, points, gained ground, dropped points, or "changed the table".',
+    'For round_results, allowed consequences are only facts directly visible in metadata: who won, lost, drew, scored many, conceded many, won away, had a big margin, was eliminated/advanced when explicitly flagged, or produced the standout scoreline.',
     'For upcoming_fixtures, do not write generic schedule copy. Lead with metadata.templateSpecific.featuredFixture or the biggest affected team, explain why that fixture matters before kickoff, and ask a pressure/stakes question. Never use "Olha os próximos jogos", "Próximos jogos", or "Qual jogo você vai assistir?" as the main angle or CTA.',
     'For upcoming_fixtures descriptions, do not describe only one match. Opening line should focus on metadata.templateSpecific.featuredFixture, but the 3 bullets must cite multiple fixtures from metadata.templateSpecific.priorityFixtures/supportingFixtures when available.',
     'For top_scorers and player_ranking, write player-first copy: the main player/ranking is the hook, teams are supporting context only, and the CTA must ask about the individual race or player debate.',
@@ -1610,11 +1640,13 @@ const generateYouTubePublishingDraft = async ({
     'Title must be compelling, accurate, searchable, and under 100 characters. Prefer an editorial long-form angle over punchy short-video hooks.',
     'Title must be specific, not generic. It should normally include a team, player, fixture, scoreline, or direct consequence/stakes before broad words like "recap", "summary", "key results", "shocks", or "standout goals".',
     'Avoid titles that only describe the format or the round, such as "Premier League Matchday 1 Recap: Shocks, Standout Goals & Key Results". Instead, choose the strongest concrete story from the metadata and make that the lead.',
-    'Use the consequence-first rule from the Foot Analysis PT system: do not merely describe what happened; explain who benefits, who is pressured, who dropped points, who gained ground, or what changed.',
+    'Use the consequence-first rule from the Foot Analysis PT system, but keep every consequence grounded in metadata. Explain who benefits, who is pressured, who dropped points, who gained ground, or what changed only when the supplied metadata proves that context.',
     'Description should be ready to paste into YouTube for a horizontal long-form video, but it must read like football analysis, not like an outline of the video.',
     'Do not write "in this video", "we cover", "we go through", "this recap looks at", "vamos ver", or similar structure-first phrases. The description should describe the predictions/results themselves.',
     'For long-form predictions, explain what the predictions are saying about the round: which teams look safer, where the risky games are, where an upset can happen, which scorelines carry the strongest logic, and what pressure each fixture creates.',
-    'For long-form round summaries, explain how the round actually went: which results mattered, who gained ground, who dropped points, which scorelines changed the story, and what the round means for the league context.',
+    'For long-form round summaries, explain how the round actually went: which results mattered, standout scorelines, decisive moments, and the clearest result story.',
+    'For long-form round summaries or results-only jobs, do not mention standings, table position, leader, title race, relegation, promotion, qualification, points, gained ground, dropped points, or table movement unless that table context is explicitly present in metadata.summaryRows or metadata.templateSpecific.',
+    'When table context is absent, result consequences must come only from the scorelines and explicit flags: won, lost, drew, scored many, conceded many, away win, big margin, elimination/advancement if explicitly present.',
     'Description structure: opening analytical paragraph about the predictions/results themselves, 3-5 bullets with concrete match/team/stakes details from metadata, then one specific viewer question.',
     'Tags must be comma-friendly keywords without #. Include broad football discovery terms, the league, round, teams when useful, channel brand, and long-form context terms such as analysis, predictions, recap, or round summary.',
     'Do not invent match facts beyond the metadata. If the metadata is sparse, frame the video around the league, round, and format.',
@@ -1777,10 +1809,17 @@ const buildCtaGuidance = (metadata) => {
         avoid: ['What do you think?', 'Comment below'],
       };
     }
-    if (template === 'results' || template === 'champion-final') {
+    if (template === 'results') {
       return {
-        goal: `Ask one result-consequence question about ${leagueName}.`,
-        preferred: ['Who leaves stronger?', 'Who takes the trophy?', 'Who is under more pressure now?'],
+        goal: `Ask one question about the scoreline/result itself in ${leagueName}.`,
+        preferred: ['Who had the biggest result?', 'Which scoreline stands out?', 'Who leaves the match stronger?'],
+        avoid: ['What was the best match?', 'Who changed the table?', 'Who is in the title race?', 'Who is in danger?', 'Comment below'],
+      };
+    }
+    if (template === 'champion-final') {
+      return {
+        goal: `Ask one champion/final-result question about ${leagueName}.`,
+        preferred: ['Who takes the trophy?', 'Who leaves stronger?', 'Who decided the final?'],
         avoid: ['What was the best match?', 'Comment below'],
       };
     }
@@ -1812,10 +1851,17 @@ const buildCtaGuidance = (metadata) => {
       avoid: ['O que achou?', 'Comente abaixo'],
     };
   }
-  if (template === 'results' || template === 'champion-final') {
+  if (template === 'results') {
     return {
-      goal: `Pergunte sobre a consequência do resultado em ${leagueName}.`,
-      preferred: ['Quem sai mais forte?', 'Quem leva a taça?', 'Quem ficou mais pressionado?'],
+      goal: `Pergunte sobre o placar/resultado em si em ${leagueName}.`,
+      preferred: ['Quem fez o maior resultado?', 'Qual placar chama mais atenção?', 'Quem sai mais forte do jogo?'],
+      avoid: ['Qual foi o melhor jogo?', 'Quem mudou a tabela?', 'Quem briga pelo título?', 'Quem está em perigo?', 'O que achou?', 'Comente abaixo'],
+    };
+  }
+  if (template === 'champion-final') {
+    return {
+      goal: `Pergunte sobre campeão/final em ${leagueName}.`,
+      preferred: ['Quem leva a taça?', 'Quem sai mais forte?', 'Quem decidiu a final?'],
       avoid: ['Qual foi o melhor jogo?', 'O que achou?', 'Comente abaixo'],
     };
   }
@@ -2002,17 +2048,18 @@ const buildHookCtaEditorialBrief = (metadata, ctaGuidance) => {
       mustUseFacts: compactArray([
         priorityFacts.length ? `priority teams: ${priorityFacts.join(' / ')}` : '',
         base.userDirection.editorialAngle ? `requested angle: ${base.userDirection.editorialAngle}` : '',
+        'grounding rule: this is results-only metadata; do not infer standings, table movement, title race, relegation, qualification, points, gained ground, or dropped points.',
         leadStory,
         specific.bigWins?.[0] ? `big win: ${specific.bigWins[0]}` : '',
         specific.surpriseCandidates?.[0] ? `away/surprise angle: ${specific.surpriseCandidates[0]}` : '',
         specific.eliminatedTeams?.length ? `eliminated/removed teams: ${specific.eliminatedTeams.join(', ')}` : '',
       ]),
       hookAngles: isEnglish
-        ? ['scoreline changed the round', 'winner gained pressure leverage', 'one result exposed a team']
-        : ['placar que muda a rodada', 'vencedor sai com moral/pressão', 'resultado que expõe um time'],
+        ? ['standout scoreline', 'biggest win', 'away win or draw that stands out']
+        : ['placar de destaque', 'maior vitória', 'vitória fora ou empate que chama atenção'],
       ctaAngles: isEnglish
-        ? ['ask who leaves stronger', 'ask which result changed the table', 'ask who is under pressure now']
-        : ['perguntar quem sai mais forte', 'perguntar qual resultado mudou a tabela', 'perguntar quem ficou pressionado'],
+        ? ['ask which scoreline stands out', 'ask who had the strongest result', 'ask who leaves the match stronger']
+        : ['perguntar qual placar chama atenção', 'perguntar quem fez o resultado mais forte', 'perguntar quem sai mais forte do jogo'],
     };
   }
 
@@ -2194,6 +2241,7 @@ const generateHookCtaSuggestion = async ({job, preparedJob, target}) => {
     'Generate short-video Hook, CTA, and voice-over text for the current football video setup.',
     `Requested field: ${requestedTarget}. Still return hookText, ctaText, and voiceoverText.`,
     'Use only the facts in the production brief. Do not invent standings, scores, teams, dates, or consequences.',
+    'When productionBrief.videoContext.contentType is "round_results", results means scorelines only. Do not mention standings, table movement, title race, relegation, promotion, qualification, points, gained ground, dropped points, or pressure caused by the table unless those exact facts appear in mustUseFacts.',
     'If userDirection.priorityFacts has items, use those before any other fact.',
     'If userDirection.priorityTeams has items, mention at least one of those teams in hookText or voiceoverText.',
     'If userDirection.editorialAngle is filled, all three fields must follow that angle.',
@@ -3296,6 +3344,11 @@ const server = http.createServer(async (request, response) => {
 
   if (request.method === 'GET' && url.pathname === '/api/football/standings-editor') {
     await sendFootballStandingsEditor(response, url);
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/football/top-scorers-editor') {
+    await sendFootballTopScorersEditor(response, url);
     return;
   }
 

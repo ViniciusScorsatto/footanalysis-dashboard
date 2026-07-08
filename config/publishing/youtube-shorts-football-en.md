@@ -266,18 +266,30 @@ Qual foi o momento mais absurdo? 💬👇
 
 ## Informações importantes
 
-- principais resultados
-- goleadas
-- surpresa da rodada
-- sequência de vitórias/derrotas
+- main scorelines
+- big wins
+- away wins
+- draws
+- round surprise from the scoreline itself
+- standings, title race, relegation, promotion, qualification, or points only when explicitly present in metadata
+
+---
+
+## Angle
+
+Do not summarize all results equally.
+
+Choose the strongest result story from the scoreline itself: big win, away win, draw, upset, clean sheet, or explicit elimination/qualification flag.
+
+Do not infer table movement, title race, relegation, promotion, qualification, points, gained ground, dropped points, or "changed the table" from a results-only payload.
 
 ---
 
 ## CTA
 
-- Qual resultado mais te chamou atenção?
-- Qual jogo foi o melhor?
-- Quem decepcionou?
+- Which scoreline stands out?
+- Who had the strongest result?
+- Who leaves the match stronger?
 
 ---
 
