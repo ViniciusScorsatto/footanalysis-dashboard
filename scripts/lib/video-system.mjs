@@ -1239,7 +1239,10 @@ const cachedTeamLogoAliases = {
   austria: ['Austria'],
   'africa do sul': ['South Africa'],
   'arabia saudita': ['Saudi Arabia'],
+  'athletico pr': ['Atletico Paranaense 134', 'Atletico Paranaense'],
+  'atletico pr': ['Atletico Paranaense 134', 'Atletico Paranaense'],
   belgica: ['Belgium'],
+  bragantino: ['RB Bragantino'],
   brasil: ['Brazil'],
   canada: ['Canada'],
   'cabo verde': ['Cape Verde Islands'],
@@ -1417,10 +1420,17 @@ const resolveTeamLogo = async ({
     return youthProfessionalLogo;
   }
 
+  const cachedLogo =
+    findCachedTeamLogo(displayTeamName) ??
+    findCachedTeamLogo(apiTeamName);
+
+  if (cachedLogo) {
+    return cachedLogo;
+  }
+
   return (
     (await downloadLogo(logoUrl, apiTeamName)) ??
-    findCachedTeamLogo(displayTeamName) ??
-    findCachedTeamLogo(apiTeamName)
+    cachedLogo
   );
 };
 
@@ -3911,9 +3921,9 @@ const longformBadgeForTeam = (teamName, leagueId, aliasesConfig, accentConfig, a
           leagueId,
           aliasesConfig,
         }) ??
+        findCachedTeamLogo(teamName) ??
         findCachedTeamLogo(apiDisplayName) ??
-        findCachedTeamLogo(displayName) ??
-        findCachedTeamLogo(teamName),
+        findCachedTeamLogo(displayName),
       accentColor: isHexColor(accentColor)
         ? String(accentColor).trim()
         : configuredAccentColor ?? inferLongformTeamAccent(displayName),
