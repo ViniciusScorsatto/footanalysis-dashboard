@@ -4,21 +4,17 @@
   "accentColor": "#E67E22",
   "standings": {
     "safeArea": {
-      "left": 40,
-      "right": 120
+      "left": 68,
+      "right": 104
     },
     "zones": [
       {
-        "key": "champion",
-        "label": "Campeão",
+        "key": "quadrangular",
+        "label": "Quadrangular",
         "start": 1,
-        "end": 1
-      },
-      {
-        "key": "relegation",
-        "label": "Rebaixamento",
-        "start": 18,
-        "end": 20
+        "end": 8,
+        "fill": "linear-gradient(90deg, rgba(39, 174, 96, 0.88), rgba(39, 174, 96, 0.24) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(86, 214, 120, 0.62)"
       }
     ]
   }

@@ -1099,6 +1099,16 @@ const fetchJson = async (url, apiKey, apiHost) => {
 const getFootballDateBucketTimeZone = (languageProfile = 'pt-br') =>
   languageProfile === 'pt-br' ? 'America/Sao_Paulo' : undefined;
 
+const sharedFixtureDateKeyTemplates = new Set([
+  'results',
+  'next-games',
+  'predictions',
+  'champion-final',
+]);
+
+const getFixtureDateKeyLanguageProfile = (template, languageProfile = 'pt-br') =>
+  sharedFixtureDateKeyTemplates.has(template) ? 'en' : languageProfile;
+
 const getFixtureDateKey = (fixture, languageProfile = 'pt-br') => {
   const fixtureDate = fixture.fixture?.date;
   if (!fixtureDate) {
@@ -1143,6 +1153,7 @@ export const loadRoundDates = async ({
   leagueId,
   season,
   round,
+  template,
   languageProfile = 'pt-br',
 }) => {
   if (!apiKey) {
@@ -1164,7 +1175,9 @@ export const loadRoundDates = async ({
   return [
     ...new Set(
       (payload.response ?? [])
-        .map((fixture) => getFixtureDateKey(fixture, languageProfile))
+        .map((fixture) =>
+          getFixtureDateKey(fixture, getFixtureDateKeyLanguageProfile(template, languageProfile))
+        )
         .filter(Boolean)
     ),
   ].sort((left, right) => left.localeCompare(right));
@@ -1226,7 +1239,10 @@ const cachedTeamLogoAliases = {
   austria: ['Austria'],
   'africa do sul': ['South Africa'],
   'arabia saudita': ['Saudi Arabia'],
+  'athletico pr': ['Atletico Paranaense 134', 'Atletico Paranaense'],
+  'atletico pr': ['Atletico Paranaense 134', 'Atletico Paranaense'],
   belgica: ['Belgium'],
+  bragantino: ['RB Bragantino'],
   brasil: ['Brazil'],
   canada: ['Canada'],
   'cabo verde': ['Cape Verde Islands'],
@@ -1404,10 +1420,17 @@ const resolveTeamLogo = async ({
     return youthProfessionalLogo;
   }
 
+  const cachedLogo =
+    findCachedTeamLogo(displayTeamName) ??
+    findCachedTeamLogo(apiTeamName);
+
+  if (cachedLogo) {
+    return cachedLogo;
+  }
+
   return (
     (await downloadLogo(logoUrl, apiTeamName)) ??
-    findCachedTeamLogo(displayTeamName) ??
-    findCachedTeamLogo(apiTeamName)
+    cachedLogo
   );
 };
 
@@ -1567,6 +1590,7 @@ const resolveTemplateFixtures = ({
 
   const normalizedMatchDates = normalizeMatchDateSelection({matchDate, matchDates});
   const normalizedMatchDateSet = new Set(normalizedMatchDates);
+  const dateKeyLanguageProfile = getFixtureDateKeyLanguageProfile(template, languageProfile);
   const roundFixtures = fixtures.filter((fixture) => {
     if (fixture.league?.round !== detectedRound) {
       return false;
@@ -1576,7 +1600,7 @@ const resolveTemplateFixtures = ({
       return true;
     }
 
-    return normalizedMatchDateSet.has(getFixtureDateKey(fixture, languageProfile));
+    return normalizedMatchDateSet.has(getFixtureDateKey(fixture, dateKeyLanguageProfile));
   });
 
   return {
@@ -1600,6 +1624,7 @@ const buildFixtures = async ({
 }) => {
   const sorted = [...fixtures].sort((a, b) => (a.fixture?.timestamp ?? 0) - (b.fixture?.timestamp ?? 0));
   const cards = [];
+  const dateKeyLanguageProfile = getFixtureDateKeyLanguageProfile(template, languageProfile);
   for (const fixture of sorted) {
     const apiHomeTeam = fixture.teams?.home?.name;
     const apiAwayTeam = fixture.teams?.away?.name;
@@ -1641,7 +1666,7 @@ const buildFixtures = async ({
 
     cards.push({
       fixtureId,
-      fixtureDateKey: getFixtureDateKey(fixture, languageProfile) ?? undefined,
+      fixtureDateKey: getFixtureDateKey(fixture, dateKeyLanguageProfile) ?? undefined,
       homeTeam,
       awayTeam,
       homeScore:
@@ -2296,6 +2321,102 @@ const buildTopScorerEntries = async (topScorersResponse, leagueId, aliasesConfig
   return entries;
 };
 
+const parseTopScorerNumber = (value, fallback = 0) => {
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) ? Math.max(0, Math.round(numericValue)) : fallback;
+};
+
+const buildManualTopScorerEntry = async ({edit, fallbackEntry, index, leagueId, aliasesConfig}) => {
+  const playerName = String(edit?.playerName ?? fallbackEntry?.playerName ?? '').trim();
+  const rawTeamName = String(edit?.team ?? fallbackEntry?.team ?? '').trim();
+
+  if (!playerName || !rawTeamName) {
+    return null;
+  }
+
+  const names = resolveVideoTeamNames(rawTeamName, leagueId, aliasesConfig);
+  const teamName = names.videoDisplayName;
+
+  return {
+    rank: parseTopScorerNumber(edit?.rank, fallbackEntry?.rank ?? index + 1),
+    playerName,
+    team: teamName,
+    teamShort: teamShortLabel(teamName),
+    goals: parseTopScorerNumber(edit?.goals, fallbackEntry?.goals ?? 0),
+    assists:
+      edit?.assists === null || edit?.assists === undefined || edit?.assists === ''
+        ? null
+        : parseTopScorerNumber(edit.assists, fallbackEntry?.assists ?? 0),
+    badge: {
+      label: initials(teamName),
+      logoPath: await resolveTeamLogo({
+        logoUrl: undefined,
+        apiTeamName: rawTeamName,
+        displayTeamName: names.apiDisplayName,
+        leagueId,
+        aliasesConfig,
+      }),
+    },
+  };
+};
+
+const applyTopScorerEdits = async ({entries, edits, leagueId, aliasesConfig}) => {
+  if (!Array.isArray(edits) || edits.length === 0) {
+    return entries;
+  }
+
+  const editedEntries = (
+    await Promise.all(
+      edits.map((edit, index) =>
+        buildManualTopScorerEntry({
+          edit,
+          fallbackEntry: entries[index],
+          index,
+          leagueId,
+          aliasesConfig,
+        })
+      )
+    )
+  ).filter(Boolean);
+
+  if (editedEntries.length === 0) {
+    return entries;
+  }
+
+  return editedEntries
+    .sort((left, right) => left.rank - right.rank)
+    .slice(0, 10)
+    .map((entry, index) => ({
+      ...entry,
+      rank: index + 1,
+    }));
+};
+
+export const loadTopScorersEditor = async ({
+  apiKey,
+  apiHost = 'v3.football.api-sports.io',
+  leagueId,
+  season,
+}) => {
+  if (!apiKey) {
+    throw new Error('Missing FOOTBALL_API_KEY.');
+  }
+
+  const aliasesConfig = await loadTeamNameAliases();
+  await ensureDirectories();
+
+  const payload = await fetchJson(
+    `https://${apiHost}/players/topscorers?league=${leagueId}&season=${season}`,
+    apiKey,
+    apiHost
+  );
+  const responseRows = Array.isArray(payload.response) ? payload.response : [];
+
+  return {
+    entries: await buildTopScorerEntries(responseRows, leagueId, aliasesConfig),
+  };
+};
+
 const buildTopScorersJob = async ({
   apiKey,
   apiHost,
@@ -2310,6 +2431,7 @@ const buildTopScorersJob = async ({
   ctaText,
   soundtrackPath,
   soundtrackVolume,
+  topScorerEdits,
 }) => {
   const payload = await fetchJson(
     `https://${apiHost}/players/topscorers?league=${leagueId}&season=${season}`,
@@ -2319,7 +2441,13 @@ const buildTopScorersJob = async ({
   const leagueConfig = await loadLeagueConfig(leagueId);
   const aliasesConfig = await loadTeamNameAliases();
   const responseRows = Array.isArray(payload.response) ? payload.response : [];
-  const entries = await buildTopScorerEntries(responseRows, leagueId, aliasesConfig);
+  const apiEntries = await buildTopScorerEntries(responseRows, leagueId, aliasesConfig);
+  const entries = await applyTopScorerEdits({
+    entries: apiEntries,
+    edits: topScorerEdits,
+    leagueId,
+    aliasesConfig,
+  });
   const apiLeagueName =
     responseRows[0]?.statistics?.[0]?.league?.name ??
     leagueConfig?.leagueName ??
@@ -3793,9 +3921,9 @@ const longformBadgeForTeam = (teamName, leagueId, aliasesConfig, accentConfig, a
           leagueId,
           aliasesConfig,
         }) ??
+        findCachedTeamLogo(teamName) ??
         findCachedTeamLogo(apiDisplayName) ??
-        findCachedTeamLogo(displayName) ??
-        findCachedTeamLogo(teamName),
+        findCachedTeamLogo(displayName),
       accentColor: isHexColor(accentColor)
         ? String(accentColor).trim()
         : configuredAccentColor ?? inferLongformTeamAccent(displayName),
@@ -4507,6 +4635,7 @@ export const prepareJob = async ({
   standingEdits,
   seasonFinalVerdictEdits,
   tierlistSelections,
+  topScorerEdits,
   topScorerPrediction,
   bestPlayerPrediction,
 }) => {
@@ -4646,6 +4775,7 @@ export const prepareJob = async ({
       ctaText,
       soundtrackPath,
       soundtrackVolume,
+      topScorerEdits,
     });
     const job = await addFootballIntroAndVoiceover(baseJob, {
       introTitle,

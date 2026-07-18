@@ -17,6 +17,7 @@ const languageProfileSelect = document.getElementById('language-profile');
 const roundSelect = document.getElementById('round-select');
 const matchDateSelect = document.getElementById('match-date-select');
 const matchDateOptions = document.getElementById('match-date-options');
+const matchDateSummary = document.getElementById('match-date-summary');
 const generateShortCopyButton = document.getElementById('generate-short-copy-button');
 const hookCtaStatus = document.getElementById('hook-cta-status');
 const soundtrackSelect = document.getElementById('soundtrack-select');
@@ -59,6 +60,10 @@ const standingsEditorField = document.getElementById('standings-editor-field');
 const standingsEditorStatus = document.getElementById('standings-editor-status');
 const standingsEditorList = document.getElementById('standings-editor-list');
 const reloadStandingsButton = document.getElementById('reload-standings-button');
+const topScorersEditorField = document.getElementById('top-scorers-editor-field');
+const topScorersEditorStatus = document.getElementById('top-scorers-editor-status');
+const topScorersEditorList = document.getElementById('top-scorers-editor-list');
+const reloadTopScorersButton = document.getElementById('reload-top-scorers-button');
 const worldCupStandingsEditorField = document.getElementById('world-cup-standings-editor-field');
 const worldCupStandingsEditorStatus = document.getElementById('world-cup-standings-editor-status');
 const worldCupStandingsEditorList = document.getElementById('world-cup-standings-editor-list');
@@ -295,6 +300,7 @@ let currentWorldCupStandingRows = [];
 let currentChampionFinalRows = [];
 let currentSeasonVerdictRows = [];
 let currentTierlistTeams = [];
+let currentTopScorerEntries = [];
 let cachedWorldCupGroups = null;
 const cachedWorldCupStandingsPreview = new Map();
 let lastPreparedJob = null;
@@ -303,6 +309,47 @@ let activePublishingPlatform = 'youtube';
 let allLeaguePresets = [];
 let allChannelProfiles = [];
 let availableMatchDates = [];
+
+const formatMatchDateParts = (dateValue) => {
+  const [year, month, day] = String(dateValue).split('-').map(Number);
+
+  if (!year || !month || !day) {
+    return {
+      title: String(dateValue),
+      meta: 'Match date',
+    };
+  }
+
+  const locale = languageProfileSelect.value === 'en' ? 'en-US' : 'pt-BR';
+  const date = new Date(Date.UTC(year, month - 1, day, 12));
+  const weekday = new Intl.DateTimeFormat(locale, {weekday: 'short', timeZone: 'UTC'})
+    .format(date)
+    .replace('.', '');
+  const monthName = new Intl.DateTimeFormat(locale, {month: 'short', timeZone: 'UTC'})
+    .format(date)
+    .replace('.', '');
+
+  return {
+    title: locale === 'en-US' ? `${monthName} ${day}` : `${String(day).padStart(2, '0')} ${monthName}`,
+    meta: weekday,
+  };
+};
+
+const describeMatchDateSelection = (selectedDates) => {
+  if (availableMatchDates.length === 0) {
+    return 'Round dates will appear after choosing a round.';
+  }
+
+  if (selectedDates.length === 0) {
+    return `All ${availableMatchDates.length} date${availableMatchDates.length === 1 ? '' : 's'} selected`;
+  }
+
+  if (selectedDates.length === 1) {
+    return `1 date selected: ${selectedDates[0]}`;
+  }
+
+  return `${selectedDates.length} dates selected`;
+};
 const EUROPEAN_LEAGUE_IDS = new Set([39, 40, 140, 135, 78, 61, 2, 3]);
 const UPCOMING_FIXTURE_TEMPLATES = new Set([NEXT_GAMES_TEMPLATE, 'predictions']);
 
@@ -758,6 +805,9 @@ const buildJobPayloadFromForm = () => {
   if (templateSelect.value === 'standings') {
     payload.standingEdits = getStandingEdits();
   }
+  if (templateSelect.value === TOP_SCORERS_TEMPLATE) {
+    payload.topScorerEdits = getTopScorerEdits();
+  }
   if (templateSelect.value === WORLD_CUP_TEMPLATE) {
     payload.worldCupStandingEdits = getWorldCupStandingEdits();
   }
@@ -1154,7 +1204,7 @@ const setRenderDownload = (job, render) => {
     .join('/')}`;
   renderDownloadRoot.innerHTML = `
     <div class="job-status-line job-render-line">
-      <span class="status-chip success">render</span>
+      <span class="ds-chip ds-chip--success status-chip success">render</span>
       <div class="job-status-copy">
         <strong>Render ready</strong>
         <span>${escapeHtml(job.outputName)}</span>
@@ -1244,7 +1294,7 @@ const updatePublishingMetadata = (job) => {
   ].filter(Boolean);
 
   publishingMetadataRoot.innerHTML = chips
-    .map((chip) => `<span class="status-chip neutral">${escapeHtml(chip)}</span>`)
+    .map((chip) => `<span class="ds-chip ds-chip--neutral status-chip neutral">${escapeHtml(chip)}</span>`)
     .join('');
 };
 
@@ -1255,10 +1305,10 @@ const draftField = ({platform, label, key, value, multiline = true}) => {
     ? `<textarea data-platform="${platform}" data-key="${key}" rows="4">${escapedValue}</textarea>`
     : `<input data-platform="${platform}" data-key="${key}" type="text" value="${escapedValue}" />`;
   return `
-    <label class="publishing-field">
+    <label class="ds-field publishing-field">
       <span>${escapeHtml(label)}</span>
       ${control}
-      <button type="button" class="copy-field-button btn btn-secondary btn-compact" data-copy-value="${escapeHtml(fieldValue)}">Copy</button>
+      <button type="button" class="copy-field-button ds-button ds-button--secondary ds-button--compact btn btn-secondary btn-compact" data-copy-value="${escapeHtml(fieldValue)}">Copy</button>
     </label>
   `;
 };
@@ -1361,7 +1411,7 @@ const renderPublishingDraft = (draft) => {
           >
             <div class="publishing-card-header">
               <h3>${escapeHtml(card.label)}</h3>
-              <span class="status-chip neutral">draft</span>
+              <span class="ds-chip ds-chip--neutral status-chip neutral">draft</span>
             </div>
             ${card.fields
               .map(([label, key, value, multiline]) =>
@@ -1371,8 +1421,8 @@ const renderPublishingDraft = (draft) => {
             ${
               card.key === 'youtube'
                 ? `
-                  <div class="youtube-upload-box notice info">
-                    <label class="publishing-field">
+                  <div class="youtube-upload-box ds-notice ds-notice--info notice info">
+                    <label class="ds-field publishing-field">
                       <span>Privacy</span>
                       <select id="youtube-privacy-status">
                         <option value="private">Private</option>
@@ -1392,15 +1442,15 @@ const renderPublishingDraft = (draft) => {
                       <input type="checkbox" id="youtube-channel-footer" />
                       <span>Include Foot Analysis channel description</span>
                     </label>
-                    <button type="button" id="upload-youtube-button" class="btn btn-secondary">Upload to YouTube</button>
-                    <p id="youtube-upload-status" class="publishing-status notice info">Upload uses the rendered MP4 and keeps manual review in YouTube Studio.</p>
+                    <button type="button" id="upload-youtube-button" class="ds-button ds-button--secondary btn btn-secondary">Upload to YouTube</button>
+                    <p id="youtube-upload-status" class="publishing-status ds-notice ds-notice--info notice info">Upload uses the rendered MP4 and keeps manual review in YouTube Studio.</p>
                   </div>
                 `
                 : card.key === 'tiktok'
                   ? `
-                    <div class="youtube-upload-box notice info">
-                      <button type="button" id="upload-tiktok-button" class="btn btn-secondary">Upload to TikTok Inbox</button>
-                      <p id="tiktok-upload-status" class="publishing-status notice info">TikTok upload sends the rendered MP4 to your inbox/draft flow. Copy the caption and finish in TikTok.</p>
+                    <div class="youtube-upload-box ds-notice ds-notice--info notice info">
+                      <button type="button" id="upload-tiktok-button" class="ds-button ds-button--secondary btn btn-secondary">Upload to TikTok Inbox</button>
+                      <p id="tiktok-upload-status" class="publishing-status ds-notice ds-notice--info notice info">TikTok upload sends the rendered MP4 to your inbox/draft flow. Copy the caption and finish in TikTok.</p>
                     </div>
                   `
                 : ''
@@ -1683,7 +1733,6 @@ const renderPredictionEditor = (fixtures = []) => {
 
   predictionEditorList.innerHTML = fixtures
     .map((fixture, index) => {
-      const sourceLabel = fixture.predictionSource === 'api' ? 'API' : 'Manual';
       return `
         <div class="prediction-card editor-row fixture-editor-row">
           <label class="prediction-team">
@@ -1709,10 +1758,9 @@ const renderPredictionEditor = (fixtures = []) => {
             value="${fixture.awayScore ?? ''}"
             aria-label="${fixture.awayTeam} score"
           />
-          <label class="prediction-team" style="justify-content:flex-end;text-align:right;">
+          <label class="prediction-team prediction-team-away">
             <span>${escapeHtml(fixture.awayTeam)}</span>
           </label>
-          <div class="prediction-source status-chip neutral" style="grid-column:1 / -1;">${index + 1}. ${sourceLabel}</div>
         </div>
       `;
     })
@@ -1749,9 +1797,6 @@ const renderResultEditor = (fixtures = []) => {
       return `
         <div class="prediction-card editor-row fixture-editor-row">
           <div class="prediction-team-block">
-            <label class="prediction-team">
-              <span>${escapeHtml(fixture.homeTeam)}</span>
-            </label>
             <label class="eliminated-toggle">
               <input
                 type="checkbox"
@@ -1761,6 +1806,9 @@ const renderResultEditor = (fixtures = []) => {
                 ${fixture.homeEliminated ? 'checked' : ''}
               />
               <span>Elim.</span>
+            </label>
+            <label class="prediction-team">
+              <span>${escapeHtml(fixture.homeTeam)}</span>
             </label>
           </div>
           <input
@@ -1786,7 +1834,7 @@ const renderResultEditor = (fixtures = []) => {
             aria-label="${escapeHtml(fixture.awayTeam)} score"
           />
           <div class="prediction-team-block align-right">
-            <label class="prediction-team" style="justify-content:flex-end;text-align:right;">
+            <label class="prediction-team prediction-team-away">
               <span>${escapeHtml(fixture.awayTeam)}</span>
             </label>
             <label class="eliminated-toggle align-right">
@@ -1948,6 +1996,141 @@ const getStandingEdits = () => {
       form: getValue('form'),
     };
   });
+};
+
+const renderTopScorersEditor = (entries = []) => {
+  currentTopScorerEntries = entries;
+
+  if (!entries.length) {
+    topScorersEditorList.innerHTML = '';
+    return;
+  }
+
+  topScorersEditorList.innerHTML = entries
+    .map((entry, index) => {
+      const logoSource = entry.badge?.logoPath ?? entry.badge?.imagePath;
+      const badgeHtml = logoSource
+        ? `<img src="${escapeHtml(logoSource)}" alt="" />`
+        : `<span class="season-verdict-fallback-badge">${escapeHtml(entry.badge?.label ?? '')}</span>`;
+
+      return `
+        <div class="top-scorers-editor-row editor-row" data-index="${index}">
+          <div class="top-scorers-editor-player">
+            ${badgeHtml}
+            <div>
+              <strong>${escapeHtml(entry.playerName)}</strong>
+              <span>${escapeHtml(entry.team)}</span>
+            </div>
+          </div>
+          <label>
+            Rank
+            <input type="number" min="1" max="20" step="1" data-field="rank" value="${entry.rank ?? index + 1}" />
+          </label>
+          <label>
+            Player
+            <input type="text" data-field="playerName" value="${escapeHtml(entry.playerName ?? '')}" />
+          </label>
+          <label>
+            Team
+            <input type="text" data-field="team" value="${escapeHtml(entry.team ?? '')}" />
+          </label>
+          <label>
+            Goals
+            <input type="number" min="0" step="1" data-field="goals" value="${entry.goals ?? 0}" />
+          </label>
+          <label>
+            Ast
+            <input type="number" min="0" step="1" data-field="assists" value="${entry.assists ?? ''}" />
+          </label>
+        </div>
+      `;
+    })
+    .join('');
+};
+
+const getTopScorerEdits = () => {
+  return currentTopScorerEntries
+    .map((entry, index) => {
+      const rowElement = topScorersEditorList.querySelector(
+        `.top-scorers-editor-row[data-index="${index}"]`
+      );
+      if (!rowElement) return null;
+      const getValue = (field) => rowElement.querySelector(`[data-field="${field}"]`)?.value ?? '';
+
+      return {
+        rank: Number(getValue('rank') || entry.rank || index + 1),
+        playerName: getValue('playerName').trim(),
+        team: getValue('team').trim(),
+        goals: Number(getValue('goals') || 0),
+        assists: getValue('assists') === '' ? null : Number(getValue('assists')),
+      };
+    })
+    .filter((entry) => entry && entry.playerName && entry.team);
+};
+
+const loadTopScorersEditor = async ({preferPrepared = false} = {}) => {
+  const template = templateSelect.value;
+  const leagueIdValue = form.elements.leagueId.value.trim();
+  const seasonValue = form.elements.season.value.trim();
+  const leagueId = Number(leagueIdValue);
+  const season = Number(seasonValue);
+
+  if (template !== TOP_SCORERS_TEMPLATE) {
+    setNoticeStatus(topScorersEditorStatus, 'Select Top Scorers to load API scorers.', 'info');
+    renderTopScorersEditor([]);
+    return;
+  }
+
+  if (
+    preferPrepared &&
+    lastPreparedJob?.template === TOP_SCORERS_TEMPLATE &&
+    Array.isArray(lastPreparedJob.entries) &&
+    lastPreparedJob.entries.length > 0
+  ) {
+    renderTopScorersEditor(lastPreparedJob.entries);
+    setNoticeStatus(
+      topScorersEditorStatus,
+      `Loaded ${lastPreparedJob.entries.length} prepared scorers. Edit and prepare again to keep overrides.`,
+      'success'
+    );
+    return;
+  }
+
+  if (!leagueIdValue || !seasonValue || !Number.isFinite(leagueId) || !Number.isFinite(season)) {
+    setNoticeStatus(topScorersEditorStatus, 'Choose a league and season to load top scorers.', 'warning');
+    renderTopScorersEditor([]);
+    return;
+  }
+
+  try {
+    reloadTopScorersButton.disabled = true;
+    setNoticeStatus(topScorersEditorStatus, 'Loading top scorers from API…', 'warning');
+    const params = new URLSearchParams({
+      leagueId: String(leagueId),
+      season: String(season),
+    });
+    const response = await fetch(`${apiBase}/top-scorers-editor?${params.toString()}`);
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not load top scorers.');
+    }
+
+    renderTopScorersEditor(data.entries ?? []);
+    setNoticeStatus(
+      topScorersEditorStatus,
+      data.entries?.length
+        ? `Loaded ${data.entries.length} scorers from API. Edit only what needs correction.`
+        : 'No top scorers found.',
+      data.entries?.length ? 'success' : 'warning'
+    );
+  } catch (error) {
+    renderTopScorersEditor([]);
+    setNoticeStatus(topScorersEditorStatus, 'Could not load top scorers.', 'error');
+    log(error instanceof Error ? error.message : String(error));
+  } finally {
+    reloadTopScorersButton.disabled = false;
+  }
 };
 
 const getWorldCupGroups = async () => {
@@ -2736,7 +2919,7 @@ const renderCurrentJob = (job) => {
     updatePublishingMetadata(null);
     templateChip.textContent = 'no job';
     currentJobRoot.innerHTML =
-      '<div class="empty-state command-empty-state"><span class="status-chip neutral">no job</span><strong>No prepared job yet</strong><span>Prepare a preview after choosing template, league, season, and round.</span></div>';
+      '<div class="empty-state command-empty-state"><span class="ds-chip ds-chip--neutral status-chip neutral">no job</span><strong>No prepared job yet</strong><span>Prepare a preview after choosing template, league, season, and round.</span></div>';
     if (dashboardQuickStatus) {
       dashboardQuickStatus.textContent = 'Choose a template, league, and round/date. Then prepare a preview job.';
     }
@@ -2799,14 +2982,14 @@ const renderCurrentJob = (job) => {
 
   currentJobRoot.innerHTML = `
     <div class="job-status-line">
-      <span class="status-chip success">ready</span>
+      <span class="ds-chip ds-chip--success status-chip success">ready</span>
       <div class="job-status-copy">
         <strong>${escapeHtml(job.leagueName)} • ${escapeHtml(templateLabel)}</strong>
         <span>${escapeHtml(titleLine)} • ${escapeHtml(detailLine)} • ${escapeHtml(job.outputName)}</span>
       </div>
       <div class="job-status-meta">
-        <span class="status-chip neutral">${escapeHtml(job.languageProfile ?? 'pt-br')}</span>
-        <span class="status-chip neutral">${escapeHtml(job.brandName)}</span>
+        <span class="ds-chip ds-chip--neutral status-chip neutral">${escapeHtml(job.languageProfile ?? 'pt-br')}</span>
+        <span class="ds-chip ds-chip--neutral status-chip neutral">${escapeHtml(job.brandName)}</span>
       </div>
     </div>
   `;
@@ -2893,6 +3076,7 @@ const applyTemplateHints = () => {
   predictionEditorField.hidden = template !== 'predictions';
   resultEditorField.hidden = template !== 'results' && template !== CHAMPION_FINAL_TEMPLATE;
   standingsEditorField.hidden = template !== 'standings';
+  topScorersEditorField.hidden = template !== TOP_SCORERS_TEMPLATE;
   worldCupStandingsEditorField.hidden = template !== WORLD_CUP_TEMPLATE;
   seasonVerdictEditorField.hidden = template !== SEASON_FINAL_VERDICT_TEMPLATE;
   tierlistEditorField.hidden = template !== TIERLIST_TEMPLATE;
@@ -2902,6 +3086,7 @@ const applyTemplateHints = () => {
     template !== 'results' &&
     template !== CHAMPION_FINAL_TEMPLATE &&
     template !== 'standings' &&
+    template !== TOP_SCORERS_TEMPLATE &&
     template !== WORLD_CUP_TEMPLATE &&
     template !== SEASON_FINAL_VERDICT_TEMPLATE &&
     template !== TIERLIST_TEMPLATE;
@@ -2967,11 +3152,14 @@ const setSelectedMatchDates = (dates) => {
 
   matchDateOptions.querySelectorAll('[data-date]').forEach((button) => {
     const dateValue = button.dataset.date ?? '';
-    button.classList.toggle(
-      'active',
-      dateValue ? selectedDates.includes(dateValue) : selectedDates.length === 0
-    );
+    const isActive = dateValue ? selectedDates.includes(dateValue) : selectedDates.length === 0;
+    button.classList.toggle('active', isActive);
+    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
   });
+
+  if (matchDateSummary) {
+    matchDateSummary.textContent = describeMatchDateSelection(selectedDates);
+  }
 };
 
 const setMatchDateOptions = (dates, selectedDates = '') => {
@@ -2981,13 +3169,19 @@ const setMatchDateOptions = (dates, selectedDates = '') => {
   );
 
   matchDateOptions.innerHTML = [
-    '<button type="button" class="date-pill" data-date="">All dates in this round</button>',
-    ...availableMatchDates.map(
-      (dateValue) =>
-        `<button type="button" class="date-pill" data-date="${escapeHtml(dateValue)}">${escapeHtml(
-          dateValue
-        )}</button>`
-    ),
+    `<button type="button" class="date-pill date-pill-all" data-date="" aria-pressed="false">
+      <span class="date-pill-title">All</span>
+      <span class="date-pill-meta">round</span>
+    </button>`,
+    ...availableMatchDates.map((dateValue) => {
+      const {title, meta} = formatMatchDateParts(dateValue);
+      return `<button type="button" class="date-pill" data-date="${escapeHtml(
+        dateValue
+      )}" aria-label="${escapeHtml(`Select ${dateValue}`)}" aria-pressed="false">
+        <span class="date-pill-title">${escapeHtml(title)}</span>
+        <span class="date-pill-meta">${escapeHtml(meta)}</span>
+      </button>`;
+    }),
   ].join('');
   setSelectedMatchDates(selectedDateList);
 };
@@ -3033,7 +3227,7 @@ const loadRoundDates = async (preferredDate = form.elements.matchDate.value) => 
         String(leagueId)
       )}&season=${encodeURIComponent(String(season))}&round=${encodeURIComponent(
         roundValue
-      )}&languageProfile=${encodeURIComponent(languageProfile)}`
+      )}&template=${encodeURIComponent(template)}&languageProfile=${encodeURIComponent(languageProfile)}`
     );
     const data = await response.json();
 
@@ -3240,6 +3434,8 @@ const loadOptions = async () => {
     }
   } else if (form.elements.template.value === 'standings') {
     await loadStandingsEditor();
+  } else if (form.elements.template.value === TOP_SCORERS_TEMPLATE) {
+    await loadTopScorersEditor({preferPrepared: true});
   } else if (form.elements.template.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     await loadSeasonFinalVerdictEditor();
   } else if (form.elements.template.value === TIERLIST_TEMPLATE) {
@@ -3263,6 +3459,9 @@ presetSelect.addEventListener('change', async () => {
   await loadRounds('');
   if (templateSelect.value === 'standings') {
     await loadStandingsEditor();
+  }
+  if (templateSelect.value === TOP_SCORERS_TEMPLATE) {
+    await loadTopScorersEditor();
   }
   if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     await loadSeasonFinalVerdictEditor();
@@ -3301,6 +3500,8 @@ channelProfileSelect.addEventListener('change', async () => {
     }
   } else if (templateSelect.value === 'standings') {
     await loadStandingsEditor();
+  } else if (templateSelect.value === TOP_SCORERS_TEMPLATE) {
+    await loadTopScorersEditor();
   } else if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     await loadSeasonFinalVerdictEditor();
   } else if (templateSelect.value === TIERLIST_TEMPLATE) {
@@ -3327,6 +3528,7 @@ templateSelect.addEventListener('change', async () => {
     await loadPredictionFixtures();
     renderResultEditor([]);
     renderStandingsEditor([]);
+    renderTopScorersEditor([]);
     renderWorldCupStandingsEditor([]);
     renderSeasonVerdictEditor([]);
     renderTierlistEditor([]);
@@ -3337,6 +3539,7 @@ templateSelect.addEventListener('change', async () => {
     }
     renderPredictionEditor([]);
     renderStandingsEditor([]);
+    renderTopScorersEditor([]);
     renderWorldCupStandingsEditor([]);
     renderSeasonVerdictEditor([]);
     renderTierlistEditor([]);
@@ -3344,6 +3547,15 @@ templateSelect.addEventListener('change', async () => {
     await loadStandingsEditor();
     renderPredictionEditor([]);
     renderResultEditor([]);
+    renderTopScorersEditor([]);
+    renderWorldCupStandingsEditor([]);
+    renderSeasonVerdictEditor([]);
+    renderTierlistEditor([]);
+  } else if (templateSelect.value === TOP_SCORERS_TEMPLATE) {
+    await loadTopScorersEditor();
+    renderPredictionEditor([]);
+    renderResultEditor([]);
+    renderStandingsEditor([]);
     renderWorldCupStandingsEditor([]);
     renderSeasonVerdictEditor([]);
     renderTierlistEditor([]);
@@ -3352,6 +3564,7 @@ templateSelect.addEventListener('change', async () => {
     renderPredictionEditor([]);
     renderResultEditor([]);
     renderStandingsEditor([]);
+    renderTopScorersEditor([]);
     renderWorldCupStandingsEditor([]);
     renderTierlistEditor([]);
   } else if (templateSelect.value === TIERLIST_TEMPLATE) {
@@ -3359,6 +3572,7 @@ templateSelect.addEventListener('change', async () => {
     renderPredictionEditor([]);
     renderResultEditor([]);
     renderStandingsEditor([]);
+    renderTopScorersEditor([]);
     renderWorldCupStandingsEditor([]);
     renderSeasonVerdictEditor([]);
   } else if (templateSelect.value === WORLD_CUP_TEMPLATE) {
@@ -3366,12 +3580,14 @@ templateSelect.addEventListener('change', async () => {
     renderPredictionEditor([]);
     renderResultEditor([]);
     renderStandingsEditor([]);
+    renderTopScorersEditor([]);
     renderSeasonVerdictEditor([]);
     renderTierlistEditor([]);
   } else {
     renderPredictionEditor([]);
     renderResultEditor([]);
     renderStandingsEditor([]);
+    renderTopScorersEditor([]);
     renderWorldCupStandingsEditor([]);
     renderSeasonVerdictEditor([]);
     renderTierlistEditor([]);
@@ -3392,6 +3608,8 @@ languageProfileSelect.addEventListener('change', () => {
     }
   } else if (templateSelect.value === 'standings') {
     loadStandingsEditor();
+  } else if (templateSelect.value === TOP_SCORERS_TEMPLATE) {
+    loadTopScorersEditor();
   } else if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     loadSeasonFinalVerdictEditor();
   } else if (templateSelect.value === TIERLIST_TEMPLATE) {
@@ -3452,6 +3670,9 @@ form.elements.leagueId.addEventListener('change', async () => {
   if (templateSelect.value === 'standings') {
     await loadStandingsEditor();
   }
+  if (templateSelect.value === TOP_SCORERS_TEMPLATE) {
+    await loadTopScorersEditor();
+  }
   if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     await loadSeasonFinalVerdictEditor();
   }
@@ -3477,6 +3698,9 @@ form.elements.season.addEventListener('change', async () => {
   updateDashboardMeta();
   if (templateSelect.value === 'standings') {
     await loadStandingsEditor();
+  }
+  if (templateSelect.value === TOP_SCORERS_TEMPLATE) {
+    await loadTopScorersEditor();
   }
   if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) {
     await loadSeasonFinalVerdictEditor();
@@ -3519,6 +3743,7 @@ applyPreviewButton.addEventListener('click', updatePreview);
 reloadPredictionsButton.addEventListener('click', loadPredictionFixtures);
 reloadResultsButton.addEventListener('click', loadResultFixturesForEditor);
 reloadStandingsButton.addEventListener('click', loadStandingsEditor);
+reloadTopScorersButton.addEventListener('click', loadTopScorersEditor);
 reloadWorldCupStandingsButton.addEventListener('click', () =>
   loadWorldCupStandingsEditor({force: true})
 );
@@ -3591,6 +3816,9 @@ const submitJob = async (endpoint, actionLabel, options = {}) => {
     }
 
     renderCurrentJob(data.job);
+    if (data.job?.template === TOP_SCORERS_TEMPLATE) {
+      renderTopScorersEditor(data.job.entries ?? []);
+    }
     setRenderDownload(data.job, data.render);
     updatePreview();
     if (silent && templateSelect.value === TIERLIST_TEMPLATE) {
