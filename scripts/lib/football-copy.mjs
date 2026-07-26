@@ -15,6 +15,7 @@ const copyByLanguage = {
       'player-of-round': ['Quem brilhou na rodada?', 'O craque saiu daqui', 'Essa nota te convence?'],
       'championship-pace': ['Quem tem ritmo de taça?', 'Esse ritmo segura o título?', 'A corrida pelo topo apertou'],
       'relegation-line': ['A linha está chegando', 'Quem escapa agora?', 'A briga contra a queda apertou'],
+      'historical-champions': ['Os últimos campeões estão aqui', 'A lista recente da Libertadores', 'Quem marcou mais essa era?'],
       tierlist: ['Minha tierlist da Copa', 'Quem chega como favorito?', 'A Copa já tem favoritos'],
       'continental-groups-standings': ['Os grupos mudaram', 'Quem está passando agora?', 'Essa chave está viva'],
       predictions: ['Você crava esses placares?', 'Vai ter zebra aqui?', 'Seus palpites batem?'],
@@ -76,6 +77,12 @@ const copyByLanguage = {
         'Quem reage a tempo?',
         'Quem está mais ameaçado?',
       ],
+      'historical-champions': [
+        'Qual foi o melhor campeão?',
+        'Qual título foi mais marcante?',
+        'Quem teve a campanha mais histórica?',
+        'Qual campeão você colocaria no topo?',
+      ],
       tierlist: [
         'Concorda com essa lista?',
         'Quem ficou alto demais?',
@@ -117,6 +124,7 @@ const copyByLanguage = {
       'player-of-round': 'Craque da Rodada',
       'championship-pace': 'Ritmo de Campeão',
       'relegation-line': 'Linha do Rebaixamento',
+      'historical-champions': 'Últimos Campeões',
       tierlist: 'Tierlist',
       'continental-groups-standings': 'Grupos Continentais',
       predictions: 'Palpites',
@@ -155,6 +163,7 @@ const copyByLanguage = {
       'player-of-round': ['Who owned the round?', 'Your MVP is here', 'Does this rating hold up?'],
       'championship-pace': ['Who has title pace?', 'Can this pace win it?', 'The title race tightened'],
       'relegation-line': ['The drop zone is moving', 'Who escapes now?', 'Survival mode is on'],
+      'historical-champions': ['The latest champions are here', 'Recent Libertadores winners', 'Who owned this era?'],
       tierlist: ['My World Cup tierlist', 'Who are the real favorites?', 'The favorites are set'],
       'continental-groups-standings': ['The groups just shifted', 'Who goes through now?', 'This group is alive'],
       predictions: ['Can you call these scores?', 'Where is the upset?', 'Lock in your picks'],
@@ -216,6 +225,12 @@ const copyByLanguage = {
         'Who turns it around?',
         'Who is in the most danger?',
       ],
+      'historical-champions': [
+        'Who was the best champion?',
+        'Which title run was the greatest?',
+        'Who had the most historic campaign?',
+        'Which champion ranks first?',
+      ],
       tierlist: [
         'Do you agree with this list?',
         'Who is too high?',
@@ -257,6 +272,7 @@ const copyByLanguage = {
       'player-of-round': 'Player of the Round',
       'championship-pace': 'Title Pace',
       'relegation-line': 'Relegation Line',
+      'historical-champions': 'Last Champions',
       tierlist: 'Tierlist',
       'continental-groups-standings': 'Continental Groups',
       predictions: 'Predictions',
@@ -475,6 +491,9 @@ export const getFootballIntroDefaults = ({
     'relegation-line': pt
       ? withPtIntro(`a linha do rebaixamento ${ptCompetition}`)
       : `Relegation line in the ${leagueWithoutSeason}`,
+    'historical-champions': pt
+      ? withPtIntro(`os últimos campeões ${ptCompetition}`)
+      : `Last ${leagueWithoutSeason} champions`,
     tierlist: pt
       ? withPtIntro(`a tierlist de favoritos da ${worldCupTitle}`)
       : `${worldCupTitle} favorites tierlist`,

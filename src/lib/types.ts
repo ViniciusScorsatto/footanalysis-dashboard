@@ -19,7 +19,8 @@ export type FootballVideoTemplate =
   | 'tierlist'
   | 'continental-groups-standings'
   | 'world-cup-group-standings'
-  | 'world-cup-knockout';
+  | 'world-cup-knockout'
+  | 'historical-champions';
 
 export type VideoTemplate = FootballVideoTemplate;
 
@@ -145,6 +146,7 @@ type BaseVideoJob = {
 type FootballBaseVideoJob = BaseVideoJob & {
   sport: 'football';
   template: FootballVideoTemplate;
+  videoMode?: 'animated' | 'static';
   leagueId: number;
   season: number;
   leagueName: string;
@@ -164,7 +166,13 @@ type FootballBaseVideoJob = BaseVideoJob & {
 
 export type ResultsVideoJob = FootballBaseVideoJob & {
   template: 'results' | 'next-games' | 'predictions';
-  compositionId: 'FootballResultsShort' | 'FootballNextGamesShort' | 'FootballPredictionsShort';
+  compositionId:
+    | 'FootballResultsShort'
+    | 'FootballNextGamesShort'
+    | 'FootballPredictionsShort'
+    | 'FootballStaticResultsShort'
+    | 'FootballStaticNextGamesShort'
+    | 'FootballStaticPredictionsShort';
   round: string;
   matchDate?: string;
   matchDates?: string[];
@@ -251,7 +259,7 @@ export type FootballRoundSummaryLongVideoJob = FootballBaseVideoJob & {
 
 export type StandingsVideoJob = FootballBaseVideoJob & {
   template: 'standings';
-  compositionId: 'FootballStandingsShort';
+  compositionId: 'FootballStandingsShort' | 'FootballStaticStandingsShort';
   standingsLabel: string;
   rows: StandingRow[];
 };
@@ -296,7 +304,7 @@ export type TopScorerEntry = {
 
 export type TopScorersVideoJob = FootballBaseVideoJob & {
   template: 'top-scorers';
-  compositionId: 'FootballTopScorersShort';
+  compositionId: 'FootballTopScorersShort' | 'FootballStaticTopScorersShort';
   titleLabel: string;
   subtitleLabel: string;
   entries: TopScorerEntry[];
@@ -340,7 +348,11 @@ export type PaceEntry = {
 
 export type PaceVideoJob = FootballBaseVideoJob & {
   template: 'championship-pace' | 'relegation-line';
-  compositionId: 'FootballChampionshipPaceShort' | 'FootballRelegationLineShort';
+  compositionId:
+    | 'FootballChampionshipPaceShort'
+    | 'FootballRelegationLineShort'
+    | 'FootballStaticChampionshipPaceShort'
+    | 'FootballStaticRelegationLineShort';
   titleLabel: string;
   subtitleLabel: string;
   benchmarkPercentage: number;
@@ -479,6 +491,25 @@ export type WorldCupKnockoutVideoJob = FootballBaseVideoJob & {
   matches: WorldCupKnockoutMatch[];
 };
 
+export type HistoricalChampionEntry = {
+  year: number;
+  clubId: string;
+  clubName: string;
+  country: string;
+  runnerUp?: string;
+  score?: string;
+  notes?: string;
+  badge: TeamBadge;
+};
+
+export type HistoricalChampionsVideoJob = FootballBaseVideoJob & {
+  template: 'historical-champions';
+  compositionId: 'FootballStaticHistoricalChampionsShort';
+  titleLabel: string;
+  subtitleLabel: string;
+  entries: HistoricalChampionEntry[];
+};
+
 export type FootballThumbnailJob = {
   sport: 'football';
   template: 'thumbnail';
@@ -518,6 +549,7 @@ export type FootballVideoJob =
   | TierlistVideoJob
   | ContinentalGroupsStandingsVideoJob
   | WorldCupGroupVideoJob
-  | WorldCupKnockoutVideoJob;
+  | WorldCupKnockoutVideoJob
+  | HistoricalChampionsVideoJob;
 
 export type VideoJob = FootballVideoJob;
