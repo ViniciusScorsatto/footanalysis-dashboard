@@ -33,6 +33,7 @@ import {
   parseFootballRoundSummaryLongYaml,
   projectRoot,
   saveFootballShortContentDurations,
+  staticFootballTemplates,
   summarizeFootballShortDurations,
   syncCurrentFootballJobDuration,
   templates,
@@ -289,6 +290,7 @@ const sendFootballOptions = async (response) => {
   const currentJob = await loadCurrentJob().catch(() => null);
   sendJson(response, 200, {
     templates,
+    staticTemplates: staticFootballTemplates,
     leaguePresets,
     channelProfiles: footballChannelProfiles,
     languageProfiles: footballLanguageProfiles,
@@ -701,6 +703,9 @@ const sendFootballTierlistTeams = async (response, url) => {
 const prepareFootballJob = async (body) =>
   prepareJob({
     template: body.template,
+    videoMode: body.videoMode,
+    durationInFrames: body.durationInFrames,
+    durationSeconds: body.durationSeconds,
     apiKey: process.env.FOOTBALL_API_KEY,
     apiHost: process.env.FOOTBALL_API_HOST,
     leagueId: Number(body.leagueId),
@@ -716,6 +721,10 @@ const prepareFootballJob = async (body) =>
     languageProfile: body.languageProfile,
     groupLetter: body.groupLetter,
     competitionName: body.competitionName,
+    historicalCompetitionName: body.historicalCompetitionName,
+    historicalCompetitionId: body.historicalCompetitionId,
+    historicalSourceMode: body.historicalSourceMode,
+    historicalAmount: Number(body.historicalAmount),
     ctaText: body.ctaText,
     worldCupStandingEdits: body.worldCupStandingEdits,
     soundtrackPath: body.soundtrackPath,
@@ -3854,6 +3863,8 @@ const server = http.createServer(async (request, response) => {
   if (url.pathname === '/') {
     filePath = path.join(dashboardDir, 'index.html');
   } else if (url.pathname === '/football' || url.pathname === '/football/') {
+    filePath = path.join(dashboardDir, 'football', 'index.html');
+  } else if (url.pathname === '/football-static' || url.pathname === '/football-static/') {
     filePath = path.join(dashboardDir, 'football', 'index.html');
   } else if (
     url.pathname === '/football-longform' ||

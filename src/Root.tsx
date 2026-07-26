@@ -2,6 +2,7 @@ import {Composition} from 'remotion';
 import {FootballContinentalGroupsComposition} from './compositions/FootballContinentalGroupsComposition';
 import {FootballChampionFinalComposition} from './compositions/FootballChampionFinalComposition';
 import {FootballFixturesComposition} from './compositions/FootballFixturesComposition';
+import {FootballHistoricalChampionsComposition} from './compositions/FootballHistoricalChampionsComposition';
 import {FootballPaceComposition} from './compositions/FootballPaceComposition';
 import {FootballPlayerOfRoundComposition} from './compositions/FootballPlayerOfRoundComposition';
 import {FootballPredictionsLongComposition} from './compositions/FootballPredictionsLongComposition';
@@ -31,8 +32,10 @@ import footballTierlistJobJson from './data/generated/current-job.football.tierl
 import footballContinentalGroupsJobJson from './data/generated/current-job.football.continental-groups-standings.json';
 import footballWorldCupGroupJobJson from './data/generated/current-job.football.world-cup-group-standings.json';
 import footballWorldCupKnockoutJobJson from './data/generated/current-job.football.world-cup-knockout.json';
+import footballHistoricalChampionsJobJson from './data/generated/current-job.football.historical-champions.json';
 import {sampleContinentalGroupsJob} from './data/continentalGroups';
 import {sampleChampionFinalJob} from './data/championFinal';
+import {sampleHistoricalChampionsJob} from './data/historyChampions';
 import {sampleChampionshipPaceJob, sampleRelegationLineJob} from './data/pace';
 import {samplePlayerOfRoundJob} from './data/playerOfRound';
 import {sampleSeasonFinalVerdictJob} from './data/seasonFinalVerdict';
@@ -73,6 +76,14 @@ const footballTierlistJob =
 const footballContinentalGroupsJob = footballContinentalGroupsJobJson as Partial<FootballVideoJob>;
 const footballWorldCupGroupJob = footballWorldCupGroupJobJson as Partial<FootballVideoJob>;
 const footballWorldCupKnockoutJob = footballWorldCupKnockoutJobJson as Partial<FootballVideoJob>;
+const footballHistoricalChampionsJob =
+  footballCurrentJob.template === 'historical-champions'
+    ? footballCurrentJob
+    : (footballHistoricalChampionsJobJson as Partial<FootballVideoJob>);
+const staticFootballJob =
+  footballCurrentJob.videoMode === 'static'
+    ? (footballCurrentJob as Partial<FootballVideoJob>)
+    : null;
 const defaultFootballSoundtrack = '/audio/football/fun-vibe-dyalla.mp3';
 const defaultFootballBrandLogo = '/branding/foot-analysis-logo.png';
 
@@ -276,6 +287,18 @@ const nextGamesProps = {
         ? 'Which match is must-watch?'
         : 'Qual jogo você vai assistir?',
 };
+const staticResultsProps =
+  staticFootballJob?.template === 'results'
+    ? {...resultsProps, ...staticFootballJob, variant: 'results' as const}
+    : {...resultsProps, presentation: 'static' as const};
+const staticNextGamesProps =
+  staticFootballJob?.template === 'next-games'
+    ? {...nextGamesProps, ...staticFootballJob, variant: 'next-games' as const}
+    : {...nextGamesProps, presentation: 'static' as const};
+const staticPredictionsProps =
+  staticFootballJob?.template === 'predictions'
+    ? {...predictionsProps, ...staticFootballJob, variant: 'predictions' as const}
+    : {...predictionsProps, presentation: 'static' as const};
 
 const predictionsLongFallback =
   footballPredictionsLongJobJson as FootballPredictionsLongVideoJob;
@@ -341,6 +364,10 @@ const standingsProps = {
       ? footballStandingsJob.ctaText
       : 'Quem fica com a taça?',
 };
+const staticStandingsProps =
+  staticFootballJob?.template === 'standings'
+    ? {...standingsProps, ...staticFootballJob}
+    : {...standingsProps, presentation: 'static' as const};
 
 const seasonFinalVerdictProps = {
   channelProfile:
@@ -570,6 +597,10 @@ const topScorersProps = {
       ? footballTopScorersJob.ctaText
       : sampleTopScorersJob.ctaText,
 };
+const staticTopScorersProps =
+  staticFootballJob?.template === 'top-scorers'
+    ? {...topScorersProps, ...staticFootballJob}
+    : {...topScorersProps, presentation: 'static' as const};
 
 const playerOfRoundProps = {
   channelProfile:
@@ -798,6 +829,16 @@ const relegationLineProps = {
       ? footballRelegationLineJob.ctaText
       : sampleRelegationLineJob.ctaText,
 };
+
+const staticChampionshipPaceProps =
+  staticFootballJob?.template === 'championship-pace'
+    ? {...championshipPaceProps, ...staticFootballJob}
+    : {...championshipPaceProps, presentation: 'static' as const};
+
+const staticRelegationLineProps =
+  staticFootballJob?.template === 'relegation-line'
+    ? {...relegationLineProps, ...staticFootballJob}
+    : {...relegationLineProps, presentation: 'static' as const};
 
 const continentalGroupsProps = {
   leagueId:
@@ -1093,6 +1134,55 @@ const worldCupKnockoutProps = {
       : sampleWorldCupKnockoutJob.coldOpenData,
 };
 
+const historicalChampionsProps = {
+  leagueName:
+    footballHistoricalChampionsJob.template === 'historical-champions' &&
+    footballHistoricalChampionsJob.leagueName
+      ? footballHistoricalChampionsJob.leagueName
+      : sampleHistoricalChampionsJob.leagueName,
+  titleLabel:
+    footballHistoricalChampionsJob.template === 'historical-champions' &&
+    footballHistoricalChampionsJob.titleLabel
+      ? footballHistoricalChampionsJob.titleLabel
+      : sampleHistoricalChampionsJob.titleLabel,
+  subtitleLabel:
+    footballHistoricalChampionsJob.template === 'historical-champions' &&
+    footballHistoricalChampionsJob.subtitleLabel
+      ? footballHistoricalChampionsJob.subtitleLabel
+      : sampleHistoricalChampionsJob.subtitleLabel,
+  entries:
+    footballHistoricalChampionsJob.template === 'historical-champions' &&
+    Array.isArray(footballHistoricalChampionsJob.entries)
+      ? footballHistoricalChampionsJob.entries
+      : sampleHistoricalChampionsJob.entries,
+  channelProfile:
+    footballHistoricalChampionsJob.template === 'historical-champions' &&
+    footballHistoricalChampionsJob.channelProfile
+      ? footballHistoricalChampionsJob.channelProfile
+      : sampleHistoricalChampionsJob.channelProfile,
+  leagueConfig:
+    footballHistoricalChampionsJob.template === 'historical-champions'
+      ? footballHistoricalChampionsJob.leagueConfig ?? sampleHistoricalChampionsJob.leagueConfig
+      : sampleHistoricalChampionsJob.leagueConfig,
+  brandName: footballHistoricalChampionsJob.brandName ?? sampleHistoricalChampionsJob.brandName,
+  brandLogoPath:
+    footballHistoricalChampionsJob.template === 'historical-champions'
+      ? footballHistoricalChampionsJob.brandLogoPath ?? defaultFootballBrandLogo
+      : sampleHistoricalChampionsJob.brandLogoPath ?? defaultFootballBrandLogo,
+  soundtrackPath:
+    footballHistoricalChampionsJob.template === 'historical-champions'
+      ? footballHistoricalChampionsJob.soundtrackPath ?? defaultFootballSoundtrack
+      : sampleHistoricalChampionsJob.soundtrackPath ?? defaultFootballSoundtrack,
+  soundtrackVolume:
+    footballHistoricalChampionsJob.template === 'historical-champions'
+      ? footballHistoricalChampionsJob.soundtrackVolume ?? 0.2
+      : sampleHistoricalChampionsJob.soundtrackVolume ?? 0.2,
+  ctaText:
+    footballHistoricalChampionsJob.template === 'historical-champions'
+      ? footballHistoricalChampionsJob.ctaText ?? sampleHistoricalChampionsJob.ctaText
+      : sampleHistoricalChampionsJob.ctaText,
+};
+
 const FOOTBALL_LONG_DURATION_IN_FRAMES =
   footballPredictionsLongJob.template === 'predictions-long' &&
   typeof footballPredictionsLongJob.durationInFrames === 'number'
@@ -1103,6 +1193,12 @@ const FOOTBALL_ROUND_SUMMARY_LONG_DURATION_IN_FRAMES =
   typeof footballRoundSummaryLongJob.durationInFrames === 'number'
     ? Math.max(300, footballRoundSummaryLongJob.durationInFrames)
     : 900;
+const getStaticFootballDurationInFrames = (compositionId: string) =>
+  footballCurrentJob.videoMode === 'static' &&
+  footballCurrentJob.compositionId === compositionId &&
+  typeof footballCurrentJob.durationInFrames === 'number'
+    ? Math.max(1, footballCurrentJob.durationInFrames)
+    : 300;
 
 export const RemotionRoot = () => {
   return (
@@ -1133,6 +1229,33 @@ export const RemotionRoot = () => {
         width={1080}
         height={1920}
         defaultProps={predictionsProps}
+      />
+      <Composition
+        id="FootballStaticResultsShort"
+        component={FootballFixturesComposition}
+        durationInFrames={getStaticFootballDurationInFrames('FootballStaticResultsShort')}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{...staticResultsProps, presentation: 'static'}}
+      />
+      <Composition
+        id="FootballStaticNextGamesShort"
+        component={FootballFixturesComposition}
+        durationInFrames={getStaticFootballDurationInFrames('FootballStaticNextGamesShort')}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{...staticNextGamesProps, presentation: 'static'}}
+      />
+      <Composition
+        id="FootballStaticPredictionsShort"
+        component={FootballFixturesComposition}
+        durationInFrames={getStaticFootballDurationInFrames('FootballStaticPredictionsShort')}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{...staticPredictionsProps, presentation: 'static'}}
       />
       <Composition
         id="FootballPredictionsLong"
@@ -1171,6 +1294,15 @@ export const RemotionRoot = () => {
         defaultProps={standingsProps}
       />
       <Composition
+        id="FootballStaticStandingsShort"
+        component={FootballStandingsComposition}
+        durationInFrames={getStaticFootballDurationInFrames('FootballStaticStandingsShort')}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{...staticStandingsProps, presentation: 'static'}}
+      />
+      <Composition
         id="FootballSeasonFinalVerdictShort"
         component={FootballSeasonFinalVerdictComposition}
         durationInFrames={getFootballShortDurationInFrames('FootballSeasonFinalVerdictShort')}
@@ -1198,6 +1330,15 @@ export const RemotionRoot = () => {
         defaultProps={topScorersProps}
       />
       <Composition
+        id="FootballStaticTopScorersShort"
+        component={FootballTopScorersComposition}
+        durationInFrames={getStaticFootballDurationInFrames('FootballStaticTopScorersShort')}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{...staticTopScorersProps, presentation: 'static'}}
+      />
+      <Composition
         id="FootballPlayerOfRoundShort"
         component={FootballPlayerOfRoundComposition}
         durationInFrames={getFootballShortDurationInFrames('FootballPlayerOfRoundShort')}
@@ -1219,6 +1360,19 @@ export const RemotionRoot = () => {
         }}
       />
       <Composition
+        id="FootballStaticChampionshipPaceShort"
+        component={FootballPaceComposition}
+        durationInFrames={getStaticFootballDurationInFrames('FootballStaticChampionshipPaceShort')}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{
+          ...staticChampionshipPaceProps,
+          variant: 'championship',
+          presentation: 'static',
+        }}
+      />
+      <Composition
         id="FootballRelegationLineShort"
         component={FootballPaceComposition}
         durationInFrames={getFootballShortDurationInFrames('FootballRelegationLineShort')}
@@ -1228,6 +1382,19 @@ export const RemotionRoot = () => {
         defaultProps={{
           ...relegationLineProps,
           variant: 'relegation',
+        }}
+      />
+      <Composition
+        id="FootballStaticRelegationLineShort"
+        component={FootballPaceComposition}
+        durationInFrames={getStaticFootballDurationInFrames('FootballStaticRelegationLineShort')}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{
+          ...staticRelegationLineProps,
+          variant: 'relegation',
+          presentation: 'static',
         }}
       />
       <Composition
@@ -1265,6 +1432,15 @@ export const RemotionRoot = () => {
         width={1080}
         height={1920}
         defaultProps={worldCupKnockoutProps}
+      />
+      <Composition
+        id="FootballStaticHistoricalChampionsShort"
+        component={FootballHistoricalChampionsComposition}
+        durationInFrames={getStaticFootballDurationInFrames('FootballStaticHistoricalChampionsShort')}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={historicalChampionsProps}
       />
     </>
   );

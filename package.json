@@ -10,6 +10,7 @@
     "studio": "remotion studio src/index.ts",
     "build": "remotion bundle src/index.ts",
     "render": "SPORT=football node --env-file=.env scripts/render-current-job.mjs",
+    "history:generate": "tsc -p tsconfig.history.json && node --env-file=.env build/history/scripts/history/generate-history.js",
     "verify:short-endframes": "node scripts/verify-short-endframes.mjs",
     "verify:current-job-stills": "node scripts/verify-current-job-stills.mjs"
   },

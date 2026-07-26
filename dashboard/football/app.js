@@ -12,6 +12,8 @@ import {
 const form = document.getElementById('job-form');
 const presetSelect = document.getElementById('preset');
 const templateSelect = document.getElementById('template');
+const staticDurationField = document.getElementById('static-duration-field');
+const staticDurationSecondsInput = document.getElementById('static-duration-seconds');
 const channelProfileSelect = document.getElementById('channel-profile');
 const languageProfileSelect = document.getElementById('language-profile');
 const roundSelect = document.getElementById('round-select');
@@ -28,6 +30,7 @@ const voiceoverEnabledCheckbox = document.querySelector(
 const prepareButton = document.getElementById('prepare-button');
 const renderButton = document.getElementById('render-button');
 const settingsToggleButton = document.getElementById('settings-toggle-button');
+const staticDashboardLink = document.getElementById('static-dashboard-link');
 const settingsPanel = document.getElementById('settings-panel');
 const settingsStatus = document.getElementById('settings-status');
 const shortDurationsFps = document.getElementById('short-durations-fps');
@@ -77,6 +80,7 @@ const tierlistEditorStatus = document.getElementById('tierlist-editor-status');
 const tierlistEditorList = document.getElementById('tierlist-editor-list');
 const reloadTierlistButton = document.getElementById('reload-tierlist-button');
 const leagueOverrideFields = document.getElementById('league-override-fields');
+const historicalFields = document.getElementById('historical-fields');
 const worldCupFields = document.getElementById('world-cup-fields');
 const ctaField = document.getElementById('cta-field');
 const championFinalFields = document.getElementById('champion-final-fields');
@@ -100,12 +104,24 @@ let youtubeUploadStatusRoot = null;
 let tiktokUploadStatusRoot = null;
 
 const apiBase = '/api/football';
+const isStaticDashboard = window.location.pathname.replace(/\/+$/, '') === '/football-static';
 const NEXT_GAMES_TEMPLATE = 'next-games';
 const CHAMPIONSHIP_PACE_TEMPLATE = 'championship-pace';
 const RELEGATION_LINE_TEMPLATE = 'relegation-line';
 const TIERLIST_TEMPLATE = 'tierlist';
 const CONTINENTAL_GROUPS_TEMPLATE = 'continental-groups-standings';
 const TOP_SCORERS_TEMPLATE = 'top-scorers';
+const HISTORICAL_CHAMPIONS_TEMPLATE = 'historical-champions';
+const STATIC_TEMPLATE_VALUES = new Set([
+  'results',
+  NEXT_GAMES_TEMPLATE,
+  'predictions',
+  'standings',
+  TOP_SCORERS_TEMPLATE,
+  CHAMPIONSHIP_PACE_TEMPLATE,
+  RELEGATION_LINE_TEMPLATE,
+  HISTORICAL_CHAMPIONS_TEMPLATE,
+]);
 const PLAYER_OF_ROUND_TEMPLATE = 'player-of-round';
 const SEASON_FINAL_VERDICT_TEMPLATE = 'season-final-verdict';
 const CHAMPION_FINAL_TEMPLATE = 'champion-final';
@@ -136,6 +152,30 @@ const templateCompositionMap = {
   [WORLD_CUP_TEMPLATE]: 'FootballWorldCupGroupShort',
   [WORLD_CUP_KNOCKOUT_TEMPLATE]: 'FootballWorldCupKnockoutShort',
 };
+const staticTemplateCompositionMap = {
+  results: 'FootballStaticResultsShort',
+  [NEXT_GAMES_TEMPLATE]: 'FootballStaticNextGamesShort',
+  predictions: 'FootballStaticPredictionsShort',
+  standings: 'FootballStaticStandingsShort',
+  [TOP_SCORERS_TEMPLATE]: 'FootballStaticTopScorersShort',
+  [CHAMPIONSHIP_PACE_TEMPLATE]: 'FootballStaticChampionshipPaceShort',
+  [RELEGATION_LINE_TEMPLATE]: 'FootballStaticRelegationLineShort',
+  [HISTORICAL_CHAMPIONS_TEMPLATE]: 'FootballStaticHistoricalChampionsShort',
+};
+const activeTemplateCompositionMap = isStaticDashboard ? staticTemplateCompositionMap : templateCompositionMap;
+
+const configureDashboardMode = () => {
+  staticDurationField.hidden = !isStaticDashboard;
+  if (isStaticDashboard) {
+    document.title = 'Football Static Videos Dashboard';
+    document.querySelector('.command-title h1').textContent = 'Football Static Videos';
+    dashboardQuickStatus.textContent = 'Choose a static template and prepare a frame-0 video.';
+    prepareButton.textContent = 'Prepare Static Preview';
+    renderButton.textContent = 'Render Static MP4';
+    staticDashboardLink.href = '/football';
+    staticDashboardLink.textContent = 'Animated dashboard';
+  }
+};
 
 const normalizeSoundtrackVolume = (value) => {
   const numericValue = Number(value);
@@ -161,6 +201,7 @@ const templateFieldVisibility = {
     round: true,
     matchDate: true,
     leagueOverrides: true,
+    historicalFields: false,
     worldCupFields: false,
     cta: true,
   },
@@ -170,6 +211,7 @@ const templateFieldVisibility = {
     round: true,
     matchDate: true,
     leagueOverrides: true,
+    historicalFields: false,
     worldCupFields: false,
     cta: true,
   },
@@ -179,6 +221,7 @@ const templateFieldVisibility = {
     round: true,
     matchDate: true,
     leagueOverrides: true,
+    historicalFields: false,
     worldCupFields: false,
     cta: true,
   },
@@ -188,6 +231,7 @@ const templateFieldVisibility = {
     round: false,
     matchDate: false,
     leagueOverrides: true,
+    historicalFields: false,
     worldCupFields: false,
     cta: true,
   },
@@ -197,6 +241,7 @@ const templateFieldVisibility = {
     round: false,
     matchDate: false,
     leagueOverrides: true,
+    historicalFields: false,
     worldCupFields: false,
     cta: true,
   },
@@ -206,6 +251,7 @@ const templateFieldVisibility = {
     round: true,
     matchDate: true,
     leagueOverrides: true,
+    historicalFields: false,
     worldCupFields: false,
     cta: true,
   },
@@ -215,6 +261,7 @@ const templateFieldVisibility = {
     round: false,
     matchDate: false,
     leagueOverrides: true,
+    historicalFields: false,
     worldCupFields: false,
     cta: true,
   },
@@ -224,6 +271,7 @@ const templateFieldVisibility = {
     round: true,
     matchDate: true,
     leagueOverrides: true,
+    historicalFields: false,
     worldCupFields: false,
     cta: true,
   },
@@ -233,6 +281,7 @@ const templateFieldVisibility = {
     round: false,
     matchDate: false,
     leagueOverrides: true,
+    historicalFields: false,
     worldCupFields: false,
     cta: true,
   },
@@ -242,6 +291,17 @@ const templateFieldVisibility = {
     round: false,
     matchDate: false,
     leagueOverrides: true,
+    historicalFields: false,
+    worldCupFields: false,
+    cta: true,
+  },
+  [HISTORICAL_CHAMPIONS_TEMPLATE]: {
+    leaguePreset: true,
+    leagueCore: true,
+    round: false,
+    matchDate: false,
+    leagueOverrides: true,
+    historicalFields: true,
     worldCupFields: false,
     cta: true,
   },
@@ -269,6 +329,7 @@ const templateFieldVisibility = {
     round: false,
     matchDate: false,
     leagueOverrides: false,
+    historicalFields: false,
     worldCupFields: true,
     cta: true,
   },
@@ -278,6 +339,7 @@ const templateFieldVisibility = {
     round: false,
     matchDate: false,
     leagueOverrides: false,
+    historicalFields: false,
     worldCupFields: false,
     cta: true,
   },
@@ -434,6 +496,12 @@ const dashboardCopy = {
         'Quem reage a tempo?',
         'Quem está mais ameaçado?',
       ],
+      [HISTORICAL_CHAMPIONS_TEMPLATE]: [
+        'Qual foi o melhor campeão?',
+        'Qual título foi mais marcante?',
+        'Quem teve a campanha mais histórica?',
+        'Qual campeão você colocaria no topo?',
+      ],
       [TIERLIST_TEMPLATE]: [
         'Concorda com essa lista?',
         'Quem ficou alto demais?',
@@ -523,6 +591,12 @@ const dashboardCopy = {
         'Who turns it around?',
         'Who is most in danger?',
       ],
+      [HISTORICAL_CHAMPIONS_TEMPLATE]: [
+        'Who was the best champion?',
+        'Which title run was the greatest?',
+        'Who had the most historic campaign?',
+        'Which champion ranks first?',
+      ],
       [TIERLIST_TEMPLATE]: [
         'Do you agree with this list?',
         'Who is too high?',
@@ -584,6 +658,10 @@ const getDefaultSeasonForContext = ({
     template === TIERLIST_TEMPLATE
   ) {
     return '2026';
+  }
+
+  if (template === HISTORICAL_CHAMPIONS_TEMPLATE) {
+    return '2025';
   }
 
   const numericLeagueId = Number(leagueId);
@@ -792,6 +870,29 @@ const buildJobPayloadFromForm = () => {
     payload.languageProfile
   );
   payload.matchDates = getSelectedMatchDates();
+  if (isStaticDashboard) {
+    const durationSeconds = Number(staticDurationSecondsInput?.value);
+    if (!Number.isFinite(durationSeconds) || durationSeconds <= 0) {
+      throw new Error('Static video duration must be a positive number of seconds.');
+    }
+    payload.videoMode = 'static';
+    payload.durationSeconds = Math.round(durationSeconds);
+    payload.durationInFrames = Math.round(durationSeconds * 30);
+  }
+
+  if (templateSelect.value === HISTORICAL_CHAMPIONS_TEMPLATE) {
+    const historicalAmount = Number(payload.historicalAmount);
+    if (!Number.isInteger(historicalAmount) || historicalAmount <= 0 || historicalAmount > 30) {
+      throw new Error('Historical amount must be an integer between 1 and 30.');
+    }
+
+    payload.historicalAmount = historicalAmount;
+    payload.historicalSourceMode = payload.historicalSourceMode || 'cache-first';
+    payload.historicalCompetitionName =
+      String(payload.historicalCompetitionName ?? '').trim() ||
+      String(payload.leagueName ?? '').trim() ||
+      getSelectedOptionLabel(presetSelect);
+  }
 
   if (templateSelect.value === 'predictions') {
     payload.predictionEdits = getPredictionEdits();
@@ -919,6 +1020,37 @@ const syncLeagueTitleFromPreset = () => {
   }
 };
 
+const applyHistoricalChampionDefaults = () => {
+  if (templateSelect.value !== HISTORICAL_CHAMPIONS_TEMPLATE) {
+    return;
+  }
+
+  const leagueTitle =
+    form.elements.leagueName.value.trim() ||
+    presetSelect.selectedOptions?.[0]?.textContent?.trim() ||
+    'Copa Libertadores';
+  const canReplaceLeagueTitle =
+    !hasCustomLeagueTitle ||
+    !form.elements.leagueName.value.trim() ||
+    form.elements.leagueName.value === lastAutoLeagueTitle;
+  if (canReplaceLeagueTitle) {
+    form.elements.leagueName.value = leagueTitle;
+    hasCustomLeagueTitle = false;
+  }
+
+  lastAutoLeagueTitle = leagueTitle;
+
+  if (!form.elements.historicalCompetitionName.value.trim()) {
+    form.elements.historicalCompetitionName.value = leagueTitle;
+  }
+  if (!form.elements.historicalAmount.value.trim()) {
+    form.elements.historicalAmount.value = '10';
+  }
+  if (!form.elements.historicalSourceMode.value) {
+    form.elements.historicalSourceMode.value = 'cache-first';
+  }
+};
+
 const getTemplateOutputSlug = () => {
   const template = templateSelect.value;
   const languageProfile = languageProfileSelect.value || 'pt-br';
@@ -936,6 +1068,7 @@ const getTemplateOutputSlug = () => {
         [PLAYER_OF_ROUND_TEMPLATE]: 'player-of-round',
         [CHAMPIONSHIP_PACE_TEMPLATE]: 'championship-pace',
         [RELEGATION_LINE_TEMPLATE]: 'relegation-line',
+        [HISTORICAL_CHAMPIONS_TEMPLATE]: 'last-champions',
         [TIERLIST_TEMPLATE]: 'tierlist',
         [CONTINENTAL_GROUPS_TEMPLATE]: 'continental-groups',
         [WORLD_CUP_TEMPLATE]: 'world-cup-group',
@@ -956,6 +1089,7 @@ const getTemplateOutputSlug = () => {
         [PLAYER_OF_ROUND_TEMPLATE]: 'craque-da-rodada',
         [CHAMPIONSHIP_PACE_TEMPLATE]: 'ritmo-de-campeao',
         [RELEGATION_LINE_TEMPLATE]: 'linha-do-rebaixamento',
+        [HISTORICAL_CHAMPIONS_TEMPLATE]: 'ultimos-campeoes',
         [TIERLIST_TEMPLATE]: 'tierlist',
         [CONTINENTAL_GROUPS_TEMPLATE]: 'grupos',
         [WORLD_CUP_TEMPLATE]: 'grupo-da-copa',
@@ -1009,9 +1143,13 @@ const buildAutoOutputName = () => {
     template === TOP_SCORERS_TEMPLATE ||
     template === CHAMPIONSHIP_PACE_TEMPLATE ||
     template === RELEGATION_LINE_TEMPLATE ||
+    template === HISTORICAL_CHAMPIONS_TEMPLATE ||
     template === TIERLIST_TEMPLATE
   ) {
     const leagueName =
+      (template === HISTORICAL_CHAMPIONS_TEMPLATE
+        ? form.elements.historicalCompetitionName.value.trim()
+        : '') ||
       form.elements.leagueName.value.trim() ||
       presetSelect.selectedOptions?.[0]?.textContent?.trim() ||
       `League ${form.elements.leagueId.value || 'Custom'}`;
@@ -2802,8 +2940,16 @@ const loadResultFixturesForEditor = async () => {
 
 const getStudioPreviewUrl = () => {
   const studioUrl = normalizeStudioUrl(studioUrlInput.value);
-  const compositionId = templateCompositionMap[templateSelect.value];
-  const knownCompositionIds = new Set(Object.values(templateCompositionMap).filter(Boolean));
+  const preparedCompositionId =
+    lastPreparedJob?.template === templateSelect.value ? lastPreparedJob?.compositionId : '';
+  const compositionId = preparedCompositionId || activeTemplateCompositionMap[templateSelect.value];
+  const knownCompositionIds = new Set(
+    [
+      ...Object.values(templateCompositionMap),
+      ...Object.values(staticTemplateCompositionMap),
+      lastPreparedJob?.compositionId,
+    ].filter(Boolean)
+  );
 
   return buildStudioPreviewUrl({studioUrl, compositionId, knownCompositionIds});
 };
@@ -2812,6 +2958,11 @@ const updatePreview = () => {
   const studioUrl = normalizeStudioUrl(studioUrlInput.value);
   studioUrlInput.value = studioUrl;
   localStorage.setItem(STUDIO_URL_KEY, studioUrl);
+  if (isStaticDashboard && !lastPreparedJob) {
+    previewFrame.src = 'about:blank';
+    openPreviewLink.href = studioUrl;
+    return;
+  }
   const previewUrl = getStudioPreviewUrl();
   previewFrame.src = 'about:blank';
   window.setTimeout(() => {
@@ -2943,6 +3094,10 @@ const renderCurrentJob = (job) => {
           } relegated`
       : job.template === CHAMPIONSHIP_PACE_TEMPLATE || job.template === RELEGATION_LINE_TEMPLATE
         ? `${job.entries.length} teams • ${job.benchmarkPercentage}% reference`
+      : job.template === HISTORICAL_CHAMPIONS_TEMPLATE
+        ? `${job.entries?.length ?? 0} champions • ${job.entries?.[0]?.year ?? job.season}-${
+            job.entries?.at(-1)?.year ?? job.season
+          }`
       : job.template === TIERLIST_TEMPLATE
         ? `${job.tiers?.reduce((total, tier) => total + (tier.entries?.length ?? 0), 0) ?? 0} teams • ${
             job.tiers?.[0]?.entries?.[0]?.team ? `campeão: ${job.tiers[0].entries[0].team}` : '6 tiers'
@@ -2965,6 +3120,8 @@ const renderCurrentJob = (job) => {
       : job.template === SEASON_FINAL_VERDICT_TEMPLATE
         ? `${job.titleLabel} • ${job.subtitleLabel}`
       : job.template === CHAMPIONSHIP_PACE_TEMPLATE || job.template === RELEGATION_LINE_TEMPLATE
+        ? `${job.titleLabel} • ${job.subtitleLabel}`
+      : job.template === HISTORICAL_CHAMPIONS_TEMPLATE
         ? `${job.titleLabel} • ${job.subtitleLabel}`
       : job.template === TIERLIST_TEMPLATE
         ? `${job.titleLabel} • ${job.subtitleLabel}`
@@ -3091,6 +3248,7 @@ const applyTemplateHints = () => {
     template !== SEASON_FINAL_VERDICT_TEMPLATE &&
     template !== TIERLIST_TEMPLATE;
   leagueOverrideFields.hidden = !visibleFields.leagueOverrides;
+  historicalFields.hidden = !visibleFields.historicalFields;
   worldCupFields.hidden = !visibleFields.worldCupFields;
   ctaField.hidden = !visibleFields.cta;
   championFinalFields.hidden = template !== CHAMPION_FINAL_TEMPLATE;
@@ -3321,8 +3479,11 @@ const loadOptions = async () => {
 
   allChannelProfiles = data.channelProfiles ?? [];
   allLeaguePresets = data.leaguePresets ?? [];
+  const templateOptions = isStaticDashboard
+    ? (data.staticTemplates ?? []).filter((template) => STATIC_TEMPLATE_VALUES.has(template.value))
+    : data.templates;
 
-  templateSelect.innerHTML = data.templates
+  templateSelect.innerHTML = templateOptions
     .map((template) => `<option value="${template.value}">${template.label}</option>`)
     .join('');
 
@@ -3339,7 +3500,11 @@ const loadOptions = async () => {
     .join('');
 
   const currentJob = data.currentJob;
-  if (currentJob) {
+  const canUseCurrentJob =
+    currentJob &&
+    (!isStaticDashboard ||
+      (currentJob.videoMode === 'static' && STATIC_TEMPLATE_VALUES.has(currentJob.template)));
+  if (canUseCurrentJob) {
     form.elements.template.value = currentJob.template;
     form.elements.channelProfile.value =
       currentJob.channelProfile ?? (currentJob.languageProfile === 'en' ? 'en' : 'pt');
@@ -3352,9 +3517,19 @@ const loadOptions = async () => {
     form.elements.roundLabel.value =
       currentJob.roundLabel ?? currentJob.standingsLabel ?? currentJob.subtitleLabel ?? '';
     form.elements.outputName.value = currentJob.outputName;
+    if (staticDurationSecondsInput) {
+      staticDurationSecondsInput.value = String(
+        Math.max(1, Math.round(Number(currentJob.durationInFrames ?? 360) / 30))
+      );
+    }
     form.elements.languageProfile.value = currentJob.languageProfile ?? getChannelLanguageProfile(form.elements.channelProfile.value);
     form.elements.groupLetter.value = currentJob.groupLetter ?? 'A';
     form.elements.competitionName.value = currentJob.competitionName ?? '';
+    form.elements.historicalCompetitionName.value =
+      currentJob.historicalCompetitionName ?? currentJob.leagueName ?? '';
+    form.elements.historicalCompetitionId.value = currentJob.historicalCompetitionId ?? '';
+    form.elements.historicalSourceMode.value = currentJob.historicalSourceMode ?? 'cache-first';
+    form.elements.historicalAmount.value = String(currentJob.historicalAmount ?? currentJob.entries?.length ?? 10);
     form.elements.ctaText.value = currentJob.ctaText ?? '';
     form.elements.introTitle.value = currentJob.introTitle ?? '';
     form.elements.aiPriorityTeams.value = currentJob.aiPriorityTeams ?? '';
@@ -3380,7 +3555,7 @@ const loadOptions = async () => {
     }
     hasCustomOutputName = false;
   } else {
-    form.elements.template.value = 'results';
+    form.elements.template.value = isStaticDashboard && templateOptions[0] ? templateOptions[0].value : 'results';
     form.elements.channelProfile.value = 'pt';
     form.elements.leagueId.value = 72;
     form.elements.season.value = 2026;
@@ -3390,6 +3565,10 @@ const loadOptions = async () => {
     form.elements.languageProfile.value = 'pt-br';
     form.elements.groupLetter.value = 'A';
     form.elements.competitionName.value = '';
+    form.elements.historicalCompetitionName.value = '';
+    form.elements.historicalCompetitionId.value = '';
+    form.elements.historicalSourceMode.value = 'cache-first';
+    form.elements.historicalAmount.value = '10';
     form.elements.ctaText.value = '';
     form.elements.introTitle.value = '';
     form.elements.aiPriorityTeams.value = '';
@@ -3401,6 +3580,9 @@ const loadOptions = async () => {
     voiceoverEnabledCheckbox.checked = true;
     form.elements.soundtrackPath.value = data.soundtrackPresets?.[0]?.value ?? '';
     setSoundtrackVolume(0.2);
+    if (staticDurationSecondsInput) {
+      staticDurationSecondsInput.value = '12';
+    }
     renderLeaguePresetOptions('72');
     syncSeasonFromContext({force: true});
     syncLeagueTitleFromPreset();
@@ -3413,10 +3595,10 @@ const loadOptions = async () => {
   syncLanguageFromChannel();
   applyTemplateHints();
   updateLocalizedDefaults();
-  await loadRounds(currentJob?.round ?? '');
-  await loadRoundDates(currentJob ? normalizeSelectedDates(currentJob.matchDates ?? currentJob.matchDate) : '');
+  await loadRounds(canUseCurrentJob ? currentJob?.round ?? '' : '');
+  await loadRoundDates(canUseCurrentJob ? normalizeSelectedDates(currentJob.matchDates ?? currentJob.matchDate) : '');
   syncOutputNameFromSelections();
-  renderCurrentJob(currentJob);
+  renderCurrentJob(canUseCurrentJob ? currentJob : null);
   updateDashboardMeta();
   loadShortDurations();
   const savedStudioUrl = localStorage.getItem(STUDIO_URL_KEY) || 'http://127.0.0.1:3000';
@@ -3453,6 +3635,13 @@ presetSelect.addEventListener('change', async () => {
   clearRoundLabelOverride();
   clearIntroOverrides();
   syncLeagueTitleFromPreset();
+  if (templateSelect.value === HISTORICAL_CHAMPIONS_TEMPLATE) {
+    form.elements.historicalCompetitionName.value =
+      form.elements.leagueName.value.trim() ||
+      presetSelect.selectedOptions?.[0]?.textContent?.trim() ||
+      form.elements.historicalCompetitionName.value;
+    form.elements.historicalCompetitionId.value = '';
+  }
   syncOutputNameFromSelections();
   syncIntroPlaceholders();
   updateDashboardMeta();
@@ -3517,6 +3706,7 @@ templateSelect.addEventListener('change', async () => {
   syncSeasonFromContext();
   clearRoundLabelOverride();
   clearIntroOverrides();
+  applyHistoricalChampionDefaults();
   syncLeagueTitleFromPreset();
   applyTemplateHints();
   await loadRounds(form.elements.round.value);
@@ -3735,6 +3925,13 @@ form.elements.soundtrackVolume.addEventListener('input', () => {
   setSoundtrackVolume(form.elements.soundtrackVolume.value);
 });
 form.elements.competitionName.addEventListener('input', syncOutputNameFromSelections);
+form.elements.historicalCompetitionName.addEventListener('input', () => {
+  syncOutputNameFromSelections();
+  updateDashboardMeta();
+});
+form.elements.historicalCompetitionId.addEventListener('input', syncOutputNameFromSelections);
+form.elements.historicalAmount.addEventListener('input', syncOutputNameFromSelections);
+form.elements.historicalSourceMode.addEventListener('change', syncOutputNameFromSelections);
 form.elements.outputName.addEventListener('input', () => {
   const currentValue = form.elements.outputName.value.trim();
   hasCustomOutputName = Boolean(currentValue) && currentValue !== lastAutoOutputName;
@@ -3829,6 +4026,14 @@ const submitJob = async (endpoint, actionLabel, options = {}) => {
     if (data.render?.outputPath) {
       log(`Rendered file: ${data.render.outputPath}`);
     }
+    if (Array.isArray(data.job?.historyWarnings) && data.job.historyWarnings.length > 0) {
+      log(
+        `History warnings: ${data.job.historyWarnings
+          .map((warning) => warning.message)
+          .slice(0, 4)
+          .join(' | ')}`
+      );
+    }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     if (silent && templateSelect.value === TIERLIST_TEMPLATE) {
@@ -3843,7 +4048,8 @@ const submitJob = async (endpoint, actionLabel, options = {}) => {
   }
 };
 
-prepareButton.addEventListener('click', () => submitJob('/jobs/prepare', 'Preparing job'));
-renderButton.addEventListener('click', () => submitJob('/jobs/render', 'Rendering video'));
+prepareButton.addEventListener('click', () => submitJob('/jobs/prepare', isStaticDashboard ? 'Preparing static job' : 'Preparing job'));
+renderButton.addEventListener('click', () => submitJob('/jobs/render', isStaticDashboard ? 'Rendering static video' : 'Rendering video'));
 
+configureDashboardMode();
 loadOptions();

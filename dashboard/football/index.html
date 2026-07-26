@@ -10,6 +10,7 @@
     <main class="shell">
       <nav class="top-nav dashboard-top-nav">
         <a class="back-link" href="/">All dashboards</a>
+        <a class="back-link" href="/football-static" id="static-dashboard-link">Static videos</a>
         <div class="dashboard-status">
           <button type="button" class="settings-button ds-button ds-button--secondary ds-button--compact btn btn-secondary btn-compact" id="settings-toggle-button">Settings</button>
           <span class="ds-chip ds-chip--neutral status-chip neutral">Football</span>
@@ -93,6 +94,10 @@
             <label class="ds-field command-field">
               Template
               <select name="template" id="template"></select>
+            </label>
+            <label class="ds-field command-field command-field-duration" id="static-duration-field" hidden>
+              Duration
+              <input type="number" name="durationSeconds" id="static-duration-seconds" min="1" step="1" value="12" />
             </label>
             <label class="ds-field command-field">
               Channel
@@ -267,6 +272,29 @@
               <label>
                 Label override
                 <input type="text" name="roundLabel" placeholder="Optional" />
+              </label>
+            </div>
+
+            <div class="two-up" id="historical-fields" hidden>
+              <label>
+                Historical competition
+                <input type="text" name="historicalCompetitionName" placeholder="Ex: Brasileirão Série A" />
+              </label>
+              <label>
+                Data source
+                <select name="historicalSourceMode">
+                  <option value="cache-first">Cache first</option>
+                  <option value="openai-refresh">OpenAI refresh</option>
+                  <option value="local-only">Local only</option>
+                </select>
+              </label>
+              <label>
+                Amount
+                <input type="number" name="historicalAmount" min="1" max="30" step="1" value="10" />
+              </label>
+              <label>
+                Cache id
+                <input type="text" name="historicalCompetitionId" placeholder="Auto" />
               </label>
             </div>
 

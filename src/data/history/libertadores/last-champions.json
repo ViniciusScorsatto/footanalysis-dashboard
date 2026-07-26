@@ -1,0 +1,79 @@
+{
+  "competitionId": "libertadores",
+  "competitionName": "Copa Libertadores",
+  "champions": [
+    {
+      "year": 2016,
+      "champion": "Atlético Nacional",
+      "country": "Colombia",
+      "runnerUp": "Independiente del Valle",
+      "score": "2-1 aggregate"
+    },
+    {
+      "year": 2017,
+      "champion": "Grêmio",
+      "country": "Brazil",
+      "runnerUp": "Lanús",
+      "score": "3-1 aggregate"
+    },
+    {
+      "year": 2018,
+      "champion": "River Plate",
+      "country": "Argentina",
+      "runnerUp": "Boca Juniors",
+      "score": "5-3 aggregate",
+      "notes": "Final second leg played in Madrid."
+    },
+    {
+      "year": 2019,
+      "champion": "Flamengo",
+      "country": "Brazil",
+      "runnerUp": "River Plate",
+      "score": "2-1"
+    },
+    {
+      "year": 2020,
+      "champion": "Palmeiras",
+      "country": "Brazil",
+      "runnerUp": "Santos",
+      "score": "1-0"
+    },
+    {
+      "year": 2021,
+      "champion": "Palmeiras",
+      "country": "Brazil",
+      "runnerUp": "Flamengo",
+      "score": "2-1",
+      "notes": "After extra time."
+    },
+    {
+      "year": 2022,
+      "champion": "Flamengo",
+      "country": "Brazil",
+      "runnerUp": "Athletico-PR",
+      "score": "1-0"
+    },
+    {
+      "year": 2023,
+      "champion": "Fluminense",
+      "country": "Brazil",
+      "runnerUp": "Boca Juniors",
+      "score": "2-1",
+      "notes": "After extra time."
+    },
+    {
+      "year": 2024,
+      "champion": "Botafogo",
+      "country": "Brazil",
+      "runnerUp": "Atlético Mineiro",
+      "score": "3-1"
+    },
+    {
+      "year": 2025,
+      "champion": "Flamengo",
+      "country": "Brazil",
+      "runnerUp": "Palmeiras",
+      "score": "1-0"
+    }
+  ]
+}
