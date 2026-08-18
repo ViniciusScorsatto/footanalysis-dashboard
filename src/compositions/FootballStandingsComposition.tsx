@@ -51,24 +51,36 @@ type FootballStandingsCompositionProps = {
   hookText?: string;
   coldOpenData?: FootballColdOpenData;
   ctaText?: string;
+  presentation?: 'animated' | 'static';
 };
 
-const fallbackZones: StandingsZoneConfig[] = [
+const getFallbackZones = (rowCount: number): StandingsZoneConfig[] => [
   {
-    key: 'top-three',
-    label: 'Top 3',
+    key: 'promoted',
+    label: '1–2 Automatic Promotion',
     start: 1,
-    end: 3,
-    fill: 'linear-gradient(90deg, rgba(58, 196, 88, 0.84), rgba(58, 196, 88, 0.28) 62%, rgba(0,0,0,0.04))',
-    accent: 'rgba(86, 214, 120, 0.62)',
+    end: 2,
+    fill: 'linear-gradient(90deg, rgba(10, 132, 255, 0.34), rgba(10, 132, 255, 0.10) 62%, rgba(0,0,0,0.04))',
+    accent: 'rgba(10, 132, 255, 0.72)',
+    textColor: '#0A84FF',
   },
   {
-    key: 'bottom-three',
-    label: 'Bottom 3',
-    start: 18,
-    end: 20,
-    fill: 'linear-gradient(90deg, rgba(224, 48, 48, 0.84), rgba(224, 48, 48, 0.28) 62%, rgba(0,0,0,0.04))',
-    accent: 'rgba(255, 90, 90, 0.56)',
+    key: 'promotion-playoffs',
+    label: '3–8 Promotion Play-offs',
+    start: 3,
+    end: 8,
+    fill: 'linear-gradient(90deg, rgba(39, 174, 96, 0.34), rgba(39, 174, 96, 0.10) 62%, rgba(0,0,0,0.04))',
+    accent: 'rgba(39, 174, 96, 0.72)',
+    textColor: '#27AE60',
+  },
+  {
+    key: 'relegation',
+    label: `${Math.max(rowCount - 2, 1)}–${rowCount} Relegated`,
+    start: Math.max(rowCount - 2, 1),
+    end: rowCount,
+    fill: 'linear-gradient(90deg, rgba(224, 48, 48, 0.34), rgba(224, 48, 48, 0.10) 62%, rgba(0,0,0,0.04))',
+    accent: 'rgba(231, 76, 60, 0.72)',
+    textColor: '#E74C3C',
   },
 ];
 
@@ -89,18 +101,24 @@ export const FootballStandingsComposition = ({
   hookText,
   coldOpenData,
   ctaText,
+  presentation = 'animated',
 }: FootballStandingsCompositionProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const contentFrame =
-    Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
+  const isStatic = presentation === 'static';
+  const contentStartFrame = isStatic ? 0 : SHORT_OPENING_DURATION_FRAMES;
+  const contentFrame = isStatic
+    ? 999
+    : Math.max(0, frame - contentStartFrame) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
   const isEnglish = channelProfile === 'en';
 
   const standingsConfig = leagueConfig?.standings;
   const safeArea = standingsConfig?.safeArea ?? {left: 40, right: 120};
   const contentLeftPadding = 72;
   const tableLeftPadding = Math.max(24, safeArea.left - (contentLeftPadding - 28));
-  const zones = standingsConfig?.zones?.length ? standingsConfig.zones : fallbackZones;
+  const zones = standingsConfig?.zones?.length
+    ? standingsConfig.zones
+    : getFallbackZones(rows.length);
   const accentColor = leagueConfig?.accentColor ?? '#F0A500';
 
   const chipAnim = headerEntranceStyle(contentFrame, fps, 0);
@@ -128,23 +146,25 @@ export const FootballStandingsComposition = ({
         accentColor={accentColor}
         opacity={0.5}
       />
-      <FootballShortOpening
-        template="standings"
-        channelProfile={channelProfile}
-        leagueName={leagueName}
-        roundLabel={standingsLabel}
-        rows={rows}
-        accentColor={accentColor}
-        secondaryAccentColor={leagueConfig?.secondaryAccentColor}
-        brandName={brandName}
-        brandLogoPath={brandLogoPath}
-        introTitle={introTitle}
-        introSubtitle={introSubtitle}
-        hookText={hookText}
-        coldOpenData={coldOpenData}
-      />
-      <Sequence from={SHORT_OPENING_DURATION_FRAMES}>
-        <VoiceoverBed voiceoverPath={voiceoverPath} />
+      {!isStatic ? (
+        <FootballShortOpening
+          template="standings"
+          channelProfile={channelProfile}
+          leagueName={leagueName}
+          roundLabel={standingsLabel}
+          rows={rows}
+          accentColor={accentColor}
+          secondaryAccentColor={leagueConfig?.secondaryAccentColor}
+          brandName={brandName}
+          brandLogoPath={brandLogoPath}
+          introTitle={introTitle}
+          introSubtitle={introSubtitle}
+          hookText={hookText}
+          coldOpenData={coldOpenData}
+        />
+      ) : null}
+      <Sequence from={contentStartFrame}>
+        <VoiceoverBed voiceoverPath={isStatic ? undefined : voiceoverPath} />
         <CompetitionAccentRail
           accentColor={accentColor}
           secondaryAccentColor={leagueConfig?.secondaryAccentColor}
@@ -167,6 +187,18 @@ export const FootballStandingsComposition = ({
             padding: `40px 28px 136px ${contentLeftPadding}px`,
           }}
         >
+        <div
+          style={{
+            height: isStatic ? 88 : 0,
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'flex-start',
+            ...labelAnim,
+          }}
+        >
+          {isStatic ? <BrandMark brandName={brandName} brandLogoPath={brandLogoPath} /> : null}
+        </div>
+
         {/* Animated header */}
         <StandingsHeader
           channelProfile={channelProfile}
@@ -187,7 +219,12 @@ export const FootballStandingsComposition = ({
             padding: `0 ${safeArea.right}px 0 ${tableLeftPadding}px`,
           }}
         >
-          <StandingsTable rows={rows} zones={zones} channelProfile={channelProfile} />
+          <StandingsTable
+            rows={rows}
+            zones={zones}
+            channelProfile={channelProfile}
+            disableAnimation={isStatic}
+          />
         </div>
 
         <div
@@ -199,43 +236,45 @@ export const FootballStandingsComposition = ({
           <StandingsLegend zones={zones} channelProfile={channelProfile} />
         </div>
 
-        {/* Animated footer */}
-        <div
-          style={{
-            marginTop: 'auto',
-            paddingLeft: tableLeftPadding,
-            paddingRight: safeArea.right,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-            gap: 32,
-            ...footerAnim,
-          }}
-        >
-          {ctaText?.trim() ? (
-            <div
-              style={{
-                maxWidth: 560,
-                padding: '16px 24px 14px',
-                borderRadius: 20,
-                background: '#0f1318',
-                border: `2px solid ${accentColor}`,
-                boxShadow: isEnglish ? 'none' : `0 0 20px ${accentColor}22`,
-                color: '#ffffff',
-                fontSize: 34,
-                lineHeight: 1,
-                fontWeight: 900,
-                letterSpacing: 0.6,
-                textTransform: 'uppercase',
-              }}
-            >
-              {ctaText}
-            </div>
-          ) : (
-            <div />
-          )}
-          <BrandMark brandName={brandName} brandLogoPath={brandLogoPath} />
-        </div>
+        {!isStatic ? (
+          <div
+            style={{
+              marginTop: 'auto',
+              paddingLeft: tableLeftPadding,
+              paddingRight: safeArea.right,
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-end',
+              gap: 32,
+              ...footerAnim,
+            }}
+          >
+            {ctaText?.trim() ? (
+              <div
+                style={{
+                  maxWidth: 560,
+                  padding: '16px 24px 14px',
+                  borderRadius: 20,
+                  background: '#0f1318',
+                  border: `2px solid ${accentColor}`,
+                  boxShadow: isEnglish ? 'none' : `0 0 20px ${accentColor}22`,
+                  color: '#ffffff',
+                  fontSize: 34,
+                  lineHeight: 1,
+                  fontWeight: 900,
+                  letterSpacing: 0.6,
+                  textTransform: 'uppercase',
+                }}
+              >
+                {ctaText}
+              </div>
+            ) : (
+              <div />
+            )}
+            <BrandMark brandName={brandName} brandLogoPath={brandLogoPath} />
+          </div>
+        ) : null}
+
         </div>
       </Sequence>
     </AbsoluteFill>

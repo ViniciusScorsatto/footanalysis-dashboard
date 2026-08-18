@@ -6,6 +6,7 @@ type StandingsTableProps = {
   rows: StandingRow[];
   zones: StandingsZoneConfig[];
   channelProfile?: FootballChannelProfile;
+  disableAnimation?: boolean;
 };
 
 const findZone = (rank: number, zones: StandingsZoneConfig[]) =>
@@ -59,6 +60,7 @@ export const StandingsTable = ({
   rows,
   zones,
   channelProfile = 'pt',
+  disableAnimation = false,
 }: StandingsTableProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -132,7 +134,7 @@ export const StandingsTable = ({
               : 'Classificação ainda indisponível'}
           </div>
         ) : null}
-        {rows.slice(0, 20).map((row, index) => {
+        {rows.map((row, index) => {
           const zone = findZone(row.rank, zones);
           const variant =
             isDangerZone(zone) || (!hasConfiguredZones && row.rank >= Math.max(rows.length - 2, 1))
@@ -237,7 +239,9 @@ export const StandingsTable = ({
               : '#c0ccd8';
           const pointsColor = zoneTextColor;
 
-          const anim = entranceStyle(frame, fps, rowStartFrame(index));
+          const anim = disableAnimation
+            ? {opacity: 1, transform: 'none'}
+            : entranceStyle(frame, fps, rowStartFrame(index));
 
           return (
             <div
