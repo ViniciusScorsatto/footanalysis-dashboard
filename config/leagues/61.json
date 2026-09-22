@@ -1,8 +1,8 @@
 {
   "leagueId": 61,
   "leagueName": "Ligue 1",
-  "accentColor": "#0A84FF",
-  "secondaryAccentColor": "#FF4FD8",
+  "accentColor": "#2ECC71",
+  "secondaryAccentColor": "#0A84FF",
   "standings": {
     "safeArea": {
       "left": 68,

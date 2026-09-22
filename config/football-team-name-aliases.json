@@ -20,7 +20,6 @@
     "botafogo sp": "Botafogo SP",
     "fortaleza ec": "Fortaleza",
     "sport recife": "Sport",
-    "deportes tolima": "Tolima",
     "independ rivadavia": "Rivadavia",
     "deportivo la guaira": "La Guaira",
     "deportivo recoleta": "Recoleta",
@@ -63,7 +62,8 @@
     "Bosnia & Herzegovina": "Bosnia",
     "Czech Republic": "Czech Rep.",
     "RB Bragantino": "Bragantino",
-    "RB Bragantino U-17": "Bragantino"
+    "RB Bragantino U-17": "Bragantino",
+    "Deportivo La Coruna": "La Coruna"
   },
   "leagues": {
     "71": {

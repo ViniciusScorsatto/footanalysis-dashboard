@@ -10,6 +10,7 @@ export type FootballVideoTemplate =
   | 'predictions-long'
   | 'round-summary-long'
   | 'standings'
+  | 'serie-c-quadrangular'
   | 'top-scorers'
   | 'player-of-round'
   | 'season-final-verdict'
@@ -20,7 +21,10 @@ export type FootballVideoTemplate =
   | 'continental-groups-standings'
   | 'world-cup-group-standings'
   | 'world-cup-knockout'
-  | 'historical-champions';
+  | 'historical-champions'
+  | 'team-comparison'
+  | 'league-comparison'
+  | 'top-scorers-comparison';
 
 export type VideoTemplate = FootballVideoTemplate;
 
@@ -66,6 +70,11 @@ export type StandingRow = {
   played: number;
   points: number;
   goalDifference: number;
+  wins?: number;
+  draws?: number;
+  losses?: number;
+  goalsFor?: number;
+  goalsAgainst?: number;
   form?: string;
   badge: TeamBadge;
 };
@@ -127,6 +136,7 @@ export type LeagueConfig = {
   secondaryAccentColor?: string;
   standings?: StandingsLayoutConfig;
   pace?: PaceLayoutConfig;
+  quadrangular?: {groups: Array<{key: string; label: string; teams: string[]}>};
 };
 
 type BaseVideoJob = {
@@ -178,6 +188,7 @@ export type ResultsVideoJob = FootballBaseVideoJob & {
   matchDates?: string[];
   roundLabel: string;
   fixtures: FixtureCard[];
+  includeUnfinishedResults?: boolean;
 };
 
 export type LongformPredictionMatch = {
@@ -262,6 +273,19 @@ export type StandingsVideoJob = FootballBaseVideoJob & {
   compositionId: 'FootballStandingsShort' | 'FootballStaticStandingsShort';
   standingsLabel: string;
   rows: StandingRow[];
+};
+
+export type SerieCQuadrangularGroup = {
+  groupKey: string;
+  groupLabel: string;
+  rows: StandingRow[];
+};
+
+export type SerieCQuadrangularVideoJob = FootballBaseVideoJob & {
+  template: 'serie-c-quadrangular';
+  compositionId: 'FootballSerieCQuadrangularShort' | 'FootballStaticSerieCQuadrangularShort';
+  standingsLabel: string;
+  groups: SerieCQuadrangularGroup[];
 };
 
 export type SeasonFinalVerdictGroup = {
@@ -410,7 +434,7 @@ export type TierlistGroup = {
 
 export type TierlistVideoJob = FootballBaseVideoJob & {
   template: 'tierlist';
-  compositionId: 'FootballTierlistShort';
+  compositionId: 'FootballTierlistShort' | 'FootballStaticTierlistShort';
   titleLabel: string;
   subtitleLabel: string;
   topScorerPrediction?: string;
@@ -510,6 +534,46 @@ export type HistoricalChampionsVideoJob = FootballBaseVideoJob & {
   entries: HistoricalChampionEntry[];
 };
 
+export type ComparisonMetric = {
+  label: string;
+  leftValue?: string | number;
+  rightValue?: string | number;
+  value?: string | number;
+  winner?: 'left' | 'right' | 'tie' | 'none';
+};
+
+export type ComparisonEntity = {
+  id?: number | string;
+  label: string;
+  sublabel?: string;
+  badge?: TeamBadge;
+};
+
+export type ComparisonRow = {
+  rank?: number;
+  label: string;
+  sublabel?: string;
+  value: string | number;
+  secondaryValue?: string | number;
+  badge?: TeamBadge;
+};
+
+export type FootballComparisonVideoJob = FootballBaseVideoJob & {
+  template: 'team-comparison' | 'league-comparison' | 'top-scorers-comparison';
+  compositionId: 'FootballComparisonShort';
+  titleLabel: string;
+  subtitleLabel: string;
+  comparisonContext: {
+    metric?: string;
+    season: number;
+    source: 'sqlite';
+  };
+  leftEntity?: ComparisonEntity;
+  rightEntity?: ComparisonEntity;
+  metrics: ComparisonMetric[];
+  rows?: ComparisonRow[];
+};
+
 export type FootballThumbnailJob = {
   sport: 'football';
   template: 'thumbnail';
@@ -541,6 +605,7 @@ export type FootballVideoJob =
   | FootballPredictionsLongVideoJob
   | FootballRoundSummaryLongVideoJob
   | StandingsVideoJob
+  | SerieCQuadrangularVideoJob
   | SeasonFinalVerdictVideoJob
   | ChampionFinalVideoJob
   | TopScorersVideoJob
@@ -550,6 +615,7 @@ export type FootballVideoJob =
   | ContinentalGroupsStandingsVideoJob
   | WorldCupGroupVideoJob
   | WorldCupKnockoutVideoJob
-  | HistoricalChampionsVideoJob;
+  | HistoricalChampionsVideoJob
+  | FootballComparisonVideoJob;
 
 export type VideoJob = FootballVideoJob;

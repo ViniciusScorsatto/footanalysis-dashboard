@@ -1,0 +1,135 @@
+{
+  "competitionId": "la-liga",
+  "competitionName": "La Liga",
+  "champions": [
+    {
+      "year": 2017,
+      "clubId": "real-madrid",
+      "clubName": "Real Madrid",
+      "country": "Spain",
+      "runnerUp": "Barcelona",
+      "notes": "Season 2016–17",
+      "badge": {
+        "label": "RM",
+        "logoPath": "/logos/real-madrid-541.png",
+        "accentColor": "#F0F4F8"
+      }
+    },
+    {
+      "year": 2018,
+      "clubId": "barcelona",
+      "clubName": "Barcelona",
+      "country": "Spain",
+      "runnerUp": "Atlético Madrid",
+      "notes": "Season 2017–18",
+      "badge": {
+        "label": "BARC",
+        "logoPath": "/logos/barcelona-529.png",
+        "accentColor": "#A50044"
+      }
+    },
+    {
+      "year": 2019,
+      "clubId": "barcelona",
+      "clubName": "Barcelona",
+      "country": "Spain",
+      "runnerUp": "Atlético Madrid",
+      "notes": "Season 2018–19",
+      "badge": {
+        "label": "BARC",
+        "logoPath": "/logos/barcelona-529.png",
+        "accentColor": "#A50044"
+      }
+    },
+    {
+      "year": 2020,
+      "clubId": "real-madrid",
+      "clubName": "Real Madrid",
+      "country": "Spain",
+      "runnerUp": "Barcelona",
+      "notes": "Season 2019–20",
+      "badge": {
+        "label": "RM",
+        "logoPath": "/logos/real-madrid-541.png",
+        "accentColor": "#F0F4F8"
+      }
+    },
+    {
+      "year": 2021,
+      "clubId": "atl-madrid",
+      "clubName": "Atl Madrid",
+      "country": "Spain",
+      "runnerUp": "Real Madrid",
+      "notes": "Season 2020–21",
+      "badge": {
+        "label": "AM",
+        "logoPath": "/logos/atletico-madrid-530.png"
+      }
+    },
+    {
+      "year": 2022,
+      "clubId": "real-madrid",
+      "clubName": "Real Madrid",
+      "country": "Spain",
+      "runnerUp": "Barcelona",
+      "notes": "Season 2021–22",
+      "badge": {
+        "label": "RM",
+        "logoPath": "/logos/real-madrid-541.png",
+        "accentColor": "#F0F4F8"
+      }
+    },
+    {
+      "year": 2023,
+      "clubId": "barcelona",
+      "clubName": "Barcelona",
+      "country": "Spain",
+      "runnerUp": "Real Madrid",
+      "notes": "Season 2022–23",
+      "badge": {
+        "label": "BARC",
+        "logoPath": "/logos/barcelona-529.png",
+        "accentColor": "#A50044"
+      }
+    },
+    {
+      "year": 2024,
+      "clubId": "real-madrid",
+      "clubName": "Real Madrid",
+      "country": "Spain",
+      "runnerUp": "Barcelona",
+      "notes": "Season 2023–24",
+      "badge": {
+        "label": "RM",
+        "logoPath": "/logos/real-madrid-541.png",
+        "accentColor": "#F0F4F8"
+      }
+    },
+    {
+      "year": 2025,
+      "clubId": "barcelona",
+      "clubName": "Barcelona",
+      "country": "Spain",
+      "runnerUp": "Real Madrid",
+      "notes": "Season 2024–25",
+      "badge": {
+        "label": "BARC",
+        "logoPath": "/logos/barcelona-529.png",
+        "accentColor": "#A50044"
+      }
+    },
+    {
+      "year": 2026,
+      "clubId": "barcelona",
+      "clubName": "Barcelona",
+      "country": "Spain",
+      "runnerUp": "Real Madrid",
+      "notes": "Season 2025–26",
+      "badge": {
+        "label": "BARC",
+        "logoPath": "/logos/barcelona-529.png",
+        "accentColor": "#A50044"
+      }
+    }
+  ]
+}

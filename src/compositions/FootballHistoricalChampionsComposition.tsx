@@ -37,9 +37,27 @@ const SILVER = '#c0ccd8';
 const STEEL = '#3a5060';
 const WHITE = '#f0f4f8';
 
-const badgeSrc = (badge: TeamBadge) =>
+const normalizeLogoKey = (value: string) =>
+  value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const historicalLogoFallbacks: Record<string, string> = {
+  'defensa y justicia': '/logos/defensa-y-justicia-442.png',
+  'ldu quito': '/logos/ldu-de-quito-1158.png',
+  'ldu de quito': '/logos/ldu-de-quito-1158.png',
+  'liga de quito': '/logos/ldu-de-quito-1158.png',
+};
+
+const badgeSrc = (badge: TeamBadge, clubName?: string) =>
   badge.logoPath || badge.imagePath
     ? staticFile((badge.logoPath ?? badge.imagePath ?? '').replace(/^\//, ''))
+    : clubName && historicalLogoFallbacks[normalizeLogoKey(clubName)]
+      ? staticFile(historicalLogoFallbacks[normalizeLogoKey(clubName)].replace(/^\//, ''))
     : null;
 
 const countryMeta = (country: string) => {
@@ -52,6 +70,7 @@ const countryMeta = (country: string) => {
   if (normalized === 'brazil' || normalized === 'brasil') return {code: 'BRA', flag: '🇧🇷'};
   if (normalized === 'argentina') return {code: 'ARG', flag: '🇦🇷'};
   if (normalized === 'colombia') return {code: 'COL', flag: '🇨🇴'};
+  if (normalized === 'ecuador' || normalized === 'equador') return {code: 'ECU', flag: '🇪🇨'};
   if (normalized === 'uruguay') return {code: 'URU', flag: '🇺🇾'};
   if (normalized === 'chile') return {code: 'CHI', flag: '🇨🇱'};
 
@@ -123,12 +142,14 @@ const ChampionRow = ({
   entry,
   rowIndex,
   showRunnerUp,
+  runnerUpCaption,
 }: {
   entry: HistoricalChampionEntry;
   rowIndex: number;
   showRunnerUp: boolean;
+  runnerUpCaption: string;
 }) => {
-  const logoSrc = badgeSrc(entry.badge);
+  const logoSrc = badgeSrc(entry.badge, entry.clubName);
   const meta = countryMeta(entry.country);
   const clubLabel = compactClubName(entry.clubName);
   const runnerUpLabel = compactClubName(entry.runnerUp ?? '');
@@ -216,7 +237,7 @@ const ChampionRow = ({
               opacity: 0.62,
             }}
           >
-            Vice
+            {runnerUpCaption}
           </div>
           <div
             style={{
@@ -322,12 +343,14 @@ const HeroChampion = ({
   entry,
   accentColor,
   showRunnerUp,
+  runnerUpCaption,
 }: {
   entry: HistoricalChampionEntry;
   accentColor: string;
   showRunnerUp: boolean;
+  runnerUpCaption: string;
 }) => {
-  const logoSrc = badgeSrc(entry.badge);
+  const logoSrc = badgeSrc(entry.badge, entry.clubName);
   const runnerUpLabel = compactClubName(entry.runnerUp ?? '');
 
   return (
@@ -446,7 +469,7 @@ const HeroChampion = ({
               opacity: 0.66,
             }}
           >
-            Vice
+            {runnerUpCaption}
           </span>
           <span
             style={{
@@ -473,6 +496,7 @@ export const FootballHistoricalChampionsComposition = ({
   titleLabel,
   subtitleLabel,
   entries,
+  channelProfile = 'pt',
   leagueConfig,
   brandName,
   brandLogoPath,
@@ -480,6 +504,7 @@ export const FootballHistoricalChampionsComposition = ({
   soundtrackVolume,
   ctaText,
 }: FootballHistoricalChampionsCompositionProps) => {
+  const isEnglish = channelProfile === 'en';
   const accentColor = leagueConfig?.accentColor ?? LIBERTADORES_GOLD;
   const sortedEntries = [...entries].sort((left, right) => left.year - right.year).slice(-10);
   const heroChampion = sortedEntries.at(-1);
@@ -557,7 +582,7 @@ export const FootballHistoricalChampionsComposition = ({
             textTransform: 'uppercase',
           }}
         >
-          Quem leva esse ano?
+          {isEnglish ? 'Who wins it this year?' : 'Quem leva esse ano?'}
         </div>
         <div
           style={{
@@ -582,7 +607,7 @@ export const FootballHistoricalChampionsComposition = ({
             textAlign: 'center',
             fontFamily: TEASER_LABEL_FONT,
             fontSize: 19,
-            color: STEEL,
+            color: isEnglish ? accentColor : STEEL,
             textTransform: 'uppercase',
             letterSpacing: 2,
           }}
@@ -595,6 +620,7 @@ export const FootballHistoricalChampionsComposition = ({
             entry={heroChampion}
             accentColor={accentColor}
             showRunnerUp={showRunnerUp}
+            runnerUpCaption={isEnglish ? 'Runner-up' : 'Vice'}
           />
         ) : null}
 
@@ -612,6 +638,7 @@ export const FootballHistoricalChampionsComposition = ({
               entry={entry}
               rowIndex={index}
               showRunnerUp={showRunnerUp}
+              runnerUpCaption={isEnglish ? 'Runner-up' : 'Vice'}
             />
           ))}
         </div>
@@ -627,7 +654,7 @@ export const FootballHistoricalChampionsComposition = ({
             letterSpacing: 7,
           }}
         >
-          {ctaText ?? 'Qual foi o melhor campeão?'}
+          {ctaText ?? (isEnglish ? 'Who was the best champion?' : 'Qual foi o melhor campeão?')}
         </div>
         <div
           style={{

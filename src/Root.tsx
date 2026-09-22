@@ -1,6 +1,7 @@
 import {Composition} from 'remotion';
 import {FootballContinentalGroupsComposition} from './compositions/FootballContinentalGroupsComposition';
 import {FootballChampionFinalComposition} from './compositions/FootballChampionFinalComposition';
+import {FootballComparisonComposition} from './compositions/FootballComparisonComposition';
 import {FootballFixturesComposition} from './compositions/FootballFixturesComposition';
 import {FootballHistoricalChampionsComposition} from './compositions/FootballHistoricalChampionsComposition';
 import {FootballPaceComposition} from './compositions/FootballPaceComposition';
@@ -9,9 +10,11 @@ import {FootballPredictionsLongComposition} from './compositions/FootballPredict
 import {FootballRoundSummaryLongComposition} from './compositions/FootballRoundSummaryLongComposition';
 import {FootballSeasonFinalVerdictComposition} from './compositions/FootballSeasonFinalVerdictComposition';
 import {FootballStandingsComposition} from './compositions/FootballStandingsComposition';
+import {FootballSerieCQuadrangularComposition} from './compositions/FootballSerieCQuadrangularComposition';
 import {FootballThumbnailComposition} from './compositions/FootballThumbnailComposition';
 import {FootballTierlistComposition} from './compositions/FootballTierlistComposition';
 import {FootballTopScorersComposition} from './compositions/FootballTopScorersComposition';
+import {FootballStoryShortComposition} from './compositions/FootballStoryShortComposition';
 import {FootballWorldCupGroupComposition} from './compositions/FootballWorldCupGroupComposition';
 import {FootballWorldCupKnockoutComposition} from './compositions/FootballWorldCupKnockoutComposition';
 import footballResultsJobJson from './data/generated/current-job.football.results.json';
@@ -43,10 +46,12 @@ import {sampleFixtures} from './data/results';
 import {sampleStandingsRows} from './data/standings';
 import {sampleTopScorersJob} from './data/topScorers';
 import {sampleWorldCupGroupJob, sampleWorldCupKnockoutJob} from './data/worldCup';
+import {sampleShortVisualComposition} from './data/shortVisualSample';
 import {getFootballShortDurationInFrames} from './lib/football-short-durations';
 import type {
   FootballPredictionsLongVideoJob,
   FootballRoundSummaryLongVideoJob,
+  FootballComparisonVideoJob,
   TierlistVideoJob,
   FootballVideoJob,
 } from './lib/types';
@@ -80,12 +85,51 @@ const footballHistoricalChampionsJob =
   footballCurrentJob.template === 'historical-champions'
     ? footballCurrentJob
     : (footballHistoricalChampionsJobJson as Partial<FootballVideoJob>);
+const footballComparisonJob =
+  footballCurrentJob.template === 'team-comparison' ||
+  footballCurrentJob.template === 'league-comparison' ||
+  footballCurrentJob.template === 'top-scorers-comparison'
+    ? (footballCurrentJob as Partial<FootballComparisonVideoJob>)
+    : null;
 const staticFootballJob =
   footballCurrentJob.videoMode === 'static'
     ? (footballCurrentJob as Partial<FootballVideoJob>)
     : null;
 const defaultFootballSoundtrack = '/audio/football/fun-vibe-dyalla.mp3';
 const defaultFootballBrandLogo = '/branding/foot-analysis-logo.png';
+const comparisonJob: FootballComparisonVideoJob =
+  footballComparisonJob?.compositionId === 'FootballComparisonShort'
+    ? (footballComparisonJob as FootballComparisonVideoJob)
+    : {
+        sport: 'football',
+        template: 'league-comparison',
+        compositionId: 'FootballComparisonShort',
+        leagueId: 0,
+        season: 2026,
+        leagueName: 'Foot Analysis',
+        channelProfile: 'pt',
+        languageProfile: 'pt-br',
+        brandName: 'Foot Analysis',
+        brandLogoPath: defaultFootballBrandLogo,
+        outputName: 'football-comparison.mp4',
+        durationInFrames: getFootballShortDurationInFrames('FootballComparisonShort'),
+        titleLabel: 'Comparativo',
+        subtitleLabel: 'Premier League x Brasileirao',
+        comparisonContext: {
+          metric: 'goals',
+          season: 2026,
+          source: 'sqlite',
+        },
+        leftEntity: {label: 'Premier League', sublabel: 'England'},
+        rightEntity: {label: 'Brasileirao', sublabel: 'Brazil'},
+        metrics: [
+          {label: 'Goals', leftValue: 0, rightValue: 0, winner: 'tie'},
+          {label: 'Goals per match', leftValue: 0, rightValue: 0, winner: 'tie'},
+          {label: 'Average points', leftValue: 0, rightValue: 0, winner: 'tie'},
+        ],
+        rows: [],
+        ctaText: 'Quem leva essa comparacao?',
+      };
 
 const thumbnailJob: FootballThumbnailJob = {
   sport: 'football',
@@ -368,6 +412,22 @@ const staticStandingsProps =
   staticFootballJob?.template === 'standings'
     ? {...standingsProps, ...staticFootballJob}
     : {...standingsProps, presentation: 'static' as const};
+const serieCQuadrangularJob = staticFootballJob?.template === 'serie-c-quadrangular'
+  ? staticFootballJob
+  : null;
+const serieCQuadrangularProps = {
+  channelProfile: serieCQuadrangularJob?.channelProfile ?? 'pt',
+  leagueName: serieCQuadrangularJob?.leagueName ?? 'Brasileirão Série C',
+  standingsLabel: serieCQuadrangularJob?.standingsLabel ?? 'Segunda Fase',
+  groups: Array.isArray(serieCQuadrangularJob?.groups) ? serieCQuadrangularJob.groups : [],
+  leagueConfig: serieCQuadrangularJob?.leagueConfig,
+  brandName: serieCQuadrangularJob?.brandName ?? 'Foot Analysis',
+  brandLogoPath: serieCQuadrangularJob?.brandLogoPath ?? defaultFootballBrandLogo,
+  backgroundImagePath: serieCQuadrangularJob?.backgroundImagePath,
+  soundtrackPath: serieCQuadrangularJob?.soundtrackPath ?? defaultFootballSoundtrack,
+  soundtrackVolume: serieCQuadrangularJob?.soundtrackVolume ?? 0.2,
+  presentation: 'static' as const,
+};
 
 const seasonFinalVerdictProps = {
   channelProfile:
@@ -1303,6 +1363,24 @@ export const RemotionRoot = () => {
         defaultProps={{...staticStandingsProps, presentation: 'static'}}
       />
       <Composition
+        id="FootballSerieCQuadrangularShort"
+        component={FootballSerieCQuadrangularComposition}
+        durationInFrames={getStaticFootballDurationInFrames('FootballStaticSerieCQuadrangularShort')}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={serieCQuadrangularProps}
+      />
+      <Composition
+        id="FootballStaticSerieCQuadrangularShort"
+        component={FootballSerieCQuadrangularComposition}
+        durationInFrames={getStaticFootballDurationInFrames('FootballStaticSerieCQuadrangularShort')}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={serieCQuadrangularProps}
+      />
+      <Composition
         id="FootballSeasonFinalVerdictShort"
         component={FootballSeasonFinalVerdictComposition}
         durationInFrames={getFootballShortDurationInFrames('FootballSeasonFinalVerdictShort')}
@@ -1416,6 +1494,15 @@ export const RemotionRoot = () => {
         defaultProps={tierlistProps}
       />
       <Composition
+        id="FootballStaticTierlistShort"
+        component={FootballTierlistComposition}
+        durationInFrames={getStaticFootballDurationInFrames('FootballStaticTierlistShort')}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{...tierlistProps, presentation: 'static'}}
+      />
+      <Composition
         id="FootballWorldCupGroupShort"
         component={FootballWorldCupGroupComposition}
         durationInFrames={getFootballShortDurationInFrames('FootballWorldCupGroupShort')}
@@ -1441,6 +1528,24 @@ export const RemotionRoot = () => {
         width={1080}
         height={1920}
         defaultProps={historicalChampionsProps}
+      />
+      <Composition
+        id="FootballComparisonShort"
+        component={FootballComparisonComposition}
+        durationInFrames={getFootballShortDurationInFrames('FootballComparisonShort')}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{job: comparisonJob}}
+      />
+      <Composition
+        id="FootballStoryShort"
+        component={FootballStoryShortComposition}
+        durationInFrames={sampleShortVisualComposition.durationInFrames}
+        fps={sampleShortVisualComposition.fps}
+        width={sampleShortVisualComposition.width}
+        height={sampleShortVisualComposition.height}
+        defaultProps={{composition: sampleShortVisualComposition}}
       />
     </>
   );

@@ -7,6 +7,7 @@ type StandingsTableProps = {
   zones: StandingsZoneConfig[];
   channelProfile?: FootballChannelProfile;
   disableAnimation?: boolean;
+  mode?: 'default' | 'serie-c-quadrangular';
 };
 
 const findZone = (rank: number, zones: StandingsZoneConfig[]) =>
@@ -61,11 +62,16 @@ export const StandingsTable = ({
   zones,
   channelProfile = 'pt',
   disableAnimation = false,
+  mode = 'default',
 }: StandingsTableProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const hasConfiguredZones = zones.length > 0;
   const isEnglish = channelProfile === 'en';
+  const isQuadrangular = mode === 'serie-c-quadrangular';
+  const tableColumns = isQuadrangular
+    ? '44px 36px minmax(0, 1fr) repeat(7, 40px) 56px'
+    : '64px 48px minmax(0, 1fr) 72px 72px 184px';
 
   return (
     <div
@@ -80,25 +86,32 @@ export const StandingsTable = ({
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '64px 48px minmax(0, 1fr) 72px 72px 184px',
+          gridTemplateColumns: tableColumns,
           alignItems: 'center',
           padding: '0 16px 8px',
           color: isEnglish ? '#4a6070' : '#3a5060',
           fontFamily: '"Barlow", "Arial", sans-serif',
-          fontSize: 20,
+          fontSize: isQuadrangular ? 13 : 20,
           fontWeight: 600,
-          letterSpacing: 2,
+          letterSpacing: isQuadrangular ? 0.5 : 2,
           textTransform: 'uppercase',
         }}
       >
         <div>{isEnglish ? 'Pos' : 'Pos'}</div>
         <div />
         <div>{isEnglish ? 'Team' : 'Clube'}</div>
-        <div style={{textAlign: 'center'}}>{isEnglish ? 'PL' : 'JG'}</div>
-        <div style={{textAlign: 'center'}}>SG</div>
-        <div style={{display: 'flex', justifyContent: 'flex-end', paddingRight: 4}}>
-          PTS&nbsp;&nbsp;&nbsp;{isEnglish ? 'Form' : 'Forma'}
-        </div>
+        {isQuadrangular ? (
+          <>
+            {['PJ', 'VIT', 'E', 'DER', 'GM', 'GC', 'SG'].map((label) => <div key={label} style={{textAlign: 'center'}}>{label}</div>)}
+            <div style={{textAlign: 'center'}}>PTS</div>
+          </>
+        ) : <>
+          <div style={{textAlign: 'center'}}>{isEnglish ? 'PL' : 'JG'}</div>
+          <div style={{textAlign: 'center'}}>SG</div>
+          <div style={{display: 'flex', justifyContent: 'flex-end', paddingRight: 4}}>
+            PTS&nbsp;&nbsp;&nbsp;{isEnglish ? 'Form' : 'Forma'}
+          </div>
+        </>}
       </div>
 
       <div
@@ -161,7 +174,9 @@ export const StandingsTable = ({
                     ? '#081517'
               : isDangerZone(zone) || (!hasConfiguredZones && row.rank >= Math.max(rows.length - 2, 1))
                 ? '#140808'
-                : index % 2 === 0
+                : isQuadrangular
+                  ? '#0f1318'
+                  : index % 2 === 0
                   ? '#0f1318'
                   : '#141c24';
           const fallbackEnglishBackground =
@@ -175,7 +190,9 @@ export const StandingsTable = ({
                     ? '#081410'
                     : variant === 'danger'
                       ? '#140808'
-                      : index % 2 === 0
+                      : isQuadrangular
+                        ? '#0f1318'
+                        : index % 2 === 0
                         ? '#0f1318'
                         : '#141c24';
           const background =
@@ -248,7 +265,7 @@ export const StandingsTable = ({
               key={`${row.rank}-${row.team}`}
               style={{
                 display: 'grid',
-                gridTemplateColumns: '64px 48px minmax(0, 1fr) 72px 72px 184px',
+                gridTemplateColumns: tableColumns,
                 alignItems: 'center',
                 flex: 1,
                 minHeight: 52,
@@ -262,7 +279,7 @@ export const StandingsTable = ({
             >
               <div
                 style={{
-                  fontSize: 30,
+                  fontSize: isQuadrangular ? 22 : 30,
                   fontWeight: 900,
                   color: rankColor,
                   textShadow: rankTextShadow,
@@ -273,7 +290,7 @@ export const StandingsTable = ({
               <Badge badge={row.badge} />
               <div
                 style={{
-                  fontSize: 34,
+                  fontSize: isQuadrangular ? 22 : 34,
                   fontWeight: 700,
                   lineHeight: 1,
                   textTransform: 'uppercase',
@@ -285,12 +302,12 @@ export const StandingsTable = ({
               >
                 {row.team}
               </div>
-              <div style={{fontSize: 28, textAlign: 'center', fontWeight: 700, color: statColor}}>
-                {row.played}
-              </div>
-              <div style={{fontSize: 28, textAlign: 'center', fontWeight: 700, color: statColor}}>
-                {row.goalDifference > 0 ? `+${row.goalDifference}` : row.goalDifference}
-              </div>
+              {isQuadrangular ? <>
+                {[row.played, row.wins ?? 0, row.draws ?? 0, row.losses ?? 0, row.goalsFor ?? 0, row.goalsAgainst ?? 0, row.goalDifference > 0 ? `+${row.goalDifference}` : row.goalDifference].map((value, statIndex) => <div key={statIndex} style={{fontSize: 18, textAlign: 'center', fontWeight: 700, color: statColor}}>{value}</div>)}
+                <div style={{fontSize: 22, textAlign: 'center', fontWeight: 900, color: pointsColor}}>{row.points}</div>
+              </> : <>
+              <div style={{fontSize: 28, textAlign: 'center', fontWeight: 700, color: statColor}}>{row.played}</div>
+              <div style={{fontSize: 28, textAlign: 'center', fontWeight: 700, color: statColor}}>{row.goalDifference > 0 ? `+${row.goalDifference}` : row.goalDifference}</div>
               <div
                 style={{
                   display: 'grid',
@@ -310,7 +327,7 @@ export const StandingsTable = ({
                   {row.points}
                 </div>
                 <FormDots form={row.form} />
-              </div>
+              </div></>}
             </div>
           );
         })}

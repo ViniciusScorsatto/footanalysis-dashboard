@@ -1,0 +1,77 @@
+{
+  "competitionId": "sul-americana",
+  "competitionName": "Copa Sul-Americana",
+  "champions": [
+    {
+      "year": 2016,
+      "champion": "Chapecoense",
+      "country": "Brazil",
+      "runnerUp": "Atlético Nacional",
+      "score": null,
+      "notes": "Title awarded to Chapecoense after the LaMia Flight 2933 tragedy, at Atlético Nacional's request."
+    },
+    {
+      "year": 2017,
+      "champion": "Independiente",
+      "country": "Argentina",
+      "runnerUp": "Flamengo",
+      "score": "3-2 aggregate"
+    },
+    {
+      "year": 2018,
+      "champion": "Athletico Paranaense",
+      "country": "Brazil",
+      "runnerUp": "Junior",
+      "score": "2-2 aggregate; 4-3 penalties"
+    },
+    {
+      "year": 2019,
+      "champion": "Independiente del Valle",
+      "country": "Ecuador",
+      "runnerUp": "Colón",
+      "score": "3-1"
+    },
+    {
+      "year": 2020,
+      "champion": "Defensa y Justicia",
+      "country": "Argentina",
+      "runnerUp": "Lanús",
+      "score": "3-0"
+    },
+    {
+      "year": 2021,
+      "champion": "Athletico Paranaense",
+      "country": "Brazil",
+      "runnerUp": "Red Bull Bragantino",
+      "score": "1-0"
+    },
+    {
+      "year": 2022,
+      "champion": "Independiente del Valle",
+      "country": "Ecuador",
+      "runnerUp": "São Paulo",
+      "score": "2-0"
+    },
+    {
+      "year": 2023,
+      "champion": "LDU Quito",
+      "country": "Ecuador",
+      "runnerUp": "Fortaleza",
+      "score": "1-1; 4-3 penalties"
+    },
+    {
+      "year": 2024,
+      "champion": "Racing Club",
+      "country": "Argentina",
+      "runnerUp": "Cruzeiro",
+      "score": "3-1"
+    },
+    {
+      "year": 2025,
+      "champion": "Lanús",
+      "country": "Argentina",
+      "runnerUp": "Atlético Mineiro",
+      "score": "0-0; 5-4 penalties"
+    }
+  ]
+}

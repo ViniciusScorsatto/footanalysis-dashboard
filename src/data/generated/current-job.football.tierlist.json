@@ -1,232 +1,279 @@
 {
   "sport": "football",
   "template": "tierlist",
-  "leagueId": 1,
+  "videoMode": "static",
+  "leagueId": 135,
   "season": 2026,
-  "leagueName": "Copa do Mundo 2026",
-  "channelProfile": "pt",
-  "languageProfile": "pt-br",
+  "leagueName": "Serie A",
+  "channelProfile": "en",
+  "languageProfile": "en",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
-  "soundtrackLabel": "Gol de Arena",
-  "soundtrackVolume": 0.35,
-  "outputName": "copa-do-mundo-2026-2026-tierlist-pt-br.mp4",
+  "soundtrackPath": "/audio/football/final-whistle-fever-latin-leagues.mp3",
+  "soundtrackLabel": "Final Whistle Fever - Latin Leagues",
+  "soundtrackVolume": 0.2,
+  "outputName": "serie-a-2026-tierlist-en.mp4",
   "durationInFrames": 360,
-  "compositionId": "FootballTierlistShort",
+  "compositionId": "FootballStaticTierlistShort",
   "leagueConfig": {
-    "leagueId": 1,
-    "leagueName": "Copa do Mundo 2026",
-    "accentColor": "#FEDF00",
-    "secondaryAccentColor": "#009B3A"
+    "leagueId": 135,
+    "accentColor": "#3A78C9",
+    "standings": {
+      "safeArea": {
+        "left": 68,
+        "right": 104
+      },
+      "zones": [
+        {
+          "key": "champions-league",
+          "label": "Champions League",
+          "start": 1,
+          "end": 4,
+          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(101, 227, 133, 0.64)",
+          "textColor": "#27AE60"
+        },
+        {
+          "key": "europa-league",
+          "label": "Europa League",
+          "start": 5,
+          "end": 5,
+          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 190, 92, 0.58)",
+          "textColor": "#F5A134"
+        },
+        {
+          "key": "conference-league-qualifying",
+          "label": "Conference League Qualifying",
+          "start": 6,
+          "end": 6,
+          "fill": "linear-gradient(90deg, rgba(59, 133, 255, 0.82), rgba(59, 133, 255, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(107, 166, 255, 0.54)",
+          "textColor": "#3B85FF"
+        },
+        {
+          "key": "relegation",
+          "label": "Relegated",
+          "start": 18,
+          "end": 20,
+          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 102, 102, 0.56)",
+          "textColor": "#E74C3C"
+        }
+      ]
+    },
+    "leagueName": "Serie A",
+    "secondaryAccentColor": "#0A84FF"
   },
   "titleLabel": "Tierlist",
-  "subtitleLabel": "Favoritos da Copa",
-  "topScorerPrediction": "Julian Alvarez",
-  "bestPlayerPrediction": "Michael Olise",
-  "ctaText": "Concorda com essa lista?",
+  "subtitleLabel": "2026/27 predictions",
+  "topScorerPrediction": "Lautaro Martínez",
+  "bestPlayerPrediction": "Federico Dimarco",
+  "ctaText": "Do you agree with this list?",
   "tiers": [
     {
       "key": "champion",
-      "label": "Campeão",
-      "accentColor": "#FEDF00",
+      "label": "Champion",
+      "accentColor": "#3A78C9",
       "entries": [
         {
-          "team": "Espanha",
-          "sourceTeam": "Spain",
+          "team": "Napoli",
+          "sourceTeam": "Napoli",
           "badge": {
-            "label": "E",
-            "imagePath": "/logos/spain-9.png"
+            "label": "N",
+            "imagePath": "/logos/napoli-492.png"
           }
         }
       ]
     },
     {
       "key": "favorites",
-      "label": "Favoritos",
-      "accentColor": "#009B3A",
+      "label": "Favorites",
+      "accentColor": "#3A78C9",
       "entries": [
         {
-          "team": "Holanda",
-          "sourceTeam": "Netherlands",
+          "team": "Inter",
+          "sourceTeam": "Inter",
           "badge": {
-            "label": "H",
-            "imagePath": "/logos/netherlands-1118.png"
+            "label": "I",
+            "imagePath": "/logos/inter-505.png"
           }
         },
         {
-          "team": "França",
-          "sourceTeam": "France",
+          "team": "Juventus",
+          "sourceTeam": "Juventus",
           "badge": {
-            "label": "F",
-            "imagePath": "/logos/france-2.png"
+            "label": "J",
+            "imagePath": "/logos/juventus-496.png"
           }
         },
         {
-          "team": "Argentina",
-          "sourceTeam": "Argentina",
+          "team": "AC Milan",
+          "sourceTeam": "AC Milan",
           "badge": {
-            "label": "A",
-            "imagePath": "/logos/argentina-26.png"
+            "label": "AM",
+            "imagePath": "/logos/ac-milan-489.png"
           }
         }
       ]
     },
     {
       "key": "deep-run",
-      "label": "Vão Longe",
-      "accentColor": "#0A84FF",
+      "label": "Champions League",
+      "accentColor": "#3A78C9",
       "entries": [
         {
-          "team": "Brasil",
-          "sourceTeam": "Brazil",
+          "team": "AS Roma",
+          "sourceTeam": "AS Roma",
           "badge": {
-            "label": "B",
-            "imagePath": "/logos/brazil-6.png"
+            "label": "AR",
+            "imagePath": "/logos/as-roma-497.png"
           }
         },
         {
-          "team": "Portugal",
-          "sourceTeam": "Portugal",
-          "badge": {
-            "label": "P",
-            "imagePath": "/logos/portugal-27.png"
-          }
-        },
-        {
-          "team": "Alemanha",
-          "sourceTeam": "Germany",
+          "team": "Atalanta",
+          "sourceTeam": "Atalanta",
           "badge": {
             "label": "A",
-            "imagePath": "/logos/germany-25.png"
+            "imagePath": "/logos/atalanta-499.png"
           }
         },
         {
-          "team": "Senegal",
-          "sourceTeam": "Senegal",
+          "team": "Como",
+          "sourceTeam": "Como",
           "badge": {
-            "label": "S",
-            "imagePath": "/logos/senegal-13.png"
+            "label": "C",
+            "imagePath": "/logos/como-895.png"
           }
         },
         {
-          "team": "Noruega",
-          "sourceTeam": "Norway",
+          "team": "Lazio",
+          "sourceTeam": "Lazio",
           "badge": {
-            "label": "N",
-            "imagePath": "/logos/norway-1090.png"
+            "label": "L",
+            "imagePath": "/logos/lazio-487.png"
+          }
+        },
+        {
+          "team": "Bologna",
+          "sourceTeam": "Bologna",
+          "badge": {
+            "label": "B",
+            "imagePath": "/logos/bologna-500.png"
           }
         }
       ]
     },
     {
       "key": "dark-horses",
-      "label": "Zebras",
-      "accentColor": "#8E44AD",
+      "label": "Mid-table",
+      "accentColor": "#4A6070",
       "entries": [
         {
-          "team": "Marrocos",
-          "sourceTeam": "Morocco",
+          "team": "Fiorentina",
+          "sourceTeam": "Fiorentina",
           "badge": {
-            "label": "M",
-            "imagePath": "/logos/morocco-31.png"
+            "label": "F",
+            "imagePath": "/logos/fiorentina-502.png"
           }
         },
         {
-          "team": "Japão",
-          "sourceTeam": "Japan",
+          "team": "Torino",
+          "sourceTeam": "Torino",
           "badge": {
-            "label": "J",
-            "imagePath": "/logos/japan-12.png"
+            "label": "T",
+            "imagePath": "/logos/torino-503.png"
           }
         },
         {
-          "team": "Paraguai",
-          "sourceTeam": "Paraguay",
+          "team": "Sassuolo",
+          "sourceTeam": "Sassuolo",
+          "badge": {
+            "label": "S",
+            "imagePath": "/logos/sassuolo-488.png"
+          }
+        },
+        {
+          "team": "Parma",
+          "sourceTeam": "Parma",
           "badge": {
             "label": "P",
-            "imagePath": "/logos/paraguay-2380.png"
+            "imagePath": "/logos/parma-523.png"
+          }
+        },
+        {
+          "team": "Genoa",
+          "sourceTeam": "Genoa",
+          "badge": {
+            "label": "G",
+            "imagePath": "/logos/genoa-495.png"
           }
         }
       ]
     },
     {
       "key": "group-stage-exit",
-      "label": "Cai na Fase de Grupos",
-      "accentColor": "#C86430",
+      "label": "Relegation Battle",
+      "accentColor": "#F5A134",
       "entries": [
         {
-          "team": "EUA",
-          "sourceTeam": "USA",
+          "team": "Cagliari",
+          "sourceTeam": "Cagliari",
           "badge": {
-            "label": "E",
-            "imagePath": "/logos/usa-2384.png"
+            "label": "C",
+            "imagePath": "/logos/cagliari-490.png"
           }
         },
         {
-          "team": "Suécia",
-          "sourceTeam": "Sweden",
-          "badge": {
-            "label": "S",
-            "imagePath": "/logos/sweden-5.png"
-          }
-        },
-        {
-          "team": "C. do Marfim",
-          "sourceTeam": "Ivory Coast",
-          "badge": {
-            "label": "CDM",
-            "imagePath": "/logos/ivory-coast-1501.png"
-          }
-        },
-        {
-          "team": "Uruguai",
-          "sourceTeam": "Uruguay",
+          "team": "Udinese",
+          "sourceTeam": "Udinese",
           "badge": {
             "label": "U",
-            "imagePath": "/logos/uruguay-7.png"
+            "imagePath": "/logos/udinese-494.png"
+          }
+        },
+        {
+          "team": "Monza",
+          "sourceTeam": "Monza",
+          "badge": {
+            "label": "M",
+            "imagePath": "/logos/monza-1579.png"
           }
         }
       ]
     },
     {
       "key": "disappointment",
-      "label": "Decepção",
+      "label": "Relegated",
       "accentColor": "#E74C3C",
       "entries": [
         {
-          "team": "Bélgica",
-          "sourceTeam": "Belgium",
+          "team": "Frosinone",
+          "sourceTeam": "Frosinone",
           "badge": {
-            "label": "B",
-            "imagePath": "/logos/belgium-1.png"
+            "label": "F",
+            "imagePath": "/logos/frosinone-512.png"
           }
         },
         {
-          "team": "Inglaterra",
-          "sourceTeam": "England",
+          "team": "Lecce",
+          "sourceTeam": "Lecce",
           "badge": {
-            "label": "I",
-            "imagePath": "/logos/england-10.png"
+            "label": "L",
+            "imagePath": "/logos/lecce-867.png"
           }
         },
         {
-          "team": "México",
-          "sourceTeam": "Mexico",
+          "team": "Venezia",
+          "sourceTeam": "Venezia",
           "badge": {
-            "label": "M",
-            "imagePath": "/logos/mexico-16.png"
+            "label": "V",
+            "imagePath": "/logos/venezia-517.png"
           }
         }
       ]
     }
   ],
   "dataSource": "api",
-  "introTitle": "Copa do Mundo 2026",
-  "introSubtitle": "Favoritos da Copa",
-  "hookText": "Minha tierlist da Copa",
-  "voiceoverEnabled": true,
-  "voiceoverText": "Fala Galera, minha tierlist da Copa... e aí...vocês concordam?",
-  "voiceoverPath": "/voiceovers/football/pt-br-d1c4cbb8f695569c.mp3",
-  "voiceoverLabel": "Fala Galera, minha tierlist da Copa... e aí...vocês concordam?"
+  "voiceoverEnabled": false
 }

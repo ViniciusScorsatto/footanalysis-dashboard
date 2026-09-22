@@ -51,6 +51,10 @@ const dataSection = document.getElementById('data-section');
 const editorSection = document.getElementById('editor-section');
 const roundField = document.getElementById('round-field');
 const matchDateField = document.getElementById('match-date-field');
+const includeUnfinishedResultsField = document.getElementById('include-unfinished-results-field');
+const includeUnfinishedResultsCheckbox = document.querySelector(
+  'input[type="checkbox"][name="includeUnfinishedResults"]'
+);
 const predictionEditorField = document.getElementById('prediction-editor-field');
 const predictionEditorStatus = document.getElementById('prediction-editor-status');
 const predictionEditorList = document.getElementById('prediction-editor-list');
@@ -100,6 +104,36 @@ const publishingStatus = document.getElementById('publishing-status');
 const publishingMetadataRoot = document.getElementById('publishing-metadata');
 const publishingDraftRoot = document.getElementById('publishing-draft-root');
 const publishingModelChip = document.getElementById('publishing-model-chip');
+const storiesSeasonInput = document.getElementById('stories-season');
+const storiesCompetitionSelect = document.getElementById('stories-competition');
+const storiesRoundSelect = document.getElementById('stories-round');
+const analyzeStoriesButton = document.getElementById('analyze-stories-button');
+const storiesStatus = document.getElementById('stories-status');
+const storiesResults = document.getElementById('stories-results');
+const shortContentReview = document.getElementById('short-content-review');
+const shortContentVersion = document.getElementById('short-content-version');
+const shortContentStatus = document.getElementById('short-content-status');
+const contentTitleInput = document.getElementById('content-title');
+const contentHookInput = document.getElementById('content-hook');
+const contentVoiceoverInput = document.getElementById('content-voiceover');
+const contentScreenTextsInput = document.getElementById('content-screen-texts');
+const contentDescriptionInput = document.getElementById('content-description');
+const contentCtaInput = document.getElementById('content-cta');
+const contentTagsInput = document.getElementById('content-tags');
+const saveContentButton = document.getElementById('save-content-button');
+const regenerateContentButton = document.getElementById('regenerate-content-button');
+const readyContentButton = document.getElementById('ready-content-button');
+const shortVisualReview = document.getElementById('short-visual-review');
+const shortVisualStatusChip = document.getElementById('short-visual-status-chip');
+const shortVisualPreview = document.getElementById('short-visual-preview');
+const shortVisualStatus = document.getElementById('short-visual-status');
+const visualTemplateSelect = document.getElementById('visual-template-select');
+const visualDurationInput = document.getElementById('visual-duration-input');
+const generateVisualButton = document.getElementById('generate-visual-button');
+const readyVisualButton = document.getElementById('ready-visual-button');
+let currentStories = [];
+let currentContent = null;
+let currentVisualComposition = null;
 let youtubeUploadStatusRoot = null;
 let tiktokUploadStatusRoot = null;
 
@@ -110,6 +144,7 @@ const CHAMPIONSHIP_PACE_TEMPLATE = 'championship-pace';
 const RELEGATION_LINE_TEMPLATE = 'relegation-line';
 const TIERLIST_TEMPLATE = 'tierlist';
 const CONTINENTAL_GROUPS_TEMPLATE = 'continental-groups-standings';
+const SERIE_C_QUADRANGULAR_TEMPLATE = 'serie-c-quadrangular';
 const TOP_SCORERS_TEMPLATE = 'top-scorers';
 const HISTORICAL_CHAMPIONS_TEMPLATE = 'historical-champions';
 const STATIC_TEMPLATE_VALUES = new Set([
@@ -117,9 +152,11 @@ const STATIC_TEMPLATE_VALUES = new Set([
   NEXT_GAMES_TEMPLATE,
   'predictions',
   'standings',
+  SERIE_C_QUADRANGULAR_TEMPLATE,
   TOP_SCORERS_TEMPLATE,
   CHAMPIONSHIP_PACE_TEMPLATE,
   RELEGATION_LINE_TEMPLATE,
+  TIERLIST_TEMPLATE,
   HISTORICAL_CHAMPIONS_TEMPLATE,
 ]);
 const PLAYER_OF_ROUND_TEMPLATE = 'player-of-round';
@@ -141,6 +178,7 @@ const templateCompositionMap = {
   [NEXT_GAMES_TEMPLATE]: 'FootballNextGamesShort',
   predictions: 'FootballPredictionsShort',
   standings: 'FootballStandingsShort',
+  [SERIE_C_QUADRANGULAR_TEMPLATE]: 'FootballSerieCQuadrangularShort',
   [SEASON_FINAL_VERDICT_TEMPLATE]: 'FootballSeasonFinalVerdictShort',
   [CHAMPION_FINAL_TEMPLATE]: 'FootballChampionFinalShort',
   [TOP_SCORERS_TEMPLATE]: 'FootballTopScorersShort',
@@ -157,9 +195,11 @@ const staticTemplateCompositionMap = {
   [NEXT_GAMES_TEMPLATE]: 'FootballStaticNextGamesShort',
   predictions: 'FootballStaticPredictionsShort',
   standings: 'FootballStaticStandingsShort',
+  [SERIE_C_QUADRANGULAR_TEMPLATE]: 'FootballStaticSerieCQuadrangularShort',
   [TOP_SCORERS_TEMPLATE]: 'FootballStaticTopScorersShort',
   [CHAMPIONSHIP_PACE_TEMPLATE]: 'FootballStaticChampionshipPaceShort',
   [RELEGATION_LINE_TEMPLATE]: 'FootballStaticRelegationLineShort',
+  [TIERLIST_TEMPLATE]: 'FootballStaticTierlistShort',
   [HISTORICAL_CHAMPIONS_TEMPLATE]: 'FootballStaticHistoricalChampionsShort',
 };
 const activeTemplateCompositionMap = isStaticDashboard ? staticTemplateCompositionMap : templateCompositionMap;
@@ -235,6 +275,16 @@ const templateFieldVisibility = {
     worldCupFields: false,
     cta: true,
   },
+  [SERIE_C_QUADRANGULAR_TEMPLATE]: {
+    leaguePreset: true,
+    leagueCore: true,
+    round: false,
+    matchDate: false,
+    leagueOverrides: true,
+    historicalFields: false,
+    worldCupFields: false,
+    cta: false,
+  },
   [SEASON_FINAL_VERDICT_TEMPLATE]: {
     leaguePreset: true,
     leagueCore: true,
@@ -306,8 +356,8 @@ const templateFieldVisibility = {
     cta: true,
   },
   [TIERLIST_TEMPLATE]: {
-    leaguePreset: false,
-    leagueCore: false,
+    leaguePreset: true,
+    leagueCore: true,
     round: false,
     matchDate: false,
     leagueOverrides: true,
@@ -352,6 +402,7 @@ let lastAutoOutputName = '';
 let lastAutoWorldCupCompetitionName = '';
 let lastAutoWorldCupGroupLabel = '';
 let lastAutoLeagueTitle = '';
+let lastAutoHistoricalCompetitionName = '';
 let lastAutoSeason = '';
 let hasCustomOutputName = false;
 let hasCustomLeagueTitle = false;
@@ -645,7 +696,11 @@ const getChannelLanguageProfile = (channelProfile = getCurrentChannelProfile()) 
   (channelProfile === 'en' ? 'en' : 'pt-br');
 
 const getPresetsForChannel = (channelProfile = getCurrentChannelProfile()) =>
-  allLeaguePresets.filter((preset) => !preset.channels || preset.channels.includes(channelProfile));
+  allLeaguePresets.filter(
+    (preset) =>
+      (!preset.channels || preset.channels.includes(channelProfile)) &&
+      (!preset.staticOnly || isStaticDashboard)
+  );
 
 const getDefaultSeasonForContext = ({
   channelProfile = getCurrentChannelProfile(),
@@ -1020,15 +1075,38 @@ const syncLeagueTitleFromPreset = () => {
   }
 };
 
+const getHistoricalCompetitionTitleFromForm = () =>
+  form.elements.leagueName.value.trim() ||
+  presetSelect.selectedOptions?.[0]?.textContent?.trim() ||
+  'Copa Libertadores';
+
+const syncHistoricalCompetitionFromLeague = ({force = false} = {}) => {
+  if (templateSelect.value !== HISTORICAL_CHAMPIONS_TEMPLATE) {
+    return;
+  }
+
+  const nextCompetitionName = getHistoricalCompetitionTitleFromForm();
+  const currentCompetitionName = form.elements.historicalCompetitionName.value.trim();
+  const shouldReplace =
+    force ||
+    !currentCompetitionName ||
+    currentCompetitionName === lastAutoHistoricalCompetitionName ||
+    currentCompetitionName === lastAutoLeagueTitle;
+
+  if (shouldReplace) {
+    form.elements.historicalCompetitionName.value = nextCompetitionName;
+    form.elements.historicalCompetitionId.value = '';
+  }
+
+  lastAutoHistoricalCompetitionName = nextCompetitionName;
+};
+
 const applyHistoricalChampionDefaults = () => {
   if (templateSelect.value !== HISTORICAL_CHAMPIONS_TEMPLATE) {
     return;
   }
 
-  const leagueTitle =
-    form.elements.leagueName.value.trim() ||
-    presetSelect.selectedOptions?.[0]?.textContent?.trim() ||
-    'Copa Libertadores';
+  const leagueTitle = getHistoricalCompetitionTitleFromForm();
   const canReplaceLeagueTitle =
     !hasCustomLeagueTitle ||
     !form.elements.leagueName.value.trim() ||
@@ -1040,9 +1118,7 @@ const applyHistoricalChampionDefaults = () => {
 
   lastAutoLeagueTitle = leagueTitle;
 
-  if (!form.elements.historicalCompetitionName.value.trim()) {
-    form.elements.historicalCompetitionName.value = leagueTitle;
-  }
+  syncHistoricalCompetitionFromLeague();
   if (!form.elements.historicalAmount.value.trim()) {
     form.elements.historicalAmount.value = '10';
   }
@@ -1292,8 +1368,8 @@ const getAutoIntroCopy = () => {
       ? `Relegation line in the ${leagueWithoutSeason}`
       : withPtIntro(`a linha do rebaixamento ${ptCompetition}`),
     [TIERLIST_TEMPLATE]: isEnglish
-      ? `${worldCupTitle} favorites tierlist`
-      : withPtIntro(`a tierlist de favoritos da ${worldCupTitle}`),
+      ? `${leagueWithoutSeason} season tier list`
+      : withPtIntro(`a tierlist da temporada ${ptCompetition}`),
     [CONTINENTAL_GROUPS_TEMPLATE]: isEnglish
       ? `${leagueWithoutSeason} group standings`
       : withPtIntro(`a tabela dos grupos ${ptCompetition}`),
@@ -1308,7 +1384,6 @@ const getAutoIntroCopy = () => {
   return {
     introTitle:
       template === WORLD_CUP_TEMPLATE || template === WORLD_CUP_KNOCKOUT_TEMPLATE
-        || template === TIERLIST_TEMPLATE
         ? worldCupTitle
         : leagueTitle,
     voiceoverText: voiceoverByTemplate[template] ?? leagueTitle,
@@ -2722,17 +2797,41 @@ const loadSeasonFinalVerdictEditor = async () => {
   }
 };
 
-const tierlistGroups = [
-  {key: 'champion', label: 'Campeão / Champion', count: 1},
-  {key: 'favorites', label: 'Favoritos / Favorites', count: 3},
-  {key: 'deepRun', label: 'Vão Longe / Deep Run', count: 5},
-  {key: 'darkHorses', label: 'Zebras / Dark Horses', count: 3},
-  {key: 'groupStageExit', label: 'Cai na Fase de Grupos / Group Stage Exit', count: 4},
-  {key: 'disappointment', label: 'Decepção / Disappointment', count: 3},
-];
+const getTierlistGroups = () => {
+  const isWorldCup = Number(form.elements.leagueId.value) === WORLD_CUP_LEAGUE_ID;
+  const isEnglish = (languageProfileSelect.value || 'pt-br') === 'en';
+  const labels = isWorldCup
+    ? {
+        champion: isEnglish ? 'Champion' : 'Campeão',
+        favorites: isEnglish ? 'Favorites' : 'Favoritos',
+        deepRun: isEnglish ? 'Deep Run' : 'Vão Longe',
+        darkHorses: isEnglish ? 'Dark Horses' : 'Zebras',
+        groupStageExit: isEnglish ? 'Group Stage Exit' : 'Cai na Fase de Grupos',
+        disappointment: isEnglish ? 'Disappointment' : 'Decepção',
+      }
+    : {
+        champion: isEnglish ? 'Champion' : 'Campeão',
+        favorites: isEnglish ? 'Favorites' : 'Favoritos',
+        deepRun: 'Champions League',
+        darkHorses: isEnglish ? 'Mid-table' : 'Meio da Tabela',
+        groupStageExit: isEnglish ? 'Relegation Battle' : 'Briga Contra o Rebaixamento',
+        disappointment: isEnglish ? 'Relegated' : 'Rebaixados',
+      };
+
+  return [
+    {key: 'champion', label: labels.champion, count: 1},
+    {key: 'favorites', label: labels.favorites, count: 3},
+    {key: 'deepRun', label: labels.deepRun, count: 5},
+    {key: 'darkHorses', label: labels.darkHorses, count: isWorldCup ? 3 : 5},
+    {key: 'groupStageExit', label: labels.groupStageExit, count: isWorldCup ? 4 : 3},
+    {key: 'disappointment', label: labels.disappointment, count: 3},
+  ];
+};
 
 const renderTierlistEditor = (teams = []) => {
   currentTierlistTeams = teams;
+  const tierlistGroups = getTierlistGroups();
+  const isWorldCup = Number(form.elements.leagueId.value) === WORLD_CUP_LEAGUE_ID;
 
   if (!teams.length) {
     tierlistEditorList.innerHTML = '';
@@ -2748,7 +2847,7 @@ const renderTierlistEditor = (teams = []) => {
       }),
     ].join('');
 
-  const defaults = [
+  const worldCupDefaults = [
     'Brazil',
     'Argentina',
     'France',
@@ -2797,7 +2896,8 @@ const renderTierlistEditor = (teams = []) => {
                 slugifyOutputPart(team.label) === slugifyOutputPart(preparedTeam) ||
                 slugifyOutputPart(team.value) === slugifyOutputPart(preparedTeam))
           )?.value ??
-          teams.find((team) => team.value === defaults[defaultIndex])?.value ??
+          teams.find((team) => team.value === worldCupDefaults[defaultIndex])?.value ??
+          teams[defaultIndex]?.value ??
           '';
         defaultIndex += 1;
         return `
@@ -2814,7 +2914,7 @@ const renderTierlistEditor = (teams = []) => {
         <div class="tierlist-editor-row editor-row">
           <div class="tierlist-editor-label">
             <strong>${escapeHtml(group.label)}</strong>
-            <span>${group.count} team${group.count === 1 ? '' : 's'}</span>
+            <span>${isWorldCup ? '' : 'Up to '}${group.count} team${group.count === 1 ? '' : 's'}</span>
           </div>
           <div class="tierlist-editor-controls">${controls}</div>
         </div>
@@ -2825,7 +2925,7 @@ const renderTierlistEditor = (teams = []) => {
 
 const getTierlistSelections = () =>
   Object.fromEntries(
-    tierlistGroups.map((group) => [
+    getTierlistGroups().map((group) => [
       group.key,
       [...tierlistEditorList.querySelectorAll(`select[data-tier="${group.key}"]`)]
         .map((select) => select.value)
@@ -2835,7 +2935,9 @@ const getTierlistSelections = () =>
 
 const loadTierlistTeams = async () => {
   const template = templateSelect.value;
+  const leagueIdValue = form.elements.leagueId.value.trim();
   const seasonValue = form.elements.season.value.trim();
+  const leagueId = Number(leagueIdValue);
   const season = Number(seasonValue);
   const languageProfile = languageProfileSelect.value || 'pt-br';
 
@@ -2845,16 +2947,17 @@ const loadTierlistTeams = async () => {
     return;
   }
 
-  if (!seasonValue || !Number.isFinite(season)) {
-    setNoticeStatus(tierlistEditorStatus, 'Choose a season to load World Cup teams.', 'warning');
+  if (!leagueIdValue || !seasonValue || !Number.isFinite(leagueId) || !Number.isFinite(season)) {
+    setNoticeStatus(tierlistEditorStatus, 'Choose a league and season to load teams.', 'warning');
     renderTierlistEditor([]);
     return;
   }
 
   try {
     reloadTierlistButton.disabled = true;
-    setNoticeStatus(tierlistEditorStatus, 'Loading World Cup teams…', 'warning');
+    setNoticeStatus(tierlistEditorStatus, 'Loading league teams…', 'warning');
     const params = new URLSearchParams({
+      leagueId: String(leagueId),
       season: String(season),
       languageProfile,
     });
@@ -2870,7 +2973,7 @@ const loadTierlistTeams = async () => {
       tierlistEditorStatus,
       data.teams?.length
         ? `Loaded ${data.teams.length} teams. Fill all tiers before preparing.`
-        : 'No World Cup teams found.',
+        : 'No teams found for this league and season.',
       data.teams?.length ? 'success' : 'warning'
     );
   } catch (error) {
@@ -2911,6 +3014,7 @@ const loadResultFixturesForEditor = async () => {
       leagueId: String(leagueId),
       season: String(season),
       languageProfile,
+      includeUnfinishedResults: String(Boolean(includeUnfinishedResultsCheckbox?.checked)),
     });
     if (selectedRound) params.set('round', selectedRound);
     selectedDates.forEach((dateValue) => params.append('matchDates', dateValue));
@@ -3221,8 +3325,8 @@ const applyTemplateHints = () => {
   const template = templateSelect.value;
   const isWorldCupTemplate =
     template === WORLD_CUP_TEMPLATE ||
-    template === WORLD_CUP_KNOCKOUT_TEMPLATE ||
-    template === TIERLIST_TEMPLATE;
+    template === WORLD_CUP_KNOCKOUT_TEMPLATE;
+  const isSerieCQuadrangularTemplate = template === SERIE_C_QUADRANGULAR_TEMPLATE;
   const shouldUseRounds = ROUND_TEMPLATES.has(template);
   const visibleFields = templateFieldVisibility[template] ?? templateFieldVisibility.results;
 
@@ -3230,6 +3334,9 @@ const applyTemplateHints = () => {
   leagueCoreFields.hidden = !visibleFields.leagueCore;
   roundField.hidden = !visibleFields.round;
   matchDateField.hidden = !visibleFields.matchDate;
+  if (includeUnfinishedResultsField) {
+    includeUnfinishedResultsField.hidden = template !== 'results';
+  }
   predictionEditorField.hidden = template !== 'predictions';
   resultEditorField.hidden = template !== 'results' && template !== CHAMPION_FINAL_TEMPLATE;
   standingsEditorField.hidden = template !== 'standings';
@@ -3259,15 +3366,11 @@ const applyTemplateHints = () => {
   if (isWorldCupTemplate) {
     form.elements.leagueId.value = WORLD_CUP_LEAGUE_ID;
     form.elements.groupLetter.value = (form.elements.groupLetter.value || 'A').toUpperCase();
-    if (template === TIERLIST_TEMPLATE && (!hasCustomLeagueTitle || !form.elements.leagueName.value.trim())) {
-      const worldCupLeagueName =
-        languageProfileSelect.value === 'en'
-          ? `World Cup ${form.elements.season.value || '2026'}`
-          : `Copa do Mundo ${form.elements.season.value || '2026'}`;
-      form.elements.leagueName.value = worldCupLeagueName;
-      lastAutoLeagueTitle = worldCupLeagueName;
-      hasCustomLeagueTitle = false;
-    }
+    updateLocalizedDefaults();
+  } else if (isSerieCQuadrangularTemplate) {
+    form.elements.leagueId.value = '75';
+    renderLeaguePresetOptions();
+    presetSelect.value = '75';
     updateLocalizedDefaults();
   } else if (shouldUseRounds) {
     const hint =
@@ -3385,7 +3488,11 @@ const loadRoundDates = async (preferredDate = form.elements.matchDate.value) => 
         String(leagueId)
       )}&season=${encodeURIComponent(String(season))}&round=${encodeURIComponent(
         roundValue
-      )}&template=${encodeURIComponent(template)}&languageProfile=${encodeURIComponent(languageProfile)}`
+      )}&template=${encodeURIComponent(template)}&languageProfile=${encodeURIComponent(
+        languageProfile
+      )}&includeUnfinishedResults=${encodeURIComponent(
+        String(Boolean(includeUnfinishedResultsCheckbox?.checked))
+      )}`
     );
     const data = await response.json();
 
@@ -3539,6 +3646,7 @@ const loadOptions = async () => {
     form.elements.topScorerPrediction.value = currentJob.topScorerPrediction ?? '';
     form.elements.bestPlayerPrediction.value = currentJob.bestPlayerPrediction ?? '';
     voiceoverEnabledCheckbox.checked = currentJob.voiceoverEnabled !== false;
+    includeUnfinishedResultsCheckbox.checked = currentJob.includeUnfinishedResults === true;
     form.elements.soundtrackPath.value = currentJob.soundtrackPath ?? '';
     setSoundtrackVolume(currentJob.soundtrackVolume ?? 0.2);
     renderLeaguePresetOptions(currentJob.leagueId ?? '');
@@ -3553,6 +3661,8 @@ const loadOptions = async () => {
       lastAutoWorldCupCompetitionName = currentJob.competitionName ?? '';
       lastAutoWorldCupGroupLabel = currentJob.groupLabel ?? '';
     }
+    lastAutoHistoricalCompetitionName =
+      currentJob.historicalCompetitionName ?? currentJob.leagueName ?? '';
     hasCustomOutputName = false;
   } else {
     form.elements.template.value = isStaticDashboard && templateOptions[0] ? templateOptions[0].value : 'results';
@@ -3578,6 +3688,7 @@ const loadOptions = async () => {
     form.elements.topScorerPrediction.value = '';
     form.elements.bestPlayerPrediction.value = '';
     voiceoverEnabledCheckbox.checked = true;
+    includeUnfinishedResultsCheckbox.checked = false;
     form.elements.soundtrackPath.value = data.soundtrackPresets?.[0]?.value ?? '';
     setSoundtrackVolume(0.2);
     if (staticDurationSecondsInput) {
@@ -3588,6 +3699,7 @@ const loadOptions = async () => {
     syncLeagueTitleFromPreset();
     lastAutoWorldCupCompetitionName = '';
     lastAutoWorldCupGroupLabel = '';
+    lastAutoHistoricalCompetitionName = '';
     hasCustomOutputName = false;
     hasCustomLeagueTitle = false;
   }
@@ -3635,13 +3747,7 @@ presetSelect.addEventListener('change', async () => {
   clearRoundLabelOverride();
   clearIntroOverrides();
   syncLeagueTitleFromPreset();
-  if (templateSelect.value === HISTORICAL_CHAMPIONS_TEMPLATE) {
-    form.elements.historicalCompetitionName.value =
-      form.elements.leagueName.value.trim() ||
-      presetSelect.selectedOptions?.[0]?.textContent?.trim() ||
-      form.elements.historicalCompetitionName.value;
-    form.elements.historicalCompetitionId.value = '';
-  }
+  syncHistoricalCompetitionFromLeague({force: true});
   syncOutputNameFromSelections();
   syncIntroPlaceholders();
   updateDashboardMeta();
@@ -3876,6 +3982,7 @@ form.elements.leagueId.addEventListener('change', async () => {
 form.elements.leagueName.addEventListener('input', () => {
   const currentValue = form.elements.leagueName.value.trim();
   hasCustomLeagueTitle = Boolean(currentValue) && currentValue !== lastAutoLeagueTitle;
+  syncHistoricalCompetitionFromLeague();
   syncOutputNameFromSelections();
   syncIntroPlaceholders();
 });
@@ -3916,6 +4023,12 @@ form.elements.matchDate.addEventListener('change', () => {
     loadResultFixturesForEditor();
   else if (templateSelect.value === SEASON_FINAL_VERDICT_TEMPLATE) loadSeasonFinalVerdictEditor();
   else if (templateSelect.value === TIERLIST_TEMPLATE) loadTierlistTeams();
+});
+includeUnfinishedResultsCheckbox?.addEventListener('change', async () => {
+  if (templateSelect.value !== 'results') return;
+  const selectedDates = getSelectedMatchDates();
+  await loadRoundDates(selectedDates);
+  await loadResultFixturesForEditor();
 });
 form.elements.soundtrackPath.addEventListener('change', syncOutputNameFromSelections);
 soundtrackVolumeRange?.addEventListener('input', () => {
@@ -4047,6 +4160,184 @@ const submitJob = async (endpoint, actionLabel, options = {}) => {
     }
   }
 };
+
+const storyTypeLabels = {
+  MUDANCA_LIDERANCA: 'Mudança de liderança', MUDANCA_G4_G6: 'Mudança no G4/G6', MUDANCA_Z4: 'Mudança no Z4',
+  GOLEADA: 'Goleada', SEQUENCIA_VITORIAS: 'Sequência de vitórias', SEQUENCIA_SEM_VENCER: 'Sequência sem vencer',
+  INVENCIBILIDADE: 'Invencibilidade', CORRIDA_TITULO: 'Corrida pelo título',
+};
+const storyFormatLabels = {CLASSIFICACAO: 'Classificação', RESULTADO: 'Resultado', SEQUENCIA: 'Sequência', TITULO: 'Título', REBAIXAMENTO: 'Rebaixamento'};
+
+const renderStories = (stories = []) => {
+  currentStories = stories;
+  storiesResults.innerHTML = stories.length ? stories.map((story) => `
+    <article class="story-card ${story.status === 'REJEITADA' ? 'story-card--rejected' : ''}">
+      <div class="story-card-score">${escapeHtml(String(story.pontuacao))}</div>
+      <div class="story-card-body">
+        <div class="story-card-meta"><span>${escapeHtml(storyTypeLabels[story.tipo] ?? story.tipo)}</span><span>${escapeHtml(story.status)}</span></div>
+        <h3>${escapeHtml(story.titulo)}</h3>
+        <p>${escapeHtml(story.resumo)}</p>
+        <small>${escapeHtml(story.justificativa)}</small>
+        <div class="story-card-footer"><span>Times: ${escapeHtml((story.times ?? []).join(' · ') || '—')}</span><span>Formato: ${escapeHtml(storyFormatLabels[story.formatoRecomendado] ?? story.formatoRecomendado)}</span></div>
+        ${story.status === 'DETECTADA' ? `<button type="button" class="ds-button ds-button--secondary btn btn-secondary story-action-button" data-story-action="approve" data-story-id="${escapeHtml(story.id)}">Aprovar história</button>` : ''}
+        ${story.status === 'APROVADA' ? `<button type="button" class="ds-button ds-button--primary btn btn-primary story-action-button" data-story-action="generate" data-story-id="${escapeHtml(story.id)}">Gerar conteúdo</button>` : ''}
+        ${story.status === 'CONTEUDO_GERADO' ? `<button type="button" class="ds-button ds-button--secondary btn btn-secondary story-action-button" data-story-action="view-content" data-story-id="${escapeHtml(story.id)}">Ver conteúdo</button><button type="button" class="ds-button ds-button--secondary btn btn-secondary story-action-button" data-story-action="generate" data-story-id="${escapeHtml(story.id)}">Gerar novamente</button>` : ''}
+      </div>
+    </article>`).join('') : '<div class="empty-state">Nenhuma história forte foi encontrada nesta rodada.</div>';
+};
+
+const renderContent = (content) => {
+  currentContent = content;
+  if (!content) { shortContentReview.hidden = true; return; }
+  shortContentReview.hidden = false;
+  shortContentVersion.textContent = `v${content.version} · ${content.status}`;
+  contentTitleInput.value = content.titulo ?? '';
+  contentHookInput.value = content.hook ?? '';
+  contentVoiceoverInput.value = content.voiceover ?? '';
+  contentScreenTextsInput.value = (content.screenTexts ?? []).map((item) => `${item.type}: ${item.text}`).join('\n');
+  contentDescriptionInput.value = content.descricao ?? '';
+  contentCtaInput.value = content.cta ?? '';
+  contentTagsInput.value = (content.tags ?? []).join(', ');
+  currentVisualComposition = null;
+  shortVisualPreview.innerHTML = '';
+  shortVisualReview.hidden = false;
+  setNoticeStatus(shortVisualStatus, 'Gere um preview para montar a composição visual.', 'info');
+};
+
+const renderVisualComposition = (composition) => {
+  currentVisualComposition = composition;
+  if (!composition) { shortVisualReview.hidden = true; return; }
+  shortVisualReview.hidden = false;
+  shortVisualStatusChip.textContent = `v${composition.version} · ${composition.status}`;
+  visualTemplateSelect.value = composition.template ?? '';
+  visualDurationInput.value = composition.durationSeconds ?? '';
+  shortVisualPreview.innerHTML = `<div class="visual-preview-frame"><div class="visual-preview-stripe"></div><div class="visual-preview-meta">${escapeHtml(String(composition.metadata?.competition ?? 'BRASILEIRÃO').toUpperCase())}<span>${escapeHtml(String(composition.metadata?.round ?? ''))}</span></div><div class="visual-preview-scenes">${(composition.scenes ?? []).map((scene) => `<div class="visual-preview-scene"><span class="visual-preview-scene-label">${escapeHtml(scene.type)}</span>${(scene.texts ?? []).map((item) => `<strong>${escapeHtml(item.text)}</strong>`).join('')}</div>`).join('')}</div><div class="visual-preview-brand">FOOT ANALYSIS</div></div><div class="visual-preview-timeline">${(composition.scenes ?? []).map((scene) => `<span style="flex:${scene.durationInFrames}">${escapeHtml(scene.type)} · ${Math.round(scene.durationInFrames / composition.fps * 10) / 10}s</span>`).join('')}</div>`;
+};
+
+const approveStory = async (storyId) => {
+  const response = await fetch(`${apiBase}/stories/status`, {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({storyId, status: 'APROVADA'})});
+  const data = await response.json();
+  if (!response.ok || !data.ok) throw new Error(data.error || 'Não foi possível aprovar a história.');
+  currentStories = currentStories.map((story) => story.id === storyId ? data.story : story);
+  renderStories(currentStories);
+  setNoticeStatus(storiesStatus, 'História aprovada. Agora você pode gerar o conteúdo editorial.', 'success');
+};
+
+const generateContentForStory = async (storyId, regenerationNote = null) => {
+  const response = await fetch(`${apiBase}/short-content/generate`, {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({storyId, regenerationNote})});
+  const data = await response.json();
+  if (!response.ok || !data.ok) throw new Error(data.error || data.validation?.errors?.join(' ') || 'Não foi possível gerar o conteúdo.');
+  renderContent(data.content);
+  currentStories = currentStories.map((story) => story.id === storyId ? {...story, status: 'CONTEUDO_GERADO'} : story);
+  renderStories(currentStories);
+  setNoticeStatus(shortContentStatus, `Conteúdo ${data.content.version} gerado e validado em português.`, 'success');
+  shortContentReview.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+};
+
+const loadContentForStory = async (storyId) => {
+  const response = await fetch(`${apiBase}/short-content?storyId=${encodeURIComponent(storyId)}&limit=1`);
+  const data = await response.json();
+  if (!response.ok || !data.ok || !data.contents?.[0]) throw new Error('Nenhum conteúdo salvo para esta história.');
+  renderContent(data.contents[0]);
+  const visualResponse = await fetch(`${apiBase}/short-visual?contentId=${encodeURIComponent(data.contents[0].id)}`);
+  const visualData = await visualResponse.json();
+  if (visualResponse.ok && visualData.ok && visualData.composition) renderVisualComposition(visualData.composition);
+  shortContentReview.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+};
+
+const saveContentEdits = async () => {
+  if (!currentContent) return;
+  const screenTexts = contentScreenTextsInput.value.split('\n').map((line, index) => {
+    const separator = line.indexOf(':');
+    return separator > 0 ? {type: line.slice(0, separator).trim().toUpperCase(), text: line.slice(separator + 1).trim()} : {type: index === 0 ? 'PRIMARY' : 'SUPPORT', text: line.trim()};
+  }).filter((item) => item.text);
+  const content = {titulo: contentTitleInput.value, hook: contentHookInput.value, voiceover: contentVoiceoverInput.value, roteiro: `${contentHookInput.value} ${contentVoiceoverInput.value}`, screenTexts, descricao: contentDescriptionInput.value, cta: contentCtaInput.value, tags: contentTagsInput.value.split(',').map((tag) => tag.trim()).filter(Boolean)};
+  const response = await fetch(`${apiBase}/short-content/update`, {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({storyId: currentContent.storyId, content})});
+  const data = await response.json();
+  if (!response.ok || !data.ok) throw new Error(data.error || data.validation?.errors?.join(' ') || 'A edição não passou na validação.');
+  renderContent(data.content);
+  setNoticeStatus(shortContentStatus, 'Edição salva e validada.', 'success');
+};
+
+const markContentReady = async () => {
+  if (!currentContent) return;
+  const response = await fetch(`${apiBase}/short-content/status`, {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({contentId: currentContent.id, status: 'PRONTO_PARA_VIDEO'})});
+  const data = await response.json();
+  if (!response.ok || !data.ok) throw new Error(data.error || 'Não foi possível marcar o conteúdo como pronto.');
+  renderContent(data.content);
+  setNoticeStatus(shortContentStatus, 'Conteúdo marcado como pronto para vídeo.', 'success');
+};
+
+const generateVisualPreview = async () => {
+  if (!currentContent) return;
+  const body = {contentId: currentContent.id, templateOverride: visualTemplateSelect.value || undefined, durationSeconds: Number(visualDurationInput.value) || undefined};
+  const response = await fetch(`${apiBase}/short-visual/generate`, {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify(body)});
+  const data = await response.json();
+  if (!response.ok || !data.ok) throw new Error(data.error || data.validation?.errors?.join(' ') || 'Não foi possível gerar o preview visual.');
+  renderVisualComposition(data.composition);
+  setNoticeStatus(shortVisualStatus, `Preview validado: ${data.composition.template}, ${data.composition.durationSeconds}s, ${data.composition.scenes.length} cenas.`, 'success');
+};
+
+const markVisualReady = async () => {
+  if (!currentVisualComposition) return;
+  const response = await fetch(`${apiBase}/short-visual/status`, {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({compositionId: currentVisualComposition.id, status: 'PRONTO_PARA_RENDER'})});
+  const data = await response.json();
+  if (!response.ok || !data.ok) throw new Error(data.error || 'Não foi possível preparar a composição para renderização.');
+  renderVisualComposition(data.composition);
+  setNoticeStatus(shortVisualStatus, 'Composição pronta para renderização.', 'success');
+};
+
+const loadStoryRounds = async () => {
+  const season = Number(storiesSeasonInput.value);
+  if (!Number.isFinite(season)) return;
+  try {
+    const response = await fetch(`${apiBase}/stories/rounds?leagueId=${encodeURIComponent(storiesCompetitionSelect.value)}&season=${season}`);
+    const data = await response.json();
+    storiesRoundSelect.innerHTML = '<option value="">Selecione a rodada</option>' + (data.rounds ?? []).map((round) =>
+      `<option value="${escapeHtml(round.round)}">${escapeHtml(round.round)} · ${round.finishedCount}/${round.fixtureCount} finalizados</option>`).join('');
+    setNoticeStatus(storiesStatus, `${data.rounds?.length ?? 0} rodadas disponíveis no banco local.`, 'info');
+  } catch (error) {
+    setNoticeStatus(storiesStatus, error instanceof Error ? error.message : String(error), 'error');
+  }
+};
+
+const analyzeStories = async () => {
+  const season = Number(storiesSeasonInput.value); const round = storiesRoundSelect.value; const leagueId = Number(storiesCompetitionSelect.value);
+  if (!round) { setNoticeStatus(storiesStatus, 'Selecione uma rodada antes de analisar.', 'warning'); return; }
+  analyzeStoriesButton.disabled = true; setNoticeStatus(storiesStatus, 'Analisando resultados, tabela e sequências…', 'info');
+  try {
+    const competitionName = storiesCompetitionSelect.options[storiesCompetitionSelect.selectedIndex]?.textContent ?? 'Brasileirão Série A';
+    const response = await fetch(`${apiBase}/stories/analyze`, {method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify({leagueId, season, round, competitionName})});
+    const data = await response.json();
+    if (!response.ok || !data.ok) throw new Error(data.error || 'Não foi possível analisar a rodada.');
+    renderStories(data.stories);
+    setNoticeStatus(storiesStatus, `${data.selecionadas} história(s) selecionada(s), ${data.descartadas} descartada(s). A análise foi salva sem duplicar registros.`, 'success');
+  } catch (error) { setNoticeStatus(storiesStatus, error instanceof Error ? error.message : String(error), 'error'); }
+  finally { analyzeStoriesButton.disabled = false; }
+};
+
+storiesSeasonInput?.addEventListener('change', loadStoryRounds);
+storiesCompetitionSelect?.addEventListener('change', loadStoryRounds);
+analyzeStoriesButton?.addEventListener('click', analyzeStories);
+storiesResults?.addEventListener('click', async (event) => {
+  const button = event.target.closest('[data-story-action]');
+  if (!button) return;
+  button.disabled = true;
+  try {
+    if (button.dataset.storyAction === 'approve') await approveStory(button.dataset.storyId);
+    if (button.dataset.storyAction === 'generate') await generateContentForStory(button.dataset.storyId, 'Regeneração solicitada pelo dashboard.');
+    if (button.dataset.storyAction === 'view-content') await loadContentForStory(button.dataset.storyId);
+  } catch (error) { setNoticeStatus(storiesStatus, error instanceof Error ? error.message : String(error), 'error'); }
+  finally { button.disabled = false; }
+});
+saveContentButton?.addEventListener('click', async () => { try { await saveContentEdits(); } catch (error) { setNoticeStatus(shortContentStatus, error instanceof Error ? error.message : String(error), 'error'); } });
+regenerateContentButton?.addEventListener('click', async () => { try { await generateContentForStory(currentContent?.storyId, 'Regeneração solicitada pelo dashboard.'); } catch (error) { setNoticeStatus(shortContentStatus, error instanceof Error ? error.message : String(error), 'error'); } });
+readyContentButton?.addEventListener('click', async () => { try { await markContentReady(); } catch (error) { setNoticeStatus(shortContentStatus, error instanceof Error ? error.message : String(error), 'error'); } });
+generateVisualButton?.addEventListener('click', async () => { try { await generateVisualPreview(); } catch (error) { setNoticeStatus(shortVisualStatus, error instanceof Error ? error.message : String(error), 'error'); } });
+readyVisualButton?.addEventListener('click', async () => { try { await markVisualReady(); } catch (error) { setNoticeStatus(shortVisualStatus, error instanceof Error ? error.message : String(error), 'error'); } });
+if (storiesSeasonInput && storiesCompetitionSelect && storiesRoundSelect) {
+  loadStoryRounds();
+}
 
 prepareButton.addEventListener('click', () => submitJob('/jobs/prepare', isStaticDashboard ? 'Preparing static job' : 'Preparing job'));
 renderButton.addEventListener('click', () => submitJob('/jobs/render', isStaticDashboard ? 'Rendering static video' : 'Rendering video'));

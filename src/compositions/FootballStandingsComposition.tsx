@@ -54,6 +54,10 @@ type FootballStandingsCompositionProps = {
   presentation?: 'animated' | 'static';
 };
 
+// The 36-team Champions League and Europa League phases are presented as two
+// consecutive screens. Other competitions retain their original single-table layout.
+const STANDINGS_PAGE_SIZE = 18;
+
 const getFallbackZones = (rowCount: number): StandingsZoneConfig[] => [
   {
     key: 'promoted',
@@ -104,13 +108,41 @@ export const FootballStandingsComposition = ({
   presentation = 'animated',
 }: FootballStandingsCompositionProps) => {
   const frame = useCurrentFrame();
-  const {fps} = useVideoConfig();
+  const {fps, durationInFrames} = useVideoConfig();
   const isStatic = presentation === 'static';
   const contentStartFrame = isStatic ? 0 : SHORT_OPENING_DURATION_FRAMES;
   const contentFrame = isStatic
     ? 999
     : Math.max(0, frame - contentStartFrame) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
   const isEnglish = channelProfile === 'en';
+  const normalizedLeagueName = leagueName.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+  const isChampionsLeague =
+    leagueConfig?.leagueId === 2 || normalizedLeagueName.includes('champions league');
+  const isEuropaLeague =
+    leagueConfig?.leagueId === 3 || normalizedLeagueName.includes('europa league');
+  const isConferenceLeague =
+    leagueConfig?.leagueId === 848 || normalizedLeagueName.includes('conference league');
+  const isSplitStandingsCompetition = isChampionsLeague || isEuropaLeague || isConferenceLeague;
+  const pageCount = isSplitStandingsCompetition
+    ? Math.max(1, Math.ceil(rows.length / STANDINGS_PAGE_SIZE))
+    : 1;
+  const pageDuration = Math.max(
+    1,
+    Math.floor((durationInFrames - contentStartFrame) / pageCount),
+  );
+  const pageIndex =
+    pageCount > 1
+      ? Math.min(
+          pageCount - 1,
+          Math.floor(Math.max(0, frame - contentStartFrame) / pageDuration),
+        )
+      : 0;
+  const visibleRows = isSplitStandingsCompetition
+    ? rows.slice(
+        pageIndex * STANDINGS_PAGE_SIZE,
+        (pageIndex + 1) * STANDINGS_PAGE_SIZE,
+      )
+    : rows;
 
   const standingsConfig = leagueConfig?.standings;
   const safeArea = standingsConfig?.safeArea ?? {left: 40, right: 120};
@@ -202,8 +234,11 @@ export const FootballStandingsComposition = ({
         {/* Animated header */}
         <StandingsHeader
           channelProfile={channelProfile}
+          isStatic={isStatic}
           leagueName={leagueName}
           standingsLabel={standingsLabel}
+          pageIndex={pageIndex}
+          pageCount={pageCount}
           accentColor={accentColor}
           chipAnim={chipAnim}
           titleAnim={titleAnim}
@@ -220,7 +255,7 @@ export const FootballStandingsComposition = ({
           }}
         >
           <StandingsTable
-            rows={rows}
+            rows={visibleRows}
             zones={zones}
             channelProfile={channelProfile}
             disableAnimation={isStatic}
@@ -283,23 +318,31 @@ export const FootballStandingsComposition = ({
 
 const StandingsHeader = ({
   channelProfile,
+  isStatic,
   leagueName,
   standingsLabel,
+  pageIndex,
+  pageCount,
   accentColor,
   chipAnim,
   titleAnim,
   labelAnim,
 }: {
   channelProfile: FootballChannelProfile;
+  isStatic: boolean;
   leagueName: string;
   standingsLabel: string;
+  pageIndex: number;
+  pageCount: number;
   accentColor: string;
   chipAnim: React.CSSProperties;
   titleAnim: React.CSSProperties;
   labelAnim: React.CSSProperties;
 }) => {
   const isEnglish = channelProfile === 'en';
+  const useLeagueAccent = isStatic && isEnglish;
   const displayStandingsLabel = resolveStandingsLabel(standingsLabel, channelProfile);
+  const pageLabel = pageCount > 1 ? ` · ${pageIndex + 1}/${pageCount}` : '';
 
   return (
     <div
@@ -315,10 +358,19 @@ const StandingsHeader = ({
             alignSelf: 'flex-start',
             padding: '10px 18px 8px',
             borderRadius: 999,
-            background: isEnglish ? '#141c24' : '#0f1318',
-            border: isEnglish ? '1px solid #1e2a3a' : 'none',
-            borderLeft: isEnglish ? '1px solid #1e2a3a' : `8px solid ${accentColor}`,
-            color: isEnglish ? '#4a6070' : accentColor,
+            background: useLeagueAccent ? `${accentColor}14` : isEnglish ? '#141c24' : '#0f1318',
+            border: useLeagueAccent
+              ? `1px solid ${accentColor}88`
+              : isEnglish
+                ? '1px solid #1e2a3a'
+                : 'none',
+            borderLeft: useLeagueAccent
+              ? `7px solid ${accentColor}`
+              : isEnglish
+                ? '1px solid #1e2a3a'
+                : `8px solid ${accentColor}`,
+            color: useLeagueAccent ? accentColor : isEnglish ? '#4a6070' : accentColor,
+            boxShadow: useLeagueAccent ? `0 0 20px ${accentColor}20` : undefined,
             fontFamily: TEASER_LABEL_FONT,
             fontSize: 20,
             lineHeight: 1,
@@ -348,7 +400,7 @@ const StandingsHeader = ({
 
       <div
         style={{
-          color: isEnglish ? '#4a6070' : '#3a5060',
+          color: useLeagueAccent ? accentColor : isEnglish ? '#4a6070' : '#3a5060',
           fontSize: 56,
           lineHeight: 1,
           fontWeight: 600,
@@ -358,6 +410,7 @@ const StandingsHeader = ({
         }}
       >
         {displayStandingsLabel}
+        {pageLabel}
       </div>
     </div>
   );

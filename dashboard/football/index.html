@@ -10,6 +10,7 @@
     <main class="shell">
       <nav class="top-nav dashboard-top-nav">
         <a class="back-link" href="/">All dashboards</a>
+        <a class="back-link" href="/football-story-shorts">Shorts inteligentes</a>
         <a class="back-link" href="/football-static" id="static-dashboard-link">Static videos</a>
         <div class="dashboard-status">
           <button type="button" class="settings-button ds-button ds-button--secondary ds-button--compact btn btn-secondary btn-compact" id="settings-toggle-button">Settings</button>
@@ -140,6 +141,11 @@
                   <span id="match-date-summary" class="match-date-summary">All dates selected</span>
                 </div>
               </label>
+              <label class="toggle-row command-field" id="include-unfinished-results-field" hidden>
+                <input type="hidden" name="includeUnfinishedResults" value="false" />
+                <input type="checkbox" name="includeUnfinishedResults" value="true" />
+                <span>Mostrar jogos e datas não terminados</span>
+              </label>
             </div>
           </div>
 
@@ -241,18 +247,18 @@
               <div class="prediction-editor-header">
                 <div>
                   <strong>Tierlist selections</strong>
-                  <p>Pick the World Cup teams for each tier. The same selections feed PT and EN.</p>
+                  <p>Pick the clubs or national teams for each tier.</p>
                 </div>
                 <button type="button" id="reload-tierlist-button" class="ds-button ds-button--secondary ds-button--compact btn btn-secondary btn-compact">Reload teams</button>
               </div>
               <div id="tierlist-editor-status" class="prediction-editor-status ds-notice ds-notice--info notice info">Choose Tierlist to load teams.</div>
               <div class="tierlist-manual-fields">
                 <label>
-                  Manual - Artilheiro
+                  Top scorer prediction
                   <input type="text" name="topScorerPrediction" placeholder="Ex: Mbappé" />
                 </label>
                 <label>
-                  Manual - Melhor Jogador
+                  Best player prediction
                   <input type="text" name="bestPlayerPrediction" placeholder="Ex: Bellingham" />
                 </label>
               </div>

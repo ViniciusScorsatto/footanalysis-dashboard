@@ -1,0 +1,194 @@
+{
+  "competitionId": "bundesliga",
+  "competitionName": "Bundesliga",
+  "champions": [
+    {
+      "year": 2017,
+      "clubId": "bayern-munich",
+      "clubName": "Bayern Munich",
+      "country": "Germany",
+      "runnerUp": "RB Leipzig",
+      "badge": {
+        "label": "BM",
+        "accentColor": "#DC052D"
+      }
+    },
+    {
+      "year": 2018,
+      "clubId": "bayern-munich",
+      "clubName": "Bayern Munich",
+      "country": "Germany",
+      "runnerUp": "Schalke 04",
+      "badge": {
+        "label": "BM",
+        "accentColor": "#DC052D"
+      }
+    },
+    {
+      "year": 2019,
+      "clubId": "bayern-munich",
+      "clubName": "Bayern Munich",
+      "country": "Germany",
+      "runnerUp": "Borussia Dortmund",
+      "badge": {
+        "label": "BM",
+        "accentColor": "#DC052D"
+      }
+    },
+    {
+      "year": 2020,
+      "clubId": "bayern-munich",
+      "clubName": "Bayern Munich",
+      "country": "Germany",
+      "runnerUp": "Borussia Dortmund",
+      "badge": {
+        "label": "BM",
+        "accentColor": "#DC052D"
+      }
+    },
+    {
+      "year": 2021,
+      "clubId": "bayern-munich",
+      "clubName": "Bayern Munich",
+      "country": "Germany",
+      "runnerUp": "RB Leipzig",
+      "badge": {
+        "label": "BM",
+        "accentColor": "#DC052D"
+      }
+    },
+    {
+      "year": 2022,
+      "clubId": "bayern-munich",
+      "clubName": "Bayern Munich",
+      "country": "Germany",
+      "runnerUp": "Borussia Dortmund",
+      "badge": {
+        "label": "BM",
+        "accentColor": "#DC052D"
+      }
+    },
+    {
+      "year": 2023,
+      "clubId": "bayern-munich",
+      "clubName": "Bayern Munich",
+      "country": "Germany",
+      "runnerUp": "Borussia Dortmund",
+      "notes": "Won the title on goal difference on the final day.",
+      "badge": {
+        "label": "BM",
+        "accentColor": "#DC052D"
+      }
+    },
+    {
+      "year": 2024,
+      "clubId": "leverkusen",
+      "clubName": "Leverkusen",
+      "country": "Germany",
+      "runnerUp": "VfB Stuttgart",
+      "notes": "First Bundesliga title; completed an unbeaten league season.",
+      "badge": {
+        "label": "LEVE",
+        "logoPath": "/logos/bayer-leverkusen-168.png"
+      }
+    },
+    {
+      "year": 2025,
+      "clubId": "bayern-munich",
+      "clubName": "Bayern Munich",
+      "country": "Germany",
+      "runnerUp": "Bayer Leverkusen",
+      "notes": "Secured the title with two matches to spare.",
+      "badge": {
+        "label": "BM",
+        "accentColor": "#DC052D"
+      }
+    },
+    {
+      "year": 2026,
+      "clubId": "bayern-munich",
+      "clubName": "Bayern Munich",
+      "country": "Germany",
+      "runnerUp": "Borussia Dortmund",
+      "notes": "Clinched with four matches to spare after a 4–2 win vs VfB Stuttgart.",
+      "badge": {
+        "label": "BM",
+        "accentColor": "#DC052D"
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "code": "club-not-found",
+      "message": "Club \"Bayern Munich\" was not found in local logos.",
+      "context": {
+        "clubName": "Bayern Munich",
+        "year": 2026
+      }
+    },
+    {
+      "code": "club-not-found",
+      "message": "Club \"Bayern Munich\" was not found in local logos.",
+      "context": {
+        "clubName": "Bayern Munich",
+        "year": 2025
+      }
+    },
+    {
+      "code": "club-not-found",
+      "message": "Club \"Bayern Munich\" was not found in local logos.",
+      "context": {
+        "clubName": "Bayern Munich",
+        "year": 2023
+      }
+    },
+    {
+      "code": "club-not-found",
+      "message": "Club \"Bayern Munich\" was not found in local logos.",
+      "context": {
+        "clubName": "Bayern Munich",
+        "year": 2022
+      }
+    },
+    {
+      "code": "club-not-found",
+      "message": "Club \"Bayern Munich\" was not found in local logos.",
+      "context": {
+        "clubName": "Bayern Munich",
+        "year": 2021
+      }
+    },
+    {
+      "code": "club-not-found",
+      "message": "Club \"Bayern Munich\" was not found in local logos.",
+      "context": {
+        "clubName": "Bayern Munich",
+        "year": 2020
+      }
+    },
+    {
+      "code": "club-not-found",
+      "message": "Club \"Bayern Munich\" was not found in local logos.",
+      "context": {
+        "clubName": "Bayern Munich",
+        "year": 2019
+      }
+    },
+    {
+      "code": "club-not-found",
+      "message": "Club \"Bayern Munich\" was not found in local logos.",
+      "context": {
+        "clubName": "Bayern Munich",
+        "year": 2018
+      }
+    },
+    {
+      "code": "club-not-found",
+      "message": "Club \"Bayern Munich\" was not found in local logos.",
+      "context": {
+        "clubName": "Bayern Munich",
+        "year": 2017
+      }
+    }
+  ]
+}

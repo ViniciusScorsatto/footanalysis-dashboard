@@ -1,22 +1,23 @@
 {
   "sport": "football",
   "template": "standings",
-  "leagueId": 72,
+  "videoMode": "static",
+  "leagueId": 848,
   "season": 2026,
-  "leagueName": "Brasileirão Série B",
-  "channelProfile": "pt",
-  "languageProfile": "pt-br",
+  "leagueName": "Conference League",
+  "channelProfile": "en",
+  "languageProfile": "en",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Estádio Vai Ferver.mp3",
-  "soundtrackLabel": "Estádio Vai Ferver",
-  "soundtrackVolume": 0.25,
-  "outputName": "brasileirao-serie-b-2026-classificacao-pt-br.mp4",
-  "durationInFrames": 510,
-  "compositionId": "FootballStandingsShort",
+  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
+  "soundtrackLabel": "Gol de Arena",
+  "soundtrackVolume": 0.2,
+  "outputName": "conference-league-2026-standings-en.mp4",
+  "durationInFrames": 360,
+  "compositionId": "FootballStaticStandingsShort",
   "leagueConfig": {
-    "leagueId": 72,
-    "accentColor": "#2E86DE",
+    "leagueId": 848,
+    "accentColor": "#00E676",
     "standings": {
       "safeArea": {
         "left": 68,
@@ -24,304 +25,471 @@
       },
       "zones": [
         {
-          "key": "acesso-direto",
-          "label": "Acesso direto",
+          "key": "round-of-16",
+          "label": "1–8 Round of 16",
           "start": 1,
-          "end": 2,
-          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(101, 227, 133, 0.64)"
+          "end": 8,
+          "fill": "linear-gradient(90deg, rgba(10, 132, 255, 0.78), rgba(10, 132, 255, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "#0A84FF",
+          "textColor": "#0A84FF"
         },
         {
-          "key": "playoffs-acesso",
-          "label": "Playoffs de acesso",
-          "start": 3,
-          "end": 6,
-          "fill": "linear-gradient(90deg, rgba(240, 165, 0, 0.88), rgba(240, 165, 0, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(240, 165, 0, 0.52)"
+          "key": "knockout-playoff",
+          "label": "9–24 Knockout Play-off",
+          "start": 9,
+          "end": 24,
+          "fill": "linear-gradient(90deg, rgba(39, 174, 96, 0.72), rgba(39, 174, 96, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "#27AE60",
+          "textColor": "#27AE60"
         },
         {
-          "key": "rebaixamento",
-          "label": "Rebaixamento",
-          "start": 17,
-          "end": 20,
-          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 102, 102, 0.56)"
+          "key": "eliminated",
+          "label": "25–36 Eliminated",
+          "start": 25,
+          "end": 36,
+          "fill": "linear-gradient(90deg, rgba(231, 76, 60, 0.72), rgba(231, 76, 60, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "#E74C3C",
+          "textColor": "#E74C3C"
         }
       ]
     },
-    "leagueName": "Brasileirão Série B"
+    "leagueName": "Conference League"
   },
-  "standingsLabel": "Rodada 14",
-  "ctaText": "Quem vai garantir uma vaga entre os líderes da Série B?",
+  "standingsLabel": "Playoff round",
+  "ctaText": "Who wins this?",
   "rows": [
     {
       "rank": 1,
-      "team": "Vila Nova",
-      "played": 14,
-      "points": 28,
-      "goalDifference": 7,
-      "form": "WLWWW",
+      "team": "Mjallby AIF",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "VN",
-        "logoPath": "/logos/vila-nova-142.png"
+        "label": "MA",
+        "logoPath": "/logos/mjallby-aif-2240.png"
       }
     },
     {
       "rank": 2,
-      "team": "São Bernardo",
-      "played": 14,
-      "points": 25,
-      "goalDifference": 9,
-      "form": "LDWDW",
+      "team": "Brighton",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "SB",
-        "logoPath": "/logos/sao-bernardo-7865.png"
+        "label": "B",
+        "logoPath": "/logos/brighton-51.png"
       }
     },
     {
       "rank": 3,
-      "team": "Sport",
-      "played": 14,
-      "points": 25,
-      "goalDifference": 8,
-      "form": "DDDWW",
+      "team": "Monaco",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "S",
-        "logoPath": "/logos/sport-recife-123.png"
+        "label": "M",
+        "logoPath": "/logos/monaco-91.png"
       }
     },
     {
       "rank": 4,
-      "team": "Novorizontino",
-      "played": 14,
-      "points": 24,
-      "goalDifference": 9,
-      "form": "WDWDW",
+      "team": "FK Jablonec",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "N",
-        "logoPath": "/logos/novorizontino.svg"
+        "label": "FJ",
+        "logoPath": "/logos/fk-jablonec-1122.png"
       }
     },
     {
       "rank": 5,
-      "team": "Criciuma",
-      "played": 14,
-      "points": 24,
-      "goalDifference": 5,
-      "form": "WDWWD",
+      "team": "Gent",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "C",
-        "logoPath": "/logos/criciuma-140.png"
+        "label": "G",
+        "logoPath": "/logos/gent-631.png"
       }
     },
     {
       "rank": 6,
-      "team": "Juventude",
-      "played": 14,
-      "points": 22,
-      "goalDifference": 6,
-      "form": "WWLWL",
+      "team": "St. Truiden",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "J",
-        "logoPath": "/logos/juventude-152.png"
+        "label": "ST",
+        "logoPath": "/logos/st-truiden-735.png"
       }
     },
     {
       "rank": 7,
-      "team": "Operario-PR",
-      "played": 14,
-      "points": 22,
-      "goalDifference": 1,
-      "form": "WLWWD",
+      "team": "SC Freiburg",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "O",
-        "logoPath": "/logos/operario-pr-1223.png"
+        "label": "SF",
+        "logoPath": "/logos/sc-freiburg-160.png"
       }
     },
     {
       "rank": 8,
-      "team": "Fortaleza",
-      "played": 14,
-      "points": 22,
-      "goalDifference": 1,
-      "form": "DLWLW",
+      "team": "Atalanta",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "F",
-        "logoPath": "/logos/fortaleza-ec-154.png"
+        "label": "A",
+        "logoPath": "/logos/atalanta-499.png"
       }
     },
     {
       "rank": 9,
-      "team": "Náutico",
-      "played": 14,
-      "points": 20,
-      "goalDifference": 3,
-      "form": "LDLLW",
+      "team": "Ajax",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "N",
-        "logoPath": "/logos/nautico-recife-755.png"
+        "label": "A",
+        "logoPath": "/logos/ajax-194.png"
       }
     },
     {
       "rank": 10,
-      "team": "Cuiaba",
-      "played": 14,
-      "points": 19,
-      "goalDifference": 2,
-      "form": "LWWWL",
+      "team": "Twente",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "C",
-        "logoPath": "/logos/cuiaba-1193.png"
+        "label": "T",
+        "logoPath": "/logos/twente-415.png"
       }
     },
     {
       "rank": 11,
-      "team": "Athletic Club",
-      "played": 14,
-      "points": 19,
+      "team": "Getafe",
+      "played": 0,
+      "points": 0,
       "goalDifference": 0,
-      "form": "LDDWW",
+      "form": "",
       "badge": {
-        "label": "AC",
-        "logoPath": "/logos/athletic-club-13975.png"
+        "label": "G",
+        "logoPath": "/logos/getafe-546.png"
       }
     },
     {
       "rank": 12,
-      "team": "Goias",
-      "played": 14,
-      "points": 18,
-      "goalDifference": -8,
-      "form": "LDLDW",
+      "team": "KuPS",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "G",
-        "logoPath": "/logos/goias-151.png"
+        "label": "K",
+        "logoPath": "/logos/kups-1165.png"
       }
     },
     {
       "rank": 13,
-      "team": "Atlético-GO",
-      "played": 14,
-      "points": 18,
+      "team": "CSKA Sofia",
+      "played": 0,
+      "points": 0,
       "goalDifference": 0,
-      "form": "DDWDL",
+      "form": "",
       "badge": {
-        "label": "A",
-        "logoPath": "/logos/atletico-goianiense-144.png"
+        "label": "CS",
+        "logoPath": "/logos/cska-sofia-853.png"
       }
     },
     {
       "rank": 14,
-      "team": "Ceara",
-      "played": 14,
-      "points": 17,
-      "goalDifference": -1,
-      "form": "LDWLL",
+      "team": "HNK Hajduk Split",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "C",
-        "logoPath": "/logos/ceara-129.png"
+        "label": "HHS",
+        "logoPath": "/logos/hnk-hajduk-split-608.png"
       }
     },
     {
       "rank": 15,
-      "team": "Botafogo SP",
-      "played": 14,
-      "points": 16,
-      "goalDifference": 1,
-      "form": "WWLDL",
+      "team": "Pafos",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "BS",
-        "logoPath": "/logos/botafogo-sp-2618.png"
+        "label": "P",
+        "logoPath": "/logos/pafos-3403.png"
       }
     },
     {
       "rank": 16,
-      "team": "CRB",
-      "played": 14,
-      "points": 16,
-      "goalDifference": -1,
-      "form": "DDLLW",
+      "team": "Aarhus",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "C",
-        "logoPath": "/logos/crb-146.png"
+        "label": "A",
+        "logoPath": "/logos/aarhus-406.png"
       }
     },
     {
       "rank": 17,
-      "team": "Londrina",
-      "played": 14,
-      "points": 14,
-      "goalDifference": -5,
-      "form": "WWLLL",
+      "team": "FC Copenhagen",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "L",
-        "logoPath": "/logos/londrina-148.png"
+        "label": "FC",
+        "logoPath": "/logos/fc-copenhagen-400.png"
       }
     },
     {
       "rank": 18,
-      "team": "Avai",
-      "played": 14,
-      "points": 13,
-      "goalDifference": -5,
-      "form": "WLLLL",
+      "team": "FC Midtjylland",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "A",
-        "logoPath": "/logos/avai-145.png"
+        "label": "FM",
+        "logoPath": "/logos/fc-midtjylland-397.png"
       }
     },
     {
       "rank": 19,
-      "team": "Ponte Preta",
-      "played": 14,
-      "points": 8,
-      "goalDifference": -17,
-      "form": "LLLDL",
+      "team": "FC Nordsjaelland",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "PP",
-        "logoPath": "/logos/ponte-preta-139.png"
+        "label": "FN",
+        "logoPath": "/logos/fc-nordsjaelland-398.png"
       }
     },
     {
       "rank": 20,
-      "team": "América-MG",
-      "played": 14,
-      "points": 6,
-      "goalDifference": -15,
-      "form": "LWLLL",
+      "team": "Panathinaikos",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
       "badge": {
-        "label": "A",
-        "logoPath": "/logos/america-mineiro-125.png"
+        "label": "P",
+        "logoPath": "/logos/panathinaikos-617.png"
+      }
+    },
+    {
+      "rank": 21,
+      "team": "Brann",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "B",
+        "logoPath": "/logos/brann-319.png"
+      }
+    },
+    {
+      "rank": 22,
+      "team": "SC Braga",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "SB",
+        "logoPath": "/logos/sc-braga.png"
+      }
+    },
+    {
+      "rank": 23,
+      "team": "Heart Of Midlothian",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "HOM",
+        "logoPath": "/logos/heart-of-midlothian-254.png"
+      }
+    },
+    {
+      "rank": 24,
+      "team": "FC Lugano",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "FL",
+        "logoPath": "/logos/fc-lugano-606.png"
+      }
+    },
+    {
+      "rank": 25,
+      "team": "FK Crvena Zvezda",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "FCZ",
+        "logoPath": "/logos/fk-crvena-zvezda-598.png"
+      }
+    },
+    {
+      "rank": 26,
+      "team": "FC Thun",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "FT",
+        "logoPath": "/logos/fc-thun-1012.png"
+      }
+    },
+    {
+      "rank": 27,
+      "team": "Trabzonspor",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "T",
+        "logoPath": "/logos/trabzonspor-998.png"
+      }
+    },
+    {
+      "rank": 28,
+      "team": "Borac Banja Luka",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "BBL",
+        "logoPath": "/logos/borac-banja-luka-3364.png"
+      }
+    },
+    {
+      "rank": 29,
+      "team": "Kairat Almaty",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "KA",
+        "logoPath": "/logos/kairat-almaty-664.png"
+      }
+    },
+    {
+      "rank": 30,
+      "team": "Egnatia Rrogozhinë",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "ER",
+        "logoPath": "/logos/egnatia-rrogozhine-3327.png"
+      }
+    },
+    {
+      "rank": 31,
+      "team": "Inter Club d'Escaldes",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "ICD",
+        "logoPath": "/logos/inter-club-d-escaldes-3342.png"
+      }
+    },
+    {
+      "rank": 32,
+      "team": "Kauno Žalgiris",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "KŽ",
+        "logoPath": "/logos/kauno-zalgiris-3872.png"
+      }
+    },
+    {
+      "rank": 33,
+      "team": "Universitatea Craiova",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "UC",
+        "logoPath": "/logos/universitatea-craiova-632.png"
+      }
+    },
+    {
+      "rank": 34,
+      "team": "FC Iberia 1999",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "FI1",
+        "logoPath": "/logos/fc-iberia-1999-3502.png"
+      }
+    },
+    {
+      "rank": 35,
+      "team": "Lincoln Red Imps FC",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "LRIF",
+        "logoPath": "/logos/lincoln-red-imps-fc-667.png"
+      }
+    },
+    {
+      "rank": 36,
+      "team": "Riga",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "R",
+        "logoPath": "/logos/riga-10124.png"
       }
     }
   ],
-  "introTitle": "Brasileirão Série B",
-  "introSubtitle": "Rodada 14",
-  "hookText": "Vila Nova lidera a Série B com 3 pontos de vantagem na rodada 14.",
-  "coldOpenData": {
-    "tableRows": [
-      {
-        "rank": 1,
-        "club": "VILA NOVA",
-        "pts": 28
-      },
-      {
-        "rank": 2,
-        "club": "SÃO BERNARDO",
-        "pts": 25
-      },
-      {
-        "rank": 3,
-        "club": "SPORT",
-        "pts": 25
-      },
-      {
-        "rank": 4,
-        "club": "NOVORIZONTINO",
-        "pts": 24
-      }
-    ]
-  },
-  "voiceoverEnabled": false,
-  "voiceoverText": "Na 14ª rodada, Vila Nova lidera com 28 pontos, três à frente do São Bernardo e Sport na luta pelo acesso."
+  "voiceoverEnabled": false
 }

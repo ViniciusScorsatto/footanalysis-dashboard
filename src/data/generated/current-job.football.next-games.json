@@ -1,86 +1,62 @@
 {
   "sport": "football",
   "template": "next-games",
-  "leagueId": 71,
+  "videoMode": "static",
+  "leagueId": 11,
   "season": 2026,
-  "leagueName": "Brasileirão Série A",
+  "leagueName": "Copa Sulamericana",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/foot-analysis-whistle.mp3",
-  "soundtrackLabel": "Foot Analysis Whistle",
-  "soundtrackVolume": 0.35,
-  "outputName": "brasileirao-serie-a-2026-proximos-jogos-pt-br.mp4",
+  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
+  "soundtrackLabel": "Gol de Arena",
+  "soundtrackVolume": 0.2,
+  "outputName": "copa-sulamericana-2026-proximos-jogos-round-of-16-2026-08-13-pt-br.mp4",
   "durationInFrames": 360,
-  "compositionId": "FootballNextGamesShort",
+  "compositionId": "FootballStaticNextGamesShort",
   "leagueConfig": {
-    "leagueId": 71,
-    "accentColor": "#F0A500",
+    "leagueId": 11,
+    "accentColor": "#1ABC9C",
     "standings": {
       "safeArea": {
-        "left": 68,
-        "right": 104
+        "left": 64,
+        "right": 92
       },
       "zones": [
         {
-          "key": "libertadores",
-          "label": "Libertadores",
+          "key": "top-three",
+          "label": "Top 3",
           "start": 1,
-          "end": 4,
-          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(101, 227, 133, 0.64)"
+          "end": 3,
+          "fill": "linear-gradient(90deg, rgba(58, 196, 88, 0.84), rgba(58, 196, 88, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(86, 214, 120, 0.62)"
         },
         {
-          "key": "pre-libertadores",
-          "label": "Pré-Libertadores",
-          "start": 5,
-          "end": 5,
-          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 190, 92, 0.58)"
-        },
-        {
-          "key": "sul-americana",
-          "label": "Sul-Americana",
-          "start": 6,
-          "end": 11,
-          "fill": "linear-gradient(90deg, rgba(0, 177, 183, 0.82), rgba(0, 177, 183, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(0, 177, 183, 0.54)"
-        },
-        {
-          "key": "rebaixamento",
-          "label": "Rebaixamento",
-          "start": 17,
+          "key": "bottom-three",
+          "label": "Bottom 3",
+          "start": 18,
           "end": 20,
-          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(255, 102, 102, 0.56)"
+          "fill": "linear-gradient(90deg, rgba(224, 48, 48, 0.84), rgba(224, 48, 48, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 90, 90, 0.56)"
         }
       ]
     },
-    "leagueName": "Brasileirão Série A",
-    "pace": {
-      "championship": {
-        "benchmarkPercentage": 68,
-        "benchmarkLabel": "Média dos últimos 10 campeões",
-        "entryCount": 10
-      },
-      "relegation": {
-        "benchmarkPercentage": 38,
-        "benchmarkLabel": "Linha de segurança",
-        "safeRowsAbove": 3,
-        "maxRows": 10
-      }
-    }
+    "leagueName": "Copa Sul-Americana"
   },
-  "round": "Regular Season - 19",
-  "roundLabel": "Próximos Jogos · Rodada 19",
+  "round": "Round of 16",
+  "matchDate": "2026-08-13",
+  "matchDates": [
+    "2026-08-13"
+  ],
+  "roundLabel": "Próximos Jogos · Fase de 16",
   "ctaText": "Qual jogo você vai assistir?",
   "fixtures": [
     {
-      "fixtureId": 1492296,
-      "fixtureDateKey": "2026-07-22",
-      "homeTeam": "Internacional",
-      "awayTeam": "Cruzeiro",
+      "fixtureId": 1606076,
+      "fixtureDateKey": "2026-08-13",
+      "homeTeam": "Santos",
+      "awayTeam": "Macara",
       "homeScore": null,
       "awayScore": null,
       "homeEliminated": false,
@@ -89,40 +65,19 @@
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "I",
-        "logoPath": "/logos/internacional-119.png"
-      },
-      "awayBadge": {
-        "label": "C",
-        "logoPath": "/logos/cruzeiro-135.png"
-      }
-    },
-    {
-      "fixtureId": 1492291,
-      "fixtureDateKey": "2026-07-22",
-      "homeTeam": "Botafogo",
-      "awayTeam": "Santos",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "B",
-        "logoPath": "/logos/botafogo-120.png"
-      },
-      "awayBadge": {
         "label": "S",
         "logoPath": "/logos/santos-128.png"
+      },
+      "awayBadge": {
+        "label": "M",
+        "logoPath": "/logos/macara-1155.png"
       }
     },
     {
-      "fixtureId": 1492295,
-      "fixtureDateKey": "2026-07-22",
-      "homeTeam": "Fluminense",
-      "awayTeam": "Bragantino",
+      "fixtureId": 1607199,
+      "fixtureDateKey": "2026-08-13",
+      "homeTeam": "Vasco DA Gama",
+      "awayTeam": "Olimpia",
       "homeScore": null,
       "awayScore": null,
       "homeEliminated": false,
@@ -131,103 +86,61 @@
       "homePenaltyScore": null,
       "awayPenaltyScore": null,
       "homeBadge": {
-        "label": "F",
-        "logoPath": "/logos/fluminense-124.png"
-      },
-      "awayBadge": {
-        "label": "B",
-        "logoPath": "/logos/rb-bragantino-794.png"
-      }
-    },
-    {
-      "fixtureId": 1492298,
-      "fixtureDateKey": "2026-07-22",
-      "homeTeam": "Sao Paulo",
-      "awayTeam": "Athletico-PR",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "SP",
-        "logoPath": "/logos/sao-paulo-126.png"
-      },
-      "awayBadge": {
-        "label": "A",
-        "logoPath": "/logos/atletico-paranaense-134.png"
-      }
-    },
-    {
-      "fixtureId": 1492293,
-      "fixtureDateKey": "2026-07-22",
-      "homeTeam": "Corinthians",
-      "awayTeam": "Remo",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "C",
-        "logoPath": "/logos/corinthians-131.png"
-      },
-      "awayBadge": {
-        "label": "R",
-        "logoPath": "/logos/remo-1198.png"
-      }
-    },
-    {
-      "fixtureId": 1492292,
-      "fixtureDateKey": "2026-07-22",
-      "homeTeam": "Chapecoense",
-      "awayTeam": "Flamengo",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "C",
-        "logoPath": "/logos/chapecoense-sc-132.png"
-      },
-      "awayBadge": {
-        "label": "F",
-        "logoPath": "/logos/flamengo-127.png"
-      }
-    },
-    {
-      "fixtureId": 1492299,
-      "fixtureDateKey": "2026-07-22",
-      "homeTeam": "Vitoria",
-      "awayTeam": "Vasco DA Gama",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "V",
-        "logoPath": "/logos/vitoria-136.png"
-      },
-      "awayBadge": {
         "label": "VDG",
         "logoPath": "/logos/vasco-da-gama-133.png"
+      },
+      "awayBadge": {
+        "label": "O",
+        "logoPath": "/logos/olimpia-1182.png"
       }
     },
     {
-      "fixtureId": 1492294,
-      "fixtureDateKey": "2026-07-22",
-      "homeTeam": "Coritiba",
-      "awayTeam": "Palmeiras",
+      "fixtureId": 1606077,
+      "fixtureDateKey": "2026-08-13",
+      "homeTeam": "Tigre",
+      "awayTeam": "Atl. Torque",
+      "homeScore": null,
+      "awayScore": null,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "T",
+        "logoPath": "/logos/tigre-452.png"
+      },
+      "awayBadge": {
+        "label": "AT",
+        "logoPath": "/logos/atletico-torque-2365.png"
+      }
+    },
+    {
+      "fixtureId": 1607197,
+      "fixtureDateKey": "2026-08-13",
+      "homeTeam": "Bragantino",
+      "awayTeam": "Atletico-MG",
+      "homeScore": null,
+      "awayScore": null,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "B",
+        "logoPath": "/logos/rb-bragantino-794.png"
+      },
+      "awayBadge": {
+        "label": "A",
+        "logoPath": "/logos/atletico-mg-1062.png"
+      }
+    },
+    {
+      "fixtureId": 1607198,
+      "fixtureDateKey": "2026-08-13",
+      "homeTeam": "Cienciano",
+      "awayTeam": "Botafogo",
       "homeScore": null,
       "awayScore": null,
       "homeEliminated": false,
@@ -237,107 +150,13 @@
       "awayPenaltyScore": null,
       "homeBadge": {
         "label": "C",
-        "logoPath": "/logos/coritiba-147.png"
-      },
-      "awayBadge": {
-        "label": "P",
-        "logoPath": "/logos/palmeiras-121.png"
-      }
-    },
-    {
-      "fixtureId": 1492290,
-      "fixtureDateKey": "2026-07-22",
-      "homeTeam": "Atletico-MG",
-      "awayTeam": "Bahia",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "A",
-        "logoPath": "/logos/atletico-mg-1062.png"
+        "logoPath": "/logos/cienciano-2562.png"
       },
       "awayBadge": {
         "label": "B",
-        "logoPath": "/logos/bahia-118.png"
-      }
-    },
-    {
-      "fixtureId": 1492297,
-      "fixtureDateKey": "2026-07-22",
-      "homeTeam": "Mirassol",
-      "awayTeam": "Gremio",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "M",
-        "logoPath": "/logos/mirassol-7848.png"
-      },
-      "awayBadge": {
-        "label": "G",
-        "logoPath": "/logos/gremio-130.png"
+        "logoPath": "/logos/botafogo-120.png"
       }
     }
   ],
-  "introTitle": "Brasileirão Série A",
-  "introSubtitle": "Próximos Jogos · Rodada 19",
-  "hookText": "Olha os próximos jogos",
-  "coldOpenData": {
-    "matchRows": [
-      {
-        "left": "INTERNACIONAL",
-        "center": "0 - 0",
-        "right": "CRUZEIRO"
-      },
-      {
-        "left": "BOTAFOGO",
-        "center": "0 - 0",
-        "right": "SANTOS"
-      },
-      {
-        "left": "FLUMINENSE",
-        "center": "0 - 0",
-        "right": "BRAGANTINO"
-      },
-      {
-        "left": "SAO PAULO",
-        "center": "0 - 0",
-        "right": "ATHLETICO-PR"
-      }
-    ],
-    "tableRows": [
-      {
-        "rank": 1,
-        "club": "INTERNACIONAL",
-        "pts": 22
-      },
-      {
-        "rank": 2,
-        "club": "CRUZEIRO",
-        "pts": 20
-      },
-      {
-        "rank": 3,
-        "club": "BOTAFOGO",
-        "pts": 18
-      },
-      {
-        "rank": 4,
-        "club": "SANTOS",
-        "pts": 16
-      }
-    ]
-  },
-  "voiceoverEnabled": true,
-  "voiceoverText": "Fala Galera, pra vocês... os próximos jogos do Brasileirão Série A.",
-  "voiceoverPath": "/voiceovers/football/pt-br-57a107882b06ddfb.mp3",
-  "voiceoverLabel": "Fala Galera, pra vocês... os próximos jogos do Brasileirão Série A."
+  "voiceoverEnabled": false
 }

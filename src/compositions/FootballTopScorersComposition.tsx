@@ -43,6 +43,7 @@ type FootballTopScorersCompositionProps = {
   hookText?: string;
   coldOpenData?: FootballColdOpenData;
   ctaText?: string;
+  presentation?: 'animated' | 'static';
 };
 
 const SAFE_AREA = {
@@ -73,11 +74,15 @@ export const FootballTopScorersComposition = ({
   hookText,
   coldOpenData,
   ctaText,
+  presentation = 'animated',
 }: FootballTopScorersCompositionProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const contentFrame =
-    Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
+  const isStatic = presentation === 'static';
+  const contentStartFrame = isStatic ? 0 : SHORT_OPENING_DURATION_FRAMES;
+  const contentFrame = isStatic
+    ? 999
+    : Math.max(0, frame - contentStartFrame) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
   const isEnglishChannel = channelProfile === 'en' || languageProfile === 'en';
   const accentColor = leagueConfig?.accentColor ?? (isEnglishChannel ? '#0A84FF' : '#F0A500');
   const statColor = isEnglishChannel ? accentColor : '#F4C44E';
@@ -117,25 +122,27 @@ export const FootballTopScorersComposition = ({
         accentColor={accentColor}
         opacity={0.5}
       />
-      <FootballShortOpening
-        template="top-scorers"
-        channelProfile={channelProfile}
-        leagueName={leagueName}
-        titleLabel={titleLabel}
-        subtitleLabel={subtitleLabel}
-        entries={sortedEntries}
-        accentColor={accentColor}
-        secondaryAccentColor={leagueConfig?.secondaryAccentColor}
-        brandName={brandName}
-        brandLogoPath={brandLogoPath}
-        introTitle={introTitle}
-        introSubtitle={introSubtitle}
-        hookText={hookText}
-        coldOpenData={coldOpenData}
-      />
+      {!isStatic ? (
+        <FootballShortOpening
+          template="top-scorers"
+          channelProfile={channelProfile}
+          leagueName={leagueName}
+          titleLabel={titleLabel}
+          subtitleLabel={subtitleLabel}
+          entries={sortedEntries}
+          accentColor={accentColor}
+          secondaryAccentColor={leagueConfig?.secondaryAccentColor}
+          brandName={brandName}
+          brandLogoPath={brandLogoPath}
+          introTitle={introTitle}
+          introSubtitle={introSubtitle}
+          hookText={hookText}
+          coldOpenData={coldOpenData}
+        />
+      ) : null}
 
-      <Sequence from={SHORT_OPENING_DURATION_FRAMES}>
-        <VoiceoverBed voiceoverPath={voiceoverPath} />
+      <Sequence from={contentStartFrame}>
+        <VoiceoverBed voiceoverPath={isStatic ? undefined : voiceoverPath} />
         <CompetitionAccentRail
           accentColor={accentColor}
           secondaryAccentColor={leagueConfig?.secondaryAccentColor}
@@ -174,9 +181,11 @@ export const FootballTopScorersComposition = ({
               alignSelf: 'flex-start',
               padding: '9px 17px 8px',
               borderRadius: 999,
-              background: '#111820',
+              background: isStatic && isEnglishChannel ? `${accentColor}14` : '#111820',
+              border: isStatic && isEnglishChannel ? `1px solid ${accentColor}88` : 'none',
               borderLeft: `8px solid ${accentColor}`,
               color: accentColor,
+              boxShadow: isStatic && isEnglishChannel ? `0 0 20px ${accentColor}20` : undefined,
               fontFamily: TEASER_LABEL_FONT,
               fontSize: 20,
               lineHeight: 1,
@@ -205,7 +214,7 @@ export const FootballTopScorersComposition = ({
           </div>
           <div
             style={{
-              color: '#3a5060',
+              color: isStatic && isEnglishChannel ? accentColor : '#3a5060',
               fontSize: 42,
               lineHeight: 1,
               fontWeight: 800,
@@ -226,6 +235,7 @@ export const FootballTopScorersComposition = ({
             isEnglishChannel={isEnglishChannel}
             frame={contentFrame}
             fps={fps}
+            disableAnimation={isStatic}
           />
         ) : null}
 
@@ -240,6 +250,7 @@ export const FootballTopScorersComposition = ({
               frame={contentFrame}
               fps={fps}
               rowIndex={index}
+              disableAnimation={isStatic}
             />
           ))}
         </div>
@@ -289,6 +300,7 @@ const LeaderCard = ({
   isEnglishChannel,
   frame,
   fps,
+  disableAnimation = false,
 }: {
   entry: TopScorerEntry;
   accentColor: string;
@@ -296,12 +308,18 @@ const LeaderCard = ({
   isEnglishChannel: boolean;
   frame: number;
   fps: number;
+  disableAnimation?: boolean;
 }) => {
   const logoSrc = getLogoSrc(entry.badge);
-  const pop = interpolate(frame, [12, 22], [0.94, 1], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
+  const pop = disableAnimation
+    ? 1
+    : interpolate(frame, [12, 22], [0.94, 1], {
+        extrapolateLeft: 'clamp',
+        extrapolateRight: 'clamp',
+      });
+  const entrance = disableAnimation
+    ? {opacity: 1, transform: `scale(${pop})`}
+    : headerEntranceStyle(frame, fps, 12);
 
   return (
     <div
@@ -322,7 +340,7 @@ const LeaderCard = ({
             : `linear-gradient(90deg, ${accentColor}30, rgba(15,19,24,0.96) 44%, rgba(15,19,24,0.88))`,
         boxShadow: `0 0 42px ${accentColor}44`,
         transform: `scale(${pop})`,
-        ...headerEntranceStyle(frame, fps, 12),
+        ...entrance,
       }}
     >
       <div
@@ -405,6 +423,7 @@ const ScorerRow = ({
   frame,
   fps,
   rowIndex,
+  disableAnimation = false,
 }: {
   entry: TopScorerEntry;
   accentColor: string;
@@ -413,6 +432,7 @@ const ScorerRow = ({
   frame: number;
   fps: number;
   rowIndex: number;
+  disableAnimation?: boolean;
 }) => {
   const logoSrc = getLogoSrc(entry.badge);
 
@@ -436,7 +456,7 @@ const ScorerRow = ({
               ? 'linear-gradient(90deg, #141c24, #0f1318)'
               : 'linear-gradient(90deg, #101820, #0d1118)',
         boxShadow: 'inset 0 -1px 0 rgba(255,255,255,0.035)',
-        ...fadeInStyle(frame, fps, rowStartFrame(rowIndex + 3)),
+        ...(disableAnimation ? {opacity: 1} : fadeInStyle(frame, fps, rowStartFrame(rowIndex + 3))),
       }}
     >
       <div

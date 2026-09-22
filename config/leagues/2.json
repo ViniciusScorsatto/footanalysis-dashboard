@@ -1,5 +1,40 @@
 {
   "leagueId": 2,
   "leagueName": "Champions League",
-  "accentColor": "#C8A84B"
+  "accentColor": "#C8A84B",
+  "standings": {
+    "safeArea": {
+      "left": 64,
+      "right": 92
+    },
+    "zones": [
+      {
+        "key": "round-of-16",
+        "label": "1–8 Round of 16",
+        "start": 1,
+        "end": 8,
+        "fill": "linear-gradient(90deg, rgba(10, 132, 255, 0.78), rgba(10, 132, 255, 0.24) 62%, rgba(0,0,0,0.04))",
+        "accent": "#0A84FF",
+        "textColor": "#0A84FF"
+      },
+      {
+        "key": "knockout-playoff",
+        "label": "9–24 Knockout Play-off",
+        "start": 9,
+        "end": 24,
+        "fill": "linear-gradient(90deg, rgba(39, 174, 96, 0.72), rgba(39, 174, 96, 0.22) 62%, rgba(0,0,0,0.04))",
+        "accent": "#27AE60",
+        "textColor": "#27AE60"
+      },
+      {
+        "key": "eliminated",
+        "label": "25–36 Eliminated",
+        "start": 25,
+        "end": 36,
+        "fill": "linear-gradient(90deg, rgba(231, 76, 60, 0.72), rgba(231, 76, 60, 0.22) 62%, rgba(0,0,0,0.04))",
+        "accent": "#E74C3C",
+        "textColor": "#E74C3C"
+      }
+    ]
+  }
 }

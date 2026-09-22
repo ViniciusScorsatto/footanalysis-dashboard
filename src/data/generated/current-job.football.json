@@ -1,308 +1,495 @@
 {
   "sport": "football",
-  "template": "results",
-  "leagueId": 1128,
+  "template": "standings",
+  "videoMode": "static",
+  "leagueId": 848,
   "season": 2026,
-  "leagueName": "Brasileirão Sub-17",
-  "channelProfile": "pt",
-  "languageProfile": "pt-br",
+  "leagueName": "Conference League",
+  "channelProfile": "en",
+  "languageProfile": "en",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/É Gol, É Gol.mp3",
-  "soundtrackLabel": "É Gol, É Gol",
-  "soundtrackVolume": 0.25,
-  "outputName": "brasileirao-sub-17-2026-resultados-pt-br.mp4",
+  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
+  "soundtrackLabel": "Gol de Arena",
+  "soundtrackVolume": 0.2,
+  "outputName": "conference-league-2026-standings-en.mp4",
   "durationInFrames": 360,
-  "compositionId": "FootballResultsShort",
+  "compositionId": "FootballStaticStandingsShort",
   "leagueConfig": {
-    "leagueId": 1128,
-    "accentColor": "#E67E22",
+    "leagueId": 848,
+    "accentColor": "#00E676",
     "standings": {
       "safeArea": {
-        "left": 40,
-        "right": 120
+        "left": 68,
+        "right": 104
       },
       "zones": [
         {
-          "key": "champion",
-          "label": "Campeão",
+          "key": "round-of-16",
+          "label": "1–8 Round of 16",
           "start": 1,
-          "end": 1
+          "end": 8,
+          "fill": "linear-gradient(90deg, rgba(10, 132, 255, 0.78), rgba(10, 132, 255, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "#0A84FF",
+          "textColor": "#0A84FF"
         },
         {
-          "key": "relegation",
-          "label": "Rebaixamento",
-          "start": 18,
-          "end": 20
+          "key": "knockout-playoff",
+          "label": "9–24 Knockout Play-off",
+          "start": 9,
+          "end": 24,
+          "fill": "linear-gradient(90deg, rgba(39, 174, 96, 0.72), rgba(39, 174, 96, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "#27AE60",
+          "textColor": "#27AE60"
+        },
+        {
+          "key": "eliminated",
+          "label": "25–36 Eliminated",
+          "start": 25,
+          "end": 36,
+          "fill": "linear-gradient(90deg, rgba(231, 76, 60, 0.72), rgba(231, 76, 60, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "#E74C3C",
+          "textColor": "#E74C3C"
         }
       ]
     },
-    "leagueName": "Brasileirão Sub-17"
+    "leagueName": "Conference League"
   },
-  "round": "Regular Season - 5",
-  "roundLabel": "Rodada 5",
-  "ctaText": "Qual foi o melhor jogo?",
-  "fixtures": [
+  "standingsLabel": "Playoff round",
+  "ctaText": "Who wins this?",
+  "rows": [
     {
-      "fixtureId": 1543911,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "America MG",
-      "awayTeam": "Sao Paulo",
-      "homeScore": 0,
-      "awayScore": 0,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "AM",
-        "logoPath": "/logos/america-mineiro-125.png"
-      },
-      "awayBadge": {
-        "label": "SP",
-        "logoPath": "/logos/sao-paulo.png"
+      "rank": 1,
+      "team": "Mjallby AIF",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "MA",
+        "logoPath": "/logos/mjallby-aif-2240.png"
       }
     },
     {
-      "fixtureId": 1543912,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "Athletico PR",
-      "awayTeam": "Internacional",
-      "homeScore": 3,
-      "awayScore": 2,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "AP",
-        "logoPath": "/logos/atletico-paranaense.png"
-      },
-      "awayBadge": {
-        "label": "I",
-        "logoPath": "/logos/internacional.png"
-      }
-    },
-    {
-      "fixtureId": 1543913,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "Atletico GO",
-      "awayTeam": "Fortaleza",
-      "homeScore": 0,
-      "awayScore": 2,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "AG",
-        "logoPath": "/logos/atletico-go-u17-24470.png"
-      },
-      "awayBadge": {
-        "label": "F",
-        "logoPath": "/logos/fortaleza-ec-154.png"
-      }
-    },
-    {
-      "fixtureId": 1543914,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "Atlético MG",
-      "awayTeam": "Palmeiras",
-      "homeScore": 3,
-      "awayScore": 4,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "AM",
-        "logoPath": "/logos/atletico-mg.png"
-      },
-      "awayBadge": {
-        "label": "P",
-        "logoPath": "/logos/palmeiras.png"
-      }
-    },
-    {
-      "fixtureId": 1543916,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "Corinthians",
-      "awayTeam": "Botafogo",
-      "homeScore": 4,
-      "awayScore": 0,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "C",
-        "logoPath": "/logos/corinthians.png"
-      },
-      "awayBadge": {
+      "rank": 2,
+      "team": "Brighton",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
         "label": "B",
-        "logoPath": "/logos/botafogo.png"
+        "logoPath": "/logos/brighton-51.png"
       }
     },
     {
-      "fixtureId": 1543917,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "Fluminense",
-      "awayTeam": "RB Bragantino",
-      "homeScore": 2,
-      "awayScore": 0,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "F",
-        "logoPath": "/logos/fluminense.png"
-      },
-      "awayBadge": {
-        "label": "RB",
-        "logoPath": "/logos/rb-bragantino.png"
+      "rank": 3,
+      "team": "Monaco",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "M",
+        "logoPath": "/logos/monaco-91.png"
       }
     },
     {
-      "fixtureId": 1543919,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "Santos",
-      "awayTeam": "Gremio",
-      "homeScore": 0,
-      "awayScore": 1,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "S",
-        "logoPath": "/logos/santos.png"
-      },
-      "awayBadge": {
+      "rank": 4,
+      "team": "FK Jablonec",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "FJ",
+        "logoPath": "/logos/fk-jablonec-1122.png"
+      }
+    },
+    {
+      "rank": 5,
+      "team": "Gent",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
         "label": "G",
-        "logoPath": "/logos/gremio.png"
+        "logoPath": "/logos/gent-631.png"
       }
     },
     {
-      "fixtureId": 1543918,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "Juventude",
-      "awayTeam": "Cruzeiro",
-      "homeScore": 2,
-      "awayScore": 1,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "J",
-        "logoPath": "/logos/juventude-152.png"
-      },
-      "awayBadge": {
-        "label": "C",
-        "logoPath": "/logos/cruzeiro.png"
+      "rank": 6,
+      "team": "St. Truiden",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "ST",
+        "logoPath": "/logos/st-truiden-735.png"
       }
     },
     {
-      "fixtureId": 1543920,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "Vasco",
-      "awayTeam": "Flamengo",
-      "homeScore": 1,
-      "awayScore": 1,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "V",
-        "logoPath": "/logos/vasco-da-gama-133.png"
-      },
-      "awayBadge": {
-        "label": "F",
-        "logoPath": "/logos/flamengo.png"
+      "rank": 7,
+      "team": "SC Freiburg",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "SF",
+        "logoPath": "/logos/sc-freiburg-160.png"
       }
     },
     {
-      "fixtureId": 1543915,
-      "fixtureDateKey": "2026-06-25",
-      "homeTeam": "Bahia",
-      "awayTeam": "Vitoria",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
+      "rank": 8,
+      "team": "Atalanta",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "A",
+        "logoPath": "/logos/atalanta-499.png"
+      }
+    },
+    {
+      "rank": 9,
+      "team": "Ajax",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "A",
+        "logoPath": "/logos/ajax-194.png"
+      }
+    },
+    {
+      "rank": 10,
+      "team": "Twente",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "T",
+        "logoPath": "/logos/twente-415.png"
+      }
+    },
+    {
+      "rank": 11,
+      "team": "Getafe",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "G",
+        "logoPath": "/logos/getafe-546.png"
+      }
+    },
+    {
+      "rank": 12,
+      "team": "KuPS",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "K",
+        "logoPath": "/logos/kups-1165.png"
+      }
+    },
+    {
+      "rank": 13,
+      "team": "CSKA Sofia",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "CS",
+        "logoPath": "/logos/cska-sofia-853.png"
+      }
+    },
+    {
+      "rank": 14,
+      "team": "HNK Hajduk Split",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "HHS",
+        "logoPath": "/logos/hnk-hajduk-split-608.png"
+      }
+    },
+    {
+      "rank": 15,
+      "team": "Pafos",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "P",
+        "logoPath": "/logos/pafos-3403.png"
+      }
+    },
+    {
+      "rank": 16,
+      "team": "Aarhus",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "A",
+        "logoPath": "/logos/aarhus-406.png"
+      }
+    },
+    {
+      "rank": 17,
+      "team": "FC Copenhagen",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "FC",
+        "logoPath": "/logos/fc-copenhagen-400.png"
+      }
+    },
+    {
+      "rank": 18,
+      "team": "FC Midtjylland",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "FM",
+        "logoPath": "/logos/fc-midtjylland-397.png"
+      }
+    },
+    {
+      "rank": 19,
+      "team": "FC Nordsjaelland",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "FN",
+        "logoPath": "/logos/fc-nordsjaelland-398.png"
+      }
+    },
+    {
+      "rank": 20,
+      "team": "Panathinaikos",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "P",
+        "logoPath": "/logos/panathinaikos-617.png"
+      }
+    },
+    {
+      "rank": 21,
+      "team": "Brann",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
         "label": "B",
-        "logoPath": "/logos/bahia.png"
-      },
-      "awayBadge": {
-        "label": "V",
-        "logoPath": "/logos/vitoria.png"
+        "logoPath": "/logos/brann-319.png"
+      }
+    },
+    {
+      "rank": 22,
+      "team": "SC Braga",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "SB",
+        "logoPath": "/logos/sc-braga.png"
+      }
+    },
+    {
+      "rank": 23,
+      "team": "Heart Of Midlothian",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "HOM",
+        "logoPath": "/logos/heart-of-midlothian-254.png"
+      }
+    },
+    {
+      "rank": 24,
+      "team": "FC Lugano",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "FL",
+        "logoPath": "/logos/fc-lugano-606.png"
+      }
+    },
+    {
+      "rank": 25,
+      "team": "FK Crvena Zvezda",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "FCZ",
+        "logoPath": "/logos/fk-crvena-zvezda-598.png"
+      }
+    },
+    {
+      "rank": 26,
+      "team": "FC Thun",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "FT",
+        "logoPath": "/logos/fc-thun-1012.png"
+      }
+    },
+    {
+      "rank": 27,
+      "team": "Trabzonspor",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "T",
+        "logoPath": "/logos/trabzonspor-998.png"
+      }
+    },
+    {
+      "rank": 28,
+      "team": "Borac Banja Luka",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "BBL",
+        "logoPath": "/logos/borac-banja-luka-3364.png"
+      }
+    },
+    {
+      "rank": 29,
+      "team": "Kairat Almaty",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "KA",
+        "logoPath": "/logos/kairat-almaty-664.png"
+      }
+    },
+    {
+      "rank": 30,
+      "team": "Egnatia Rrogozhinë",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "ER",
+        "logoPath": "/logos/egnatia-rrogozhine-3327.png"
+      }
+    },
+    {
+      "rank": 31,
+      "team": "Inter Club d'Escaldes",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "ICD",
+        "logoPath": "/logos/inter-club-d-escaldes-3342.png"
+      }
+    },
+    {
+      "rank": 32,
+      "team": "Kauno Žalgiris",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "KŽ",
+        "logoPath": "/logos/kauno-zalgiris-3872.png"
+      }
+    },
+    {
+      "rank": 33,
+      "team": "Universitatea Craiova",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "UC",
+        "logoPath": "/logos/universitatea-craiova-632.png"
+      }
+    },
+    {
+      "rank": 34,
+      "team": "FC Iberia 1999",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "FI1",
+        "logoPath": "/logos/fc-iberia-1999-3502.png"
+      }
+    },
+    {
+      "rank": 35,
+      "team": "Lincoln Red Imps FC",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "LRIF",
+        "logoPath": "/logos/lincoln-red-imps-fc-667.png"
+      }
+    },
+    {
+      "rank": 36,
+      "team": "Riga",
+      "played": 0,
+      "points": 0,
+      "goalDifference": 0,
+      "form": "",
+      "badge": {
+        "label": "R",
+        "logoPath": "/logos/riga-10124.png"
       }
     }
   ],
-  "introTitle": "Brasileirão Sub-17",
-  "introSubtitle": "Rodada 5",
-  "hookText": "Olha o que aconteceu na rodada",
-  "coldOpenData": {
-    "matchRows": [
-      {
-        "left": "AMERICA MG",
-        "center": "0 - 0",
-        "right": "SAO PAULO"
-      },
-      {
-        "left": "ATHLETICO PR",
-        "center": "3 - 2",
-        "right": "INTERNACIONAL"
-      },
-      {
-        "left": "ATLETICO GO",
-        "center": "0 - 2",
-        "right": "FORTALEZA"
-      },
-      {
-        "left": "ATLÉTICO MG",
-        "center": "3 - 4",
-        "right": "PALMEIRAS"
-      }
-    ],
-    "tableRows": [
-      {
-        "rank": 1,
-        "club": "AMERICA MG",
-        "pts": 22
-      },
-      {
-        "rank": 2,
-        "club": "SAO PAULO",
-        "pts": 20
-      },
-      {
-        "rank": 3,
-        "club": "ATHLETICO PR",
-        "pts": 18
-      },
-      {
-        "rank": 4,
-        "club": "INTERNACIONAL",
-        "pts": 16
-      }
-    ]
-  },
-  "voiceoverEnabled": false,
-  "voiceoverText": "Fala Galera, pra vocês... os últimos resultados do Brasileirão Sub-17."
+  "voiceoverEnabled": false
 }

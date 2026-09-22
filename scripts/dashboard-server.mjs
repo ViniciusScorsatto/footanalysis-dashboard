@@ -24,13 +24,16 @@ import {
   loadTeamAccentColors,
   loadTopScorersEditor,
   loadWorldCupConfig,
-  loadWorldCupTierlistTeams,
+  loadTierlistTeams,
   prepareJob,
   prepareWorldCupGroupStandingsPreview,
   prepareFootballPredictionsLongJob,
   parseFootballPredictionsLongYaml,
   prepareFootballRoundSummaryLongJob,
   parseFootballRoundSummaryLongYaml,
+  prepareLeagueComparisonJob,
+  prepareTeamComparisonJob,
+  prepareTopScorersComparisonJob,
   projectRoot,
   saveFootballShortContentDurations,
   staticFootballTemplates,
@@ -39,6 +42,32 @@ import {
   templates,
 } from './lib/video-system.mjs';
 import {getFootballCtaOptions, getFootballHookOptions} from './lib/football-copy.mjs';
+import {
+  compareLeagues,
+  compareTeams,
+  compareTopScorers,
+  getStandings,
+  getTopScorers,
+  getFootballStories,
+  getFootballStory,
+  getShortContent,
+  getLatestShortContent,
+  getLatestShortVisualComposition,
+  getShortVisualComposition,
+  listDbRounds,
+  listShortContents,
+  listLeagues,
+  saveRenderOutput,
+  searchTeams,
+  saveShortContent,
+  saveShortVisualComposition,
+  updateFootballStoryStatus,
+  updateShortContent,
+  updateShortVisualComposition,
+} from './lib/football-db.mjs';
+import {analyzeRound} from './lib/story-analysis.mjs';
+import {generateShortContent, validateShortContent} from './lib/short-content-generator.mjs';
+import {buildShortVisualComposition, validateShortVisualComposition} from './lib/short-visual-composition.mjs';
 
 const dashboardDir = path.join(projectRoot, 'dashboard');
 const publicDir = path.join(projectRoot, 'public');
@@ -275,6 +304,18 @@ const parseMatchDates = (value, values = []) => {
   ];
 };
 
+const parseNumberList = (value, values = []) => [
+  ...new Set(
+    [
+      ...(Array.isArray(values) ? values : [values]),
+      ...(Array.isArray(value) ? value : [value]),
+    ]
+      .flatMap((item) => String(item ?? '').split(','))
+      .map((item) => Number(item.trim()))
+      .filter(Number.isFinite)
+  ),
+];
+
 const serveStatic = async (response, filePath) => {
   try {
     const ext = path.extname(filePath);
@@ -482,6 +523,7 @@ const sendFootballRoundDates = async (response, url) => {
     const round = url.searchParams.get('round') ?? '';
     const template = url.searchParams.get('template') ?? '';
     const languageProfile = url.searchParams.get('languageProfile') ?? 'pt-br';
+    const includeUnfinishedResults = parseBooleanField(url.searchParams.get('includeUnfinishedResults'), false);
     const dates = await loadRoundDates({
       apiKey: process.env.FOOTBALL_API_KEY,
       apiHost: process.env.FOOTBALL_API_HOST,
@@ -490,6 +532,7 @@ const sendFootballRoundDates = async (response, url) => {
       round,
       template,
       languageProfile,
+      includeUnfinishedResults,
     });
 
     sendJson(response, 200, {
@@ -577,6 +620,7 @@ const sendFootballResultFixtures = async (response, url) => {
     const matchDate = url.searchParams.get('matchDate') ?? '';
     const matchDates = parseMatchDates(matchDate, url.searchParams.getAll('matchDates'));
     const languageProfile = url.searchParams.get('languageProfile') ?? 'pt-br';
+    const includeUnfinishedResults = parseBooleanField(url.searchParams.get('includeUnfinishedResults'), false);
     const data = await loadResultFixtures({
       apiKey: process.env.FOOTBALL_API_KEY,
       apiHost: process.env.FOOTBALL_API_HOST,
@@ -586,6 +630,7 @@ const sendFootballResultFixtures = async (response, url) => {
       matchDate,
       matchDates,
       languageProfile,
+      includeUnfinishedResults,
     });
 
     sendJson(response, 200, {
@@ -678,11 +723,13 @@ const sendFootballSeasonFinalVerdictEditor = async (response, url) => {
 
 const sendFootballTierlistTeams = async (response, url) => {
   try {
+    const leagueId = Number(url.searchParams.get('leagueId'));
     const season = Number(url.searchParams.get('season'));
     const languageProfile = url.searchParams.get('languageProfile') ?? 'pt-br';
-    const teams = await loadWorldCupTierlistTeams({
+    const teams = await loadTierlistTeams({
       apiKey: process.env.FOOTBALL_API_KEY,
       apiHost: process.env.FOOTBALL_API_HOST,
+      leagueId: Number.isFinite(leagueId) ? leagueId : 1,
       season: Number.isFinite(season) ? season : 2026,
       languageProfile,
     });
@@ -734,6 +781,7 @@ const prepareFootballJob = async (body) =>
     hookText: body.hookText,
     voiceoverText: body.voiceoverText,
     voiceoverEnabled: parseBooleanField(body.voiceoverEnabled, true),
+    includeUnfinishedResults: parseBooleanField(body.includeUnfinishedResults, false),
     includeFinalResult: parseBooleanField(body.includeFinalResult, true),
     championFinalSelection: body.championFinalSelection,
     championFinalRank: body.championFinalRank,
@@ -3371,6 +3419,331 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
+  if (request.method === 'GET' && url.pathname === '/api/football/db/leagues') {
+    try {
+      sendJson(response, 200, {ok: true, leagues: listLeagues()});
+    } catch (error) {
+      sendJson(response, 500, {ok: false, error: error instanceof Error ? error.message : String(error)});
+    }
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/football/stories/rounds') {
+    try {
+      const rounds = listDbRounds({
+        leagueId: Number(url.searchParams.get('leagueId')),
+        season: Number(url.searchParams.get('season')),
+      });
+      sendJson(response, 200, {ok: true, rounds});
+    } catch (error) {
+      sendJson(response, 500, {ok: false, error: error instanceof Error ? error.message : String(error), rounds: []});
+    }
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/football/stories') {
+    try {
+      const stories = getFootballStories({
+        competitionId: Number(url.searchParams.get('leagueId')),
+        season: Number(url.searchParams.get('season')),
+        round: url.searchParams.get('round'),
+      });
+      sendJson(response, 200, {ok: true, stories});
+    } catch (error) {
+      sendJson(response, 500, {ok: false, error: error instanceof Error ? error.message : String(error), stories: []});
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/stories/analyze') {
+    try {
+      const body = await readBody(request);
+      const leagueId = Number(body.leagueId ?? 71);
+      const season = Number(body.season);
+      const round = String(body.round ?? '').trim();
+      if (!Number.isFinite(leagueId) || !Number.isFinite(season) || !round) {
+        sendJson(response, 400, {ok: false, error: 'Competição, temporada e rodada são obrigatórias.'});
+        return;
+      }
+      const result = analyzeRound({leagueId, season, round, competitionName: body.competitionName ?? 'Brasileirão Série A'});
+      sendJson(response, 200, {ok: true, ...result});
+    } catch (error) {
+      sendJson(response, 400, {ok: false, error: error instanceof Error ? error.message : String(error)});
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/stories/status') {
+    try {
+      const body = await readBody(request);
+      const story = updateFootballStoryStatus({storyId: body.storyId, status: body.status});
+      if (!story) throw new Error('História não encontrada.');
+      sendJson(response, 200, {ok: true, story});
+    } catch (error) {
+      sendJson(response, 400, {ok: false, error: error instanceof Error ? error.message : String(error)});
+    }
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/football/short-content') {
+    try {
+      const contents = listShortContents({storyId: url.searchParams.get('storyId') ?? undefined, limit: Number(url.searchParams.get('limit') ?? 20)});
+      sendJson(response, 200, {ok: true, contents});
+    } catch (error) {
+      sendJson(response, 500, {ok: false, error: error instanceof Error ? error.message : String(error), contents: []});
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/short-content/generate') {
+    try {
+      const body = await readBody(request);
+      const story = getFootballStory({storyId: body.storyId});
+      if (!story) throw new Error('História não encontrada.');
+      if (!['APROVADA', 'CONTEUDO_GERADO'].includes(story.status)) throw new Error('A história precisa ser aprovada antes de gerar conteúdo.');
+      const previous = getLatestShortContent({storyId: story.id});
+      const content = generateShortContent(story, {version: Number(previous?.version ?? 0) + 1, regenerationNote: body.regenerationNote ?? null});
+      const validation = validateShortContent(content, story);
+      const saved = saveShortContent(content, {validation, status: validation.valid ? 'GERADO' : 'RASCUNHO'});
+      if (validation.valid) updateFootballStoryStatus({storyId: story.id, status: 'CONTEUDO_GERADO'});
+      sendJson(response, validation.valid ? 200 : 422, {ok: validation.valid, content: saved, validation});
+    } catch (error) {
+      sendJson(response, 400, {ok: false, error: error instanceof Error ? error.message : String(error)});
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/short-content/update') {
+    try {
+      const body = await readBody(request);
+      const current = listShortContents({storyId: body.storyId, limit: 1})[0];
+      if (!current) throw new Error('Conteúdo não encontrado.');
+      const story = getFootballStory({storyId: current.storyId});
+      const draft = {...current, ...(body.content ?? {})};
+      const validation = validateShortContent(draft, story);
+      const saved = updateShortContent({contentId: current.id, content: draft, validation, status: validation.valid ? (body.status ?? current.status) : 'RASCUNHO'});
+      sendJson(response, validation.valid ? 200 : 422, {ok: validation.valid, content: saved, validation});
+    } catch (error) {
+      sendJson(response, 400, {ok: false, error: error instanceof Error ? error.message : String(error)});
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/short-content/status') {
+    try {
+      const body = await readBody(request);
+      const current = getShortContent({contentId: body.contentId});
+      if (!current) throw new Error('Conteúdo não encontrado.');
+      const allowed = new Set(['RASCUNHO', 'GERADO', 'APROVADO', 'REJEITADO', 'PRONTO_PARA_VIDEO', 'VIDEO_GERADO']);
+      if (!allowed.has(body.status)) throw new Error('Status de conteúdo inválido.');
+      const saved = updateShortContent({contentId: current.id, content: current, validation: current.validation, status: body.status});
+      sendJson(response, 200, {ok: true, content: saved});
+    } catch (error) {
+      sendJson(response, 400, {ok: false, error: error instanceof Error ? error.message : String(error)});
+    }
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/football/short-visual') {
+    try {
+      const composition = getLatestShortVisualComposition({contentId: url.searchParams.get('contentId')});
+      sendJson(response, 200, {ok: true, composition});
+    } catch (error) {
+      sendJson(response, 500, {ok: false, error: error instanceof Error ? error.message : String(error)});
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/short-visual/generate') {
+    try {
+      const body = await readBody(request);
+      const content = getShortContent({contentId: body.contentId});
+      if (!content) throw new Error('Conteúdo do Short não encontrado.');
+      if (!['GERADO', 'APROVADO', 'PRONTO_PARA_VIDEO'].includes(content.status)) throw new Error('O conteúdo precisa estar gerado antes de criar a composição.');
+      const story = getFootballStory({storyId: content.storyId});
+      if (!story) throw new Error('História de origem não encontrada.');
+      const logoFiles = await fs.readdir(logosDir).catch(() => []);
+      const logoKey = (value) => String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      const assets = (story.times ?? story.teams ?? []).map((name) => {
+        const candidates = searchTeams({query: name, limit: 10});
+        const resolved = candidates.find((team) => team.name.toLowerCase() === String(name).toLowerCase()) ?? candidates[0];
+        const localLogo = resolved?.teamId
+          ? logoFiles.find((file) => file.endsWith(`-${resolved.teamId}.png`) || file.endsWith(`-${resolved.teamId}.svg`))
+          : logoFiles.find((file) => file.toLowerCase().startsWith(`${logoKey(name)}.`));
+        return {name, logoPath: resolved?.logoPath ?? (localLogo ? `/logos/${localLogo}` : null), accentColor: resolved?.accentColor ?? '#F0A500'};
+      });
+      const previous = getLatestShortVisualComposition({contentId: content.id});
+      const composition = buildShortVisualComposition({content, story, assets, options: {templateOverride: body.templateOverride || undefined, durationSeconds: body.durationSeconds, version: Number(previous?.version ?? 0) + 1}});
+      const validation = validateShortVisualComposition(composition, content);
+      const status = validation.valid ? 'PREVIEW_VALIDADO' : 'AJUSTES_NECESSARIOS';
+      const saved = saveShortVisualComposition(composition, {validation, status});
+      sendJson(response, validation.valid ? 200 : 422, {ok: validation.valid, composition: saved, validation});
+    } catch (error) {
+      sendJson(response, 400, {ok: false, error: error instanceof Error ? error.message : String(error)});
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/short-visual/update') {
+    try {
+      const body = await readBody(request);
+      const current = getShortVisualComposition({compositionId: body.compositionId});
+      if (!current) throw new Error('Composição visual não encontrada.');
+      const content = getShortContent({contentId: current.contentId});
+      const next = {...current, ...(body.composition ?? {})};
+      const validation = validateShortVisualComposition(next, content);
+      const saved = updateShortVisualComposition({compositionId: current.id, composition: next, validation, status: validation.valid ? (body.status ?? current.status) : 'AJUSTES_NECESSARIOS'});
+      sendJson(response, validation.valid ? 200 : 422, {ok: validation.valid, composition: saved, validation});
+    } catch (error) {
+      sendJson(response, 400, {ok: false, error: error instanceof Error ? error.message : String(error)});
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/short-visual/status') {
+    try {
+      const body = await readBody(request);
+      const current = getShortVisualComposition({compositionId: body.compositionId});
+      if (!current) throw new Error('Composição visual não encontrada.');
+      const allowed = new Set(['AGUARDANDO_COMPOSICAO', 'COMPOSICAO_GERADA', 'PREVIEW_VALIDADO', 'AJUSTES_NECESSARIOS', 'PRONTO_PARA_RENDER']);
+      if (!allowed.has(body.status)) throw new Error('Status visual inválido.');
+      const saved = updateShortVisualComposition({compositionId: current.id, composition: current, validation: current.validation, status: body.status});
+      sendJson(response, 200, {ok: true, composition: saved});
+    } catch (error) {
+      sendJson(response, 400, {ok: false, error: error instanceof Error ? error.message : String(error)});
+    }
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/football/db/teams') {
+    try {
+      const teams = searchTeams({
+        query: url.searchParams.get('query') ?? url.searchParams.get('q') ?? '',
+        limit: Number(url.searchParams.get('limit') ?? 25),
+      });
+      sendJson(response, 200, {ok: true, teams});
+    } catch (error) {
+      sendJson(response, 500, {ok: false, error: error instanceof Error ? error.message : String(error)});
+    }
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/football/db/standings') {
+    try {
+      const rows = getStandings({
+        leagueId: Number(url.searchParams.get('leagueId')),
+        season: Number(url.searchParams.get('season')),
+      });
+      sendJson(response, 200, {ok: true, rows});
+    } catch (error) {
+      sendJson(response, 500, {ok: false, error: error instanceof Error ? error.message : String(error), rows: []});
+    }
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/football/db/top-scorers') {
+    try {
+      const entries = getTopScorers({
+        leagueId: Number(url.searchParams.get('leagueId')),
+        season: Number(url.searchParams.get('season')),
+        limit: Number(url.searchParams.get('limit') ?? 20),
+      });
+      sendJson(response, 200, {ok: true, entries});
+    } catch (error) {
+      sendJson(response, 500, {ok: false, error: error instanceof Error ? error.message : String(error), entries: []});
+    }
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/football/compare/teams') {
+    try {
+      const comparison = compareTeams({
+        leftTeamId: Number(url.searchParams.get('leftTeamId')),
+        rightTeamId: Number(url.searchParams.get('rightTeamId')),
+        season: Number(url.searchParams.get('season')),
+      });
+      sendJson(response, 200, {ok: true, comparison});
+    } catch (error) {
+      sendJson(response, 500, {ok: false, error: error instanceof Error ? error.message : String(error)});
+    }
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/football/compare/leagues') {
+    try {
+      const comparison = compareLeagues({
+        leftLeagueId: Number(url.searchParams.get('leftLeagueId')),
+        rightLeagueId: Number(url.searchParams.get('rightLeagueId')),
+        season: Number(url.searchParams.get('season')),
+        metric: url.searchParams.get('metric') ?? 'goals',
+      });
+      sendJson(response, 200, {ok: true, comparison});
+    } catch (error) {
+      sendJson(response, 500, {ok: false, error: error instanceof Error ? error.message : String(error)});
+    }
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/football/compare/top-scorers') {
+    try {
+      const entries = compareTopScorers({
+        leagueIds: parseNumberList(url.searchParams.get('leagueIds'), url.searchParams.getAll('leagueId')),
+        season: Number(url.searchParams.get('season')),
+        limit: Number(url.searchParams.get('limit') ?? 10),
+      });
+      sendJson(response, 200, {ok: true, entries});
+    } catch (error) {
+      sendJson(response, 500, {ok: false, error: error instanceof Error ? error.message : String(error), entries: []});
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/jobs/team-comparison') {
+    try {
+      const body = await readBody(request);
+      const {job, comparison} = await prepareTeamComparisonJob({
+        ...body,
+        leftTeamId: Number(body.leftTeamId),
+        rightTeamId: Number(body.rightTeamId),
+        season: Number(body.season),
+      });
+      sendJson(response, 200, {ok: true, message: 'Team comparison job prepared.', job, comparison});
+    } catch (error) {
+      sendJson(response, 400, {ok: false, error: error instanceof Error ? error.message : String(error)});
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/jobs/league-comparison') {
+    try {
+      const body = await readBody(request);
+      const {job, comparison} = await prepareLeagueComparisonJob({
+        ...body,
+        leftLeagueId: Number(body.leftLeagueId),
+        rightLeagueId: Number(body.rightLeagueId),
+        season: Number(body.season),
+      });
+      sendJson(response, 200, {ok: true, message: 'League comparison job prepared.', job, comparison});
+    } catch (error) {
+      sendJson(response, 400, {ok: false, error: error instanceof Error ? error.message : String(error)});
+    }
+    return;
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/football/jobs/top-scorers-comparison') {
+    try {
+      const body = await readBody(request);
+      const {job, rows} = await prepareTopScorersComparisonJob({
+        ...body,
+        leagueIds: parseNumberList(body.leagueIds, body.leagueId),
+        season: Number(body.season),
+      });
+      sendJson(response, 200, {ok: true, message: 'Top scorers comparison job prepared.', job, rows});
+    } catch (error) {
+      sendJson(response, 400, {ok: false, error: error instanceof Error ? error.message : String(error)});
+    }
+    return;
+  }
 
   if (request.method === 'POST' && url.pathname === '/api/football/jobs/prepare') {
     try {
@@ -3399,6 +3772,12 @@ const server = http.createServer(async (request, response) => {
       const {job} = await prepareFootballJob(body);
 
       const renderResult = await runRender(job.compositionId, job.outputName);
+      saveRenderOutput({
+        compositionId: job.compositionId,
+        outputName: job.outputName,
+        renderPath: renderResult.outputPath,
+        payload: renderResult,
+      });
 
       sendJson(response, 200, {
         ok: true,
@@ -3443,6 +3822,12 @@ const server = http.createServer(async (request, response) => {
       const body = await readBody(request);
       const {job} = await prepareFootballThumbnailJob(body);
       const renderResult = await runStill(job.compositionId, job.outputName);
+      saveRenderOutput({
+        compositionId: job.compositionId,
+        outputName: job.outputName,
+        renderPath: renderResult.outputPath,
+        payload: renderResult,
+      });
 
       sendJson(response, 200, {
         ok: true,
@@ -3524,6 +3909,12 @@ const server = http.createServer(async (request, response) => {
         voiceoverEnabled: parseBooleanField(body.voiceoverEnabled, true),
       });
       const renderResult = await runRender('FootballPredictionsLong', job.outputName);
+      saveRenderOutput({
+        compositionId: 'FootballPredictionsLong',
+        outputName: job.outputName,
+        renderPath: renderResult.outputPath,
+        payload: renderResult,
+      });
 
       sendJson(response, 200, {
         ok: true,
@@ -3641,6 +4032,12 @@ const server = http.createServer(async (request, response) => {
         voiceoverEnabled: parseBooleanField(body.voiceoverEnabled, true),
       });
       const renderResult = await runRender('FootballRoundSummaryLong', job.outputName);
+      saveRenderOutput({
+        compositionId: 'FootballRoundSummaryLong',
+        outputName: job.outputName,
+        renderPath: renderResult.outputPath,
+        payload: renderResult,
+      });
 
       sendJson(response, 200, {
         ok: true,
@@ -3864,6 +4261,8 @@ const server = http.createServer(async (request, response) => {
     filePath = path.join(dashboardDir, 'index.html');
   } else if (url.pathname === '/football' || url.pathname === '/football/') {
     filePath = path.join(dashboardDir, 'football', 'index.html');
+  } else if (url.pathname === '/football-story-shorts' || url.pathname === '/football-story-shorts/') {
+    filePath = path.join(dashboardDir, 'football-story-shorts', 'index.html');
   } else if (url.pathname === '/football-static' || url.pathname === '/football-static/') {
     filePath = path.join(dashboardDir, 'football', 'index.html');
   } else if (

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shorts Inteligentes · Foot Analysis</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="football-dashboard">
+    <main class="shell">
+      <nav class="top-nav dashboard-top-nav">
+        <a class="back-link" href="/">Todos os dashboards</a>
+        <a class="back-link" href="/football">Football Shorts</a>
+        <div class="dashboard-status">
+          <span class="ds-chip ds-chip--ready status-chip ready">Shorts inteligentes</span>
+          <span class="ds-chip ds-chip--neutral status-chip neutral">Português</span>
+        </div>
+      </nav>
+
+      <section class="ds-panel panel stories-panel story-shorts-workspace" lang="pt-BR">
+        <div class="ds-panel__header panel-header">
+          <div>
+            <span class="eyebrow">FOOT ANALYSIS · AUTOMAÇÃO</span>
+            <h1>Shorts Inteligentes</h1>
+            <p class="panel-subtitle">Detecte histórias relevantes da rodada, transforme-as em roteiro e prepare a composição visual do Short.</p>
+          </div>
+          <span class="ds-chip ds-chip--neutral status-chip neutral">Brasileirão Série A</span>
+        </div>
+
+        <div class="stories-controls">
+          <label class="ds-field">Competição<select id="stories-competition"><option value="71">Brasileirão Série A</option></select></label>
+          <label class="ds-field">Temporada<input id="stories-season" type="number" value="2026" min="2000" /></label>
+          <label class="ds-field">Rodada<select id="stories-round"><option value="">Selecione a rodada</option></select></label>
+          <button type="button" id="analyze-stories-button" class="ds-button ds-button--primary btn btn-primary">Analisar rodada</button>
+        </div>
+        <p id="stories-status" class="ds-notice ds-notice--info notice info">Selecione uma rodada para analisar os acontecimentos.</p>
+        <div id="stories-results" class="stories-results"><div class="empty-state">Nenhuma análise realizada.</div></div>
+
+        <section id="short-content-review" class="short-content-review" hidden>
+          <div class="section-title"><span>Conteúdo do Short</span><span id="short-content-version" class="ds-chip ds-chip--neutral status-chip neutral"></span></div>
+          <div class="short-content-grid">
+            <label>Título<input id="content-title" /></label>
+            <label>Hook<input id="content-hook" /></label>
+            <label class="short-content-wide">Voice-over<textarea id="content-voiceover" rows="4"></textarea></label>
+            <label class="short-content-wide">Textos de tela<textarea id="content-screen-texts" rows="4"></textarea></label>
+            <label class="short-content-wide">Descrição<textarea id="content-description" rows="4"></textarea></label>
+            <label>CTA<input id="content-cta" /></label>
+            <label>Tags<input id="content-tags" /></label>
+          </div>
+          <div class="short-content-actions">
+            <button type="button" id="save-content-button" class="ds-button ds-button--secondary btn btn-secondary">Salvar edição</button>
+            <button type="button" id="regenerate-content-button" class="ds-button ds-button--secondary btn btn-secondary">Gerar novamente</button>
+            <button type="button" id="ready-content-button" class="ds-button ds-button--primary btn btn-primary">Marcar pronto para vídeo</button>
+          </div>
+          <p id="short-content-status" class="ds-notice ds-notice--info notice info"></p>
+        </section>
+
+        <section id="short-visual-review" class="short-visual-review" hidden>
+          <div class="section-title"><span>Composição visual</span><span id="short-visual-status-chip" class="ds-chip ds-chip--neutral status-chip neutral"></span></div>
+          <div class="visual-controls">
+            <label>Template<select id="visual-template-select"><option value="">Automático</option><option value="RESULTADO_DESTAQUE">Resultado</option><option value="CLASSIFICACAO_DESTAQUE">Classificação</option><option value="ESTATISTICA_COMPARATIVA">Estatísticas</option><option value="SEQUENCIA">Sequência</option><option value="ARTILHARIA">Artilharia</option><option value="RESUMO_RODADA">Resumo da rodada</option><option value="REBAIXAMENTO">Rebaixamento</option></select></label>
+            <label>Duração (segundos)<input id="visual-duration-input" type="number" min="5" max="30" step="0.1" /></label>
+            <button type="button" id="generate-visual-button" class="ds-button ds-button--primary btn btn-primary">Gerar Preview</button>
+            <button type="button" id="ready-visual-button" class="ds-button ds-button--secondary btn btn-secondary">Pronto para render</button>
+          </div>
+          <div id="short-visual-preview" class="short-visual-preview"></div>
+          <p id="short-visual-status" class="ds-notice ds-notice--info notice info"></p>
+        </section>
+      </section>
+    </main>
+    <script type="module" src="/football-story-shorts/app.js"></script>
+  </body>
+</html>

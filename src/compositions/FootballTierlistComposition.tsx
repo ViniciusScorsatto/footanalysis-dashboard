@@ -31,6 +31,7 @@ import type {
 } from '../lib/types';
 
 type FootballTierlistCompositionProps = {
+  presentation?: 'animated' | 'static';
   channelProfile?: FootballChannelProfile;
   leagueName: string;
   titleLabel: string;
@@ -52,6 +53,7 @@ type FootballTierlistCompositionProps = {
 };
 
 export const FootballTierlistComposition = ({
+  presentation = 'animated',
   channelProfile = 'pt',
   leagueName,
   titleLabel,
@@ -73,12 +75,16 @@ export const FootballTierlistComposition = ({
 }: FootballTierlistCompositionProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const contentFrame =
-    Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
-  const mainOpacity = interpolate(contentFrame, [0, 8], [0, 1], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
+  const isStatic = presentation === 'static';
+  const contentFrame = isStatic
+    ? 1000
+    : Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
+  const mainOpacity = isStatic
+    ? 1
+    : interpolate(contentFrame, [0, 8], [0, 1], {
+        extrapolateLeft: 'clamp',
+        extrapolateRight: 'clamp',
+      });
   const isEnglish = channelProfile === 'en';
   const accentColor = leagueConfig?.accentColor ?? (isEnglish ? '#0A84FF' : '#F0A500');
   const secondaryAccentColor = leagueConfig?.secondaryAccentColor ?? (isEnglish ? '#C8A84B' : '#009B3A');
@@ -96,7 +102,7 @@ export const FootballTierlistComposition = ({
         color: '#f0f4f8',
         fontFamily: TEASER_NUMBER_FONT,
         background:
-          'radial-gradient(circle at 86% 12%, rgba(0,155,58,0.16), transparent 28%), radial-gradient(circle at 12% 88%, rgba(0,39,118,0.18), transparent 26%), linear-gradient(180deg, #0b0d12 0%, #07090d 100%)',
+          `radial-gradient(circle at 86% 12%, ${accentColor}24, transparent 28%), radial-gradient(circle at 12% 88%, #0A84FF1f, transparent 26%), linear-gradient(180deg, #0b0d12 0%, #07090d 100%)`,
       }}
     >
       <FootballShortFontFaces />
@@ -110,26 +116,28 @@ export const FootballTierlistComposition = ({
         accentColor={accentColor}
         opacity={0.5}
       />
-      <FootballShortOpening
-        template="tierlist"
-        channelProfile={channelProfile}
-        leagueName={leagueName}
-        titleLabel={titleLabel}
-        subtitleLabel={subtitleLabel}
-        tiers={tiers}
-        topScorerPrediction={topScorerPrediction}
-        bestPlayerPrediction={bestPlayerPrediction}
-        accentColor={accentColor}
-        secondaryAccentColor={secondaryAccentColor}
-        brandName={brandName}
-        brandLogoPath={brandLogoPath}
-        introTitle={introTitle}
-        introSubtitle={introSubtitle}
-        hookText={hookText}
-        coldOpenData={coldOpenData}
-      />
+      {isStatic ? null : (
+        <FootballShortOpening
+          template="tierlist"
+          channelProfile={channelProfile}
+          leagueName={leagueName}
+          titleLabel={titleLabel}
+          subtitleLabel={subtitleLabel}
+          tiers={tiers}
+          topScorerPrediction={topScorerPrediction}
+          bestPlayerPrediction={bestPlayerPrediction}
+          accentColor={accentColor}
+          secondaryAccentColor={secondaryAccentColor}
+          brandName={brandName}
+          brandLogoPath={brandLogoPath}
+          introTitle={introTitle}
+          introSubtitle={introSubtitle}
+          hookText={hookText}
+          coldOpenData={coldOpenData}
+        />
+      )}
 
-      <Sequence from={SHORT_OPENING_DURATION_FRAMES}>
+      <Sequence from={isStatic ? 0 : SHORT_OPENING_DURATION_FRAMES}>
       <VoiceoverBed voiceoverPath={voiceoverPath} />
       <AbsoluteFill style={{opacity: mainOpacity}}>
         <CompetitionAccentRail
@@ -161,6 +169,13 @@ export const FootballTierlistComposition = ({
             <div
               style={{
                 ...headerAnim,
+                alignSelf: 'flex-start',
+                padding: isStatic && isEnglish ? '9px 18px 8px' : undefined,
+                borderRadius: isStatic && isEnglish ? 999 : undefined,
+                background: isStatic && isEnglish ? `${accentColor}14` : undefined,
+                border: isStatic && isEnglish ? `1px solid ${accentColor}88` : undefined,
+                borderLeft: isStatic && isEnglish ? `7px solid ${accentColor}` : undefined,
+                boxShadow: isStatic && isEnglish ? `0 0 20px ${accentColor}20` : undefined,
                 color: accentColor,
                 fontSize: 22,
                 fontWeight: 900,
@@ -188,7 +203,7 @@ export const FootballTierlistComposition = ({
             <div
               style={{
                 ...subtitleAnim,
-                color: isEnglish ? '#4a6070' : '#3a5060',
+                color: isStatic && isEnglish ? accentColor : isEnglish ? '#4a6070' : '#3a5060',
                 fontSize: 34,
                 lineHeight: 1,
                 fontWeight: 900,
@@ -204,7 +219,7 @@ export const FootballTierlistComposition = ({
               marginTop: 24,
               display: 'flex',
               flexDirection: 'column',
-              gap: 14,
+              gap: isStatic ? 20 : 14,
             }}
           >
             {tiers.map((tier, index) => (
@@ -214,6 +229,7 @@ export const FootballTierlistComposition = ({
                 rowIndex={index}
                 timelineFrame={contentFrame}
                 isChampion={tier.key === 'champion'}
+                isStatic={isStatic}
               />
             ))}
           </div>
@@ -285,12 +301,15 @@ const TierRow = ({
   rowIndex,
   timelineFrame,
   isChampion,
+  isStatic,
 }: {
   tier: TierlistGroup;
   rowIndex: number;
   timelineFrame: number;
   isChampion: boolean;
+  isStatic: boolean;
 }) => {
+  const usesTwoRows = isStatic && !isChampion && tier.entries.length === 5;
   const opacity = interpolate(
     timelineFrame,
     [rowStartFrame(rowIndex), rowStartFrame(rowIndex) + 12],
@@ -310,8 +329,8 @@ const TierRow = ({
         opacity,
         transform: `translateY(${translateY}px)`,
         display: 'grid',
-        gridTemplateColumns: isChampion ? '214px 1fr' : '172px 1fr',
-        minHeight: isChampion ? 166 : 116,
+        gridTemplateColumns: isChampion ? '214px 1fr' : isStatic ? '196px 1fr' : '172px 1fr',
+        minHeight: usesTwoRows ? 226 : isChampion ? (isStatic ? 180 : 166) : isStatic ? 132 : 116,
         borderRadius: 22,
         overflow: 'hidden',
         border: `2px solid ${tier.accentColor}66`,
@@ -340,8 +359,13 @@ const TierRow = ({
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: isChampion ? '1fr' : `repeat(${Math.min(5, Math.max(1, tier.entries.length))}, 1fr)`,
-          gap: isChampion ? 0 : 4,
+          gridTemplateColumns: usesTwoRows
+            ? 'repeat(6, 1fr)'
+            : isChampion
+              ? '1fr'
+              : `repeat(${Math.min(5, Math.max(1, tier.entries.length))}, 1fr)`,
+          gridTemplateRows: usesTwoRows ? 'repeat(2, 1fr)' : undefined,
+          gap: isChampion ? 0 : usesTwoRows ? '8px 6px' : 4,
           alignItems: 'center',
           padding: isChampion ? '16px 26px' : '12px 8px',
         }}
@@ -353,6 +377,16 @@ const TierRow = ({
             badge={entry.badge}
             accentColor={tier.accentColor}
             featured={isChampion}
+            gridColumn={
+              usesTwoRows
+                ? index < 3
+                  ? `${index * 2 + 1} / span 2`
+                  : index === 3
+                    ? '2 / span 2'
+                    : '4 / span 2'
+                : undefined
+            }
+            gridRow={usesTwoRows ? (index < 3 ? 1 : 2) : undefined}
           />
         ))}
       </div>
@@ -365,20 +399,26 @@ const TierTeam = ({
   badge,
   accentColor,
   featured,
+  gridColumn,
+  gridRow,
 }: {
   team: string;
   badge: TeamBadge;
   accentColor: string;
   featured: boolean;
+  gridColumn?: string;
+  gridRow?: number;
 }) => {
   const imagePath = badge.imagePath ?? badge.logoPath;
   const imageSrc = imagePath ? staticFile(imagePath.replace(/^\/+/, '')) : null;
-  const teamFontSize = featured ? fitTierTeamFontSize(team, 66, 42) : fitTierTeamFontSize(team, 24, 19);
+  const teamFontSize = featured ? fitTierTeamFontSize(team, 66, 42) : fitTierTeamFontSize(team, 24, 18);
 
   return (
     <div
       style={{
         minWidth: 0,
+        gridColumn,
+        gridRow,
         display: 'flex',
         flexDirection: featured ? 'row' : 'column',
         alignItems: 'center',
@@ -430,8 +470,10 @@ const TierTeam = ({
           fontWeight: 950,
           textAlign: featured ? 'left' : 'center',
           textTransform: 'uppercase',
-          whiteSpace: 'nowrap',
-          overflow: 'visible',
+          whiteSpace: featured ? 'nowrap' : 'normal',
+          overflow: 'hidden',
+          maxWidth: '100%',
+          maxHeight: featured ? undefined : 40,
         }}
       >
         {team}
