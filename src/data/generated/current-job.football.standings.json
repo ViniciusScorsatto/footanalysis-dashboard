@@ -1,22 +1,23 @@
 {
   "sport": "football",
   "template": "standings",
-  "leagueId": 72,
+  "videoMode": "static",
+  "leagueId": 71,
   "season": 2026,
-  "leagueName": "Brasileirão Série B",
+  "leagueName": "Brasileirão Série A",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/Estádio Vai Ferver.mp3",
-  "soundtrackLabel": "Estádio Vai Ferver",
-  "soundtrackVolume": 0.25,
-  "outputName": "brasileirao-serie-b-2026-classificacao-pt-br.mp4",
-  "durationInFrames": 510,
-  "compositionId": "FootballStandingsShort",
+  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
+  "soundtrackLabel": "Gol de Arena",
+  "soundtrackVolume": 0.2,
+  "outputName": "brasileirao-serie-a-2026-classificacao-pt-br.mp4",
+  "durationInFrames": 360,
+  "compositionId": "FootballStaticStandingsShort",
   "leagueConfig": {
-    "leagueId": 72,
-    "accentColor": "#2E86DE",
+    "leagueId": 71,
+    "accentColor": "#F0A500",
     "standings": {
       "safeArea": {
         "left": 68,
@@ -24,20 +25,28 @@
       },
       "zones": [
         {
-          "key": "acesso-direto",
-          "label": "Acesso direto",
+          "key": "libertadores",
+          "label": "Libertadores",
           "start": 1,
-          "end": 2,
+          "end": 4,
           "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
           "accent": "rgba(101, 227, 133, 0.64)"
         },
         {
-          "key": "playoffs-acesso",
-          "label": "Playoffs de acesso",
-          "start": 3,
-          "end": 6,
-          "fill": "linear-gradient(90deg, rgba(240, 165, 0, 0.88), rgba(240, 165, 0, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(240, 165, 0, 0.52)"
+          "key": "pre-libertadores",
+          "label": "Pré-Libertadores",
+          "start": 5,
+          "end": 5,
+          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 190, 92, 0.58)"
+        },
+        {
+          "key": "sul-americana",
+          "label": "Sul-Americana",
+          "start": 6,
+          "end": 11,
+          "fill": "linear-gradient(90deg, rgba(0, 177, 183, 0.82), rgba(0, 177, 183, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(0, 177, 183, 0.54)"
         },
         {
           "key": "rebaixamento",
@@ -49,279 +58,264 @@
         }
       ]
     },
-    "leagueName": "Brasileirão Série B"
+    "leagueName": "Brasileirão Série A",
+    "pace": {
+      "championship": {
+        "benchmarkPercentage": 68,
+        "benchmarkLabel": "Média dos últimos 10 campeões",
+        "entryCount": 10
+      },
+      "relegation": {
+        "benchmarkPercentage": 38,
+        "benchmarkLabel": "Linha de segurança",
+        "safeRowsAbove": 3,
+        "maxRows": 10
+      }
+    }
   },
-  "standingsLabel": "Rodada 14",
-  "ctaText": "Quem vai garantir uma vaga entre os líderes da Série B?",
+  "standingsLabel": "Rodada 28",
+  "ctaText": "Quem sobe e quem cai?",
   "rows": [
     {
       "rank": 1,
-      "team": "Vila Nova",
-      "played": 14,
-      "points": 28,
-      "goalDifference": 7,
-      "form": "WLWWW",
+      "team": "Flamengo",
+      "played": 28,
+      "points": 60,
+      "goalDifference": 32,
+      "form": "WWWWW",
       "badge": {
-        "label": "VN",
-        "logoPath": "/logos/vila-nova-142.png"
+        "label": "F",
+        "logoPath": "/logos/flamengo-127.png"
       }
     },
     {
       "rank": 2,
-      "team": "São Bernardo",
-      "played": 14,
-      "points": 25,
-      "goalDifference": 9,
-      "form": "LDWDW",
+      "team": "Palmeiras",
+      "played": 28,
+      "points": 57,
+      "goalDifference": 26,
+      "form": "DWDDW",
       "badge": {
-        "label": "SB",
-        "logoPath": "/logos/sao-bernardo-7865.png"
+        "label": "P",
+        "logoPath": "/logos/palmeiras-121.png"
       }
     },
     {
       "rank": 3,
-      "team": "Sport",
-      "played": 14,
-      "points": 25,
-      "goalDifference": 8,
-      "form": "DDDWW",
+      "team": "Athletico-PR",
+      "played": 28,
+      "points": 49,
+      "goalDifference": 11,
+      "form": "WDLDW",
       "badge": {
-        "label": "S",
-        "logoPath": "/logos/sport-recife-123.png"
+        "label": "A",
+        "logoPath": "/logos/atletico-paranaense-134.png"
       }
     },
     {
       "rank": 4,
-      "team": "Novorizontino",
-      "played": 14,
-      "points": 24,
-      "goalDifference": 9,
-      "form": "WDWDW",
+      "team": "Fluminense",
+      "played": 28,
+      "points": 48,
+      "goalDifference": 8,
+      "form": "WLWDW",
       "badge": {
-        "label": "N",
-        "logoPath": "/logos/novorizontino.svg"
+        "label": "F",
+        "logoPath": "/logos/fluminense-124.png"
       }
     },
     {
       "rank": 5,
-      "team": "Criciuma",
-      "played": 14,
-      "points": 24,
-      "goalDifference": 5,
-      "form": "WDWWD",
+      "team": "Bahia",
+      "played": 28,
+      "points": 46,
+      "goalDifference": 8,
+      "form": "LWWWW",
       "badge": {
-        "label": "C",
-        "logoPath": "/logos/criciuma-140.png"
+        "label": "B",
+        "logoPath": "/logos/bahia-118.png"
       }
     },
     {
       "rank": 6,
-      "team": "Juventude",
-      "played": 14,
-      "points": 22,
-      "goalDifference": 6,
-      "form": "WWLWL",
+      "team": "Cruzeiro",
+      "played": 28,
+      "points": 45,
+      "goalDifference": 2,
+      "form": "WLWLW",
       "badge": {
-        "label": "J",
-        "logoPath": "/logos/juventude-152.png"
+        "label": "C",
+        "logoPath": "/logos/cruzeiro-135.png"
       }
     },
     {
       "rank": 7,
-      "team": "Operario-PR",
-      "played": 14,
-      "points": 22,
-      "goalDifference": 1,
-      "form": "WLWWD",
+      "team": "Santos",
+      "played": 28,
+      "points": 41,
+      "goalDifference": 2,
+      "form": "WWWWW",
       "badge": {
-        "label": "O",
-        "logoPath": "/logos/operario-pr-1223.png"
+        "label": "S",
+        "logoPath": "/logos/santos-128.png"
       }
     },
     {
       "rank": 8,
-      "team": "Fortaleza",
-      "played": 14,
-      "points": 22,
-      "goalDifference": 1,
-      "form": "DLWLW",
+      "team": "Atletico-MG",
+      "played": 27,
+      "points": 40,
+      "goalDifference": 4,
+      "form": "DWLWD",
       "badge": {
-        "label": "F",
-        "logoPath": "/logos/fortaleza-ec-154.png"
+        "label": "A",
+        "logoPath": "/logos/atletico-mg-1062.png"
       }
     },
     {
       "rank": 9,
-      "team": "Náutico",
-      "played": 14,
-      "points": 20,
-      "goalDifference": 3,
-      "form": "LDLLW",
+      "team": "Coritiba",
+      "played": 28,
+      "points": 38,
+      "goalDifference": -6,
+      "form": "LDLWW",
       "badge": {
-        "label": "N",
-        "logoPath": "/logos/nautico-recife-755.png"
+        "label": "C",
+        "logoPath": "/logos/coritiba-147.png"
       }
     },
     {
       "rank": 10,
-      "team": "Cuiaba",
-      "played": 14,
-      "points": 19,
+      "team": "Bragantino",
+      "played": 27,
+      "points": 36,
       "goalDifference": 2,
-      "form": "LWWWL",
+      "form": "LDLLW",
       "badge": {
-        "label": "C",
-        "logoPath": "/logos/cuiaba-1193.png"
+        "label": "B",
+        "logoPath": "/logos/rb-bragantino-794.png"
       }
     },
     {
       "rank": 11,
-      "team": "Athletic Club",
-      "played": 14,
-      "points": 19,
-      "goalDifference": 0,
-      "form": "LDDWW",
+      "team": "Sao Paulo",
+      "played": 28,
+      "points": 36,
+      "goalDifference": 1,
+      "form": "LWLWW",
       "badge": {
-        "label": "AC",
-        "logoPath": "/logos/athletic-club-13975.png"
+        "label": "SP",
+        "logoPath": "/logos/sao-paulo-126.png"
       }
     },
     {
       "rank": 12,
-      "team": "Goias",
-      "played": 14,
-      "points": 18,
-      "goalDifference": -8,
-      "form": "LDLDW",
+      "team": "Botafogo",
+      "played": 28,
+      "points": 35,
+      "goalDifference": -4,
+      "form": "LWDDL",
       "badge": {
-        "label": "G",
-        "logoPath": "/logos/goias-151.png"
+        "label": "B",
+        "logoPath": "/logos/botafogo-120.png"
       }
     },
     {
       "rank": 13,
-      "team": "Atlético-GO",
-      "played": 14,
-      "points": 18,
-      "goalDifference": 0,
-      "form": "DDWDL",
+      "team": "Vitoria",
+      "played": 28,
+      "points": 33,
+      "goalDifference": -14,
+      "form": "LDWLL",
       "badge": {
-        "label": "A",
-        "logoPath": "/logos/atletico-goianiense-144.png"
+        "label": "V",
+        "logoPath": "/logos/vitoria-136.png"
       }
     },
     {
       "rank": 14,
-      "team": "Ceara",
-      "played": 14,
-      "points": 17,
-      "goalDifference": -1,
-      "form": "LDWLL",
+      "team": "Corinthians",
+      "played": 28,
+      "points": 32,
+      "goalDifference": -3,
+      "form": "LLLLL",
       "badge": {
         "label": "C",
-        "logoPath": "/logos/ceara-129.png"
+        "logoPath": "/logos/corinthians-131.png"
       }
     },
     {
       "rank": 15,
-      "team": "Botafogo SP",
-      "played": 14,
-      "points": 16,
-      "goalDifference": 1,
-      "form": "WWLDL",
+      "team": "Mirassol",
+      "played": 28,
+      "points": 32,
+      "goalDifference": -9,
+      "form": "WDWLD",
       "badge": {
-        "label": "BS",
-        "logoPath": "/logos/botafogo-sp-2618.png"
+        "label": "M",
+        "logoPath": "/logos/mirassol-7848.png"
       }
     },
     {
       "rank": 16,
-      "team": "CRB",
-      "played": 14,
-      "points": 16,
-      "goalDifference": -1,
-      "form": "DDLLW",
+      "team": "Vasco DA Gama",
+      "played": 27,
+      "points": 31,
+      "goalDifference": -7,
+      "form": "WWLWL",
       "badge": {
-        "label": "C",
-        "logoPath": "/logos/crb-146.png"
+        "label": "VDG",
+        "logoPath": "/logos/vasco-da-gama-133.png"
       }
     },
     {
       "rank": 17,
-      "team": "Londrina",
-      "played": 14,
-      "points": 14,
-      "goalDifference": -5,
-      "form": "WWLLL",
+      "team": "Gremio",
+      "played": 28,
+      "points": 29,
+      "goalDifference": -8,
+      "form": "DLLLW",
       "badge": {
-        "label": "L",
-        "logoPath": "/logos/londrina-148.png"
+        "label": "G",
+        "logoPath": "/logos/gremio-130.png"
       }
     },
     {
       "rank": 18,
-      "team": "Avai",
-      "played": 14,
-      "points": 13,
-      "goalDifference": -5,
-      "form": "WLLLL",
+      "team": "Internacional",
+      "played": 28,
+      "points": 28,
+      "goalDifference": -6,
+      "form": "LWLLD",
       "badge": {
-        "label": "A",
-        "logoPath": "/logos/avai-145.png"
+        "label": "I",
+        "logoPath": "/logos/internacional-119.png"
       }
     },
     {
       "rank": 19,
-      "team": "Ponte Preta",
-      "played": 14,
-      "points": 8,
-      "goalDifference": -17,
-      "form": "LLLDL",
+      "team": "Remo",
+      "played": 28,
+      "points": 23,
+      "goalDifference": -15,
+      "form": "LLLLL",
       "badge": {
-        "label": "PP",
-        "logoPath": "/logos/ponte-preta-139.png"
+        "label": "R",
+        "logoPath": "/logos/remo-1198.png"
       }
     },
     {
       "rank": 20,
-      "team": "América-MG",
-      "played": 14,
-      "points": 6,
-      "goalDifference": -15,
-      "form": "LWLLL",
+      "team": "Chapecoense",
+      "played": 27,
+      "points": 18,
+      "goalDifference": -24,
+      "form": "DLWLW",
       "badge": {
-        "label": "A",
-        "logoPath": "/logos/america-mineiro-125.png"
+        "label": "C",
+        "logoPath": "/logos/chapecoense-sc-132.png"
       }
     }
   ],
-  "introTitle": "Brasileirão Série B",
-  "introSubtitle": "Rodada 14",
-  "hookText": "Vila Nova lidera a Série B com 3 pontos de vantagem na rodada 14.",
-  "coldOpenData": {
-    "tableRows": [
-      {
-        "rank": 1,
-        "club": "VILA NOVA",
-        "pts": 28
-      },
-      {
-        "rank": 2,
-        "club": "SÃO BERNARDO",
-        "pts": 25
-      },
-      {
-        "rank": 3,
-        "club": "SPORT",
-        "pts": 25
-      },
-      {
-        "rank": 4,
-        "club": "NOVORIZONTINO",
-        "pts": 24
-      }
-    ]
-  },
-  "voiceoverEnabled": false,
-  "voiceoverText": "Na 14ª rodada, Vila Nova lidera com 28 pontos, três à frente do São Bernardo e Sport na luta pelo acesso."
+  "voiceoverEnabled": false
 }

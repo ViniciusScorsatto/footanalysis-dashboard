@@ -11,6 +11,8 @@
     "FootballNextGamesShort": 255,
     "FootballPredictionsShort": 405,
     "FootballStandingsShort": 405,
+    "FootballSerieCQuadrangularShort": 255,
+    "FootballStaticSerieCQuadrangularShort": 255,
     "FootballSeasonFinalVerdictShort": 255,
     "FootballChampionFinalShort": 255,
     "FootballTopScorersShort": 255,

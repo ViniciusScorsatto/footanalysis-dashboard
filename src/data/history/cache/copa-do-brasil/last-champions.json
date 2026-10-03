@@ -1,0 +1,136 @@
+{
+  "competitionId": "copa-do-brasil",
+  "competitionName": "Copa do Brasil",
+  "champions": [
+    {
+      "year": 2016,
+      "clubId": "gremio",
+      "clubName": "Grêmio",
+      "country": "Brazil",
+      "runnerUp": "Atlético Mineiro",
+      "score": "4–2 on aggregate",
+      "badge": {
+        "label": "GRÊM",
+        "logoPath": "/logos/gremio.png",
+        "accentColor": "#2E86DE"
+      }
+    },
+    {
+      "year": 2017,
+      "clubId": "cruzeiro",
+      "clubName": "Cruzeiro",
+      "country": "Brazil",
+      "runnerUp": "Flamengo",
+      "score": "1–1 on aggregate; 5–3 on penalties",
+      "badge": {
+        "label": "CRUZ",
+        "logoPath": "/logos/cruzeiro.png",
+        "accentColor": "#003DA5"
+      }
+    },
+    {
+      "year": 2018,
+      "clubId": "cruzeiro",
+      "clubName": "Cruzeiro",
+      "country": "Brazil",
+      "runnerUp": "Corinthians",
+      "score": "3–1 on aggregate",
+      "badge": {
+        "label": "CRUZ",
+        "logoPath": "/logos/cruzeiro.png",
+        "accentColor": "#003DA5"
+      }
+    },
+    {
+      "year": 2019,
+      "clubId": "athletico-pr",
+      "clubName": "Athletico-PR",
+      "country": "Brazil",
+      "runnerUp": "Internacional",
+      "score": "3–1 on aggregate",
+      "badge": {
+        "label": "ATHL",
+        "logoPath": "/logos/atletico-paranaense-134.png",
+        "accentColor": "#D71920"
+      }
+    },
+    {
+      "year": 2020,
+      "clubId": "palmeiras",
+      "clubName": "Palmeiras",
+      "country": "Brazil",
+      "runnerUp": "Grêmio",
+      "score": "3–0 on aggregate",
+      "badge": {
+        "label": "PALM",
+        "logoPath": "/logos/palmeiras.png",
+        "accentColor": "#27AE60"
+      }
+    },
+    {
+      "year": 2021,
+      "clubId": "atletico-mineiro",
+      "clubName": "Atlético Mineiro",
+      "country": "Brazil",
+      "runnerUp": "Athletico Paranaense",
+      "score": "6–1 on aggregate",
+      "badge": {
+        "label": "AM",
+        "logoPath": "/logos/atletico-mineiro-u17-24471.png",
+        "accentColor": "#111111"
+      }
+    },
+    {
+      "year": 2022,
+      "clubId": "flamengo",
+      "clubName": "Flamengo",
+      "country": "Brazil",
+      "runnerUp": "Corinthians",
+      "score": "1–1 on aggregate; 6–5 on penalties",
+      "badge": {
+        "label": "FLAM",
+        "logoPath": "/logos/flamengo.png",
+        "accentColor": "#C8102E"
+      }
+    },
+    {
+      "year": 2023,
+      "clubId": "sao-paulo",
+      "clubName": "São Paulo",
+      "country": "Brazil",
+      "runnerUp": "Flamengo",
+      "score": "2–1 on aggregate",
+      "badge": {
+        "label": "SP",
+        "logoPath": "/logos/sao-paulo.png",
+        "accentColor": "#D71920"
+      }
+    },
+    {
+      "year": 2024,
+      "clubId": "flamengo",
+      "clubName": "Flamengo",
+      "country": "Brazil",
+      "runnerUp": "Atlético Mineiro",
+      "score": "4–1 on aggregate",
+      "badge": {
+        "label": "FLAM",
+        "logoPath": "/logos/flamengo.png",
+        "accentColor": "#C8102E"
+      }
+    },
+    {
+      "year": 2025,
+      "clubId": "corinthians",
+      "clubName": "Corinthians",
+      "country": "Brazil",
+      "runnerUp": "Vasco da Gama",
+      "score": "2–1 on aggregate",
+      "badge": {
+        "label": "CORI",
+        "logoPath": "/logos/corinthians.png",
+        "accentColor": "#111111"
+      }
+    }
+  ]
+}

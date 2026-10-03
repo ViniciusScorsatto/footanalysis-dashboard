@@ -1,0 +1,12 @@
+{
+  "leagueId": 5,
+  "leagueName": "UEFA Nations League",
+  "accentColor": "#0A84FF",
+  "standings": {
+    "safeArea": {
+      "left": 64,
+      "right": 92
+    },
+    "zones": []
+  }
+}

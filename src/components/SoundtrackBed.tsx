@@ -6,6 +6,7 @@ type SoundtrackBedProps = {
   fadeSeconds?: number;
   duckUntilSeconds?: number;
   duckVolumeMultiplier?: number;
+  loop?: boolean;
 };
 
 export const SoundtrackBed = ({
@@ -14,6 +15,7 @@ export const SoundtrackBed = ({
   fadeSeconds = 0.2,
   duckUntilSeconds = 0,
   duckVolumeMultiplier = 0.45,
+  loop = false,
 }: SoundtrackBedProps) => {
   const {fps, durationInFrames} = useVideoConfig();
 
@@ -27,6 +29,8 @@ export const SoundtrackBed = ({
   return (
     <Audio
       src={staticFile(soundtrackPath.replace(/^\//, ''))}
+      loop={loop}
+      loopVolumeCurveBehavior="extend"
       volume={(frame) => {
         const fadeInProgress = Math.min(1, frame / fadeFrames);
         const fadeOutStart = Math.max(0, durationInFrames - fadeFrames);

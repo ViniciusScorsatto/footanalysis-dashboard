@@ -9,20 +9,31 @@
     },
     "zones": [
       {
-        "key": "knockout",
-        "label": "Knockout",
+        "key": "round-of-16",
+        "label": "1–8 Round of 16",
         "start": 1,
         "end": 8,
-        "fill": "linear-gradient(90deg, rgba(46, 204, 113, 0.84), rgba(46, 204, 113, 0.24) 62%, rgba(0,0,0,0.04))",
-        "accent": "rgba(93, 232, 150, 0.58)"
+        "fill": "linear-gradient(90deg, rgba(10, 132, 255, 0.78), rgba(10, 132, 255, 0.24) 62%, rgba(0,0,0,0.04))",
+        "accent": "#0A84FF",
+        "textColor": "#0A84FF"
       },
       {
-        "key": "playoff",
-        "label": "Playoff",
+        "key": "knockout-playoff",
+        "label": "9–24 Knockout Play-off",
         "start": 9,
         "end": 24,
-        "fill": "linear-gradient(90deg, rgba(10, 132, 255, 0.72), rgba(10, 132, 255, 0.18) 62%, rgba(0,0,0,0.04))",
-        "accent": "rgba(76, 166, 255, 0.54)"
+        "fill": "linear-gradient(90deg, rgba(39, 174, 96, 0.72), rgba(39, 174, 96, 0.22) 62%, rgba(0,0,0,0.04))",
+        "accent": "#27AE60",
+        "textColor": "#27AE60"
+      },
+      {
+        "key": "eliminated",
+        "label": "25–36 Eliminated",
+        "start": 25,
+        "end": 36,
+        "fill": "linear-gradient(90deg, rgba(231, 76, 60, 0.72), rgba(231, 76, 60, 0.22) 62%, rgba(0,0,0,0.04))",
+        "accent": "#E74C3C",
+        "textColor": "#E74C3C"
       }
     ]
   }

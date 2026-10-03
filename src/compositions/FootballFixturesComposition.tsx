@@ -50,6 +50,7 @@ type FootballFixturesCompositionProps = {
   leagueConfig?: LeagueConfig;
   ctaText?: string;
   variant: 'results' | 'next-games' | 'predictions';
+  presentation?: 'animated' | 'static';
 };
 
 export const FootballFixturesComposition = ({
@@ -70,11 +71,15 @@ export const FootballFixturesComposition = ({
   leagueConfig,
   ctaText,
   variant,
+  presentation = 'animated',
 }: FootballFixturesCompositionProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const contentFrame =
-    Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
+  const isStatic = presentation === 'static';
+  const contentStartFrame = isStatic ? 0 : SHORT_OPENING_DURATION_FRAMES;
+  const contentFrame = isStatic
+    ? 999
+    : Math.max(0, frame - contentStartFrame) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
 
   const isEnglish = channelProfile === 'en';
   const accentColor = leagueConfig?.accentColor ?? '#F0A500';
@@ -96,7 +101,12 @@ export const FootballFixturesComposition = ({
         ? 'Predictions'
         : 'Palpites';
   const titleColor = isEnglish ? '#f0f4f8' : accentColor;
-  const subtitleColor = isEnglish ? '#4a6070' : '#3a5060';
+  const useLeagueAccentInHeader = isStatic && isEnglish;
+  const subtitleColor = useLeagueAccentInHeader
+    ? accentColor
+    : isEnglish
+      ? '#4a6070'
+      : '#3a5060';
   const backgroundColor = '#0b0d12';
   const isCompactFixtureLayout = fixtures.length >= 6;
   const isExpandedFixtureLayout = fixtures.length > 0 && fixtures.length < 6;
@@ -135,25 +145,27 @@ export const FootballFixturesComposition = ({
         accentColor={accentColor}
         opacity={0.5}
       />
-      <FootballShortOpening
-        template={variant}
-        variant={variant}
-        channelProfile={channelProfile}
-        leagueName={leagueName}
-        roundLabel={roundLabel}
-        fixtures={fixtures}
-        accentColor={accentColor}
-        secondaryAccentColor={leagueConfig?.secondaryAccentColor}
-        brandName={brandName}
-        brandLogoPath={brandLogoPath}
-        introTitle={introTitle}
-        introSubtitle={introSubtitle}
-        hookText={hookText}
-        coldOpenData={coldOpenData}
-      />
+      {!isStatic ? (
+        <FootballShortOpening
+          template={variant}
+          variant={variant}
+          channelProfile={channelProfile}
+          leagueName={leagueName}
+          roundLabel={roundLabel}
+          fixtures={fixtures}
+          accentColor={accentColor}
+          secondaryAccentColor={leagueConfig?.secondaryAccentColor}
+          brandName={brandName}
+          brandLogoPath={brandLogoPath}
+          introTitle={introTitle}
+          introSubtitle={introSubtitle}
+          hookText={hookText}
+          coldOpenData={coldOpenData}
+        />
+      ) : null}
 
-      <Sequence from={SHORT_OPENING_DURATION_FRAMES}>
-        <VoiceoverBed voiceoverPath={voiceoverPath} />
+      <Sequence from={contentStartFrame}>
+        <VoiceoverBed voiceoverPath={isStatic ? undefined : voiceoverPath} />
         <CompetitionAccentRail
           accentColor={accentColor}
           secondaryAccentColor={leagueConfig?.secondaryAccentColor}
@@ -191,10 +203,19 @@ export const FootballFixturesComposition = ({
                   alignSelf: 'flex-start',
                   padding: '10px 18px 8px',
                   borderRadius: 999,
-                  background: isEnglish ? '#141c24' : '#0f1318',
-                  border: isEnglish ? '1px solid #1e2a3a' : 'none',
-                  borderLeft: isEnglish ? '1px solid #1e2a3a' : `8px solid ${accentColor}`,
-                  color: isEnglish ? '#4a6070' : accentColor,
+                  background: useLeagueAccentInHeader ? `${accentColor}14` : isEnglish ? '#141c24' : '#0f1318',
+                  border: useLeagueAccentInHeader
+                    ? `1px solid ${accentColor}88`
+                    : isEnglish
+                      ? '1px solid #1e2a3a'
+                      : 'none',
+                  borderLeft: useLeagueAccentInHeader
+                    ? `7px solid ${accentColor}`
+                    : isEnglish
+                      ? '1px solid #1e2a3a'
+                      : `8px solid ${accentColor}`,
+                  color: useLeagueAccentInHeader ? accentColor : isEnglish ? '#4a6070' : accentColor,
+                  boxShadow: useLeagueAccentInHeader ? `0 0 20px ${accentColor}20` : undefined,
                   fontFamily: TEASER_LABEL_FONT,
                   fontSize: 20,
                   lineHeight: 1,
@@ -260,6 +281,10 @@ export const FootballFixturesComposition = ({
                 leagueId={leagueConfig?.leagueId}
                 density={isCompactFixtureLayout ? 'compact' : 'expanded'}
                 fixtureCount={fixtures.length}
+                disableAnimation={isStatic}
+                showCompetitionLabel={
+                  index === 0 || fixture.competitionLabel !== fixtures[index - 1]?.competitionLabel
+                }
               />
             ))}
           </div>

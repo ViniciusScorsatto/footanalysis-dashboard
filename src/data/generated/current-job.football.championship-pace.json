@@ -1,6 +1,7 @@
 {
   "sport": "football",
   "template": "championship-pace",
+  "videoMode": "static",
   "leagueId": 71,
   "season": 2026,
   "leagueName": "Brasileirão Série A",
@@ -10,10 +11,10 @@
   "brandLogoPath": "/branding/foot-analysis-logo.png",
   "soundtrackPath": "/audio/football/gol-de-arena.mp3",
   "soundtrackLabel": "Gol de Arena",
-  "soundtrackVolume": 0.25,
+  "soundtrackVolume": 0.2,
   "outputName": "brasileirao-serie-a-2026-ritmo-de-campeao-pt-br.mp4",
   "durationInFrames": 360,
-  "compositionId": "FootballChampionshipPaceShort",
+  "compositionId": "FootballStaticChampionshipPaceShort",
   "leagueConfig": {
     "leagueId": 71,
     "accentColor": "#F0A500",
@@ -73,7 +74,7 @@
     }
   },
   "titleLabel": "Ritmo de Campeão",
-  "subtitleLabel": "Aproveitamento na Rodada 18",
+  "subtitleLabel": "Aproveitamento na Rodada 28",
   "benchmarkPercentage": 68,
   "benchmarkLabel": "Média dos últimos 10 campeões",
   "noteLabel": "*times com jogos a menos",
@@ -81,10 +82,22 @@
   "entries": [
     {
       "rank": 1,
+      "team": "Flamengo",
+      "played": 28,
+      "points": 60,
+      "percentage": 71,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "F",
+        "logoPath": "/logos/flamengo-127.png"
+      }
+    },
+    {
+      "rank": 2,
       "team": "Palmeiras",
-      "played": 18,
-      "points": 41,
-      "percentage": 76,
+      "played": 28,
+      "points": 57,
+      "percentage": 68,
       "hasGameInHand": false,
       "badge": {
         "label": "P",
@@ -92,22 +105,22 @@
       }
     },
     {
-      "rank": 2,
-      "team": "Flamengo",
-      "played": 17,
-      "points": 34,
-      "percentage": 67,
-      "hasGameInHand": true,
+      "rank": 3,
+      "team": "Athletico-PR",
+      "played": 28,
+      "points": 49,
+      "percentage": 58,
+      "hasGameInHand": false,
       "badge": {
-        "label": "F",
-        "logoPath": "/logos/flamengo-127.png"
+        "label": "A",
+        "logoPath": "/logos/atletico-paranaense-134.png"
       }
     },
     {
-      "rank": 3,
+      "rank": 4,
       "team": "Fluminense",
-      "played": 18,
-      "points": 31,
+      "played": 28,
+      "points": 48,
       "percentage": 57,
       "hasGameInHand": false,
       "badge": {
@@ -116,47 +129,59 @@
       }
     },
     {
-      "rank": 4,
-      "team": "Athletico-PR",
-      "played": 18,
-      "points": 30,
-      "percentage": 56,
-      "hasGameInHand": false,
-      "badge": {
-        "label": "A",
-        "logoPath": "/logos/atletico-paranaense-134.png"
-      }
-    },
-    {
       "rank": 5,
-      "team": "Bragantino",
-      "played": 18,
-      "points": 29,
-      "percentage": 54,
-      "hasGameInHand": false,
-      "badge": {
-        "label": "B",
-        "logoPath": "/logos/rb-bragantino-794.png"
-      }
-    },
-    {
-      "rank": 6,
       "team": "Bahia",
-      "played": 17,
-      "points": 26,
-      "percentage": 51,
-      "hasGameInHand": true,
+      "played": 28,
+      "points": 46,
+      "percentage": 55,
+      "hasGameInHand": false,
       "badge": {
         "label": "B",
         "logoPath": "/logos/bahia-118.png"
       }
     },
     {
+      "rank": 6,
+      "team": "Cruzeiro",
+      "played": 28,
+      "points": 45,
+      "percentage": 54,
+      "hasGameInHand": false,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/cruzeiro-135.png"
+      }
+    },
+    {
       "rank": 7,
+      "team": "Atletico-MG",
+      "played": 27,
+      "points": 40,
+      "percentage": 49,
+      "hasGameInHand": true,
+      "badge": {
+        "label": "A",
+        "logoPath": "/logos/atletico-mg-1062.png"
+      }
+    },
+    {
+      "rank": 8,
+      "team": "Santos",
+      "played": 27,
+      "points": 38,
+      "percentage": 47,
+      "hasGameInHand": true,
+      "badge": {
+        "label": "S",
+        "logoPath": "/logos/santos-128.png"
+      }
+    },
+    {
+      "rank": 9,
       "team": "Coritiba",
-      "played": 18,
-      "points": 26,
-      "percentage": 48,
+      "played": 28,
+      "points": 38,
+      "percentage": 45,
       "hasGameInHand": false,
       "badge": {
         "label": "C",
@@ -164,71 +189,17 @@
       }
     },
     {
-      "rank": 8,
-      "team": "Sao Paulo",
-      "played": 18,
-      "points": 25,
-      "percentage": 46,
-      "hasGameInHand": false,
-      "badge": {
-        "label": "SP",
-        "logoPath": "/logos/sao-paulo-126.png"
-      }
-    },
-    {
-      "rank": 9,
-      "team": "Atletico-MG",
-      "played": 18,
-      "points": 24,
-      "percentage": 44,
-      "hasGameInHand": false,
-      "badge": {
-        "label": "A",
-        "logoPath": "/logos/atletico-mg-1062.png"
-      }
-    },
-    {
       "rank": 10,
-      "team": "Corinthians",
-      "played": 18,
-      "points": 24,
+      "team": "Bragantino",
+      "played": 27,
+      "points": 36,
       "percentage": 44,
-      "hasGameInHand": false,
+      "hasGameInHand": true,
       "badge": {
-        "label": "C",
-        "logoPath": "/logos/corinthians-131.png"
+        "label": "B",
+        "logoPath": "/logos/rb-bragantino-794.png"
       }
     }
   ],
-  "introTitle": "Brasileirão Série A",
-  "introSubtitle": "Aproveitamento na Rodada 18",
-  "hookText": "Quem tem ritmo de taça?",
-  "coldOpenData": {
-    "tableRows": [
-      {
-        "rank": 1,
-        "club": "PALMEIRAS",
-        "pts": 10
-      },
-      {
-        "rank": 2,
-        "club": "FLAMENGO",
-        "pts": 8
-      },
-      {
-        "rank": 3,
-        "club": "FLUMINENSE",
-        "pts": 6
-      },
-      {
-        "rank": 4,
-        "club": "ATHLETICO-PR",
-        "pts": 4
-      }
-    ]
-  },
-  "voiceoverEnabled": true,
-  "voiceoverText": "Fala Galera, pra vocês... o ritmo de campeão do Brasileirão Série A.",
-  "voiceoverPath": "/voiceovers/football/pt-br-4f5fa3f5fce62350.mp3",
-  "voiceoverLabel": "Fala Galera, pra vocês... o ritmo de campeão do Brasileirão Série A."
+  "voiceoverEnabled": false
 }

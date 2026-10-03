@@ -1,40 +1,77 @@
 {
   "sport": "football",
   "template": "top-scorers",
-  "leagueId": 612,
+  "videoMode": "static",
+  "leagueId": 71,
   "season": 2026,
-  "leagueName": "Copa do Nordeste",
+  "leagueName": "Brasileirão Série A",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
   "soundtrackPath": "/audio/football/gol-de-arena.mp3",
   "soundtrackLabel": "Gol de Arena",
-  "soundtrackVolume": 0.25,
-  "outputName": "copa-do-nordeste-2026-artilheiros-pt-br.mp4",
+  "soundtrackVolume": 0.2,
+  "outputName": "brasileirao-serie-a-2026-artilheiros-pt-br.mp4",
   "durationInFrames": 360,
-  "compositionId": "FootballTopScorersShort",
+  "compositionId": "FootballStaticTopScorersShort",
   "leagueConfig": {
-    "leagueId": 612,
-    "accentColor": "#2E86DE",
+    "leagueId": 71,
+    "accentColor": "#F0A500",
     "standings": {
       "safeArea": {
-        "left": 64,
-        "right": 92
+        "left": 68,
+        "right": 104
       },
       "zones": [
         {
-          "key": "classification",
-          "label": "Classificação",
+          "key": "libertadores",
+          "label": "Libertadores",
           "start": 1,
           "end": 4,
-          "fill": "linear-gradient(90deg, rgba(58, 196, 88, 0.84), rgba(58, 196, 88, 0.28) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(86, 214, 120, 0.62)"
+          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(101, 227, 133, 0.64)"
+        },
+        {
+          "key": "pre-libertadores",
+          "label": "Pré-Libertadores",
+          "start": 5,
+          "end": 5,
+          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 190, 92, 0.58)"
+        },
+        {
+          "key": "sul-americana",
+          "label": "Sul-Americana",
+          "start": 6,
+          "end": 11,
+          "fill": "linear-gradient(90deg, rgba(0, 177, 183, 0.82), rgba(0, 177, 183, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(0, 177, 183, 0.54)"
+        },
+        {
+          "key": "rebaixamento",
+          "label": "Rebaixamento",
+          "start": 17,
+          "end": 20,
+          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 102, 102, 0.56)"
         }
       ]
     },
-    "leagueName": "Copa do Nordeste",
-    "secondaryAccentColor": "#E74C3C"
+    "leagueName": "Brasileirão Série A",
+    "pace": {
+      "championship": {
+        "benchmarkPercentage": 68,
+        "benchmarkLabel": "Média dos últimos 10 campeões",
+        "entryCount": 10
+      },
+      "relegation": {
+        "benchmarkPercentage": 38,
+        "benchmarkLabel": "Linha de segurança",
+        "safeRowsAbove": 3,
+        "maxRows": 10
+      }
+    }
   },
   "titleLabel": "Artilheiros",
   "subtitleLabel": "Top 10 do campeonato",
@@ -42,29 +79,124 @@
   "entries": [
     {
       "rank": 1,
-      "playerName": "Marco Medeiros",
-      "team": "Fluminense PI",
-      "teamShort": "FP",
-      "goals": 0,
-      "assists": 0,
+      "playerName": "K. Viveros",
+      "team": "Athletico-PR",
+      "teamShort": "ATHL",
+      "goals": 18,
+      "assists": 3,
       "badge": {
-        "label": "FP",
-        "logoPath": "/logos/fluminense-pi-15617.png"
+        "label": "A",
+        "logoPath": "/logos/atletico-paranaense-134.png"
+      }
+    },
+    {
+      "rank": 2,
+      "playerName": "Pedro",
+      "team": "Flamengo",
+      "teamShort": "FLAM",
+      "goals": 15,
+      "assists": 5,
+      "badge": {
+        "label": "F",
+        "logoPath": "/logos/flamengo.png"
+      }
+    },
+    {
+      "rank": 3,
+      "playerName": "Gabriel Barbosa",
+      "team": "Santos",
+      "teamShort": "SANT",
+      "goals": 11,
+      "assists": 3,
+      "badge": {
+        "label": "S",
+        "logoPath": "/logos/santos.png"
+      }
+    },
+    {
+      "rank": 4,
+      "playerName": "Carlos Vinícius",
+      "team": "Gremio",
+      "teamShort": "GREM",
+      "goals": 10,
+      "assists": 1,
+      "badge": {
+        "label": "G",
+        "logoPath": "/logos/gremio.png"
+      }
+    },
+    {
+      "rank": 5,
+      "playerName": "Samuel Lino",
+      "team": "Flamengo",
+      "teamShort": "FLAM",
+      "goals": 9,
+      "assists": 7,
+      "badge": {
+        "label": "F",
+        "logoPath": "/logos/flamengo.png"
+      }
+    },
+    {
+      "rank": 6,
+      "playerName": "Danilo Santos",
+      "team": "Botafogo",
+      "teamShort": "BOTA",
+      "goals": 9,
+      "assists": 2,
+      "badge": {
+        "label": "B",
+        "logoPath": "/logos/botafogo.png"
+      }
+    },
+    {
+      "rank": 7,
+      "playerName": "John Kennedy",
+      "team": "Fluminense",
+      "teamShort": "FLUM",
+      "goals": 9,
+      "assists": 1,
+      "badge": {
+        "label": "F",
+        "logoPath": "/logos/fluminense.png"
+      }
+    },
+    {
+      "rank": 8,
+      "playerName": "Luciano Juba",
+      "team": "Bahia",
+      "teamShort": "BAHI",
+      "goals": 9,
+      "assists": 1,
+      "badge": {
+        "label": "B",
+        "logoPath": "/logos/bahia.png"
+      }
+    },
+    {
+      "rank": 9,
+      "playerName": "J. López",
+      "team": "Palmeiras",
+      "teamShort": "PALM",
+      "goals": 8,
+      "assists": 4,
+      "badge": {
+        "label": "P",
+        "logoPath": "/logos/palmeiras.png"
+      }
+    },
+    {
+      "rank": 10,
+      "playerName": "Matheus Pereira",
+      "team": "Cruzeiro",
+      "teamShort": "CRUZ",
+      "goals": 8,
+      "assists": 4,
+      "badge": {
+        "label": "C",
+        "logoPath": "/logos/cruzeiro.png"
       }
     }
   ],
-  "introTitle": "Copa do Nordeste",
-  "introSubtitle": "Top 10 do campeonato",
-  "hookText": "A artilharia pegou fogo",
-  "coldOpenData": {
-    "tableRows": [
-      {
-        "rank": 1,
-        "club": "FLUMINENSE PI",
-        "pts": 10
-      }
-    ]
-  },
-  "voiceoverEnabled": false,
-  "voiceoverText": "Fala Galera, pra vocês... os artilheiros da Copa do Nordeste."
+  "voiceoverEnabled": false
 }

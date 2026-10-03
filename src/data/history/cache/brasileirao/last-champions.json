@@ -1,0 +1,126 @@
+{
+  "competitionId": "brasileirao",
+  "competitionName": "Brasileirão Série A",
+  "champions": [
+    {
+      "year": 2016,
+      "clubId": "palmeiras",
+      "clubName": "Palmeiras",
+      "country": "Brazil",
+      "runnerUp": "Santos",
+      "badge": {
+        "label": "PALM",
+        "logoPath": "/logos/palmeiras.png",
+        "accentColor": "#27AE60"
+      }
+    },
+    {
+      "year": 2017,
+      "clubId": "corinthians",
+      "clubName": "Corinthians",
+      "country": "Brazil",
+      "runnerUp": "Palmeiras",
+      "badge": {
+        "label": "CORI",
+        "logoPath": "/logos/corinthians.png",
+        "accentColor": "#111111"
+      }
+    },
+    {
+      "year": 2018,
+      "clubId": "palmeiras",
+      "clubName": "Palmeiras",
+      "country": "Brazil",
+      "runnerUp": "Flamengo",
+      "badge": {
+        "label": "PALM",
+        "logoPath": "/logos/palmeiras.png",
+        "accentColor": "#27AE60"
+      }
+    },
+    {
+      "year": 2019,
+      "clubId": "flamengo",
+      "clubName": "Flamengo",
+      "country": "Brazil",
+      "runnerUp": "Santos",
+      "badge": {
+        "label": "FLAM",
+        "logoPath": "/logos/flamengo.png",
+        "accentColor": "#C8102E"
+      }
+    },
+    {
+      "year": 2020,
+      "clubId": "flamengo",
+      "clubName": "Flamengo",
+      "country": "Brazil",
+      "runnerUp": "Internacional",
+      "badge": {
+        "label": "FLAM",
+        "logoPath": "/logos/flamengo.png",
+        "accentColor": "#C8102E"
+      }
+    },
+    {
+      "year": 2021,
+      "clubId": "atletico-mineiro",
+      "clubName": "Atlético Mineiro",
+      "country": "Brazil",
+      "runnerUp": "Flamengo",
+      "badge": {
+        "label": "AM",
+        "logoPath": "/logos/atletico-mineiro-u17-24471.png",
+        "accentColor": "#111111"
+      }
+    },
+    {
+      "year": 2022,
+      "clubId": "palmeiras",
+      "clubName": "Palmeiras",
+      "country": "Brazil",
+      "runnerUp": "Internacional",
+      "badge": {
+        "label": "PALM",
+        "logoPath": "/logos/palmeiras.png",
+        "accentColor": "#27AE60"
+      }
+    },
+    {
+      "year": 2023,
+      "clubId": "palmeiras",
+      "clubName": "Palmeiras",
+      "country": "Brazil",
+      "runnerUp": "Grêmio",
+      "badge": {
+        "label": "PALM",
+        "logoPath": "/logos/palmeiras.png",
+        "accentColor": "#27AE60"
+      }
+    },
+    {
+      "year": 2024,
+      "clubId": "botafogo",
+      "clubName": "Botafogo",
+      "country": "Brazil",
+      "runnerUp": "Palmeiras",
+      "badge": {
+        "label": "BOTA",
+        "logoPath": "/logos/botafogo.png",
+        "accentColor": "#111111"
+      }
+    },
+    {
+      "year": 2025,
+      "clubId": "flamengo",
+      "clubName": "Flamengo",
+      "country": "Brazil",
+      "runnerUp": "Palmeiras",
+      "badge": {
+        "label": "FLAM",
+        "logoPath": "/logos/flamengo.png",
+        "accentColor": "#C8102E"
+      }
+    }
+  ]
+}

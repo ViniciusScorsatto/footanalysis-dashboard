@@ -2,6 +2,12 @@
   "leagueId": 75,
   "leagueName": "Brasileirão Série C",
   "accentColor": "#27AE60",
+  "quadrangular": {
+    "groups": [
+      {"key": "a", "label": "Grupo A", "teams": ["Maringá", "Santa Cruz", "Floresta", "Botafogo-PB"]},
+      {"key": "b", "label": "Grupo B", "teams": ["Brusque", "Inter de Limeira", "Ferroviária", "Paysandu"]}
+    ]
+  },
   "standings": {
     "safeArea": {
       "left": 68,

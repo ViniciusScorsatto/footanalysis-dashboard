@@ -47,6 +47,7 @@ type FootballPaceCompositionProps = {
   hookText?: string;
   coldOpenData?: FootballColdOpenData;
   ctaText?: string;
+  presentation?: 'animated' | 'static';
 };
 
 const SAFE_AREA = {
@@ -79,11 +80,15 @@ export const FootballPaceComposition = ({
   hookText,
   coldOpenData,
   ctaText,
+  presentation = 'animated',
 }: FootballPaceCompositionProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const contentFrame =
-    Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
+  const isStatic = presentation === 'static';
+  const contentStartFrame = isStatic ? 0 : SHORT_OPENING_DURATION_FRAMES;
+  const contentFrame = isStatic
+    ? 999
+    : Math.max(0, frame - contentStartFrame) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
   const competitionAccent = leagueConfig?.accentColor ?? '#F0A500';
   const titleColor = variant === 'relegation' ? '#E74C3C' : competitionAccent;
   const sortedEntries = [...entries].sort((left, right) => {
@@ -128,27 +133,29 @@ export const FootballPaceComposition = ({
         accentColor={competitionAccent}
         opacity={0.5}
       />
-      <FootballShortOpening
-        template={variant === 'relegation' ? 'relegation-line' : 'championship-pace'}
-        variant={variant}
-        leagueName={leagueName}
-        titleLabel={titleLabel}
-        subtitleLabel={subtitleLabel}
-        benchmarkPercentage={benchmarkPercentage}
-        benchmarkLabel={benchmarkLabel}
-        entries={sortedEntries}
-        accentColor={competitionAccent}
-        secondaryAccentColor={leagueConfig?.secondaryAccentColor}
-        brandName={brandName}
-        brandLogoPath={brandLogoPath}
-        introTitle={introTitle}
-        introSubtitle={introSubtitle}
-        hookText={hookText}
-        coldOpenData={coldOpenData}
-      />
+      {!isStatic ? (
+        <FootballShortOpening
+          template={variant === 'relegation' ? 'relegation-line' : 'championship-pace'}
+          variant={variant}
+          leagueName={leagueName}
+          titleLabel={titleLabel}
+          subtitleLabel={subtitleLabel}
+          benchmarkPercentage={benchmarkPercentage}
+          benchmarkLabel={benchmarkLabel}
+          entries={sortedEntries}
+          accentColor={competitionAccent}
+          secondaryAccentColor={leagueConfig?.secondaryAccentColor}
+          brandName={brandName}
+          brandLogoPath={brandLogoPath}
+          introTitle={introTitle}
+          introSubtitle={introSubtitle}
+          hookText={hookText}
+          coldOpenData={coldOpenData}
+        />
+      ) : null}
 
-      <Sequence from={SHORT_OPENING_DURATION_FRAMES}>
-        <VoiceoverBed voiceoverPath={voiceoverPath} />
+      <Sequence from={contentStartFrame}>
+        <VoiceoverBed voiceoverPath={isStatic ? undefined : voiceoverPath} />
         <CompetitionAccentRail
           accentColor={competitionAccent}
           secondaryAccentColor={leagueConfig?.secondaryAccentColor}
@@ -179,9 +186,11 @@ export const FootballPaceComposition = ({
                 alignSelf: 'flex-start',
                 padding: '10px 18px 8px',
                 borderRadius: 999,
-                background: '#0f1318',
+                background: isStatic ? `${competitionAccent}14` : '#0f1318',
+                border: isStatic ? `1px solid ${competitionAccent}88` : 'none',
                 borderLeft: `8px solid ${competitionAccent}`,
                 color: competitionAccent,
+                boxShadow: isStatic ? `0 0 20px ${competitionAccent}20` : undefined,
                 fontFamily: TEASER_LABEL_FONT,
                 fontSize: 20,
                 lineHeight: 1,
@@ -211,7 +220,7 @@ export const FootballPaceComposition = ({
 
           <div
             style={{
-              color: '#3a5060',
+              color: isStatic ? competitionAccent : '#3a5060',
               fontSize: 46,
               lineHeight: 1,
               fontWeight: 600,
@@ -241,6 +250,7 @@ export const FootballPaceComposition = ({
               rowIndex={index}
               benchmarkPercentage={benchmarkPercentage}
               variant={variant}
+              disableAnimation={isStatic}
             />
           ))}
         </div>
@@ -253,6 +263,7 @@ export const FootballPaceComposition = ({
           frame={contentFrame}
           fps={fps}
           rowIndex={splitIndex}
+          disableAnimation={isStatic}
         />
 
         <div
@@ -273,6 +284,7 @@ export const FootballPaceComposition = ({
               rowIndex={splitIndex + 1 + index}
               benchmarkPercentage={benchmarkPercentage}
               variant={variant}
+              disableAnimation={isStatic}
             />
           ))}
         </div>
@@ -343,6 +355,7 @@ const BenchmarkDivider = ({
   frame,
   fps,
   rowIndex,
+  disableAnimation = false,
 }: {
   percentage: number;
   label: string;
@@ -351,8 +364,9 @@ const BenchmarkDivider = ({
   frame: number;
   fps: number;
   rowIndex: number;
+  disableAnimation?: boolean;
 }) => {
-  const anim = entranceStyle(frame, fps, rowStartFrame(rowIndex));
+  const anim = disableAnimation ? {opacity: 1, transform: 'none'} : entranceStyle(frame, fps, rowStartFrame(rowIndex));
   const color = variant === 'relegation' ? '#E74C3C' : '#F0A500';
 
   return (
@@ -410,6 +424,7 @@ const PaceRow = ({
   rowIndex,
   benchmarkPercentage,
   variant,
+  disableAnimation = false,
 }: {
   entry: PaceEntry;
   frame: number;
@@ -417,9 +432,10 @@ const PaceRow = ({
   rowIndex: number;
   benchmarkPercentage: number;
   variant: 'championship' | 'relegation';
+  disableAnimation?: boolean;
 }) => {
-  const anim = entranceStyle(frame, fps, rowStartFrame(rowIndex));
-  const scoreAnim = scorePopStyle(frame, fps, rowStartFrame(rowIndex) + 3);
+  const anim = disableAnimation ? {opacity: 1, transform: 'none'} : entranceStyle(frame, fps, rowStartFrame(rowIndex));
+  const scoreAnim = disableAnimation ? {opacity: 1, transform: 'none'} : scorePopStyle(frame, fps, rowStartFrame(rowIndex) + 3);
   const rowColor = getPerformanceColor(entry.percentage, benchmarkPercentage, variant);
   const fillWidth = `${Math.min(Math.max(entry.percentage, 12), 100)}%`;
 

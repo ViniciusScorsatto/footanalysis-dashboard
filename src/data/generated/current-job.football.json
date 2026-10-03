@@ -1,308 +1,909 @@
 {
   "sport": "football",
-  "template": "results",
-  "leagueId": 1128,
+  "template": "continental-groups-standings",
+  "leagueId": 5,
   "season": 2026,
-  "leagueName": "Brasileirão Sub-17",
-  "channelProfile": "pt",
-  "languageProfile": "pt-br",
+  "leagueName": "UEFA Nations League",
+  "channelProfile": "en",
+  "languageProfile": "en",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/É Gol, É Gol.mp3",
-  "soundtrackLabel": "É Gol, É Gol",
-  "soundtrackVolume": 0.25,
-  "outputName": "brasileirao-sub-17-2026-resultados-pt-br.mp4",
+  "soundtrackPath": "/audio/football/final-whistle-rise-premier-league.mp3",
+  "soundtrackLabel": "Final Whistle Rise - Premier League",
+  "soundtrackVolume": 0.2,
+  "outputName": "uefa-nations-league-2026-continental-groups-en.mp4",
   "durationInFrames": 360,
-  "compositionId": "FootballResultsShort",
+  "compositionId": "FootballContinentalGroupsShort",
   "leagueConfig": {
-    "leagueId": 1128,
-    "accentColor": "#E67E22",
+    "leagueId": 5,
+    "accentColor": "#0A84FF",
     "standings": {
       "safeArea": {
-        "left": 40,
-        "right": 120
+        "left": 64,
+        "right": 92
       },
-      "zones": [
+      "zones": []
+    },
+    "leagueName": "UEFA Nations League"
+  },
+  "titleLabel": "Group Standings",
+  "subtitleLabel": "Group Stage",
+  "tableLabels": {
+    "pos": "Pos",
+    "team": "Team",
+    "gd": "GD",
+    "pts": "Pts"
+  },
+  "ctaText": "Who goes through?",
+  "groups": [
+    {
+      "groupKey": "A1",
+      "groupLabel": "A1",
+      "rows": [
         {
-          "key": "champion",
-          "label": "Campeão",
-          "start": 1,
-          "end": 1
+          "goalsFor": 3,
+          "awayGoals": 2,
+          "wins": 2,
+          "awayWins": 2,
+          "rank": 1,
+          "team": "France",
+          "goalDifference": 2,
+          "points": 7,
+          "badge": {
+            "label": "F",
+            "logoPath": "/logos/france-2.png"
+          }
         },
         {
-          "key": "relegation",
-          "label": "Rebaixamento",
-          "start": 18,
-          "end": 20
+          "goalsFor": 5,
+          "awayGoals": 2,
+          "wins": 2,
+          "awayWins": 1,
+          "rank": 2,
+          "team": "Belgium",
+          "goalDifference": 4,
+          "points": 6,
+          "badge": {
+            "label": "B",
+            "logoPath": "/logos/belgium-1.png"
+          }
+        },
+        {
+          "goalsFor": 5,
+          "awayGoals": 5,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 3,
+          "team": "Italy",
+          "goalDifference": 1,
+          "points": 4,
+          "badge": {
+            "label": "I",
+            "logoPath": "/logos/italy-768.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Türkiye",
+          "goalDifference": -7,
+          "points": 0,
+          "badge": {
+            "label": "T",
+            "logoPath": "/logos/turkiye-777.png"
+          }
         }
       ]
     },
-    "leagueName": "Brasileirão Sub-17"
-  },
-  "round": "Regular Season - 5",
-  "roundLabel": "Rodada 5",
-  "ctaText": "Qual foi o melhor jogo?",
-  "fixtures": [
     {
-      "fixtureId": 1543911,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "America MG",
-      "awayTeam": "Sao Paulo",
-      "homeScore": 0,
-      "awayScore": 0,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "AM",
-        "logoPath": "/logos/america-mineiro-125.png"
-      },
-      "awayBadge": {
-        "label": "SP",
-        "logoPath": "/logos/sao-paulo.png"
-      }
+      "groupKey": "A2",
+      "groupLabel": "A2",
+      "rows": [
+        {
+          "goalsFor": 5,
+          "awayGoals": 3,
+          "wins": 2,
+          "awayWins": 2,
+          "rank": 1,
+          "team": "Greece",
+          "goalDifference": 2,
+          "points": 7,
+          "badge": {
+            "label": "G",
+            "logoPath": "/logos/greece-1117.png"
+          }
+        },
+        {
+          "goalsFor": 5,
+          "awayGoals": 4,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 2,
+          "team": "Netherlands",
+          "goalDifference": 1,
+          "points": 5,
+          "badge": {
+            "label": "N",
+            "logoPath": "/logos/netherlands-1118.png"
+          }
+        },
+        {
+          "goalsFor": 3,
+          "awayGoals": 1,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Germany",
+          "goalDifference": 1,
+          "points": 4,
+          "badge": {
+            "label": "G",
+            "logoPath": "/logos/germany-25.png"
+          }
+        },
+        {
+          "goalsFor": 2,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Serbia",
+          "goalDifference": -4,
+          "points": 0,
+          "badge": {
+            "label": "S",
+            "logoPath": "/logos/serbia-14.png"
+          }
+        }
+      ]
     },
     {
-      "fixtureId": 1543912,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "Athletico PR",
-      "awayTeam": "Internacional",
-      "homeScore": 3,
-      "awayScore": 2,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "AP",
-        "logoPath": "/logos/atletico-paranaense.png"
-      },
-      "awayBadge": {
-        "label": "I",
-        "logoPath": "/logos/internacional.png"
-      }
+      "groupKey": "A3",
+      "groupLabel": "A3",
+      "rows": [
+        {
+          "goalsFor": 10,
+          "awayGoals": 3,
+          "wins": 3,
+          "awayWins": 1,
+          "rank": 1,
+          "team": "Spain",
+          "goalDifference": 6,
+          "points": 9,
+          "badge": {
+            "label": "S",
+            "logoPath": "/logos/spain-9.png"
+          }
+        },
+        {
+          "goalsFor": 11,
+          "awayGoals": 9,
+          "wins": 2,
+          "awayWins": 2,
+          "rank": 2,
+          "team": "England",
+          "goalDifference": 8,
+          "points": 6,
+          "badge": {
+            "label": "E",
+            "logoPath": "/logos/england-10.png"
+          }
+        },
+        {
+          "goalsFor": 3,
+          "awayGoals": 3,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 3,
+          "team": "Croatia",
+          "goalDifference": -9,
+          "points": 3,
+          "badge": {
+            "label": "C",
+            "logoPath": "/logos/croatia-3.png"
+          }
+        },
+        {
+          "goalsFor": 2,
+          "awayGoals": 1,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Czechia",
+          "goalDifference": -5,
+          "points": 0,
+          "badge": {
+            "label": "C",
+            "logoPath": "/logos/czech-republic-770.png"
+          }
+        }
+      ]
     },
     {
-      "fixtureId": 1543913,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "Atletico GO",
-      "awayTeam": "Fortaleza",
-      "homeScore": 0,
-      "awayScore": 2,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "AG",
-        "logoPath": "/logos/atletico-go-u17-24470.png"
-      },
-      "awayBadge": {
-        "label": "F",
-        "logoPath": "/logos/fortaleza-ec-154.png"
-      }
+      "groupKey": "A4",
+      "groupLabel": "A4",
+      "rows": [
+        {
+          "goalsFor": 7,
+          "awayGoals": 6,
+          "wins": 3,
+          "awayWins": 2,
+          "rank": 1,
+          "team": "Portugal",
+          "goalDifference": 4,
+          "points": 9,
+          "badge": {
+            "label": "P",
+            "logoPath": "/logos/portugal-27.png"
+          }
+        },
+        {
+          "goalsFor": 6,
+          "awayGoals": 2,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 2,
+          "team": "Denmark",
+          "goalDifference": -1,
+          "points": 3,
+          "badge": {
+            "label": "D",
+            "logoPath": "/logos/denmark-21.png"
+          }
+        },
+        {
+          "goalsFor": 5,
+          "awayGoals": 1,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Norway",
+          "goalDifference": -1,
+          "points": 3,
+          "badge": {
+            "label": "N",
+            "logoPath": "/logos/norway-1090.png"
+          }
+        },
+        {
+          "goalsFor": 2,
+          "awayGoals": 0,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Wales",
+          "goalDifference": -2,
+          "points": 3,
+          "badge": {
+            "label": "W",
+            "logoPath": "/logos/wales-767.png"
+          }
+        }
+      ]
     },
     {
-      "fixtureId": 1543914,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "Atlético MG",
-      "awayTeam": "Palmeiras",
-      "homeScore": 3,
-      "awayScore": 4,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "AM",
-        "logoPath": "/logos/atletico-mg.png"
-      },
-      "awayBadge": {
-        "label": "P",
-        "logoPath": "/logos/palmeiras.png"
-      }
+      "groupKey": "B1",
+      "groupLabel": "B1",
+      "rows": [
+        {
+          "goalsFor": 8,
+          "awayGoals": 6,
+          "wins": 3,
+          "awayWins": 2,
+          "rank": 1,
+          "team": "Switzerland",
+          "goalDifference": 7,
+          "points": 9,
+          "badge": {
+            "label": "S",
+            "logoPath": "/logos/switzerland-15.png"
+          }
+        },
+        {
+          "goalsFor": 3,
+          "awayGoals": 1,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 2,
+          "team": "Slovenia",
+          "goalDifference": 1,
+          "points": 4,
+          "badge": {
+            "label": "S",
+            "logoPath": "/logos/slovenia-1091.png"
+          }
+        },
+        {
+          "goalsFor": 2,
+          "awayGoals": 2,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 3,
+          "team": "Scotland",
+          "goalDifference": -1,
+          "points": 4,
+          "badge": {
+            "label": "S",
+            "logoPath": "/logos/scotland-1108.png"
+          }
+        },
+        {
+          "goalsFor": 0,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "FYR Macedonia",
+          "goalDifference": -7,
+          "points": 0,
+          "badge": {
+            "label": "FM",
+            "logoPath": "/logos/fyr-macedonia-1105.png"
+          }
+        }
+      ]
     },
     {
-      "fixtureId": 1543916,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "Corinthians",
-      "awayTeam": "Botafogo",
-      "homeScore": 4,
-      "awayScore": 0,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "C",
-        "logoPath": "/logos/corinthians.png"
-      },
-      "awayBadge": {
-        "label": "B",
-        "logoPath": "/logos/botafogo.png"
-      }
+      "groupKey": "B2",
+      "groupLabel": "B2",
+      "rows": [
+        {
+          "goalsFor": 4,
+          "awayGoals": 4,
+          "wins": 2,
+          "awayWins": 2,
+          "rank": 1,
+          "team": "Northern Ireland",
+          "goalDifference": 4,
+          "points": 7,
+          "badge": {
+            "label": "NI",
+            "logoPath": "/logos/northern-ireland-771.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 1,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 2,
+          "team": "Ukraine",
+          "goalDifference": -2,
+          "points": 4,
+          "badge": {
+            "label": "U",
+            "logoPath": "/logos/ukraine-772.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 0,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Hungary",
+          "goalDifference": 0,
+          "points": 4,
+          "badge": {
+            "label": "H",
+            "logoPath": "/logos/hungary-769.png"
+          }
+        },
+        {
+          "goalsFor": 0,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Georgia",
+          "goalDifference": -2,
+          "points": 1,
+          "badge": {
+            "label": "G",
+            "logoPath": "/logos/georgia-1104.png"
+          }
+        }
+      ]
     },
     {
-      "fixtureId": 1543917,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "Fluminense",
-      "awayTeam": "RB Bragantino",
-      "homeScore": 2,
-      "awayScore": 0,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "F",
-        "logoPath": "/logos/fluminense.png"
-      },
-      "awayBadge": {
-        "label": "RB",
-        "logoPath": "/logos/rb-bragantino.png"
-      }
+      "groupKey": "B3",
+      "groupLabel": "B3",
+      "rows": [
+        {
+          "goalsFor": 8,
+          "awayGoals": 2,
+          "wins": 2,
+          "awayWins": 0,
+          "rank": 1,
+          "team": "Austria",
+          "goalDifference": 4,
+          "points": 7,
+          "badge": {
+            "label": "A",
+            "logoPath": "/logos/austria-775.png"
+          }
+        },
+        {
+          "goalsFor": 2,
+          "awayGoals": 1,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 2,
+          "team": "Kosovo",
+          "goalDifference": -1,
+          "points": 4,
+          "badge": {
+            "label": "K",
+            "logoPath": "/logos/kosovo-1111.png"
+          }
+        },
+        {
+          "goalsFor": 5,
+          "awayGoals": 3,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 3,
+          "team": "Rep. Of Ireland",
+          "goalDifference": 2,
+          "points": 4,
+          "badge": {
+            "label": "ROI",
+            "logoPath": "/logos/rep-of-ireland-776.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 1,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Israel",
+          "goalDifference": -5,
+          "points": 1,
+          "badge": {
+            "label": "I",
+            "logoPath": "/logos/israel-1116.png"
+          }
+        }
+      ]
     },
     {
-      "fixtureId": 1543919,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "Santos",
-      "awayTeam": "Gremio",
-      "homeScore": 0,
-      "awayScore": 1,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "S",
-        "logoPath": "/logos/santos.png"
-      },
-      "awayBadge": {
-        "label": "G",
-        "logoPath": "/logos/gremio.png"
-      }
+      "groupKey": "B4",
+      "groupLabel": "B4",
+      "rows": [
+        {
+          "goalsFor": 6,
+          "awayGoals": 1,
+          "wins": 2,
+          "awayWins": 0,
+          "rank": 1,
+          "team": "Sweden",
+          "goalDifference": 3,
+          "points": 7,
+          "badge": {
+            "label": "S",
+            "logoPath": "/logos/sweden-5.png"
+          }
+        },
+        {
+          "goalsFor": 5,
+          "awayGoals": 4,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 2,
+          "team": "Bosnia",
+          "goalDifference": 2,
+          "points": 5,
+          "badge": {
+            "label": "B",
+            "logoPath": "/logos/bosnia-herzegovina-1113.png"
+          }
+        },
+        {
+          "goalsFor": 7,
+          "awayGoals": 1,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Poland",
+          "goalDifference": 4,
+          "points": 4,
+          "badge": {
+            "label": "P",
+            "logoPath": "/logos/poland-24.png"
+          }
+        },
+        {
+          "goalsFor": 3,
+          "awayGoals": 1,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Romania",
+          "goalDifference": -9,
+          "points": 0,
+          "badge": {
+            "label": "R",
+            "logoPath": "/logos/romania-774.png"
+          }
+        }
+      ]
     },
     {
-      "fixtureId": 1543918,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "Juventude",
-      "awayTeam": "Cruzeiro",
-      "homeScore": 2,
-      "awayScore": 1,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "J",
-        "logoPath": "/logos/juventude-152.png"
-      },
-      "awayBadge": {
-        "label": "C",
-        "logoPath": "/logos/cruzeiro.png"
-      }
+      "groupKey": "C1",
+      "groupLabel": "C1",
+      "rows": [
+        {
+          "goalsFor": 9,
+          "awayGoals": 7,
+          "wins": 2,
+          "awayWins": 1,
+          "rank": 1,
+          "team": "Finland",
+          "goalDifference": 8,
+          "points": 7,
+          "badge": {
+            "label": "F",
+            "logoPath": "/logos/finland-1099.png"
+          }
+        },
+        {
+          "goalsFor": 6,
+          "awayGoals": 4,
+          "wins": 2,
+          "awayWins": 1,
+          "rank": 2,
+          "team": "Albania",
+          "goalDifference": 4,
+          "points": 6,
+          "badge": {
+            "label": "A",
+            "logoPath": "/logos/albania-778.png"
+          }
+        },
+        {
+          "goalsFor": 4,
+          "awayGoals": 0,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Belarus",
+          "goalDifference": 2,
+          "points": 4,
+          "badge": {
+            "label": "B",
+            "logoPath": "/logos/belarus-1100.png"
+          }
+        },
+        {
+          "goalsFor": 0,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "San Marino",
+          "goalDifference": -14,
+          "points": 0,
+          "badge": {
+            "label": "SM",
+            "logoPath": "/logos/san-marino-1115.png"
+          }
+        }
+      ]
     },
     {
-      "fixtureId": 1543920,
-      "fixtureDateKey": "2026-06-23",
-      "homeTeam": "Vasco",
-      "awayTeam": "Flamengo",
-      "homeScore": 1,
-      "awayScore": 1,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "V",
-        "logoPath": "/logos/vasco-da-gama-133.png"
-      },
-      "awayBadge": {
-        "label": "F",
-        "logoPath": "/logos/flamengo.png"
-      }
+      "groupKey": "C2",
+      "groupLabel": "C2",
+      "rows": [
+        {
+          "goalsFor": 7,
+          "awayGoals": 5,
+          "wins": 3,
+          "awayWins": 2,
+          "rank": 1,
+          "team": "Montenegro",
+          "goalDifference": 3,
+          "points": 9,
+          "badge": {
+            "label": "M",
+            "logoPath": "/logos/montenegro-1109.png"
+          }
+        },
+        {
+          "goalsFor": 3,
+          "awayGoals": 1,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 2,
+          "team": "Cyprus",
+          "goalDifference": 1,
+          "points": 4,
+          "badge": {
+            "label": "C",
+            "logoPath": "/logos/cyprus-1106.png"
+          }
+        },
+        {
+          "goalsFor": 4,
+          "awayGoals": 0,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Armenia",
+          "goalDifference": -1,
+          "points": 3,
+          "badge": {
+            "label": "A",
+            "logoPath": "/logos/armenia-1094.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Latvia",
+          "goalDifference": -3,
+          "points": 1,
+          "badge": {
+            "label": "L",
+            "logoPath": "/logos/latvia-1092.png"
+          }
+        }
+      ]
     },
     {
-      "fixtureId": 1543915,
-      "fixtureDateKey": "2026-06-25",
-      "homeTeam": "Bahia",
-      "awayTeam": "Vitoria",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "B",
-        "logoPath": "/logos/bahia.png"
-      },
-      "awayBadge": {
-        "label": "V",
-        "logoPath": "/logos/vitoria.png"
-      }
+      "groupKey": "C3",
+      "groupLabel": "C3",
+      "rows": [
+        {
+          "goalsFor": 5,
+          "awayGoals": 1,
+          "wins": 2,
+          "awayWins": 0,
+          "rank": 1,
+          "team": "Slovakia",
+          "goalDifference": 3,
+          "points": 7,
+          "badge": {
+            "label": "S",
+            "logoPath": "/logos/slovakia-773.png"
+          }
+        },
+        {
+          "goalsFor": 3,
+          "awayGoals": 2,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 2,
+          "team": "Moldova",
+          "goalDifference": -1,
+          "points": 4,
+          "badge": {
+            "label": "M",
+            "logoPath": "/logos/moldova-1114.png"
+          }
+        },
+        {
+          "goalsFor": 3,
+          "awayGoals": 1,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Faroe Islands",
+          "goalDifference": 0,
+          "points": 3,
+          "badge": {
+            "label": "FI",
+            "logoPath": "/logos/faroe-islands-1098.png"
+          }
+        },
+        {
+          "goalsFor": 3,
+          "awayGoals": 2,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Kazakhstan",
+          "goalDifference": -2,
+          "points": 1,
+          "badge": {
+            "label": "K",
+            "logoPath": "/logos/kazakhstan-1095.png"
+          }
+        }
+      ]
+    },
+    {
+      "groupKey": "C4",
+      "groupLabel": "C4",
+      "rows": [
+        {
+          "goalsFor": 7,
+          "awayGoals": 3,
+          "wins": 2,
+          "awayWins": 1,
+          "rank": 1,
+          "team": "Iceland",
+          "goalDifference": 6,
+          "points": 7,
+          "badge": {
+            "label": "I",
+            "logoPath": "/logos/iceland-18.png"
+          }
+        },
+        {
+          "goalsFor": 2,
+          "awayGoals": 1,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 2,
+          "team": "Estonia",
+          "goalDifference": 1,
+          "points": 5,
+          "badge": {
+            "label": "E",
+            "logoPath": "/logos/estonia-1101.png"
+          }
+        },
+        {
+          "goalsFor": 2,
+          "awayGoals": 2,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 3,
+          "team": "Luxembourg",
+          "goalDifference": -3,
+          "points": 3,
+          "badge": {
+            "label": "L",
+            "logoPath": "/logos/luxembourg-1102.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Bulgaria",
+          "goalDifference": -4,
+          "points": 1,
+          "badge": {
+            "label": "B",
+            "logoPath": "/logos/bulgaria-1103.png"
+          }
+        }
+      ]
+    },
+    {
+      "groupKey": "D1",
+      "groupLabel": "D1",
+      "rows": [
+        {
+          "goalsFor": 3,
+          "awayGoals": 2,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 1,
+          "team": "Malta",
+          "goalDifference": 1,
+          "points": 4,
+          "badge": {
+            "label": "M",
+            "logoPath": "/logos/malta-1112.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 1,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 2,
+          "team": "Gibraltar",
+          "goalDifference": 0,
+          "points": 2,
+          "badge": {
+            "label": "G",
+            "logoPath": "/logos/gibraltar-1093.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Andorra",
+          "goalDifference": -1,
+          "points": 1,
+          "badge": {
+            "label": "A",
+            "logoPath": "/logos/andorra-1110.png"
+          }
+        }
+      ]
+    },
+    {
+      "groupKey": "D2",
+      "groupLabel": "D2",
+      "rows": [
+        {
+          "goalsFor": 3,
+          "awayGoals": 2,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 1,
+          "team": "Lithuania",
+          "goalDifference": 2,
+          "points": 4,
+          "badge": {
+            "label": "L",
+            "logoPath": "/logos/lithuania-1097.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 1,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 2,
+          "team": "Azerbaijan",
+          "goalDifference": 0,
+          "points": 2,
+          "badge": {
+            "label": "A",
+            "logoPath": "/logos/azerbaijan-1096.png"
+          }
+        },
+        {
+          "goalsFor": 0,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Liechtenstein",
+          "goalDifference": -2,
+          "points": 1,
+          "badge": {
+            "label": "L",
+            "logoPath": "/logos/liechtenstein-1107.png"
+          }
+        }
+      ]
     }
   ],
-  "introTitle": "Brasileirão Sub-17",
-  "introSubtitle": "Rodada 5",
-  "hookText": "Olha o que aconteceu na rodada",
+  "introTitle": "UEFA Nations League",
+  "introSubtitle": "Group Stage",
+  "hookText": "The groups just shifted",
   "coldOpenData": {
-    "matchRows": [
-      {
-        "left": "AMERICA MG",
-        "center": "0 - 0",
-        "right": "SAO PAULO"
-      },
-      {
-        "left": "ATHLETICO PR",
-        "center": "3 - 2",
-        "right": "INTERNACIONAL"
-      },
-      {
-        "left": "ATLETICO GO",
-        "center": "0 - 2",
-        "right": "FORTALEZA"
-      },
-      {
-        "left": "ATLÉTICO MG",
-        "center": "3 - 4",
-        "right": "PALMEIRAS"
-      }
-    ],
     "tableRows": [
       {
         "rank": 1,
-        "club": "AMERICA MG",
-        "pts": 22
+        "club": "FRANCE",
+        "pts": 7
       },
       {
         "rank": 2,
-        "club": "SAO PAULO",
-        "pts": 20
+        "club": "BELGIUM",
+        "pts": 6
       },
       {
         "rank": 3,
-        "club": "ATHLETICO PR",
-        "pts": 18
+        "club": "ITALY",
+        "pts": 4
       },
       {
         "rank": 4,
-        "club": "INTERNACIONAL",
-        "pts": 16
+        "club": "TÜRKIYE",
+        "pts": 0
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "Fala Galera, pra vocês... os últimos resultados do Brasileirão Sub-17."
+  "voiceoverText": "UEFA Nations League group standings"
 }

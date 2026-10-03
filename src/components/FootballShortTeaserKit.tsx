@@ -83,7 +83,7 @@ export const pickFootballShortBackground = (
   if (variant === 'results') return TEASER_BACKGROUNDS.stadiumLights;
   if (variant === 'next-games') return TEASER_BACKGROUNDS.goalPitch;
   if (variant === 'predictions') return TEASER_BACKGROUNDS.techBall;
-  if (template === 'standings' || template === 'world-cup-group-standings') {
+  if (template === 'standings' || template === 'serie-c-quadrangular' || template === 'world-cup-group-standings') {
     return TEASER_BACKGROUNDS.arenaPerspective;
   }
   if (template === 'top-scorers' || template === 'player-of-round') {

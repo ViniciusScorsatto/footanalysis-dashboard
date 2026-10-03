@@ -1,83 +1,90 @@
 {
   "sport": "football",
   "template": "champion-final",
-  "leagueId": 612,
+  "leagueId": 740,
   "season": 2026,
-  "leagueName": "Copa do Nordeste",
+  "leagueName": "Brasileirão Sub-20",
   "channelProfile": "pt",
   "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
   "soundtrackPath": "/audio/football/gol-de-arena.mp3",
   "soundtrackLabel": "Gol de Arena",
-  "soundtrackVolume": 0.25,
-  "outputName": "copa-do-nordeste-2026-campeao-pt-br.mp4",
+  "soundtrackVolume": 0.2,
+  "outputName": "brasileirao-sub-20-2026-campeao-pt-br.mp4",
   "durationInFrames": 360,
   "compositionId": "FootballChampionFinalShort",
   "leagueConfig": {
-    "leagueId": 612,
-    "accentColor": "#2E86DE",
+    "leagueId": 740,
+    "accentColor": "#E67E22",
     "standings": {
       "safeArea": {
-        "left": 64,
-        "right": 92
+        "left": 68,
+        "right": 104
       },
       "zones": [
         {
-          "key": "classification",
-          "label": "Classificação",
+          "key": "quadrangular",
+          "label": "Quadrangular",
           "start": 1,
-          "end": 4,
-          "fill": "linear-gradient(90deg, rgba(58, 196, 88, 0.84), rgba(58, 196, 88, 0.28) 62%, rgba(0,0,0,0.04))",
+          "end": 8,
+          "fill": "linear-gradient(90deg, rgba(39, 174, 96, 0.88), rgba(39, 174, 96, 0.24) 62%, rgba(0,0,0,0.04))",
           "accent": "rgba(86, 214, 120, 0.62)"
+        },
+        {
+          "key": "rebaixamento",
+          "label": "Rebaixamento",
+          "start": 18,
+          "end": 20,
+          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 102, 102, 0.56)"
         }
       ]
     },
-    "leagueName": "Copa do Nordeste",
-    "secondaryAccentColor": "#E74C3C"
+    "leagueName": "Brasileirão Sub-20"
   },
-  "championTeam": "Vitoria",
+  "championTeam": "Vasco da Gama",
   "championBadge": {
-    "label": "V",
-    "logoPath": "/logos/vitoria-136.png"
+    "label": "VDG",
+    "logoPath": "/logos/vasco-da-gama.png"
   },
   "titleLabel": "Campeão",
-  "subtitleLabel": "Copa do Nordeste",
+  "subtitleLabel": "Brasileirão Sub-20",
   "seasonLabel": "Temporada 2026",
   "ctaText": "Campeão merecido?",
   "finalFixture": {
-    "fixtureId": 1547221,
-    "fixtureDateKey": "2026-06-02",
-    "homeTeam": "Fortaleza",
-    "awayTeam": "Vitoria",
-    "homeScore": 1,
+    "fixtureId": 1609624,
+    "fixtureDateKey": "2026-09-04",
+    "homeTeam": "Palmeiras",
+    "awayTeam": "Vasco da Gama",
+    "homeScore": 0,
     "awayScore": 2,
-    "homeEliminated": false,
+    "homeEliminated": true,
     "awayEliminated": false,
     "hasPenalties": false,
     "homePenaltyScore": null,
     "awayPenaltyScore": null,
     "homeBadge": {
-      "label": "F",
-      "logoPath": "/logos/fortaleza-ec-154.png"
+      "label": "P",
+      "logoPath": "/logos/palmeiras.png"
     },
     "awayBadge": {
-      "label": "V",
-      "logoPath": "/logos/vitoria-136.png"
+      "label": "VDG",
+      "logoPath": "/logos/vasco-da-gama.png"
     }
   },
-  "introTitle": "Copa do Nordeste",
-  "introSubtitle": "Copa do Nordeste",
+  "introTitle": "Brasileirão Sub-20",
+  "introSubtitle": "Brasileirão Sub-20",
   "hookText": "A taça tem dono",
   "coldOpenData": {
     "tableRows": [
       {
         "rank": 1,
-        "club": "VITORIA",
+        "club": "VASCO DA GAMA",
         "pts": 1
       }
     ]
   },
   "voiceoverEnabled": false,
-  "voiceoverText": "Fala Galera, pra vocês... o campeão da Copa do Nordeste."
+  "voiceoverText": "Fala Galera, pra vocês... o campeão do Brasileirão Sub-20."
 }

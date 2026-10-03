@@ -1,0 +1,130 @@
+{
+  "competitionId": "premier-league",
+  "competitionName": "Premier League",
+  "champions": [
+    {
+      "year": 2017,
+      "clubId": "chelsea",
+      "clubName": "Chelsea",
+      "country": "England",
+      "runnerUp": "Tottenham Hotspur",
+      "notes": "Chelsea recorded 30 wins, a then-record for a Premier League season.",
+      "badge": {
+        "label": "CHEL",
+        "logoPath": "/logos/chelsea-49.png",
+        "accentColor": "#034694"
+      }
+    },
+    {
+      "year": 2018,
+      "clubId": "man-city",
+      "clubName": "Man City",
+      "country": "England",
+      "runnerUp": "Manchester United",
+      "notes": "City reached 100 points, a Premier League record.",
+      "badge": {
+        "label": "MC",
+        "logoPath": "/logos/manchester-city-50.png"
+      }
+    },
+    {
+      "year": 2019,
+      "clubId": "man-city",
+      "clubName": "Man City",
+      "country": "England",
+      "runnerUp": "Liverpool",
+      "notes": "City finished one point ahead of Liverpool (98 vs 97).",
+      "badge": {
+        "label": "MC",
+        "logoPath": "/logos/manchester-city-50.png"
+      }
+    },
+    {
+      "year": 2020,
+      "clubId": "liverpool",
+      "clubName": "Liverpool",
+      "country": "England",
+      "runnerUp": "Manchester City",
+      "notes": "Liverpool ended a 30-year wait for a top-flight title.",
+      "badge": {
+        "label": "LIVE",
+        "logoPath": "/logos/liverpool-40.png",
+        "accentColor": "#C8102E"
+      }
+    },
+    {
+      "year": 2021,
+      "clubId": "man-city",
+      "clubName": "Man City",
+      "country": "England",
+      "runnerUp": "Manchester United",
+      "notes": "City finished 12 points clear of Manchester United.",
+      "badge": {
+        "label": "MC",
+        "logoPath": "/logos/manchester-city-50.png"
+      }
+    },
+    {
+      "year": 2022,
+      "clubId": "man-city",
+      "clubName": "Man City",
+      "country": "England",
+      "runnerUp": "Liverpool",
+      "notes": "City edged Liverpool by one point on the final day to win the title.",
+      "badge": {
+        "label": "MC",
+        "logoPath": "/logos/manchester-city-50.png"
+      }
+    },
+    {
+      "year": 2023,
+      "clubId": "man-city",
+      "clubName": "Man City",
+      "country": "England",
+      "runnerUp": "Arsenal",
+      "notes": "City clinched the title after Arsenal’s defeat to Nottingham Forest late in the season.",
+      "badge": {
+        "label": "MC",
+        "logoPath": "/logos/manchester-city-50.png"
+      }
+    },
+    {
+      "year": 2024,
+      "clubId": "man-city",
+      "clubName": "Man City",
+      "country": "England",
+      "runnerUp": "Arsenal",
+      "notes": "City became the first English men’s team to win four top-flight titles in a row.",
+      "badge": {
+        "label": "MC",
+        "logoPath": "/logos/manchester-city-50.png"
+      }
+    },
+    {
+      "year": 2025,
+      "clubId": "liverpool",
+      "clubName": "Liverpool",
+      "country": "England",
+      "runnerUp": "Arsenal",
+      "notes": "Liverpool secured the 2024–25 title with four matches to spare.",
+      "badge": {
+        "label": "LIVE",
+        "logoPath": "/logos/liverpool-40.png",
+        "accentColor": "#C8102E"
+      }
+    },
+    {
+      "year": 2026,
+      "clubId": "arsenal",
+      "clubName": "Arsenal",
+      "country": "England",
+      "runnerUp": "Manchester City",
+      "notes": "Arsenal won the 2025–26 Premier League, finishing seven points ahead of Manchester City.",
+      "badge": {
+        "label": "ARSE",
+        "logoPath": "/logos/arsenal-42.png",
+        "accentColor": "#EF0107"
+      }
+    }
+  ]
+}

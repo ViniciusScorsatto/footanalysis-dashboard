@@ -3,7 +3,6 @@ import {BrandMark} from '../components/BrandMark';
 import {CompetitionAccentRail} from '../components/CompetitionAccentRail';
 import {
   FootballShortOpening,
-  SHORT_MAIN_ENTRY_PREROLL_FRAMES,
   SHORT_OPENING_DURATION_FRAMES,
 } from '../components/FootballShortOpening';
 import {
@@ -23,8 +22,10 @@ import type {
 } from '../lib/types';
 
 const GROUPS_PER_PAGE = 2;
+import {nationsLeagueDivision, nationsLeagueLegend, nationsLeagueZone, type NationsLeagueZone} from '../lib/nationsLeague';
 
 type FootballContinentalGroupsCompositionProps = {
+  season?: number;
   leagueId: number;
   leagueName: string;
   languageProfile?: 'pt-br' | 'en';
@@ -51,6 +52,7 @@ type FootballContinentalGroupsCompositionProps = {
 };
 
 export const FootballContinentalGroupsComposition = ({
+  season,
   leagueId,
   leagueName,
   languageProfile = 'pt-br',
@@ -72,16 +74,31 @@ export const FootballContinentalGroupsComposition = ({
 }: FootballContinentalGroupsCompositionProps) => {
   const frame = useCurrentFrame();
   const {durationInFrames} = useVideoConfig();
+  const isNationsLeague = leagueId === 5;
+  const usesTransitionRules = isNationsLeague && season === 2026;
+  const openingFrames = isNationsLeague ? 0 : SHORT_OPENING_DURATION_FRAMES;
   const contentFrame =
-    Math.max(0, frame - SHORT_OPENING_DURATION_FRAMES) + SHORT_MAIN_ENTRY_PREROLL_FRAMES;
-  const contentDurationInFrames = Math.max(1, durationInFrames - SHORT_OPENING_DURATION_FRAMES);
+    Math.max(0, frame - openingFrames);
+  const contentDurationInFrames = Math.max(1, durationInFrames - openingFrames);
   const accentColor = leagueConfig?.accentColor ?? '#F0A500';
-  const pages = chunkGroups(groups, GROUPS_PER_PAGE);
+  const pages = chunkGroups(isNationsLeague
+    ? [...groups].sort((a, b) => a.groupKey.localeCompare(b.groupKey))
+    : groups, GROUPS_PER_PAGE);
   const activePageIndex =
     pages.length <= 1
       ? 0
       : Math.min(Math.floor((contentFrame / contentDurationInFrames) * pages.length), pages.length - 1);
   const activeGroups = pages[activePageIndex] ?? [];
+  const legend = usesTransitionRules
+    ? nationsLeagueLegend(nationsLeagueDivision(activeGroups[0]?.groupKey ?? ''), languageProfile === 'en')
+    : getLegendItems(leagueId, languageProfile, accentColor);
+  const hasPending = usesTransitionRules && activeGroups.some((group) =>
+    group.rows.some((row) => nationsLeagueZone(group, row, groups) === 'pending'));
+  const activeLeagueLabels = isNationsLeague
+    ? [...new Set(activeGroups.map((group) => group.groupKey.match(/^([A-D])\d+$/i)?.[1]?.toUpperCase()))]
+        .filter(Boolean)
+        .map((league) => `${languageProfile === 'en' ? 'League' : 'Liga'} ${league}`)
+    : [];
 
   return (
     <AbsoluteFill
@@ -95,6 +112,7 @@ export const FootballContinentalGroupsComposition = ({
       <FootballShortFontFaces />
       <SoundtrackBed
         soundtrackPath={soundtrackPath}
+        loop={isNationsLeague}
         volume={soundtrackVolume}
         duckUntilSeconds={voiceoverPath ? 3.2 : 0}
       />
@@ -103,7 +121,7 @@ export const FootballContinentalGroupsComposition = ({
         accentColor={accentColor}
         opacity={0.5}
       />
-      <FootballShortOpening
+      {!isNationsLeague ? <FootballShortOpening
         template="continental-groups-standings"
         channelProfile={languageProfile === 'en' ? 'en' : 'pt'}
         leagueName={leagueName}
@@ -118,9 +136,9 @@ export const FootballContinentalGroupsComposition = ({
         introSubtitle={introSubtitle}
         hookText={hookText}
         coldOpenData={coldOpenData}
-      />
+      /> : null}
 
-      <Sequence from={SHORT_OPENING_DURATION_FRAMES}>
+      <Sequence from={openingFrames}>
         <VoiceoverBed voiceoverPath={voiceoverPath} />
         <CompetitionAccentRail
           accentColor={accentColor}
@@ -142,7 +160,8 @@ export const FootballContinentalGroupsComposition = ({
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
-            padding: '40px 28px 136px 72px',
+            padding: isNationsLeague ? '96px 120px 200px 72px' : '40px 28px 136px 72px',
+            boxSizing: 'border-box',
           }}
         >
         <div
@@ -175,7 +194,7 @@ export const FootballContinentalGroupsComposition = ({
 
             <div
               style={{
-                fontSize: 86,
+                fontSize: isNationsLeague ? 68 : 86,
                 lineHeight: 0.92,
                 fontWeight: 900,
                 fontFamily: TEASER_HEADLINE_FONT,
@@ -190,14 +209,14 @@ export const FootballContinentalGroupsComposition = ({
             <div
               style={{
                 color: '#3a5060',
-                fontSize: 42,
+                fontSize: isNationsLeague ? 28 : 42,
                 lineHeight: 1,
                 fontWeight: 600,
                 fontFamily: TEASER_LABEL_FONT,
                 textTransform: 'uppercase',
               }}
             >
-              {subtitleLabel}
+              {activeLeagueLabels.length > 0 ? activeLeagueLabels.join(' · ') : subtitleLabel}
             </div>
           </div>
 
@@ -209,7 +228,7 @@ export const FootballContinentalGroupsComposition = ({
                 paddingTop: 16,
               }}
             >
-              {pages.map((_, pageIdx) => (
+              {isNationsLeague ? <div style={{fontSize: 22, whiteSpace: 'nowrap', color: '#c0ccd8'}}>{activePageIndex + 1} / {pages.length}</div> : pages.map((_, pageIdx) => (
                 <div
                   key={pageIdx}
                   style={{
@@ -231,13 +250,16 @@ export const FootballContinentalGroupsComposition = ({
             gap: 26,
             marginTop: 28,
             flex: 1,
+            alignContent: isNationsLeague ? 'center' : undefined,
+            flexShrink: 0,
           }}
         >
           {activeGroups.map((group) => (
             <GroupCard
-              key={group.groupKey}
+              key={`${activePageIndex}-${group.groupKey}-${group.rows[0]?.team}`}
               leagueId={leagueId}
               group={group}
+              zones={usesTransitionRules ? group.rows.map((row) => nationsLeagueZone(group, row, groups)) : undefined}
               tableLabels={tableLabels}
               accentColor={accentColor}
             />
@@ -252,7 +274,7 @@ export const FootballContinentalGroupsComposition = ({
             gap: 12,
           }}
         >
-          {getLegendItems(leagueId, languageProfile, accentColor).map((item) => (
+          {legend.map((item) => (
             <div
               key={item.label}
               style={{
@@ -277,7 +299,7 @@ export const FootballContinentalGroupsComposition = ({
               <div
                 style={{
                   color: '#c0ccd8',
-                  fontFamily: '"Poppins", "Barlow", sans-serif',
+                  fontFamily: TEASER_NUMBER_FONT,
                   fontSize: 18,
                   lineHeight: 1,
                   fontWeight: 600,
@@ -298,10 +320,14 @@ export const FootballContinentalGroupsComposition = ({
             justifyContent: 'space-between',
             alignItems: 'flex-end',
             gap: 32,
-            paddingRight: 120,
+            paddingRight: isNationsLeague ? 0 : 120,
+            paddingTop: 24,
           }}
         >
-          {ctaText?.trim() ? (
+          {usesTransitionRules ? <div style={{fontSize: 18, color: '#8da0b3', maxWidth: 480}}>
+            {languageProfile === 'en' ? '2026/27 • Based on current standings' : '2026/27 • Classificação atual'}
+            {hasPending ? (languageProfile === 'en' ? ' • Grey: cross-group tie-break pending' : ' • Cinza: desempate entre grupos pendente') : ''}
+          </div> : ctaText?.trim() ? (
             <div
               style={{
                 maxWidth: 560,
@@ -310,7 +336,7 @@ export const FootballContinentalGroupsComposition = ({
                 background: '#0f1318',
                 border: `2px solid ${accentColor}`,
                 color: '#ffffff',
-                fontSize: 34,
+                fontSize: isNationsLeague ? 24 : 34,
                 lineHeight: 1,
                 fontWeight: 900,
                 letterSpacing: 0.6,
@@ -331,6 +357,7 @@ export const FootballContinentalGroupsComposition = ({
 };
 
 const GroupCard = ({
+  zones,
   leagueId,
   group,
   tableLabels,
@@ -338,6 +365,7 @@ const GroupCard = ({
 }: {
   leagueId: number;
   group: ContinentalGroupStandingsGroup;
+  zones?: NationsLeagueZone[];
   tableLabels: {
     pos: string;
     team: string;
@@ -383,7 +411,7 @@ const GroupCard = ({
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '88px 1fr 96px 96px',
+          gridTemplateColumns: leagueId === 5 ? '60px minmax(0, 1fr) 68px 68px' : '88px 1fr 96px 96px',
           alignItems: 'center',
           gap: 14,
           padding: '0 6px 10px',
@@ -402,13 +430,15 @@ const GroupCard = ({
       </div>
 
       <div style={{display: 'flex', flexDirection: 'column', gap: 10}}>
-        {group.rows.map((row) => (
-          <GroupRow
-            key={`${group.groupKey}-${row.rank}`}
-            leagueId={leagueId}
-            row={row}
-            accentColor={accentColor}
-          />
+        {group.rows.map((row, index) => (
+            <GroupRow
+              key={`${group.groupKey}-${row.rank}`}
+              leagueId={leagueId}
+              groupLabel={group.groupLabel}
+              row={row}
+              zone={zones?.[index]}
+              accentColor={accentColor}
+            />
         ))}
       </div>
     </div>
@@ -416,24 +446,30 @@ const GroupCard = ({
 };
 
 const GroupRow = ({
+  zone,
   leagueId,
+  groupLabel,
   row,
   accentColor,
 }: {
   leagueId: number;
+  groupLabel: string;
+  zone?: NationsLeagueZone;
   row: ContinentalGroupStandingsGroup['rows'][number];
   accentColor: string;
 }) => {
-  const tone = getRowTone(leagueId, row.rank, accentColor);
+  const color = zone ? ({quarters: '#0A84FF', promotion: '#27AE60', playoff: '#E67E22', playoffBC: '#A78BFA', relegation: '#E74C3C', stay: '#8da0b3', pending: '#8da0b3'}[zone]) : undefined;
+  const tone = color ? {background: `${color}18`, accent: color, rankColor: color, ptsColor: color}
+    : getRowTone(leagueId, row.rank, accentColor, groupLabel);
 
   return (
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: '88px 1fr 96px 96px',
+        gridTemplateColumns: leagueId === 5 ? '60px minmax(0, 1fr) 68px 68px' : '88px 1fr 96px 96px',
         alignItems: 'center',
         gap: 14,
-        minHeight: 90,
+        minHeight: leagueId === 5 ? 78 : 90,
         padding: '0 14px 0 0',
         borderRadius: 24,
         background: tone.background,
@@ -463,7 +499,7 @@ const GroupRow = ({
           style={{
             minWidth: 0,
             color: '#ffffff',
-            fontSize: 34,
+            fontSize: leagueId === 5 ? 28 : 34,
             lineHeight: 1,
             fontWeight: 800,
             textTransform: 'uppercase',
@@ -562,7 +598,43 @@ const Badge = ({badge}: {badge: TeamBadge}) => {
   );
 };
 
-const getRowTone = (leagueId: number, rank: number, accentColor: string) => {
+const getRowTone = (
+  leagueId: number,
+  rank: number,
+  accentColor: string,
+  groupLabel = ''
+) => {
+  if (leagueId === 5) {
+    const league = (groupLabel.match(/^([a-d])\d+$/i)?.[1] ?? groupLabel.match(/(?:league|liga)\s+([a-d])/i)?.[1])?.toUpperCase();
+
+    if (league === 'A' && rank <= 2) {
+      return {
+        background: 'rgba(10, 132, 255, 0.14)',
+        accent: '#0A84FF',
+        rankColor: '#0A84FF',
+        ptsColor: '#0A84FF',
+      };
+    }
+
+    if (['B', 'C', 'D'].includes(league ?? '') && rank === 1) {
+      return {
+        background: 'rgba(39, 174, 96, 0.14)',
+        accent: '#27AE60',
+        rankColor: '#5be08d',
+        ptsColor: '#27AE60',
+      };
+    }
+
+    if (['A', 'B'].includes(league ?? '') && rank === 4) {
+      return {
+        background: 'rgba(231, 76, 60, 0.14)',
+        accent: '#E74C3C',
+        rankColor: '#E74C3C',
+        ptsColor: '#E74C3C',
+      };
+    }
+  }
+
   if (leagueId === 11) {
     if (rank === 1) {
       return {
@@ -660,6 +732,22 @@ const getLegendItems = (
       : [
           {color: '#F39C12', label: 'Top 2 • Oitavas'},
           {color: '#1ABC9C', label: '3º lugar • Playoffs Sulamericana'},
+        ];
+  }
+
+  if (leagueId === 5) {
+    return languageProfile === 'en'
+      ? [
+          {color: '#0A84FF', label: 'League A top 2 • Quarter-finals'},
+          {color: '#27AE60', label: 'League B/C/D group winners • Promoted'},
+          {color: '#E67E22', label: 'Promotion/Relegation Play-offs'},
+          {color: '#E74C3C', label: 'League A/B bottom place • Relegated'},
+        ]
+      : [
+          {color: '#0A84FF', label: 'Top 2 da Liga A • Quartas de final'},
+          {color: '#27AE60', label: 'Vencedores dos grupos B/C/D • Promovidos'},
+          {color: '#E67E22', label: 'Play-offs de promoção/rebaixamento'},
+          {color: '#E74C3C', label: 'Último das Ligas A/B • Rebaixado'},
         ];
   }
 

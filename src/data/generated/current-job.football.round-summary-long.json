@@ -2,70 +2,477 @@
   "sport": "football",
   "template": "round-summary-long",
   "compositionId": "FootballRoundSummaryLong",
-  "leagueId": 39,
-  "season": 2025,
-  "leagueName": "Premier League",
-  "channelProfile": "en",
-  "languageProfile": "en",
+  "leagueId": 71,
+  "season": 2026,
+  "leagueName": "Brasileirão Série A",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/foot-analysis-whistle.mp3",
-  "soundtrackLabel": "Foot Analysis Whistle",
+  "soundtrackPath": "/audio/football/gol-na-pressao.mp3",
+  "soundtrackLabel": "Gol na Pressão",
   "soundtrackVolume": 0.35,
-  "outputName": "premier-league-matchday-1-2025-08-18-2025-08-19-resumo-longform.mp4",
-  "durationInFrames": 2028,
+  "outputName": "brasileirao-serie-a-rodada-20-resumo-longform.mp4",
+  "durationInFrames": 9468,
   "dataSource": "api",
-  "title": "Matchday 1 Round Summary - 2 dates",
-  "roundLabel": "Matchday 1",
+  "title": "Resumo da Rodada 20",
+  "roundLabel": "Rodada 20",
   "openingLines": [
-    "The matchday is complete, and the scorelines only tell part of the story.",
-    "Let us go match by match through the goals, cards, numbers, and decisive moments."
+    "A rodada terminou com jogo grande, gols decisivos e detalhes que explicam muito mais do que o placar.",
+    "Vamos passar partida por partida, olhando os números, os gols e os lances que mudaram cada jogo."
   ],
   "introDurationInFrames": 298,
   "outroDurationInFrames": 298,
   "transitionDurationInFrames": 18,
-  "disclaimer": "Data is based on the available match information.",
+  "disclaimer": "Os dados são baseados nas informações disponíveis da partida.",
   "voiceoverEnabled": true,
   "matches": [
     {
-      "id": "chelsea-c-palace-1",
-      "fixtureId": 1378976,
-      "homeTeam": "Chelsea",
-      "awayTeam": "C. Palace",
-      "homeScore": 0,
-      "awayScore": 0,
-      "fixtureDateLabel": "2025-08-18",
-      "venueLabel": "Stamford Bridge",
+      "id": "santos-chapecoense-1",
+      "fixtureId": 1492308,
+      "homeTeam": "Santos",
+      "awayTeam": "Chapecoense",
+      "homeScore": 2,
+      "awayScore": 2,
+      "fixtureDateLabel": "2026-07-25",
+      "venueLabel": "Estádio Urbano Caldeira",
       "statusLabel": "FT",
-      "voiceover": "Chelsea and C. Palace finished 0 to 0.\nUse this space to narrate the match overview: context, turning point, and what the numbers say.",
-      "voiceoverPath": "/voiceovers/football/en-c823bc8614dd2549.mp3",
-      "durationInFrames": 340,
+      "voiceover": "Santos e Chapecoense terminaram em 2 a 2.\nO jogo foi movimentado na Vila Belmiro e teve Neymar como grande personagem, com dois gols do Santos, incluindo um pênalti no fim. A Chapecoense buscou reação, teve gol de Marcinho validado com auxílio da nova tecnologia de impedimento e ainda contou com um gol contra de João Ananias. Para o Santos, ficou gosto de tropeço: mesmo com Neymar decisivo, o time deixou escapar pontos em casa contra um rival direto da parte de baixo.",
+      "voiceoverPath": "/voiceovers/football/pt-br-86b4390a9e61be08.mp3",
+      "durationInFrames": 966,
       "homeBadge": {
-        "label": "CHEL",
-        "logoPath": "/logos/chelsea-49.png",
-        "accentColor": "#034694"
+        "label": "SANT",
+        "logoPath": "/logos/santos-128.png",
+        "accentColor": "#F0F4F8"
       },
       "awayBadge": {
-        "label": "CP",
-        "logoPath": "/logos/crystal-palace-52.png",
-        "accentColor": "#1ABC9C"
+        "label": "CHAP",
+        "logoPath": "/logos/chapecoense-sc-132.png",
+        "accentColor": "#009639"
       },
       "events": [
         {
-          "minute": 14,
+          "minute": 36,
           "extraMinute": 0,
-          "team": "Crystal Palace",
-          "player": "Eberechi Eze",
-          "assist": null,
-          "type": "var",
-          "detail": "Goal cancelled",
+          "team": "Santos",
+          "player": "Neymar",
+          "assist": "Álvaro Barreal",
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "home"
+        },
+        {
+          "minute": 51,
+          "extraMinute": 0,
+          "team": "Chapecoense-sc",
+          "player": "Marcinho",
+          "assist": "Giovanni Augusto",
+          "type": "goal",
+          "detail": "Normal Goal",
           "side": "away"
         },
         {
-          "minute": 24,
+          "minute": 54,
           "extraMinute": 0,
-          "team": "Chelsea",
-          "player": "Reece James",
+          "team": "Chapecoense-sc",
+          "player": "Camilo",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 62,
+          "extraMinute": 0,
+          "team": "Chapecoense-sc",
+          "player": "João Paulo Ananias",
+          "assist": null,
+          "type": "goal",
+          "detail": "Own Goal",
+          "side": "away"
+        },
+        {
+          "minute": 68,
+          "extraMinute": 0,
+          "team": "Santos",
+          "player": "Lucas Veríssimo",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        },
+        {
+          "minute": 73,
+          "extraMinute": 0,
+          "team": "Chapecoense-sc",
+          "player": "Matheus",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 75,
+          "extraMinute": 0,
+          "team": "Chapecoense-sc",
+          "player": "Bruno Tubarão",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 76,
+          "extraMinute": 0,
+          "team": "Santos",
+          "player": "Neymar",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        },
+        {
+          "minute": 77,
+          "extraMinute": 0,
+          "team": "Santos",
+          "player": "Álvaro Barreal",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        },
+        {
+          "minute": 88,
+          "extraMinute": 0,
+          "team": "Chapecoense-sc",
+          "player": "Bruno Matias",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 88,
+          "extraMinute": 0,
+          "team": "Chapecoense-sc",
+          "player": "Vinicius Balieiro",
+          "assist": null,
+          "type": "var",
+          "detail": "Card upgrade",
+          "side": "away"
+        },
+        {
+          "minute": 89,
+          "extraMinute": 0,
+          "team": "Santos",
+          "player": "Neymar",
+          "assist": null,
+          "type": "penalty",
+          "detail": "Penalty",
+          "side": "home"
+        }
+      ],
+      "keyStats": [
+        {
+          "label": "No alvo",
+          "homeValue": "7",
+          "awayValue": "3"
+        },
+        {
+          "label": "Finalizações",
+          "homeValue": "21",
+          "awayValue": "5"
+        },
+        {
+          "label": "Posse",
+          "homeValue": "64%",
+          "awayValue": "36%"
+        },
+        {
+          "label": "Escanteios",
+          "homeValue": "12",
+          "awayValue": "1"
+        },
+        {
+          "label": "Faltas",
+          "homeValue": "11",
+          "awayValue": "13"
+        },
+        {
+          "label": "Cartões amarelos",
+          "homeValue": "3",
+          "awayValue": "4"
+        },
+        {
+          "label": "Defesas",
+          "homeValue": "2",
+          "awayValue": "5"
+        }
+      ],
+      "highlights": [
+        "Empate em 2 a 2, com equilíbrio no placar final.",
+        "Gols de Neymar, Marcinho, João Paulo Ananias, Neymar.",
+        "Finalizações: Santos 21, Chapecoense 5.",
+        "Posse de bola: Santos 64%, Chapecoense 36%."
+      ]
+    },
+    {
+      "id": "athletico-pr-internacional-2",
+      "fixtureId": 1492300,
+      "homeTeam": "Athletico-PR",
+      "awayTeam": "Internacional",
+      "homeScore": 2,
+      "awayScore": 0,
+      "fixtureDateLabel": "2026-07-25",
+      "venueLabel": "Arena da Baixada",
+      "statusLabel": "FT",
+      "voiceover": "Atlético e Internacional terminaram em 2 a 0.\nO Atlético abriu o segundo turno com vitória forte na Arena da Baixada. Leozinho marcou no fim do primeiro tempo e Viveros fechou o placar, em um jogo em que o Furacão foi mais eficiente nos momentos decisivos. O resultado colocou o Athletico na terceira colocação e deixou o Internacional sem resposta fora de casa.",
+      "voiceoverPath": "/voiceovers/football/pt-br-9674227fa3590224.mp3",
+      "durationInFrames": 757,
+      "homeBadge": {
+        "label": "ATHL",
+        "logoPath": "/logos/atletico-paranaense-134.png",
+        "accentColor": "#D71920"
+      },
+      "awayBadge": {
+        "label": "INTE",
+        "logoPath": "/logos/internacional-119.png",
+        "accentColor": "#C8102E"
+      },
+      "events": [
+        {
+          "minute": 45,
+          "extraMinute": 1,
+          "team": "Atletico Paranaense",
+          "player": "Leozinho",
+          "assist": "K. Viveros",
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "home"
+        },
+        {
+          "minute": 60,
+          "extraMinute": 0,
+          "team": "Atletico Paranaense",
+          "player": "K. Viveros",
+          "assist": null,
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "home"
+        }
+      ],
+      "keyStats": [
+        {
+          "label": "No alvo",
+          "homeValue": "4",
+          "awayValue": "3"
+        },
+        {
+          "label": "Finalizações",
+          "homeValue": "14",
+          "awayValue": "13"
+        },
+        {
+          "label": "Posse",
+          "homeValue": "46%",
+          "awayValue": "54%"
+        },
+        {
+          "label": "Escanteios",
+          "homeValue": "3",
+          "awayValue": "7"
+        },
+        {
+          "label": "Faltas",
+          "homeValue": "13",
+          "awayValue": "8"
+        },
+        {
+          "label": "Defesas",
+          "homeValue": "3",
+          "awayValue": "2"
+        },
+        {
+          "label": "Precisão passe",
+          "homeValue": "80%",
+          "awayValue": "77%"
+        }
+      ],
+      "highlights": [
+        "Athletico-PR venceu pelo placar de 2 a 0.",
+        "Gols de Leozinho, K. Viveros.",
+        "Finalizações: Athletico-PR 14, Internacional 13.",
+        "Posse de bola: Athletico-PR 46%, Internacional 54%."
+      ]
+    },
+    {
+      "id": "vasco-da-gama-mirassol-3",
+      "fixtureId": 1492309,
+      "homeTeam": "Vasco DA Gama",
+      "awayTeam": "Mirassol",
+      "homeScore": 1,
+      "awayScore": 1,
+      "fixtureDateLabel": "2026-07-25",
+      "venueLabel": "Estádio São Januário",
+      "statusLabel": "FT",
+      "voiceover": "Vasco e Mirassol terminaram em 1 a 1.\nEm São Januário, o Mirassol saiu na frente com Igor Formiga, aproveitando erro da defesa vascaína em um primeiro tempo de poucas finalizações. O Vasco chegou a ter gol de David anulado por impedimento, mas não desistiu e empatou com um golaço de Andrés Gómez de fora da área. O ponto manteve os dois pressionados na briga contra a parte de baixo da tabela.",
+      "voiceoverPath": "/voiceovers/football/pt-br-75d966a60a113e00.mp3",
+      "durationInFrames": 835,
+      "homeBadge": {
+        "label": "VDG",
+        "logoPath": "/logos/vasco-da-gama-133.png",
+        "accentColor": "#111111"
+      },
+      "awayBadge": {
+        "label": "MIRA",
+        "logoPath": "/logos/mirassol-7848.png",
+        "accentColor": "#F2C230"
+      },
+      "events": [
+        {
+          "minute": 30,
+          "extraMinute": 0,
+          "team": "Mirassol",
+          "player": "Igor Formiga",
+          "assist": "Reinaldo",
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "away"
+        },
+        {
+          "minute": 66,
+          "extraMinute": 0,
+          "team": "Mirassol",
+          "player": "Walter",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 80,
+          "extraMinute": 0,
+          "team": "Vasco DA Gama",
+          "player": "A. Gomez",
+          "assist": null,
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "home"
+        },
+        {
+          "minute": 83,
+          "extraMinute": 0,
+          "team": "Vasco DA Gama",
+          "player": "N. Moreira",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        }
+      ],
+      "keyStats": [
+        {
+          "label": "No alvo",
+          "homeValue": "4",
+          "awayValue": "3"
+        },
+        {
+          "label": "Finalizações",
+          "homeValue": "20",
+          "awayValue": "10"
+        },
+        {
+          "label": "Posse",
+          "homeValue": "58%",
+          "awayValue": "42%"
+        },
+        {
+          "label": "Escanteios",
+          "homeValue": "9",
+          "awayValue": "5"
+        },
+        {
+          "label": "Faltas",
+          "homeValue": "12",
+          "awayValue": "7"
+        },
+        {
+          "label": "Cartões amarelos",
+          "homeValue": "1",
+          "awayValue": "1"
+        },
+        {
+          "label": "Defesas",
+          "homeValue": "2",
+          "awayValue": "3"
+        }
+      ],
+      "highlights": [
+        "Empate em 1 a 1, com equilíbrio no placar final.",
+        "Gols de Igor Formiga, A. Gomez.",
+        "Finalizações: Vasco DA Gama 20, Mirassol 10.",
+        "Posse de bola: Vasco DA Gama 58%, Mirassol 42%."
+      ]
+    },
+    {
+      "id": "bahia-corinthians-4",
+      "fixtureId": 1492301,
+      "homeTeam": "Bahia",
+      "awayTeam": "Corinthians",
+      "homeScore": 1,
+      "awayScore": 1,
+      "fixtureDateLabel": "2026-07-26",
+      "venueLabel": "Arena Fonte Nova",
+      "statusLabel": "FT",
+      "voiceover": "Bahia e Corinthians terminaram em 1 a 1.\nO Corinthians começou melhor na Fonte Nova e abriu o placar com Angileri, logo no primeiro tempo. O Bahia reagiu ainda antes do intervalo com David Duarte e terminou a partida reclamando de um gol anulado, em um jogo em que Rogério Ceni criticou a arbitragem. No fim, o empate teve cara de resultado ruim para os dois: o Bahia perdeu força em casa e o Corinthians seguiu sem aliviar sua situação na tabela.",
+      "voiceoverPath": "/voiceovers/football/pt-br-7e7855770bf45415.mp3",
+      "durationInFrames": 940,
+      "homeBadge": {
+        "label": "BAHI",
+        "logoPath": "/logos/bahia-118.png",
+        "accentColor": "#005BAC"
+      },
+      "awayBadge": {
+        "label": "CORI",
+        "logoPath": "/logos/corinthians-131.png",
+        "accentColor": "#111111"
+      },
+      "events": [
+        {
+          "minute": 8,
+          "extraMinute": 0,
+          "team": "Corinthians",
+          "player": "F. Angileri",
+          "assist": "Andre",
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "away"
+        },
+        {
+          "minute": 11,
+          "extraMinute": 0,
+          "team": "Bahia",
+          "player": "A. Veliz",
+          "assist": null,
+          "type": "var",
+          "detail": "Goal Disallowed - offside",
+          "side": "home"
+        },
+        {
+          "minute": 16,
+          "extraMinute": 0,
+          "team": "Corinthians",
+          "player": "F. Angileri",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 19,
+          "extraMinute": 0,
+          "team": "Bahia",
+          "player": "David Duarte",
           "assist": null,
           "type": "card",
           "detail": "Yellow Card",
@@ -74,174 +481,68 @@
         {
           "minute": 28,
           "extraMinute": 0,
-          "team": "Crystal Palace",
-          "player": "Daniel Muñoz",
-          "assist": null,
-          "type": "card",
-          "detail": "Yellow Card",
-          "side": "away"
-        },
-        {
-          "minute": 33,
-          "extraMinute": 0,
-          "team": "Crystal Palace",
-          "player": "Jean-Philippe Mateta",
-          "assist": null,
-          "type": "card",
-          "detail": "Yellow Card",
-          "side": "away"
-        },
-        {
-          "minute": 49,
-          "extraMinute": 0,
-          "team": "Crystal Palace",
-          "player": "Will Hughes",
-          "assist": null,
-          "type": "card",
-          "detail": "Yellow Card",
-          "side": "away"
-        },
-        {
-          "minute": 74,
-          "extraMinute": 0,
-          "team": "Chelsea",
-          "player": "Estêvão",
+          "team": "Bahia",
+          "player": "Ze Guilherme",
           "assist": null,
           "type": "card",
           "detail": "Yellow Card",
           "side": "home"
-        }
-      ],
-      "keyStats": [
-        {
-          "label": "On target",
-          "homeValue": "3",
-          "awayValue": "4"
         },
         {
-          "label": "Shots",
-          "homeValue": "19",
-          "awayValue": "11"
-        },
-        {
-          "label": "Possession",
-          "homeValue": "72%",
-          "awayValue": "28%"
-        },
-        {
-          "label": "Corners",
-          "homeValue": "11",
-          "awayValue": "2"
-        },
-        {
-          "label": "Fouls",
-          "homeValue": "10",
-          "awayValue": "12"
-        },
-        {
-          "label": "Yellow cards",
-          "homeValue": "2",
-          "awayValue": "3"
-        },
-        {
-          "label": "Saves",
-          "homeValue": "4",
-          "awayValue": "2"
-        }
-      ],
-      "highlights": [
-        "Empate em 0 a 0, com equilíbrio no placar final."
-      ]
-    },
-    {
-      "id": "nott-forest-brentford-2",
-      "fixtureId": 1378972,
-      "homeTeam": "Nott Forest",
-      "awayTeam": "Brentford",
-      "homeScore": 3,
-      "awayScore": 1,
-      "fixtureDateLabel": "2025-08-18",
-      "venueLabel": "City Ground",
-      "statusLabel": "FT",
-      "voiceover": "Nott Forest and Brentford finished 3 to 1.\nUse this space to narrate the match overview: context, turning point, and what the numbers say.",
-      "voiceoverPath": "/voiceovers/football/en-8cedf86b132646b4.mp3",
-      "durationInFrames": 340,
-      "homeBadge": {
-        "label": "NF",
-        "logoPath": "/logos/nottingham-forest-65.png",
-        "accentColor": "#E67E22"
-      },
-      "awayBadge": {
-        "label": "BREN",
-        "logoPath": "/logos/brentford-55.png",
-        "accentColor": "#E30613"
-      },
-      "events": [
-        {
-          "minute": 5,
+          "minute": 35,
           "extraMinute": 0,
-          "team": "Nottingham Forest",
-          "player": "C. Wood",
+          "team": "Corinthians",
+          "player": "Raniele",
           "assist": null,
-          "type": "goal",
-          "detail": "Normal Goal",
-          "side": "home"
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
         },
         {
-          "minute": 42,
-          "extraMinute": 0,
-          "team": "Nottingham Forest",
-          "player": "D. Ndoye",
-          "assist": "M. Gibbs-White",
+          "minute": 45,
+          "extraMinute": 4,
+          "team": "Bahia",
+          "player": "David Duarte",
+          "assist": "Rodrigo",
           "type": "goal",
           "detail": "Normal Goal",
           "side": "home"
         },
         {
           "minute": 45,
-          "extraMinute": 0,
-          "team": "Nottingham Forest",
-          "player": "C. Wood",
-          "assist": "E. Anderson",
-          "type": "goal",
-          "detail": "Normal Goal",
+          "extraMinute": 9,
+          "team": "Bahia",
+          "player": "Rogerio Ceni",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
           "side": "home"
         },
         {
-          "minute": 52,
+          "minute": 67,
           "extraMinute": 0,
-          "team": "Brentford",
-          "player": "Nathan Collins",
+          "team": "Corinthians",
+          "player": "Breno Bidon",
           "assist": null,
           "type": "card",
           "detail": "Yellow Card",
           "side": "away"
         },
         {
-          "minute": 53,
+          "minute": 89,
           "extraMinute": 0,
-          "team": "Nottingham Forest",
-          "player": "Neco Williams",
+          "team": "Corinthians",
+          "player": "Kaue",
           "assist": null,
           "type": "card",
           "detail": "Yellow Card",
-          "side": "home"
-        },
-        {
-          "minute": 78,
-          "extraMinute": 0,
-          "team": "Brentford",
-          "player": "I. Thiago",
-          "assist": null,
-          "type": "penalty",
-          "detail": "Penalty",
           "side": "away"
         },
         {
           "minute": 90,
-          "extraMinute": 0,
-          "team": "Brentford",
-          "player": "Aaron Hickey",
+          "extraMinute": 6,
+          "team": "Corinthians",
+          "player": "Allan",
           "assist": null,
           "type": "card",
           "detail": "Yellow Card",
@@ -250,105 +551,137 @@
       ],
       "keyStats": [
         {
-          "label": "On target",
-          "homeValue": "5",
-          "awayValue": "3"
+          "label": "No alvo",
+          "homeValue": "2",
+          "awayValue": "2"
         },
         {
-          "label": "Shots",
-          "homeValue": "11",
-          "awayValue": "10"
-        },
-        {
-          "label": "Possession",
-          "homeValue": "54%",
-          "awayValue": "46%"
-        },
-        {
-          "label": "Corners",
-          "homeValue": "5",
+          "label": "Finalizações",
+          "homeValue": "12",
           "awayValue": "5"
         },
         {
-          "label": "Fouls",
+          "label": "Posse",
+          "homeValue": "60%",
+          "awayValue": "40%"
+        },
+        {
+          "label": "Escanteios",
           "homeValue": "7",
-          "awayValue": "15"
-        },
-        {
-          "label": "Yellow cards",
-          "homeValue": "1",
           "awayValue": "2"
         },
         {
-          "label": "Saves",
+          "label": "Faltas",
+          "homeValue": "17",
+          "awayValue": "18"
+        },
+        {
+          "label": "Cartões amarelos",
           "homeValue": "2",
-          "awayValue": "2"
+          "awayValue": "5"
+        },
+        {
+          "label": "Defesas",
+          "homeValue": "1",
+          "awayValue": "1"
         }
       ],
       "highlights": [
-        "Nott Forest venceu pelo placar de 3 a 1.",
-        "Gols de C. Wood, D. Ndoye, C. Wood, I. Thiago."
+        "Empate em 1 a 1, com equilíbrio no placar final.",
+        "Gols de F. Angileri, David Duarte.",
+        "Finalizações: Bahia 12, Corinthians 5.",
+        "Posse de bola: Bahia 60%, Corinthians 40%."
       ]
     },
     {
-      "id": "man-united-arsenal-3",
-      "fixtureId": 1378977,
-      "homeTeam": "Man United",
-      "awayTeam": "Arsenal",
+      "id": "cruzeiro-botafogo-5",
+      "fixtureId": 1492303,
+      "homeTeam": "Cruzeiro",
+      "awayTeam": "Botafogo",
       "homeScore": 0,
       "awayScore": 1,
-      "fixtureDateLabel": "2025-08-18",
-      "venueLabel": "Old Trafford",
+      "fixtureDateLabel": "2026-07-26",
+      "venueLabel": "Governador Magalhães Pinto",
       "statusLabel": "FT",
-      "voiceover": "Man United and Arsenal finished 0 to 1.\nUse this space to narrate the match overview: context, turning point, and what the numbers say.",
-      "voiceoverPath": "/voiceovers/football/en-0f356544ba03aba9.mp3",
-      "durationInFrames": 340,
+      "voiceover": "Cruzeiro e Botafogo terminaram em 0 a 1.\nO Botafogo venceu no Mineirão usando bola parada e concentração defensiva. Gabriel Justino aproveitou escanteio cobrado por Alex Telles e marcou de cabeça ainda no primeiro tempo. Depois, o Cruzeiro tentou pressionar, mas não conseguiu transformar volume em empate. Para o Botafogo, foi uma vitória de peso fora de casa; para o Cruzeiro, mais um jogo em que faltou precisão na área.",
+      "voiceoverPath": "/voiceovers/football/pt-br-58d399e639e3638a.mp3",
+      "durationInFrames": 809,
       "homeBadge": {
-        "label": "MU",
-        "logoPath": "/logos/manchester-united-33.png",
-        "accentColor": "#F39C12"
+        "label": "CRUZ",
+        "logoPath": "/logos/cruzeiro-135.png",
+        "accentColor": "#003DA5"
       },
       "awayBadge": {
-        "label": "ARSE",
-        "logoPath": "/logos/arsenal-42.png",
-        "accentColor": "#EF0107"
+        "label": "BOTA",
+        "logoPath": "/logos/botafogo-120.png",
+        "accentColor": "#111111"
       },
       "events": [
         {
-          "minute": 13,
+          "minute": 26,
           "extraMinute": 0,
-          "team": "Arsenal",
-          "player": "R. Calafiori",
-          "assist": null,
-          "type": "goal",
-          "detail": "Normal Goal",
-          "side": "away"
-        },
-        {
-          "minute": 42,
-          "extraMinute": 0,
-          "team": "Arsenal",
-          "player": "Riccardo Calafiori",
+          "team": "Botafogo",
+          "player": "Warleson",
           "assist": null,
           "type": "card",
           "detail": "Yellow Card",
           "side": "away"
         },
         {
-          "minute": 85,
+          "minute": 35,
           "extraMinute": 0,
-          "team": "Manchester United",
-          "player": "Patrick Dorgu",
+          "team": "Botafogo",
+          "player": "Huguinho",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 41,
+          "extraMinute": 0,
+          "team": "Botafogo",
+          "player": "G. Justino",
+          "assist": "Alex Telles",
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "away"
+        },
+        {
+          "minute": 45,
+          "extraMinute": 3,
+          "team": "Cruzeiro",
+          "player": "Fagner",
           "assist": null,
           "type": "card",
           "detail": "Yellow Card",
           "side": "home"
         },
         {
-          "minute": 85,
+          "minute": 45,
+          "extraMinute": 4,
+          "team": "Botafogo",
+          "player": "N. Ferraresi",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 56,
           "extraMinute": 0,
-          "team": "Arsenal",
-          "player": "David Raya",
+          "team": "Cruzeiro",
+          "player": "Jonathan Jesus",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        },
+        {
+          "minute": 88,
+          "extraMinute": 0,
+          "team": "Botafogo",
+          "player": "Alex Telles",
           "assist": null,
           "type": "card",
           "detail": "Yellow Card",
@@ -356,9 +689,148 @@
         },
         {
           "minute": 90,
-          "extraMinute": 3,
-          "team": "Arsenal",
-          "player": "Myles Lewis-Skelly",
+          "extraMinute": 4,
+          "team": "Botafogo",
+          "player": "K. Barria",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 90,
+          "extraMinute": 7,
+          "team": "Cruzeiro",
+          "player": "K. Arroyo",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        },
+        {
+          "minute": 90,
+          "extraMinute": 8,
+          "team": "Cruzeiro",
+          "player": "Kaio Jorge",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        }
+      ],
+      "keyStats": [
+        {
+          "label": "No alvo",
+          "homeValue": "6",
+          "awayValue": "4"
+        },
+        {
+          "label": "Finalizações",
+          "homeValue": "16",
+          "awayValue": "8"
+        },
+        {
+          "label": "Posse",
+          "homeValue": "61%",
+          "awayValue": "39%"
+        },
+        {
+          "label": "Escanteios",
+          "homeValue": "9",
+          "awayValue": "1"
+        },
+        {
+          "label": "Faltas",
+          "homeValue": "14",
+          "awayValue": "18"
+        },
+        {
+          "label": "Cartões amarelos",
+          "homeValue": "2",
+          "awayValue": "5"
+        },
+        {
+          "label": "Defesas",
+          "homeValue": "3",
+          "awayValue": "6"
+        }
+      ],
+      "highlights": [
+        "Botafogo venceu pelo placar de 0 a 1.",
+        "Gols de G. Justino.",
+        "Finalizações: Cruzeiro 16, Botafogo 8.",
+        "Posse de bola: Cruzeiro 61%, Botafogo 39%."
+      ]
+    },
+    {
+      "id": "flamengo-sao-paulo-6",
+      "fixtureId": 1492304,
+      "homeTeam": "Flamengo",
+      "awayTeam": "Sao Paulo",
+      "homeScore": 1,
+      "awayScore": 1,
+      "fixtureDateLabel": "2026-07-26",
+      "venueLabel": "Estádio do Maracanã",
+      "statusLabel": "FT",
+      "voiceover": "Flamengo e Sao Paulo terminaram em 1 a 1.\nNo Maracanã, Flamengo e São Paulo fizeram um jogo grande de rodada, mas o empate acabou tendo leitura diferente para cada lado. O Flamengo somou ponto, reduziu a distância para o líder Palmeiras depois do tropeço palmeirense, mas ainda ficou seis pontos atrás, com um jogo a menos. O São Paulo, por outro lado, segurou um resultado importante fora de casa e tirou pontos de um concorrente direto na parte de cima.",
+      "voiceoverPath": "/voiceovers/football/pt-br-0873bcb2065cc6b2.mp3",
+      "durationInFrames": 940,
+      "homeBadge": {
+        "label": "FLAM",
+        "logoPath": "/logos/flamengo-127.png",
+        "accentColor": "#C8102E"
+      },
+      "awayBadge": {
+        "label": "SP",
+        "logoPath": "/logos/sao-paulo-126.png",
+        "accentColor": "#D71920"
+      },
+      "events": [
+        {
+          "minute": 57,
+          "extraMinute": 0,
+          "team": "Flamengo",
+          "player": "Leo Pereira",
+          "assist": "Jorginho",
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "home"
+        },
+        {
+          "minute": 63,
+          "extraMinute": 0,
+          "team": "Flamengo",
+          "player": "Alex Sandro",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        },
+        {
+          "minute": 69,
+          "extraMinute": 0,
+          "team": "Sao Paulo",
+          "player": "Wendell",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 70,
+          "extraMinute": 0,
+          "team": "Sao Paulo",
+          "player": "Jonathan Calleri",
+          "assist": "Luis Osorio",
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "away"
+        },
+        {
+          "minute": 88,
+          "extraMinute": 0,
+          "team": "Sao Paulo",
+          "player": "Jonathan Calleri",
           "assist": null,
           "type": "card",
           "detail": "Yellow Card",
@@ -367,8 +839,18 @@
         {
           "minute": 90,
           "extraMinute": 1,
-          "team": "Arsenal",
-          "player": "Jurriën Timber",
+          "team": "Flamengo",
+          "player": "Samuel Lino",
+          "assist": null,
+          "type": "var",
+          "detail": "Goal Disallowed - offside",
+          "side": "home"
+        },
+        {
+          "minute": 90,
+          "extraMinute": 11,
+          "team": "Sao Paulo",
+          "player": "Marcos Antonio",
           "assist": null,
           "type": "card",
           "detail": "Yellow Card",
@@ -377,141 +859,566 @@
       ],
       "keyStats": [
         {
-          "label": "On target",
-          "homeValue": "7",
-          "awayValue": "3"
-        },
-        {
-          "label": "Shots",
-          "homeValue": "22",
-          "awayValue": "9"
-        },
-        {
-          "label": "Possession",
-          "homeValue": "61%",
-          "awayValue": "39%"
-        },
-        {
-          "label": "Corners",
-          "homeValue": "3",
-          "awayValue": "4"
-        },
-        {
-          "label": "Fouls",
-          "homeValue": "10",
-          "awayValue": "19"
-        },
-        {
-          "label": "Yellow cards",
+          "label": "No alvo",
           "homeValue": "1",
-          "awayValue": "4"
+          "awayValue": "0"
         },
         {
-          "label": "Saves",
-          "homeValue": "2",
-          "awayValue": "7"
+          "label": "Finalizações",
+          "homeValue": "3",
+          "awayValue": "2"
+        },
+        {
+          "label": "Posse",
+          "homeValue": "50%",
+          "awayValue": "50%"
+        },
+        {
+          "label": "Escanteios",
+          "homeValue": "0",
+          "awayValue": "1"
+        },
+        {
+          "label": "Faltas",
+          "homeValue": "9",
+          "awayValue": "8"
+        },
+        {
+          "label": "Defesas",
+          "homeValue": "0",
+          "awayValue": "1"
+        },
+        {
+          "label": "Precisão passe",
+          "homeValue": "87%",
+          "awayValue": "84%"
         }
       ],
       "highlights": [
-        "Arsenal venceu pelo placar de 0 a 1.",
-        "Gols de R. Calafiori."
+        "Empate em 1 a 1, com equilíbrio no placar final.",
+        "Gols de Leo Pereira, Jonathan Calleri.",
+        "Finalizações: Flamengo 3, Sao Paulo 2.",
+        "Posse de bola: Flamengo 50%, Sao Paulo 50%."
       ]
     },
     {
-      "id": "leeds-everton-4",
-      "fixtureId": 1378978,
-      "homeTeam": "Leeds",
-      "awayTeam": "Everton",
+      "id": "gremio-fluminense-7",
+      "fixtureId": 1492305,
+      "homeTeam": "Gremio",
+      "awayTeam": "Fluminense",
       "homeScore": 1,
-      "awayScore": 0,
-      "fixtureDateLabel": "2025-08-19",
-      "venueLabel": "Elland Road",
+      "awayScore": 1,
+      "fixtureDateLabel": "2026-07-26",
+      "venueLabel": "Arena do Grêmio",
       "statusLabel": "FT",
-      "voiceover": "Leeds and Everton finished 1 to 0.\nUse this space to narrate the match overview: context, turning point, and what the numbers say.",
-      "voiceoverPath": "/voiceovers/football/en-fc15595fa06cad2e.mp3",
-      "durationInFrames": 340,
+      "voiceover": "Gremio e Fluminense terminaram em 1 a 1.\nO Fluminense saiu na frente com Hulk, cobrando pênalti no segundo tempo, mas o Grêmio arrancou o empate no fim com Diego Caito. O grande nome da partida foi Fábio, que segurou o Fluminense com defesas importantes e ajudou a explicar por que o placar não virou para o lado gremista. Para o Grêmio, o empate em casa teve sabor amargo; para o Fluminense, foi ponto importante, mas com sensação de vitória escapando no final.",
+      "voiceoverPath": "/voiceovers/football/pt-br-5fe25b30d5de4181.mp3",
+      "durationInFrames": 966,
       "homeBadge": {
-        "label": "LEED",
-        "logoPath": "/logos/leeds-63.png",
-        "accentColor": "#1ABC9C"
+        "label": "GREM",
+        "logoPath": "/logos/gremio-130.png",
+        "accentColor": "#2E86DE"
       },
       "awayBadge": {
-        "label": "EVER",
-        "logoPath": "/logos/everton-45.png",
-        "accentColor": "#003399"
+        "label": "FLUM",
+        "logoPath": "/logos/fluminense-124.png",
+        "accentColor": "#7A1F2B"
       },
       "events": [
         {
-          "minute": 56,
+          "minute": 12,
           "extraMinute": 0,
-          "team": "Everton",
-          "player": "Tim Iroegbunam",
+          "team": "Fluminense",
+          "player": "Hercules",
           "assist": null,
           "type": "card",
           "detail": "Yellow Card",
           "side": "away"
         },
         {
-          "minute": 63,
+          "minute": 13,
           "extraMinute": 0,
-          "team": "Everton",
-          "player": "Carlos Alcaraz",
+          "team": "Fluminense",
+          "player": "Guga",
           "assist": null,
           "type": "card",
           "detail": "Yellow Card",
           "side": "away"
         },
         {
-          "minute": 84,
+          "minute": 65,
           "extraMinute": 0,
-          "team": "Leeds",
-          "player": "L. Nmecha",
+          "team": "Fluminense",
+          "player": "Hulk",
           "assist": null,
           "type": "penalty",
           "detail": "Penalty",
+          "side": "away"
+        },
+        {
+          "minute": 69,
+          "extraMinute": 0,
+          "team": "Fluminense",
+          "player": "Thiago Silva",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 76,
+          "extraMinute": 0,
+          "team": "Gremio",
+          "player": "Carlos Vinicius",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        },
+        {
+          "minute": 79,
+          "extraMinute": 0,
+          "team": "Fluminense",
+          "player": "A. Canobbio",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 89,
+          "extraMinute": 0,
+          "team": "Gremio",
+          "player": "Diego Caito",
+          "assist": "J. Cabral",
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "home"
+        },
+        {
+          "minute": 90,
+          "extraMinute": 2,
+          "team": "Gremio",
+          "player": "J. Nardoni",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
           "side": "home"
         }
       ],
       "keyStats": [
         {
-          "label": "On target",
-          "homeValue": "3",
+          "label": "No alvo",
+          "homeValue": "2",
           "awayValue": "1"
         },
         {
-          "label": "Shots",
-          "homeValue": "21",
-          "awayValue": "7"
-        },
-        {
-          "label": "Possession",
-          "homeValue": "54%",
-          "awayValue": "46%"
-        },
-        {
-          "label": "Corners",
-          "homeValue": "7",
-          "awayValue": "2"
-        },
-        {
-          "label": "Fouls",
+          "label": "Finalizações",
           "homeValue": "6",
-          "awayValue": "8"
+          "awayValue": "3"
         },
         {
-          "label": "Yellow cards",
+          "label": "Posse",
+          "homeValue": "44%",
+          "awayValue": "56%"
+        },
+        {
+          "label": "Escanteios",
+          "homeValue": "2",
+          "awayValue": "1"
+        },
+        {
+          "label": "Faltas",
+          "homeValue": "7",
+          "awayValue": "5"
+        },
+        {
+          "label": "Cartões amarelos",
           "homeValue": "0",
           "awayValue": "2"
         },
         {
-          "label": "Saves",
+          "label": "Defesas",
           "homeValue": "1",
           "awayValue": "2"
         }
       ],
       "highlights": [
-        "Leeds venceu pelo placar de 1 a 0.",
-        "Gols de L. Nmecha."
+        "Empate em 1 a 1, com equilíbrio no placar final.",
+        "Gols de Hulk, Diego Caito.",
+        "Finalizações: Gremio 6, Fluminense 3.",
+        "Posse de bola: Gremio 44%, Fluminense 56%."
+      ]
+    },
+    {
+      "id": "bragantino-coritiba-8",
+      "fixtureId": 1492302,
+      "homeTeam": "Bragantino",
+      "awayTeam": "Coritiba",
+      "homeScore": 0,
+      "awayScore": 0,
+      "fixtureDateLabel": "2026-07-26",
+      "venueLabel": "Estádio Cícero de Souza Marques",
+      "statusLabel": "FT",
+      "voiceover": "Bragantino e Coritiba terminaram em 0 a 0.\nEm Bragança Paulista, o Bragantino pressionou mais, mas esbarrou em um Coritiba bem organizado defensivamente. Foi um jogo de poucas chances claras, com destaque para a dupla de zaga do Coxa e para Josué, que ajudaram a sustentar o empate fora de casa. O Bragantino seguiu em quinto, mas perdeu a chance de encostar mais no G4; o Coritiba somou um ponto valioso depois de duas derrotas.",
+      "voiceoverPath": "/voiceovers/football/pt-br-3b8cc2265b165d1f.mp3",
+      "durationInFrames": 861,
+      "homeBadge": {
+        "label": "BRAG",
+        "logoPath": "/logos/rb-bragantino-794.png",
+        "accentColor": "#D71920"
+      },
+      "awayBadge": {
+        "label": "CORI",
+        "logoPath": "/logos/coritiba-147.png",
+        "accentColor": "#009639"
+      },
+      "events": [
+        {
+          "minute": 20,
+          "extraMinute": 0,
+          "team": "RB Bragantino",
+          "player": "Lucas Barbosa",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        },
+        {
+          "minute": 58,
+          "extraMinute": 0,
+          "team": "Coritiba",
+          "player": "Vini Paulista",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 86,
+          "extraMinute": 0,
+          "team": "RB Bragantino",
+          "player": "I. Sosa",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        },
+        {
+          "minute": 90,
+          "extraMinute": 1,
+          "team": "Coritiba",
+          "player": "Paulo Roberto",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 90,
+          "extraMinute": 6,
+          "team": "RB Bragantino",
+          "player": "G. Rodriguez",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        }
+      ],
+      "keyStats": [
+        {
+          "label": "Finalizações",
+          "homeValue": "7",
+          "awayValue": "2"
+        },
+        {
+          "label": "Posse",
+          "homeValue": "51%",
+          "awayValue": "49%"
+        },
+        {
+          "label": "Escanteios",
+          "homeValue": "3",
+          "awayValue": "1"
+        },
+        {
+          "label": "Faltas",
+          "homeValue": "7",
+          "awayValue": "0"
+        },
+        {
+          "label": "Cartões amarelos",
+          "homeValue": "1",
+          "awayValue": "0"
+        },
+        {
+          "label": "Precisão passe",
+          "homeValue": "79%",
+          "awayValue": "77%"
+        }
+      ],
+      "highlights": [
+        "Empate em 0 a 0, com equilíbrio no placar final.",
+        "Finalizações: Bragantino 7, Coritiba 2.",
+        "Posse de bola: Bragantino 51%, Coritiba 49%."
+      ]
+    },
+    {
+      "id": "palmeiras-atletico-mg-9",
+      "fixtureId": 1492306,
+      "homeTeam": "Palmeiras",
+      "awayTeam": "Atletico-MG",
+      "homeScore": 1,
+      "awayScore": 2,
+      "fixtureDateLabel": "2026-07-26",
+      "venueLabel": "Nubank Parque",
+      "statusLabel": "FT",
+      "voiceover": "Palmeiras e Atletico-MG terminaram em 1 a 2.\nO Atlético-MG conseguiu uma das vitórias mais pesadas da rodada ao bater o líder Palmeiras fora de casa. Victor Hugo e Igor Gomes marcaram para o Galo, enquanto Felipe Anderson diminuiu para o Palmeiras. O resultado quebrou a invencibilidade palmeirense como mandante no campeonato e abriu margem para o Flamengo reduzir a distância na briga pelo topo.",
+      "voiceoverPath": "/voiceovers/football/pt-br-3d5b656c7b2cb5e6.mp3",
+      "durationInFrames": 757,
+      "homeBadge": {
+        "label": "PALM",
+        "logoPath": "/logos/palmeiras-121.png",
+        "accentColor": "#27AE60"
+      },
+      "awayBadge": {
+        "label": "ATLE",
+        "logoPath": "/logos/atletico-mg-1062.png",
+        "accentColor": "#111111"
+      },
+      "events": [
+        {
+          "minute": 31,
+          "extraMinute": 0,
+          "team": "Atletico-MG",
+          "player": "A. Preciado",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 54,
+          "extraMinute": 0,
+          "team": "Atletico-MG",
+          "player": "Victor Hugo",
+          "assist": null,
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "away"
+        },
+        {
+          "minute": 75,
+          "extraMinute": 0,
+          "team": "Palmeiras",
+          "player": "Felipe Anderson",
+          "assist": "J. Arias",
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "home"
+        },
+        {
+          "minute": 76,
+          "extraMinute": 0,
+          "team": "Atletico-MG",
+          "player": "Ruan Tressoldi",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 77,
+          "extraMinute": 0,
+          "team": "Atletico-MG",
+          "player": "Igor Gomes",
+          "assist": "A. Minda",
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "away"
+        },
+        {
+          "minute": 90,
+          "extraMinute": 3,
+          "team": "Atletico-MG",
+          "player": "R. Lodi",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        }
+      ],
+      "keyStats": [
+        {
+          "label": "No alvo",
+          "homeValue": "6",
+          "awayValue": "4"
+        },
+        {
+          "label": "Finalizações",
+          "homeValue": "22",
+          "awayValue": "9"
+        },
+        {
+          "label": "Posse",
+          "homeValue": "69%",
+          "awayValue": "31%"
+        },
+        {
+          "label": "Escanteios",
+          "homeValue": "10",
+          "awayValue": "5"
+        },
+        {
+          "label": "Faltas",
+          "homeValue": "7",
+          "awayValue": "11"
+        },
+        {
+          "label": "Cartões amarelos",
+          "homeValue": "0",
+          "awayValue": "3"
+        },
+        {
+          "label": "Defesas",
+          "homeValue": "2",
+          "awayValue": "5"
+        }
+      ],
+      "highlights": [
+        "Atletico-MG venceu pelo placar de 1 a 2.",
+        "Gols de Victor Hugo, Felipe Anderson, Igor Gomes.",
+        "Finalizações: Palmeiras 22, Atletico-MG 9.",
+        "Posse de bola: Palmeiras 69%, Atletico-MG 31%."
+      ]
+    },
+    {
+      "id": "remo-vitoria-10",
+      "fixtureId": 1492307,
+      "homeTeam": "Remo",
+      "awayTeam": "Vitoria",
+      "homeScore": 2,
+      "awayScore": 0,
+      "fixtureDateLabel": "2026-07-26",
+      "venueLabel": "Mangueirão",
+      "statusLabel": "FT",
+      "voiceover": "Remo e Vitoria terminaram em 2 a 0.\nNo Mangueirão, o Remo construiu a vitória com um gol em cada tempo. Jajá abriu o placar aos 39 minutos do primeiro tempo, em chute rasteiro com falha de Lucas Arcanjo. Na etapa final, Alef Manga tabelou com Zé Ricardo, arrancou pela direita e bateu cruzado para matar o jogo. O Vitória tentou reagir, mas seguiu sem vencer fora de casa e caiu para a 13ª posição.",
+      "voiceoverPath": "/voiceovers/football/pt-br-124b1fba3f7ab2db.mp3",
+      "durationInFrames": 861,
+      "homeBadge": {
+        "label": "REMO",
+        "logoPath": "/logos/remo-1198.png",
+        "accentColor": "#1ABC9C"
+      },
+      "awayBadge": {
+        "label": "VITO",
+        "logoPath": "/logos/vitoria-136.png",
+        "accentColor": "#D71920"
+      },
+      "events": [
+        {
+          "minute": 4,
+          "extraMinute": 0,
+          "team": "Remo",
+          "player": "Ze Ricardo",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        },
+        {
+          "minute": 39,
+          "extraMinute": 0,
+          "team": "Remo",
+          "player": "Jaja",
+          "assist": "Mayk",
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "home"
+        },
+        {
+          "minute": 41,
+          "extraMinute": 0,
+          "team": "Vitoria",
+          "player": "Caca",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "away"
+        },
+        {
+          "minute": 43,
+          "extraMinute": 0,
+          "team": "Remo",
+          "player": "Matheus Felipe",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        },
+        {
+          "minute": 53,
+          "extraMinute": 0,
+          "team": "Remo",
+          "player": "Yago Pikachu",
+          "assist": null,
+          "type": "card",
+          "detail": "Yellow Card",
+          "side": "home"
+        },
+        {
+          "minute": 54,
+          "extraMinute": 0,
+          "team": "Remo",
+          "player": "Alef Manga",
+          "assist": "Ze Ricardo",
+          "type": "goal",
+          "detail": "Normal Goal",
+          "side": "home"
+        }
+      ],
+      "keyStats": [
+        {
+          "label": "No alvo",
+          "homeValue": "9",
+          "awayValue": "6"
+        },
+        {
+          "label": "Finalizações",
+          "homeValue": "15",
+          "awayValue": "14"
+        },
+        {
+          "label": "Posse",
+          "homeValue": "36%",
+          "awayValue": "64%"
+        },
+        {
+          "label": "Escanteios",
+          "homeValue": "4",
+          "awayValue": "9"
+        },
+        {
+          "label": "Faltas",
+          "homeValue": "16",
+          "awayValue": "8"
+        },
+        {
+          "label": "Cartões amarelos",
+          "homeValue": "3",
+          "awayValue": "1"
+        },
+        {
+          "label": "Defesas",
+          "homeValue": "5",
+          "awayValue": "7"
+        }
+      ],
+      "highlights": [
+        "Remo venceu pelo placar de 2 a 0.",
+        "Gols de Jaja, Alef Manga.",
+        "Finalizações: Remo 15, Vitoria 14.",
+        "Posse de bola: Remo 36%, Vitoria 64%."
       ]
     }
   ]

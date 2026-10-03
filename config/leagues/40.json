@@ -10,25 +10,25 @@
     "zones": [
       {
         "key": "promoted",
-        "label": "Promoted",
-        "start": 2,
+        "label": "1–2 Automatic Promotion",
+        "start": 1,
         "end": 2,
-        "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
-        "accent": "rgba(101, 227, 133, 0.64)",
-        "textColor": "#27AE60"
+        "fill": "linear-gradient(90deg, rgba(10, 132, 255, 0.34), rgba(10, 132, 255, 0.10) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(10, 132, 255, 0.72)",
+        "textColor": "#0A84FF"
       },
       {
         "key": "promotion-playoffs",
-        "label": "Promotion Playoffs",
+        "label": "3–8 Promotion Play-offs",
         "start": 3,
-        "end": 6,
-        "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
-        "accent": "rgba(255, 190, 92, 0.58)",
-        "textColor": "#F5A134"
+        "end": 8,
+        "fill": "linear-gradient(90deg, rgba(39, 174, 96, 0.34), rgba(39, 174, 96, 0.10) 62%, rgba(0,0,0,0.04))",
+        "accent": "rgba(39, 174, 96, 0.72)",
+        "textColor": "#27AE60"
       },
       {
         "key": "relegation",
-        "label": "Relegated",
+        "label": "22–24 Relegated to League One",
         "start": 22,
         "end": 24,
         "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",

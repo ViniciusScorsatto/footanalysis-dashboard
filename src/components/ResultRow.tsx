@@ -12,6 +12,8 @@ type ResultRowProps = {
   leagueId?: number;
   density?: 'compact' | 'expanded';
   fixtureCount?: number;
+  disableAnimation?: boolean;
+  showCompetitionLabel?: boolean;
 };
 
 export const ResultRow = ({
@@ -23,19 +25,46 @@ export const ResultRow = ({
   leagueId,
   density = 'compact',
   fixtureCount = 6,
+  disableAnimation = false,
+  showCompetitionLabel = true,
 }: ResultRowProps) => {
   if (variant === 'results' || variant === 'next-games' || variant === 'predictions') {
-    return (
+    const row = (
       <BrandedResultRow
-        fixture={fixture}
-        variant={variant}
-        rowIndex={rowIndex}
-        accentColor={accentColor}
-        channelProfile={channelProfile}
-        leagueId={leagueId}
-        density={density}
-        fixtureCount={fixtureCount}
-      />
+          fixture={fixture}
+          variant={variant}
+          rowIndex={rowIndex}
+          accentColor={accentColor}
+          channelProfile={channelProfile}
+          leagueId={leagueId}
+          density={density}
+          fixtureCount={fixtureCount}
+          disableAnimation={disableAnimation}
+        />
+    );
+
+    if (!fixture.competitionLabel || !showCompetitionLabel) return row;
+
+    return (
+      <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
+        <div
+          style={{
+            alignSelf: 'center',
+            padding: '5px 14px 4px',
+            borderRadius: 999,
+            color: '#9db4c9',
+            background: '#152331',
+            border: '1px solid #2b4052',
+            fontSize: density === 'expanded' ? 18 : 14,
+            fontWeight: 800,
+            letterSpacing: 1.5,
+            textTransform: 'uppercase',
+          }}
+        >
+          {fixture.competitionLabel}
+        </div>
+        {row}
+      </div>
     );
   }
 };
@@ -49,6 +78,7 @@ const BrandedResultRow = ({
   leagueId,
   density,
   fixtureCount,
+  disableAnimation,
 }: {
   fixture: FixtureCard;
   variant: 'results' | 'next-games' | 'predictions';
@@ -58,6 +88,7 @@ const BrandedResultRow = ({
   leagueId?: number;
   density: 'compact' | 'expanded';
   fixtureCount: number;
+  disableAnimation: boolean;
 }) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -79,7 +110,7 @@ const BrandedResultRow = ({
       ? '#0f1318'
       : '#141c24';
   const rowEnterFrame = rowStartFrame(rowIndex);
-  const anim = entranceStyle(frame, fps, rowEnterFrame);
+  const anim = disableAnimation ? {opacity: 1, transform: 'none'} : entranceStyle(frame, fps, rowEnterFrame);
   // Score pops in ~10 frames after the row starts entering (row is mostly visible by then).
   const scorePopStart = rowEnterFrame + 10;
   const isExpanded = density === 'expanded';
@@ -142,6 +173,7 @@ const BrandedResultRow = ({
         popStartFrame={scorePopStart}
         density={density}
         fixtureCount={fixtureCount}
+        disableAnimation={disableAnimation}
       />
       <BrandedTeam
         badge={fixture.awayBadge}
@@ -253,6 +285,7 @@ const BrandedScore = ({
   popStartFrame,
   density = 'compact',
   fixtureCount = 6,
+  disableAnimation = false,
 }: {
   homeScore: number | null;
   awayScore: number | null;
@@ -268,13 +301,14 @@ const BrandedScore = ({
   popStartFrame: number;
   density?: 'compact' | 'expanded';
   fixtureCount?: number;
+  disableAnimation?: boolean;
 }) => {
   const hasScore = homeScore !== null && awayScore !== null;
   const showPenaltyScore =
     Boolean(hasPenalties) &&
     typeof homePenaltyScore === 'number' &&
     typeof awayPenaltyScore === 'number';
-  const pop = scorePopStyle(frame, fps, popStartFrame);
+  const pop = disableAnimation ? {opacity: 1, transform: 'none'} : scorePopStyle(frame, fps, popStartFrame);
   const isEnglish = channelProfile === 'en';
   const isPrediction = variant === 'predictions';
   const isExpanded = density === 'expanded';

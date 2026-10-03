@@ -6,16 +6,24 @@
   "scripts": {
     "sync:data": "node scripts/sync-fixtures.mjs",
     "dashboard": "node --env-file=.env scripts/dashboard-server.mjs",
+    "prediction-service": "node --env-file=.env services/prediction-shorts/server.mjs",
     "dev": "node scripts/dev.mjs",
     "studio": "remotion studio src/index.ts",
     "build": "remotion bundle src/index.ts",
     "render": "SPORT=football node --env-file=.env scripts/render-current-job.mjs",
+    "db:migrate": "node scripts/migrate-json-to-sqlite.mjs --migrate-only",
+    "db:import-json": "node scripts/migrate-json-to-sqlite.mjs",
+    "db:export-current": "node scripts/migrate-json-to-sqlite.mjs --export-current",
+    "db:backfill-football": "node --env-file=.env scripts/backfill-football-db.mjs",
+    "test:stories": "node --test tests/story-detector.test.mjs",
+    "test:short-content": "node --test tests/story-detector.test.mjs tests/short-content.test.mjs tests/short-visual.test.mjs",
     "history:generate": "tsc -p tsconfig.history.json && node --env-file=.env build/history/scripts/history/generate-history.js",
     "verify:short-endframes": "node scripts/verify-short-endframes.mjs",
     "verify:current-job-stills": "node scripts/verify-current-job-stills.mjs"
   },
   "dependencies": {
     "@remotion/player": "^4.0.271",
+    "better-sqlite3": "^11.10.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "remotion": "^4.0.271"
