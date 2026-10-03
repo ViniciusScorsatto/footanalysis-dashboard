@@ -1,0 +1,15 @@
+.git
+.env
+.env.*
+!.env.example
+node_modules
+build
+out
+data
+.agents
+.codex
+.analysis-frames
+*.log
+src/data/generated
+src/data/history/cache
+public/voiceovers

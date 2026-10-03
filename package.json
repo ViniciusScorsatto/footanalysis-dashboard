@@ -4,6 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "start:online": "node scripts/online/start.mjs",
+    "build:online": "node scripts/online/build.mjs",
+    "test:online": "node --test tests/online-*.test.mjs",
     "sync:data": "node scripts/sync-fixtures.mjs",
     "dashboard": "node --env-file=.env scripts/dashboard-server.mjs",
     "prediction-service": "node --env-file=.env services/prediction-shorts/server.mjs",
@@ -22,16 +25,19 @@
     "verify:current-job-stills": "node scripts/verify-current-job-stills.mjs"
   },
   "dependencies": {
+    "@remotion/bundler": "4.0.438",
     "@remotion/player": "^4.0.271",
+    "@remotion/renderer": "4.0.438",
     "better-sqlite3": "^11.10.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react-dom": "18.3.1",
     "remotion": "^4.0.271"
   },
   "devDependencies": {
     "@remotion/cli": "^4.0.271",
     "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react-dom": "18.3.1",
+    "esbuild": "0.25.0",
     "typescript": "^5.6.3"
   }
 }

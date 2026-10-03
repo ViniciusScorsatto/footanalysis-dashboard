@@ -5,7 +5,9 @@ import {fileURLToPath} from 'node:url';
 import Database from 'better-sqlite3';
 
 export const projectRoot = path.resolve(fileURLToPath(new URL('../..', import.meta.url)));
-export const dataDir = path.join(projectRoot, 'data');
+export const dataDir = process.env.FOOT_ANALYSIS_ONLINE === '1'
+  ? path.resolve(process.env.FOOT_ANALYSIS_DATA_DIR || path.join(projectRoot, 'data', 'online'))
+  : path.join(projectRoot, 'data');
 export const sqliteFile = process.env.FOOT_ANALYSIS_DB_PATH
   ? path.resolve(projectRoot, process.env.FOOT_ANALYSIS_DB_PATH)
   : path.join(dataDir, 'foot-analysis.sqlite');

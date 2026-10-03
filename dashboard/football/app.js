@@ -3059,6 +3059,12 @@ const getStudioPreviewUrl = () => {
 };
 
 const updatePreview = () => {
+  if (window.FOOT_ANALYSIS_ONLINE) {
+    const previewUrl = window.footAnalysisPreviewId ? `/online/preview?id=${encodeURIComponent(window.footAnalysisPreviewId)}` : '/online/preview';
+    previewFrame.src = previewUrl;
+    openPreviewLink.href = previewUrl;
+    return;
+  }
   const studioUrl = normalizeStudioUrl(studioUrlInput.value);
   studioUrlInput.value = studioUrl;
   localStorage.setItem(STUDIO_URL_KEY, studioUrl);
@@ -4122,6 +4128,19 @@ const submitJob = async (endpoint, actionLabel, options = {}) => {
     }
     const payload = buildJobPayloadFromForm();
     Object.assign(payload, options.payloadOverrides ?? {});
+    const onlineComparison = window.FOOT_ANALYSIS_ONLINE && ['team-comparison','league-comparison','top-scorers-comparison'].includes(payload.template);
+    if (onlineComparison) Object.assign(payload, window.onlineComparisonPayload?.() ?? {});
+    const prepareEndpoint = onlineComparison ? `/jobs/${payload.template}` : '/jobs/prepare';
+    if (window.FOOT_ANALYSIS_ONLINE && endpoint === '/jobs/prepare') endpoint = prepareEndpoint;
+    if (window.FOOT_ANALYSIS_ONLINE && endpoint === '/jobs/render') {
+      // Preparation is separate from enqueueing: the renderer receives this exact snapshot.
+      const prepared = await fetch(`${apiBase}${prepareEndpoint}`, {
+        method: 'POST', headers: {'content-type': 'application/json'}, body: JSON.stringify(payload),
+      });
+      const result = await prepared.json();
+      if (!prepared.ok || !result.previewId) throw new Error(result.error || 'Não foi possível preparar o vídeo.');
+      payload.previewId = result.previewId;
+    }
     const response = await fetch(`${apiBase}${endpoint}`, {
       method: 'POST',
       headers: {'content-type': 'application/json'},
@@ -4133,12 +4152,14 @@ const submitJob = async (endpoint, actionLabel, options = {}) => {
       throw new Error(data.error || 'Unknown error');
     }
 
+    if (window.FOOT_ANALYSIS_ONLINE && data.previewId) window.footAnalysisPreviewId = data.previewId;
     renderCurrentJob(data.job);
     if (data.job?.template === TOP_SCORERS_TEMPLATE) {
       renderTopScorersEditor(data.job.entries ?? []);
     }
     setRenderDownload(data.job, data.render);
     updatePreview();
+    if (window.FOOT_ANALYSIS_ONLINE) window.dispatchEvent(new Event('online-render-update'));
     if (silent && templateSelect.value === TIERLIST_TEMPLATE) {
       setNoticeStatus(tierlistEditorStatus, 'Preview updated.', 'success');
     } else {

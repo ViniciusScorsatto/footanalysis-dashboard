@@ -5,6 +5,7 @@ import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {promisify} from 'node:util';
+import {publicRoot, configRoot, generatedRoot, online, stateRoot} from '../online/paths.mjs';
 import {
   deriveFootballRoundLabel,
   footballLanguageProfiles,
@@ -27,22 +28,22 @@ import {
 } from './football-db.mjs';
 
 export const projectRoot = path.resolve(fileURLToPath(new URL('../..', import.meta.url)));
-const generatedDir = path.join(projectRoot, 'src', 'data', 'generated');
-const logosDir = path.join(projectRoot, 'public', 'logos');
-const voiceoversDir = path.join(projectRoot, 'public', 'voiceovers', 'football');
+const generatedDir = generatedRoot;
+const logosDir = path.join(publicRoot, 'logos');
+const voiceoversDir = path.join(publicRoot, 'voiceovers', 'football');
 const currentJobFile = path.join(generatedDir, 'current-job.football.json');
 const footballPredictionsLongJobFile = path.join(
   generatedDir,
   'current-job.football.predictions-long.json'
 );
-const leagueConfigDir = path.join(projectRoot, 'config', 'leagues');
-const teamNameAliasesFile = path.join(projectRoot, 'config', 'football-team-name-aliases.json');
-const teamLogoOverridesFile = path.join(projectRoot, 'config', 'football-team-logo-overrides.json');
-const teamAccentColorsFile = path.join(projectRoot, 'config', 'football-team-accent-colors.json');
-const worldCupConfigFile = path.join(projectRoot, 'config', 'world-cup', 'groups.json');
-const shortDurationsFile = path.join(projectRoot, 'config', 'football-short-durations.json');
+const leagueConfigDir = path.join(configRoot, 'leagues');
+const teamNameAliasesFile = path.join(configRoot, 'football-team-name-aliases.json');
+const teamLogoOverridesFile = path.join(configRoot, 'football-team-logo-overrides.json');
+const teamAccentColorsFile = path.join(configRoot, 'football-team-accent-colors.json');
+const worldCupConfigFile = path.join(configRoot, 'world-cup', 'groups.json');
+const shortDurationsFile = path.join(configRoot, 'football-short-durations.json');
 const historyDataDir = path.join(projectRoot, 'src', 'data', 'history');
-const historyCacheDir = path.join(historyDataDir, 'cache');
+const historyCacheDir = online ? path.join(stateRoot, 'history-cache') : path.join(historyDataDir, 'cache');
 
 export {footballLanguageProfiles};
 
@@ -92,7 +93,7 @@ const toSoundtrackLabel = (filename) => {
 };
 
 const listSoundtrackPresets = (folder, publicPrefix, preferred = []) => {
-  const audioDir = path.join(projectRoot, 'public', 'audio', folder);
+  const audioDir = path.join(publicRoot, 'audio', folder);
   if (!fsSync.existsSync(audioDir)) return [];
   const filenames = fsSync
     .readdirSync(audioDir)
@@ -207,6 +208,9 @@ export const summarizeFootballShortDurations = (config = loadFootballShortDurati
   );
 
 export const normalizeFootballShortJobDuration = (job) => {
+  if (job?.leagueId === 5 && job.template === 'continental-groups-standings') {
+    return {...job, durationInFrames: Math.max(1, Math.ceil((job.groups?.length ?? 0) / 2)) * 180};
+  }
   if (!job || job.videoMode === 'static' || !isFootballShortComposition(job.compositionId)) {
     return job;
   }
@@ -5109,7 +5113,7 @@ const estimateVoiceoverFrames = (text, playbackRate = 1) => {
 };
 
 const publicAssetPathToFile = (publicPath) =>
-  path.join(projectRoot, 'public', String(publicPath ?? '').replace(/^\/+/, ''));
+  path.join(publicRoot, String(publicPath ?? '').replace(/^\/+/, ''));
 
 const getAudioDurationInFrames = async (publicPath, fallbackFrames = 300) => {
   const filePath = publicAssetPathToFile(publicPath);

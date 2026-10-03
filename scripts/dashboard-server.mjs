@@ -3,6 +3,8 @@ import http from 'node:http';
 import path from 'node:path';
 import {execFile, spawn} from 'node:child_process';
 import {promisify} from 'node:util';
+import {online, publicRoot, outputRoot} from './online/paths.mjs';
+import {createOnlineHttp, validateShort} from './online/http.mjs';
 import {
   footballChannelProfiles,
   footballLanguageProfiles,
@@ -70,8 +72,8 @@ import {generateShortContent, validateShortContent} from './lib/short-content-ge
 import {buildShortVisualComposition, validateShortVisualComposition} from './lib/short-visual-composition.mjs';
 
 const dashboardDir = path.join(projectRoot, 'dashboard');
-const publicDir = path.join(projectRoot, 'public');
-const outDir = path.join(projectRoot, 'out');
+const publicDir = publicRoot;
+const outDir = outputRoot;
 const publishingTemplateDir = path.join(projectRoot, 'config', 'publishing');
 const footballThumbnailJobFile = path.join(
   projectRoot,
@@ -80,9 +82,10 @@ const footballThumbnailJobFile = path.join(
   'generated',
   'current-job.football.thumbnail.json'
 );
-const logosDir = path.join(projectRoot, 'public', 'logos');
-const port = Number(process.env.DASHBOARD_PORT ?? '4321');
-const host = process.env.DASHBOARD_HOST ?? '127.0.0.1';
+const logosDir = path.join(publicRoot, 'logos');
+const port = Number(process.env.PORT ?? process.env.DASHBOARD_PORT ?? '4321');
+const host = online ? '0.0.0.0' : process.env.DASHBOARD_HOST ?? '127.0.0.1';
+const onlineHttp = online ? createOnlineHttp() : null;
 const execFileAsync = promisify(execFile);
 
 const contentTypes = {
@@ -99,6 +102,11 @@ const contentTypes = {
 };
 
 const sendJson = (response, statusCode, data) => {
+  if (onlineHttp) {
+    if (statusCode >= 400) data = {ok: false, error: 'Não foi possível concluir. Confira os dados e tente novamente.'};
+    else if (data.job) data = {...data, previewId: onlineHttp.preview(data.job)};
+    if (data.templates) data = {...data, templates: data.templates.filter((item) => item.value !== 'round-summary-long')};
+  }
   response.writeHead(statusCode, {'content-type': 'application/json; charset=utf-8'});
   response.end(JSON.stringify(data));
 };
@@ -110,7 +118,10 @@ const notFound = (response, message = 'Not found') => {
 
 const readBody = async (request) => {
   const chunks = [];
+  let size = 0;
   for await (const chunk of request) {
+    size += chunk.length;
+    if (size > 2 * 1024 * 1024) throw new Error('Request too large');
     chunks.push(chunk);
   }
 
@@ -747,8 +758,9 @@ const sendFootballTierlistTeams = async (response, url) => {
   }
 };
 
-const prepareFootballJob = async (body) =>
-  prepareJob({
+const prepareFootballJob = async (body) => {
+  if (online && !Object.hasOwn(footballShortTemplateCompositionMap, body.template) && body.template !== 'historical-champions') throw new Error('Unsupported online template');
+  const result = await prepareJob({
     template: body.template,
     videoMode: body.videoMode,
     durationInFrames: body.durationInFrames,
@@ -794,6 +806,9 @@ const prepareFootballJob = async (body) =>
     topScorerPrediction: body.topScorerPrediction,
     bestPlayerPrediction: body.bestPlayerPrediction,
   });
+  if (online) validateShort(result.job);
+  return result;
+};
 
 const compactText = (value, maxLength = 900) => {
   const text = String(value ?? '').replace(/\s+/g, ' ').trim();
@@ -3246,7 +3261,13 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
-  const url = new URL(request.url, `http://localhost:${port}`);
+  let url;
+  try {url = new URL(request.url, `http://localhost:${port}`);}
+  catch {response.writeHead(400);response.end();return;}
+  if (onlineHttp) {
+    try {if (await onlineHttp.handle(request, response, url)) return;}
+    catch {if (!response.headersSent) sendJson(response, 500, {ok: false}); else response.end(); return;}
+  }
 
   if (request.method === 'GET' && url.pathname === '/api/football/options') {
     await sendFootballOptions(response);
@@ -3769,6 +3790,12 @@ const server = http.createServer(async (request, response) => {
   if (request.method === 'POST' && url.pathname === '/api/football/jobs/render') {
     try {
       const body = await readBody(request);
+      if (onlineHttp) {
+        const job = onlineHttp.store.getPreview(body.previewId);
+        if (!job) {sendJson(response, 400, {ok: false});return;}
+        sendJson(response, 202, {ok: true, job, render: onlineHttp.enqueue(job), message: 'Vídeo na fila. Você pode fechar esta aba e acompanhar em Meus vídeos.'});
+        return;
+      }
       const {job} = await prepareFootballJob(body);
 
       const renderResult = await runRender(job.compositionId, job.outputName);
