@@ -901,6 +901,8 @@ const staticRelegationLineProps =
     : {...relegationLineProps, presentation: 'static' as const};
 
 const continentalGroupsProps = {
+  season: footballContinentalGroupsJob.template === 'continental-groups-standings'
+    ? footballContinentalGroupsJob.season : sampleContinentalGroupsJob.season,
   leagueId:
     footballContinentalGroupsJob.template === 'continental-groups-standings' &&
     footballContinentalGroupsJob.leagueId
@@ -1477,6 +1479,11 @@ export const RemotionRoot = () => {
       />
       <Composition
         id="FootballContinentalGroupsShort"
+        calculateMetadata={({props}) => ({
+          durationInFrames: props.leagueId === 5
+            ? Math.max(1, Math.ceil(props.groups.length / 2)) * 180
+            : getFootballShortDurationInFrames('FootballContinentalGroupsShort'),
+        })}
         component={FootballContinentalGroupsComposition}
         durationInFrames={getFootballShortDurationInFrames('FootballContinentalGroupsShort')}
         fps={30}

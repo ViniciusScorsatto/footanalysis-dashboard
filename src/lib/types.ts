@@ -50,6 +50,7 @@ export type TeamBadge = {
 export type FixtureCard = {
   fixtureId?: number;
   fixtureDateKey?: string;
+  competitionLabel?: string;
   homeTeam: string;
   awayTeam: string;
   homeScore: number | null;
@@ -386,6 +387,12 @@ export type PaceVideoJob = FootballBaseVideoJob & {
 };
 
 export type ContinentalGroupStandingRow = {
+  goalsFor?: number;
+  awayGoals?: number;
+  wins?: number;
+  awayWins?: number;
+  disciplinaryPoints?: number;
+  accessRank?: number;
   rank: number;
   team: string;
   goalDifference: number;

@@ -2,55 +2,135 @@
   "sport": "football",
   "template": "results",
   "videoMode": "static",
-  "leagueId": 617,
+  "leagueId": 5,
   "season": 2026,
-  "leagueName": "Copa do Brasil Sub-20",
-  "channelProfile": "pt",
-  "languageProfile": "pt-br",
+  "leagueName": "UEFA Nations League",
+  "channelProfile": "en",
+  "languageProfile": "en",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
-  "soundtrackLabel": "Gol de Arena",
+  "soundtrackPath": "/audio/football/final-whistle-rise-premier-league.mp3",
+  "soundtrackLabel": "Final Whistle Rise - Premier League",
   "soundtrackVolume": 0.2,
-  "outputName": "copa-do-brasil-sub-20-2026-resultados-round-of-32-2026-10-07-pt-br.mp4",
+  "outputName": "uefa-nations-league-2026-results-round-3-2026-10-03-en.mp4",
   "durationInFrames": 360,
   "compositionId": "FootballStaticResultsShort",
   "leagueConfig": {
-    "leagueId": 617,
-    "accentColor": "#E67E22",
+    "leagueId": 5,
+    "accentColor": "#0A84FF",
     "standings": {
       "safeArea": {
         "left": 64,
         "right": 92
       },
-      "zones": [
-        {
-          "key": "classification",
-          "label": "Classificação",
-          "start": 1,
-          "end": 2,
-          "fill": "linear-gradient(90deg, rgba(58, 196, 88, 0.84), rgba(58, 196, 88, 0.28) 62%, rgba(0,0,0,0.04))",
-          "accent": "rgba(86, 214, 120, 0.62)"
-        }
-      ]
+      "zones": []
     },
-    "leagueName": "Copa do Brasil Sub-20"
+    "leagueName": "UEFA Nations League"
   },
-  "round": "Round of 32",
-  "matchDate": "2026-10-07",
+  "round": "Round 3",
+  "matchDate": "2026-10-03",
   "matchDates": [
-    "2026-10-07"
+    "2026-10-03"
   ],
-  "roundLabel": "Fase de 32",
-  "ctaText": "Qual foi o melhor jogo?",
+  "roundLabel": "Round 3",
+  "ctaText": "What was the best match?",
   "fixtures": [
     {
-      "fixtureId": 1640550,
-      "fixtureDateKey": "2026-10-07",
-      "homeTeam": "Flamengo",
-      "awayTeam": "Vasco da Gama",
-      "homeScore": null,
-      "awayScore": null,
+      "fixtureId": 1528933,
+      "fixtureDateKey": "2026-10-03",
+      "competitionLabel": "League A",
+      "homeTeam": "Croatia",
+      "awayTeam": "England",
+      "homeScore": 0,
+      "awayScore": 7,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "C",
+        "logoPath": "/logos/croatia-3.png"
+      },
+      "awayBadge": {
+        "label": "E",
+        "logoPath": "/logos/england-10.png"
+      }
+    },
+    {
+      "fixtureId": 1528936,
+      "fixtureDateKey": "2026-10-03",
+      "competitionLabel": "League A",
+      "homeTeam": "Spain",
+      "awayTeam": "Czechia",
+      "homeScore": 3,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "S",
+        "logoPath": "/logos/spain-9.png"
+      },
+      "awayBadge": {
+        "label": "C",
+        "logoPath": "/logos/czech-republic-770.png"
+      }
+    },
+    {
+      "fixtureId": 1545653,
+      "fixtureDateKey": "2026-10-03",
+      "competitionLabel": "League B",
+      "homeTeam": "Switzerland",
+      "awayTeam": "Slovenia",
+      "homeScore": 2,
+      "awayScore": 1,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "S",
+        "logoPath": "/logos/switzerland-15.png"
+      },
+      "awayBadge": {
+        "label": "S",
+        "logoPath": "/logos/slovenia-1091.png"
+      }
+    },
+    {
+      "fixtureId": 1545660,
+      "fixtureDateKey": "2026-10-03",
+      "competitionLabel": "League B",
+      "homeTeam": "FYR Macedonia",
+      "awayTeam": "Scotland",
+      "homeScore": 0,
+      "awayScore": 2,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "FM",
+        "logoPath": "/logos/fyr-macedonia-1105.png"
+      },
+      "awayBadge": {
+        "label": "S",
+        "logoPath": "/logos/scotland-1108.png"
+      }
+    },
+    {
+      "fixtureId": 1528932,
+      "fixtureDateKey": "2026-10-03",
+      "competitionLabel": "League C",
+      "homeTeam": "Finland",
+      "awayTeam": "Albania",
+      "homeScore": 2,
+      "awayScore": 1,
       "homeEliminated": false,
       "awayEliminated": false,
       "hasPenalties": false,
@@ -58,329 +138,80 @@
       "awayPenaltyScore": null,
       "homeBadge": {
         "label": "F",
-        "logoPath": "/logos/flamengo.png"
+        "logoPath": "/logos/finland-1099.png"
       },
       "awayBadge": {
-        "label": "VDG",
-        "logoPath": "/logos/vasco-da-gama.png"
-      }
-    },
-    {
-      "fixtureId": 1639227,
-      "fixtureDateKey": "2026-10-07",
-      "homeTeam": "Atlético Mineiro",
-      "awayTeam": "Athletic Club MG",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "AM",
-        "logoPath": "/logos/atletico-mg.png"
-      },
-      "awayBadge": {
-        "label": "ACM",
-        "logoPath": "/logos/athletic-club-mg-u20-23643.png"
-      }
-    },
-    {
-      "fixtureId": 1639229,
-      "fixtureDateKey": "2026-10-07",
-      "homeTeam": "Ceará",
-      "awayTeam": "Ferroviario",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "C",
-        "logoPath": "/logos/ceara-129.png"
-      },
-      "awayBadge": {
-        "label": "F",
-        "logoPath": "/logos/ferroviario-1195.png"
-      }
-    },
-    {
-      "fixtureId": 1640286,
-      "fixtureDateKey": "2026-10-07",
-      "homeTeam": "Palmeiras",
-      "awayTeam": "Santos",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "P",
-        "logoPath": "/logos/palmeiras.png"
-      },
-      "awayBadge": {
-        "label": "S",
-        "logoPath": "/logos/santos.png"
-      }
-    },
-    {
-      "fixtureId": 1640287,
-      "fixtureDateKey": "2026-10-07",
-      "homeTeam": "São Paulo",
-      "awayTeam": "Athletico PR",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "SP",
-        "logoPath": "/logos/sao-paulo.png"
-      },
-      "awayBadge": {
-        "label": "AP",
-        "logoPath": "/logos/atletico-paranaense-134.png"
-      }
-    },
-    {
-      "fixtureId": 1639236,
-      "fixtureDateKey": "2026-10-07",
-      "homeTeam": "São Raimundo RR",
-      "awayTeam": "Nacional AM",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "SRR",
-        "logoPath": "/logos/sao-raimundo-rr-u20-12974.png"
-      },
-      "awayBadge": {
-        "label": "NA",
-        "logoPath": "/logos/nacional-am-7781.png"
-      }
-    },
-    {
-      "fixtureId": 1639232,
-      "fixtureDateKey": "2026-10-07",
-      "homeTeam": "CSA",
-      "awayTeam": "Santa Cruz AC",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "C",
-        "logoPath": "/logos/csa-150.png"
-      },
-      "awayBadge": {
-        "label": "SCA",
-        "logoPath": "/logos/santa-cruz-ac-u20-25442.png"
-      }
-    },
-    {
-      "fixtureId": 1639230,
-      "fixtureDateKey": "2026-10-07",
-      "homeTeam": "Criciuma",
-      "awayTeam": "Barra SC",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "C",
-        "logoPath": "/logos/criciuma-140.png"
-      },
-      "awayBadge": {
-        "label": "BS",
-        "logoPath": "/logos/barra-sc-u20-23321.png"
-      }
-    },
-    {
-      "fixtureId": 1639231,
-      "fixtureDateKey": "2026-10-07",
-      "homeTeam": "Cruzeiro",
-      "awayTeam": "Goiás",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "C",
-        "logoPath": "/logos/cruzeiro.png"
-      },
-      "awayBadge": {
-        "label": "G",
-        "logoPath": "/logos/goias-151.png"
-      }
-    },
-    {
-      "fixtureId": 1639233,
-      "fixtureDateKey": "2026-10-07",
-      "homeTeam": "Grêmio",
-      "awayTeam": "Operário PR",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "G",
-        "logoPath": "/logos/gremio.png"
-      },
-      "awayBadge": {
-        "label": "OP",
-        "logoPath": "/logos/operario-pr-1223.png"
-      }
-    },
-    {
-      "fixtureId": 1639234,
-      "fixtureDateKey": "2026-10-07",
-      "homeTeam": "Nautico",
-      "awayTeam": "Sergipe",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "N",
-        "logoPath": "/logos/nautico-recife-755.png"
-      },
-      "awayBadge": {
-        "label": "S",
-        "logoPath": "/logos/sergipe-2224.png"
-      }
-    },
-    {
-      "fixtureId": 1639226,
-      "fixtureDateKey": "2026-10-07",
-      "homeTeam": "América RN",
-      "awayTeam": "Piauí",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "AR",
-        "logoPath": "/logos/america-rn-2233.png"
-      },
-      "awayBadge": {
-        "label": "P",
-        "logoPath": "/logos/piaui-13094.png"
-      }
-    },
-    {
-      "fixtureId": 1639228,
-      "fixtureDateKey": "2026-10-07",
-      "homeTeam": "Botafogo",
-      "awayTeam": "Bahia",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "B",
-        "logoPath": "/logos/botafogo.png"
-      },
-      "awayBadge": {
-        "label": "B",
-        "logoPath": "/logos/bahia.png"
-      }
-    },
-    {
-      "fixtureId": 1639237,
-      "fixtureDateKey": "2026-10-07",
-      "homeTeam": "Tuna Luso PA",
-      "awayTeam": "União TO",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "TLP",
-        "logoPath": "/logos/tuna-luso-pa-u20-25016.png"
-      },
-      "awayBadge": {
-        "label": "UT",
-        "logoPath": "/logos/uniao-to-u20-25444.png"
-      }
-    },
-    {
-      "fixtureId": 1639235,
-      "fixtureDateKey": "2026-10-07",
-      "homeTeam": "Paysandu PA",
-      "awayTeam": "Independente-AP",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "PP",
-        "logoPath": "/logos/paysandu-pa-u20-25212.png"
-      },
-      "awayBadge": {
-        "label": "I",
-        "logoPath": "/logos/independente-ap.png"
-      }
-    },
-    {
-      "fixtureId": 1639225,
-      "fixtureDateKey": "2026-10-07",
-      "homeTeam": "Amazonas",
-      "awayTeam": "Santa Cruz AC",
-      "homeScore": null,
-      "awayScore": null,
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
         "label": "A",
-        "logoPath": "/logos/amazonas-10862.png"
+        "logoPath": "/logos/albania-778.png"
+      }
+    },
+    {
+      "fixtureId": 1528935,
+      "fixtureDateKey": "2026-10-03",
+      "competitionLabel": "League C",
+      "homeTeam": "Iceland",
+      "awayTeam": "Bulgaria",
+      "homeScore": 3,
+      "awayScore": 0,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "I",
+        "logoPath": "/logos/iceland-18.png"
       },
       "awayBadge": {
-        "label": "SCA",
-        "logoPath": "/logos/santa-cruz-ac-u20-25442.png"
+        "label": "B",
+        "logoPath": "/logos/bulgaria-1103.png"
+      }
+    },
+    {
+      "fixtureId": 1528934,
+      "fixtureDateKey": "2026-10-03",
+      "competitionLabel": "League C",
+      "homeTeam": "Belarus",
+      "awayTeam": "San Marino",
+      "homeScore": 4,
+      "awayScore": 0,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "B",
+        "logoPath": "/logos/belarus-1100.png"
+      },
+      "awayBadge": {
+        "label": "SM",
+        "logoPath": "/logos/san-marino-1115.png"
+      }
+    },
+    {
+      "fixtureId": 1545609,
+      "fixtureDateKey": "2026-10-03",
+      "competitionLabel": "League C",
+      "homeTeam": "Estonia",
+      "awayTeam": "Luxembourg",
+      "homeScore": 1,
+      "awayScore": 0,
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "E",
+        "logoPath": "/logos/estonia-1101.png"
+      },
+      "awayBadge": {
+        "label": "L",
+        "logoPath": "/logos/luxembourg-1102.png"
       }
     }
   ],
-  "includeUnfinishedResults": true,
+  "includeUnfinishedResults": false,
   "voiceoverEnabled": false
 }

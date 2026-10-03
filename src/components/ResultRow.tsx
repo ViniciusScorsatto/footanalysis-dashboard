@@ -13,6 +13,7 @@ type ResultRowProps = {
   density?: 'compact' | 'expanded';
   fixtureCount?: number;
   disableAnimation?: boolean;
+  showCompetitionLabel?: boolean;
 };
 
 export const ResultRow = ({
@@ -25,20 +26,45 @@ export const ResultRow = ({
   density = 'compact',
   fixtureCount = 6,
   disableAnimation = false,
+  showCompetitionLabel = true,
 }: ResultRowProps) => {
   if (variant === 'results' || variant === 'next-games' || variant === 'predictions') {
-    return (
+    const row = (
       <BrandedResultRow
-        fixture={fixture}
-        variant={variant}
-        rowIndex={rowIndex}
-        accentColor={accentColor}
-        channelProfile={channelProfile}
-        leagueId={leagueId}
-        density={density}
-        fixtureCount={fixtureCount}
-        disableAnimation={disableAnimation}
-      />
+          fixture={fixture}
+          variant={variant}
+          rowIndex={rowIndex}
+          accentColor={accentColor}
+          channelProfile={channelProfile}
+          leagueId={leagueId}
+          density={density}
+          fixtureCount={fixtureCount}
+          disableAnimation={disableAnimation}
+        />
+    );
+
+    if (!fixture.competitionLabel || !showCompetitionLabel) return row;
+
+    return (
+      <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
+        <div
+          style={{
+            alignSelf: 'center',
+            padding: '5px 14px 4px',
+            borderRadius: 999,
+            color: '#9db4c9',
+            background: '#152331',
+            border: '1px solid #2b4052',
+            fontSize: density === 'expanded' ? 18 : 14,
+            fontWeight: 800,
+            letterSpacing: 1.5,
+            textTransform: 'uppercase',
+          }}
+        >
+          {fixture.competitionLabel}
+        </div>
+        {row}
+      </div>
     );
   }
 };

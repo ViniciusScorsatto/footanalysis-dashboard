@@ -2,22 +2,22 @@
   "sport": "football",
   "template": "standings",
   "videoMode": "static",
-  "leagueId": 848,
+  "leagueId": 71,
   "season": 2026,
-  "leagueName": "Conference League",
-  "channelProfile": "en",
-  "languageProfile": "en",
+  "leagueName": "Brasileirão Série A",
+  "channelProfile": "pt",
+  "languageProfile": "pt-br",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
   "soundtrackPath": "/audio/football/gol-de-arena.mp3",
   "soundtrackLabel": "Gol de Arena",
   "soundtrackVolume": 0.2,
-  "outputName": "conference-league-2026-standings-en.mp4",
+  "outputName": "brasileirao-serie-a-2026-classificacao-pt-br.mp4",
   "durationInFrames": 360,
   "compositionId": "FootballStaticStandingsShort",
   "leagueConfig": {
-    "leagueId": 848,
-    "accentColor": "#00E676",
+    "leagueId": 71,
+    "accentColor": "#F0A500",
     "standings": {
       "safeArea": {
         "left": 68,
@@ -25,469 +25,295 @@
       },
       "zones": [
         {
-          "key": "round-of-16",
-          "label": "1–8 Round of 16",
+          "key": "libertadores",
+          "label": "Libertadores",
           "start": 1,
-          "end": 8,
-          "fill": "linear-gradient(90deg, rgba(10, 132, 255, 0.78), rgba(10, 132, 255, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "#0A84FF",
-          "textColor": "#0A84FF"
+          "end": 4,
+          "fill": "linear-gradient(90deg, rgba(54, 191, 94, 0.88), rgba(54, 191, 94, 0.28) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(101, 227, 133, 0.64)"
         },
         {
-          "key": "knockout-playoff",
-          "label": "9–24 Knockout Play-off",
-          "start": 9,
-          "end": 24,
-          "fill": "linear-gradient(90deg, rgba(39, 174, 96, 0.72), rgba(39, 174, 96, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "#27AE60",
-          "textColor": "#27AE60"
+          "key": "pre-libertadores",
+          "label": "Pré-Libertadores",
+          "start": 5,
+          "end": 5,
+          "fill": "linear-gradient(90deg, rgba(245, 161, 52, 0.82), rgba(245, 161, 52, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 190, 92, 0.58)"
         },
         {
-          "key": "eliminated",
-          "label": "25–36 Eliminated",
-          "start": 25,
-          "end": 36,
-          "fill": "linear-gradient(90deg, rgba(231, 76, 60, 0.72), rgba(231, 76, 60, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "#E74C3C",
-          "textColor": "#E74C3C"
+          "key": "sul-americana",
+          "label": "Sul-Americana",
+          "start": 6,
+          "end": 11,
+          "fill": "linear-gradient(90deg, rgba(0, 177, 183, 0.82), rgba(0, 177, 183, 0.22) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(0, 177, 183, 0.54)"
+        },
+        {
+          "key": "rebaixamento",
+          "label": "Rebaixamento",
+          "start": 17,
+          "end": 20,
+          "fill": "linear-gradient(90deg, rgba(221, 58, 58, 0.88), rgba(221, 58, 58, 0.24) 62%, rgba(0,0,0,0.04))",
+          "accent": "rgba(255, 102, 102, 0.56)"
         }
       ]
     },
-    "leagueName": "Conference League"
+    "leagueName": "Brasileirão Série A",
+    "pace": {
+      "championship": {
+        "benchmarkPercentage": 68,
+        "benchmarkLabel": "Média dos últimos 10 campeões",
+        "entryCount": 10
+      },
+      "relegation": {
+        "benchmarkPercentage": 38,
+        "benchmarkLabel": "Linha de segurança",
+        "safeRowsAbove": 3,
+        "maxRows": 10
+      }
+    }
   },
-  "standingsLabel": "Playoff round",
-  "ctaText": "Who wins this?",
+  "standingsLabel": "Rodada 28",
+  "ctaText": "Quem sobe e quem cai?",
   "rows": [
     {
       "rank": 1,
-      "team": "Mjallby AIF",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Flamengo",
+      "played": 28,
+      "points": 60,
+      "goalDifference": 32,
+      "form": "WWWWW",
       "badge": {
-        "label": "MA",
-        "logoPath": "/logos/mjallby-aif-2240.png"
+        "label": "F",
+        "logoPath": "/logos/flamengo-127.png"
       }
     },
     {
       "rank": 2,
-      "team": "Brighton",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Palmeiras",
+      "played": 28,
+      "points": 57,
+      "goalDifference": 26,
+      "form": "DWDDW",
       "badge": {
-        "label": "B",
-        "logoPath": "/logos/brighton-51.png"
+        "label": "P",
+        "logoPath": "/logos/palmeiras-121.png"
       }
     },
     {
       "rank": 3,
-      "team": "Monaco",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Athletico-PR",
+      "played": 28,
+      "points": 49,
+      "goalDifference": 11,
+      "form": "WDLDW",
       "badge": {
-        "label": "M",
-        "logoPath": "/logos/monaco-91.png"
+        "label": "A",
+        "logoPath": "/logos/atletico-paranaense-134.png"
       }
     },
     {
       "rank": 4,
-      "team": "FK Jablonec",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Fluminense",
+      "played": 28,
+      "points": 48,
+      "goalDifference": 8,
+      "form": "WLWDW",
       "badge": {
-        "label": "FJ",
-        "logoPath": "/logos/fk-jablonec-1122.png"
+        "label": "F",
+        "logoPath": "/logos/fluminense-124.png"
       }
     },
     {
       "rank": 5,
-      "team": "Gent",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Bahia",
+      "played": 28,
+      "points": 46,
+      "goalDifference": 8,
+      "form": "LWWWW",
       "badge": {
-        "label": "G",
-        "logoPath": "/logos/gent-631.png"
+        "label": "B",
+        "logoPath": "/logos/bahia-118.png"
       }
     },
     {
       "rank": 6,
-      "team": "St. Truiden",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Cruzeiro",
+      "played": 28,
+      "points": 45,
+      "goalDifference": 2,
+      "form": "WLWLW",
       "badge": {
-        "label": "ST",
-        "logoPath": "/logos/st-truiden-735.png"
+        "label": "C",
+        "logoPath": "/logos/cruzeiro-135.png"
       }
     },
     {
       "rank": 7,
-      "team": "SC Freiburg",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Santos",
+      "played": 28,
+      "points": 41,
+      "goalDifference": 2,
+      "form": "WWWWW",
       "badge": {
-        "label": "SF",
-        "logoPath": "/logos/sc-freiburg-160.png"
+        "label": "S",
+        "logoPath": "/logos/santos-128.png"
       }
     },
     {
       "rank": 8,
-      "team": "Atalanta",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Atletico-MG",
+      "played": 27,
+      "points": 40,
+      "goalDifference": 4,
+      "form": "DWLWD",
       "badge": {
         "label": "A",
-        "logoPath": "/logos/atalanta-499.png"
+        "logoPath": "/logos/atletico-mg-1062.png"
       }
     },
     {
       "rank": 9,
-      "team": "Ajax",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Coritiba",
+      "played": 28,
+      "points": 38,
+      "goalDifference": -6,
+      "form": "LDLWW",
       "badge": {
-        "label": "A",
-        "logoPath": "/logos/ajax-194.png"
+        "label": "C",
+        "logoPath": "/logos/coritiba-147.png"
       }
     },
     {
       "rank": 10,
-      "team": "Twente",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Bragantino",
+      "played": 27,
+      "points": 36,
+      "goalDifference": 2,
+      "form": "LDLLW",
       "badge": {
-        "label": "T",
-        "logoPath": "/logos/twente-415.png"
+        "label": "B",
+        "logoPath": "/logos/rb-bragantino-794.png"
       }
     },
     {
       "rank": 11,
-      "team": "Getafe",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Sao Paulo",
+      "played": 28,
+      "points": 36,
+      "goalDifference": 1,
+      "form": "LWLWW",
       "badge": {
-        "label": "G",
-        "logoPath": "/logos/getafe-546.png"
+        "label": "SP",
+        "logoPath": "/logos/sao-paulo-126.png"
       }
     },
     {
       "rank": 12,
-      "team": "KuPS",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Botafogo",
+      "played": 28,
+      "points": 35,
+      "goalDifference": -4,
+      "form": "LWDDL",
       "badge": {
-        "label": "K",
-        "logoPath": "/logos/kups-1165.png"
+        "label": "B",
+        "logoPath": "/logos/botafogo-120.png"
       }
     },
     {
       "rank": 13,
-      "team": "CSKA Sofia",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Vitoria",
+      "played": 28,
+      "points": 33,
+      "goalDifference": -14,
+      "form": "LDWLL",
       "badge": {
-        "label": "CS",
-        "logoPath": "/logos/cska-sofia-853.png"
+        "label": "V",
+        "logoPath": "/logos/vitoria-136.png"
       }
     },
     {
       "rank": 14,
-      "team": "HNK Hajduk Split",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Corinthians",
+      "played": 28,
+      "points": 32,
+      "goalDifference": -3,
+      "form": "LLLLL",
       "badge": {
-        "label": "HHS",
-        "logoPath": "/logos/hnk-hajduk-split-608.png"
+        "label": "C",
+        "logoPath": "/logos/corinthians-131.png"
       }
     },
     {
       "rank": 15,
-      "team": "Pafos",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Mirassol",
+      "played": 28,
+      "points": 32,
+      "goalDifference": -9,
+      "form": "WDWLD",
       "badge": {
-        "label": "P",
-        "logoPath": "/logos/pafos-3403.png"
+        "label": "M",
+        "logoPath": "/logos/mirassol-7848.png"
       }
     },
     {
       "rank": 16,
-      "team": "Aarhus",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Vasco DA Gama",
+      "played": 27,
+      "points": 31,
+      "goalDifference": -7,
+      "form": "WWLWL",
       "badge": {
-        "label": "A",
-        "logoPath": "/logos/aarhus-406.png"
+        "label": "VDG",
+        "logoPath": "/logos/vasco-da-gama-133.png"
       }
     },
     {
       "rank": 17,
-      "team": "FC Copenhagen",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Gremio",
+      "played": 28,
+      "points": 29,
+      "goalDifference": -8,
+      "form": "DLLLW",
       "badge": {
-        "label": "FC",
-        "logoPath": "/logos/fc-copenhagen-400.png"
+        "label": "G",
+        "logoPath": "/logos/gremio-130.png"
       }
     },
     {
       "rank": 18,
-      "team": "FC Midtjylland",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Internacional",
+      "played": 28,
+      "points": 28,
+      "goalDifference": -6,
+      "form": "LWLLD",
       "badge": {
-        "label": "FM",
-        "logoPath": "/logos/fc-midtjylland-397.png"
+        "label": "I",
+        "logoPath": "/logos/internacional-119.png"
       }
     },
     {
       "rank": 19,
-      "team": "FC Nordsjaelland",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Remo",
+      "played": 28,
+      "points": 23,
+      "goalDifference": -15,
+      "form": "LLLLL",
       "badge": {
-        "label": "FN",
-        "logoPath": "/logos/fc-nordsjaelland-398.png"
+        "label": "R",
+        "logoPath": "/logos/remo-1198.png"
       }
     },
     {
       "rank": 20,
-      "team": "Panathinaikos",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
+      "team": "Chapecoense",
+      "played": 27,
+      "points": 18,
+      "goalDifference": -24,
+      "form": "DLWLW",
       "badge": {
-        "label": "P",
-        "logoPath": "/logos/panathinaikos-617.png"
-      }
-    },
-    {
-      "rank": 21,
-      "team": "Brann",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "B",
-        "logoPath": "/logos/brann-319.png"
-      }
-    },
-    {
-      "rank": 22,
-      "team": "SC Braga",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "SB",
-        "logoPath": "/logos/sc-braga.png"
-      }
-    },
-    {
-      "rank": 23,
-      "team": "Heart Of Midlothian",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "HOM",
-        "logoPath": "/logos/heart-of-midlothian-254.png"
-      }
-    },
-    {
-      "rank": 24,
-      "team": "FC Lugano",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "FL",
-        "logoPath": "/logos/fc-lugano-606.png"
-      }
-    },
-    {
-      "rank": 25,
-      "team": "FK Crvena Zvezda",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "FCZ",
-        "logoPath": "/logos/fk-crvena-zvezda-598.png"
-      }
-    },
-    {
-      "rank": 26,
-      "team": "FC Thun",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "FT",
-        "logoPath": "/logos/fc-thun-1012.png"
-      }
-    },
-    {
-      "rank": 27,
-      "team": "Trabzonspor",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "T",
-        "logoPath": "/logos/trabzonspor-998.png"
-      }
-    },
-    {
-      "rank": 28,
-      "team": "Borac Banja Luka",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "BBL",
-        "logoPath": "/logos/borac-banja-luka-3364.png"
-      }
-    },
-    {
-      "rank": 29,
-      "team": "Kairat Almaty",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "KA",
-        "logoPath": "/logos/kairat-almaty-664.png"
-      }
-    },
-    {
-      "rank": 30,
-      "team": "Egnatia Rrogozhinë",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "ER",
-        "logoPath": "/logos/egnatia-rrogozhine-3327.png"
-      }
-    },
-    {
-      "rank": 31,
-      "team": "Inter Club d'Escaldes",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "ICD",
-        "logoPath": "/logos/inter-club-d-escaldes-3342.png"
-      }
-    },
-    {
-      "rank": 32,
-      "team": "Kauno Žalgiris",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "KŽ",
-        "logoPath": "/logos/kauno-zalgiris-3872.png"
-      }
-    },
-    {
-      "rank": 33,
-      "team": "Universitatea Craiova",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "UC",
-        "logoPath": "/logos/universitatea-craiova-632.png"
-      }
-    },
-    {
-      "rank": 34,
-      "team": "FC Iberia 1999",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "FI1",
-        "logoPath": "/logos/fc-iberia-1999-3502.png"
-      }
-    },
-    {
-      "rank": 35,
-      "team": "Lincoln Red Imps FC",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "LRIF",
-        "logoPath": "/logos/lincoln-red-imps-fc-667.png"
-      }
-    },
-    {
-      "rank": 36,
-      "team": "Riga",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "R",
-        "logoPath": "/logos/riga-10124.png"
+        "label": "C",
+        "logoPath": "/logos/chapecoense-sc-132.png"
       }
     }
   ],

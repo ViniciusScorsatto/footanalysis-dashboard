@@ -1,495 +1,909 @@
 {
   "sport": "football",
-  "template": "standings",
-  "videoMode": "static",
-  "leagueId": 848,
+  "template": "continental-groups-standings",
+  "leagueId": 5,
   "season": 2026,
-  "leagueName": "Conference League",
+  "leagueName": "UEFA Nations League",
   "channelProfile": "en",
   "languageProfile": "en",
   "brandName": "Foot Analysis",
   "brandLogoPath": "/branding/foot-analysis-logo.png",
-  "soundtrackPath": "/audio/football/gol-de-arena.mp3",
-  "soundtrackLabel": "Gol de Arena",
+  "soundtrackPath": "/audio/football/final-whistle-rise-premier-league.mp3",
+  "soundtrackLabel": "Final Whistle Rise - Premier League",
   "soundtrackVolume": 0.2,
-  "outputName": "conference-league-2026-standings-en.mp4",
+  "outputName": "uefa-nations-league-2026-continental-groups-en.mp4",
   "durationInFrames": 360,
-  "compositionId": "FootballStaticStandingsShort",
+  "compositionId": "FootballContinentalGroupsShort",
   "leagueConfig": {
-    "leagueId": 848,
-    "accentColor": "#00E676",
+    "leagueId": 5,
+    "accentColor": "#0A84FF",
     "standings": {
       "safeArea": {
-        "left": 68,
-        "right": 104
+        "left": 64,
+        "right": 92
       },
-      "zones": [
+      "zones": []
+    },
+    "leagueName": "UEFA Nations League"
+  },
+  "titleLabel": "Group Standings",
+  "subtitleLabel": "Group Stage",
+  "tableLabels": {
+    "pos": "Pos",
+    "team": "Team",
+    "gd": "GD",
+    "pts": "Pts"
+  },
+  "ctaText": "Who goes through?",
+  "groups": [
+    {
+      "groupKey": "A1",
+      "groupLabel": "A1",
+      "rows": [
         {
-          "key": "round-of-16",
-          "label": "1–8 Round of 16",
-          "start": 1,
-          "end": 8,
-          "fill": "linear-gradient(90deg, rgba(10, 132, 255, 0.78), rgba(10, 132, 255, 0.24) 62%, rgba(0,0,0,0.04))",
-          "accent": "#0A84FF",
-          "textColor": "#0A84FF"
+          "goalsFor": 3,
+          "awayGoals": 2,
+          "wins": 2,
+          "awayWins": 2,
+          "rank": 1,
+          "team": "France",
+          "goalDifference": 2,
+          "points": 7,
+          "badge": {
+            "label": "F",
+            "logoPath": "/logos/france-2.png"
+          }
         },
         {
-          "key": "knockout-playoff",
-          "label": "9–24 Knockout Play-off",
-          "start": 9,
-          "end": 24,
-          "fill": "linear-gradient(90deg, rgba(39, 174, 96, 0.72), rgba(39, 174, 96, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "#27AE60",
-          "textColor": "#27AE60"
+          "goalsFor": 5,
+          "awayGoals": 2,
+          "wins": 2,
+          "awayWins": 1,
+          "rank": 2,
+          "team": "Belgium",
+          "goalDifference": 4,
+          "points": 6,
+          "badge": {
+            "label": "B",
+            "logoPath": "/logos/belgium-1.png"
+          }
         },
         {
-          "key": "eliminated",
-          "label": "25–36 Eliminated",
-          "start": 25,
-          "end": 36,
-          "fill": "linear-gradient(90deg, rgba(231, 76, 60, 0.72), rgba(231, 76, 60, 0.22) 62%, rgba(0,0,0,0.04))",
-          "accent": "#E74C3C",
-          "textColor": "#E74C3C"
+          "goalsFor": 5,
+          "awayGoals": 5,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 3,
+          "team": "Italy",
+          "goalDifference": 1,
+          "points": 4,
+          "badge": {
+            "label": "I",
+            "logoPath": "/logos/italy-768.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Türkiye",
+          "goalDifference": -7,
+          "points": 0,
+          "badge": {
+            "label": "T",
+            "logoPath": "/logos/turkiye-777.png"
+          }
         }
       ]
     },
-    "leagueName": "Conference League"
-  },
-  "standingsLabel": "Playoff round",
-  "ctaText": "Who wins this?",
-  "rows": [
     {
-      "rank": 1,
-      "team": "Mjallby AIF",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "MA",
-        "logoPath": "/logos/mjallby-aif-2240.png"
-      }
+      "groupKey": "A2",
+      "groupLabel": "A2",
+      "rows": [
+        {
+          "goalsFor": 5,
+          "awayGoals": 3,
+          "wins": 2,
+          "awayWins": 2,
+          "rank": 1,
+          "team": "Greece",
+          "goalDifference": 2,
+          "points": 7,
+          "badge": {
+            "label": "G",
+            "logoPath": "/logos/greece-1117.png"
+          }
+        },
+        {
+          "goalsFor": 5,
+          "awayGoals": 4,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 2,
+          "team": "Netherlands",
+          "goalDifference": 1,
+          "points": 5,
+          "badge": {
+            "label": "N",
+            "logoPath": "/logos/netherlands-1118.png"
+          }
+        },
+        {
+          "goalsFor": 3,
+          "awayGoals": 1,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Germany",
+          "goalDifference": 1,
+          "points": 4,
+          "badge": {
+            "label": "G",
+            "logoPath": "/logos/germany-25.png"
+          }
+        },
+        {
+          "goalsFor": 2,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Serbia",
+          "goalDifference": -4,
+          "points": 0,
+          "badge": {
+            "label": "S",
+            "logoPath": "/logos/serbia-14.png"
+          }
+        }
+      ]
     },
     {
-      "rank": 2,
-      "team": "Brighton",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "B",
-        "logoPath": "/logos/brighton-51.png"
-      }
+      "groupKey": "A3",
+      "groupLabel": "A3",
+      "rows": [
+        {
+          "goalsFor": 10,
+          "awayGoals": 3,
+          "wins": 3,
+          "awayWins": 1,
+          "rank": 1,
+          "team": "Spain",
+          "goalDifference": 6,
+          "points": 9,
+          "badge": {
+            "label": "S",
+            "logoPath": "/logos/spain-9.png"
+          }
+        },
+        {
+          "goalsFor": 11,
+          "awayGoals": 9,
+          "wins": 2,
+          "awayWins": 2,
+          "rank": 2,
+          "team": "England",
+          "goalDifference": 8,
+          "points": 6,
+          "badge": {
+            "label": "E",
+            "logoPath": "/logos/england-10.png"
+          }
+        },
+        {
+          "goalsFor": 3,
+          "awayGoals": 3,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 3,
+          "team": "Croatia",
+          "goalDifference": -9,
+          "points": 3,
+          "badge": {
+            "label": "C",
+            "logoPath": "/logos/croatia-3.png"
+          }
+        },
+        {
+          "goalsFor": 2,
+          "awayGoals": 1,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Czechia",
+          "goalDifference": -5,
+          "points": 0,
+          "badge": {
+            "label": "C",
+            "logoPath": "/logos/czech-republic-770.png"
+          }
+        }
+      ]
     },
     {
-      "rank": 3,
-      "team": "Monaco",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "M",
-        "logoPath": "/logos/monaco-91.png"
-      }
+      "groupKey": "A4",
+      "groupLabel": "A4",
+      "rows": [
+        {
+          "goalsFor": 7,
+          "awayGoals": 6,
+          "wins": 3,
+          "awayWins": 2,
+          "rank": 1,
+          "team": "Portugal",
+          "goalDifference": 4,
+          "points": 9,
+          "badge": {
+            "label": "P",
+            "logoPath": "/logos/portugal-27.png"
+          }
+        },
+        {
+          "goalsFor": 6,
+          "awayGoals": 2,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 2,
+          "team": "Denmark",
+          "goalDifference": -1,
+          "points": 3,
+          "badge": {
+            "label": "D",
+            "logoPath": "/logos/denmark-21.png"
+          }
+        },
+        {
+          "goalsFor": 5,
+          "awayGoals": 1,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Norway",
+          "goalDifference": -1,
+          "points": 3,
+          "badge": {
+            "label": "N",
+            "logoPath": "/logos/norway-1090.png"
+          }
+        },
+        {
+          "goalsFor": 2,
+          "awayGoals": 0,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Wales",
+          "goalDifference": -2,
+          "points": 3,
+          "badge": {
+            "label": "W",
+            "logoPath": "/logos/wales-767.png"
+          }
+        }
+      ]
     },
     {
-      "rank": 4,
-      "team": "FK Jablonec",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "FJ",
-        "logoPath": "/logos/fk-jablonec-1122.png"
-      }
+      "groupKey": "B1",
+      "groupLabel": "B1",
+      "rows": [
+        {
+          "goalsFor": 8,
+          "awayGoals": 6,
+          "wins": 3,
+          "awayWins": 2,
+          "rank": 1,
+          "team": "Switzerland",
+          "goalDifference": 7,
+          "points": 9,
+          "badge": {
+            "label": "S",
+            "logoPath": "/logos/switzerland-15.png"
+          }
+        },
+        {
+          "goalsFor": 3,
+          "awayGoals": 1,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 2,
+          "team": "Slovenia",
+          "goalDifference": 1,
+          "points": 4,
+          "badge": {
+            "label": "S",
+            "logoPath": "/logos/slovenia-1091.png"
+          }
+        },
+        {
+          "goalsFor": 2,
+          "awayGoals": 2,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 3,
+          "team": "Scotland",
+          "goalDifference": -1,
+          "points": 4,
+          "badge": {
+            "label": "S",
+            "logoPath": "/logos/scotland-1108.png"
+          }
+        },
+        {
+          "goalsFor": 0,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "FYR Macedonia",
+          "goalDifference": -7,
+          "points": 0,
+          "badge": {
+            "label": "FM",
+            "logoPath": "/logos/fyr-macedonia-1105.png"
+          }
+        }
+      ]
     },
     {
-      "rank": 5,
-      "team": "Gent",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "G",
-        "logoPath": "/logos/gent-631.png"
-      }
+      "groupKey": "B2",
+      "groupLabel": "B2",
+      "rows": [
+        {
+          "goalsFor": 4,
+          "awayGoals": 4,
+          "wins": 2,
+          "awayWins": 2,
+          "rank": 1,
+          "team": "Northern Ireland",
+          "goalDifference": 4,
+          "points": 7,
+          "badge": {
+            "label": "NI",
+            "logoPath": "/logos/northern-ireland-771.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 1,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 2,
+          "team": "Ukraine",
+          "goalDifference": -2,
+          "points": 4,
+          "badge": {
+            "label": "U",
+            "logoPath": "/logos/ukraine-772.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 0,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Hungary",
+          "goalDifference": 0,
+          "points": 4,
+          "badge": {
+            "label": "H",
+            "logoPath": "/logos/hungary-769.png"
+          }
+        },
+        {
+          "goalsFor": 0,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Georgia",
+          "goalDifference": -2,
+          "points": 1,
+          "badge": {
+            "label": "G",
+            "logoPath": "/logos/georgia-1104.png"
+          }
+        }
+      ]
     },
     {
-      "rank": 6,
-      "team": "St. Truiden",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "ST",
-        "logoPath": "/logos/st-truiden-735.png"
-      }
+      "groupKey": "B3",
+      "groupLabel": "B3",
+      "rows": [
+        {
+          "goalsFor": 8,
+          "awayGoals": 2,
+          "wins": 2,
+          "awayWins": 0,
+          "rank": 1,
+          "team": "Austria",
+          "goalDifference": 4,
+          "points": 7,
+          "badge": {
+            "label": "A",
+            "logoPath": "/logos/austria-775.png"
+          }
+        },
+        {
+          "goalsFor": 2,
+          "awayGoals": 1,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 2,
+          "team": "Kosovo",
+          "goalDifference": -1,
+          "points": 4,
+          "badge": {
+            "label": "K",
+            "logoPath": "/logos/kosovo-1111.png"
+          }
+        },
+        {
+          "goalsFor": 5,
+          "awayGoals": 3,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 3,
+          "team": "Rep. Of Ireland",
+          "goalDifference": 2,
+          "points": 4,
+          "badge": {
+            "label": "ROI",
+            "logoPath": "/logos/rep-of-ireland-776.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 1,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Israel",
+          "goalDifference": -5,
+          "points": 1,
+          "badge": {
+            "label": "I",
+            "logoPath": "/logos/israel-1116.png"
+          }
+        }
+      ]
     },
     {
-      "rank": 7,
-      "team": "SC Freiburg",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "SF",
-        "logoPath": "/logos/sc-freiburg-160.png"
-      }
+      "groupKey": "B4",
+      "groupLabel": "B4",
+      "rows": [
+        {
+          "goalsFor": 6,
+          "awayGoals": 1,
+          "wins": 2,
+          "awayWins": 0,
+          "rank": 1,
+          "team": "Sweden",
+          "goalDifference": 3,
+          "points": 7,
+          "badge": {
+            "label": "S",
+            "logoPath": "/logos/sweden-5.png"
+          }
+        },
+        {
+          "goalsFor": 5,
+          "awayGoals": 4,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 2,
+          "team": "Bosnia",
+          "goalDifference": 2,
+          "points": 5,
+          "badge": {
+            "label": "B",
+            "logoPath": "/logos/bosnia-herzegovina-1113.png"
+          }
+        },
+        {
+          "goalsFor": 7,
+          "awayGoals": 1,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Poland",
+          "goalDifference": 4,
+          "points": 4,
+          "badge": {
+            "label": "P",
+            "logoPath": "/logos/poland-24.png"
+          }
+        },
+        {
+          "goalsFor": 3,
+          "awayGoals": 1,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Romania",
+          "goalDifference": -9,
+          "points": 0,
+          "badge": {
+            "label": "R",
+            "logoPath": "/logos/romania-774.png"
+          }
+        }
+      ]
     },
     {
-      "rank": 8,
-      "team": "Atalanta",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "A",
-        "logoPath": "/logos/atalanta-499.png"
-      }
+      "groupKey": "C1",
+      "groupLabel": "C1",
+      "rows": [
+        {
+          "goalsFor": 9,
+          "awayGoals": 7,
+          "wins": 2,
+          "awayWins": 1,
+          "rank": 1,
+          "team": "Finland",
+          "goalDifference": 8,
+          "points": 7,
+          "badge": {
+            "label": "F",
+            "logoPath": "/logos/finland-1099.png"
+          }
+        },
+        {
+          "goalsFor": 6,
+          "awayGoals": 4,
+          "wins": 2,
+          "awayWins": 1,
+          "rank": 2,
+          "team": "Albania",
+          "goalDifference": 4,
+          "points": 6,
+          "badge": {
+            "label": "A",
+            "logoPath": "/logos/albania-778.png"
+          }
+        },
+        {
+          "goalsFor": 4,
+          "awayGoals": 0,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Belarus",
+          "goalDifference": 2,
+          "points": 4,
+          "badge": {
+            "label": "B",
+            "logoPath": "/logos/belarus-1100.png"
+          }
+        },
+        {
+          "goalsFor": 0,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "San Marino",
+          "goalDifference": -14,
+          "points": 0,
+          "badge": {
+            "label": "SM",
+            "logoPath": "/logos/san-marino-1115.png"
+          }
+        }
+      ]
     },
     {
-      "rank": 9,
-      "team": "Ajax",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "A",
-        "logoPath": "/logos/ajax-194.png"
-      }
+      "groupKey": "C2",
+      "groupLabel": "C2",
+      "rows": [
+        {
+          "goalsFor": 7,
+          "awayGoals": 5,
+          "wins": 3,
+          "awayWins": 2,
+          "rank": 1,
+          "team": "Montenegro",
+          "goalDifference": 3,
+          "points": 9,
+          "badge": {
+            "label": "M",
+            "logoPath": "/logos/montenegro-1109.png"
+          }
+        },
+        {
+          "goalsFor": 3,
+          "awayGoals": 1,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 2,
+          "team": "Cyprus",
+          "goalDifference": 1,
+          "points": 4,
+          "badge": {
+            "label": "C",
+            "logoPath": "/logos/cyprus-1106.png"
+          }
+        },
+        {
+          "goalsFor": 4,
+          "awayGoals": 0,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Armenia",
+          "goalDifference": -1,
+          "points": 3,
+          "badge": {
+            "label": "A",
+            "logoPath": "/logos/armenia-1094.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Latvia",
+          "goalDifference": -3,
+          "points": 1,
+          "badge": {
+            "label": "L",
+            "logoPath": "/logos/latvia-1092.png"
+          }
+        }
+      ]
     },
     {
-      "rank": 10,
-      "team": "Twente",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "T",
-        "logoPath": "/logos/twente-415.png"
-      }
+      "groupKey": "C3",
+      "groupLabel": "C3",
+      "rows": [
+        {
+          "goalsFor": 5,
+          "awayGoals": 1,
+          "wins": 2,
+          "awayWins": 0,
+          "rank": 1,
+          "team": "Slovakia",
+          "goalDifference": 3,
+          "points": 7,
+          "badge": {
+            "label": "S",
+            "logoPath": "/logos/slovakia-773.png"
+          }
+        },
+        {
+          "goalsFor": 3,
+          "awayGoals": 2,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 2,
+          "team": "Moldova",
+          "goalDifference": -1,
+          "points": 4,
+          "badge": {
+            "label": "M",
+            "logoPath": "/logos/moldova-1114.png"
+          }
+        },
+        {
+          "goalsFor": 3,
+          "awayGoals": 1,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Faroe Islands",
+          "goalDifference": 0,
+          "points": 3,
+          "badge": {
+            "label": "FI",
+            "logoPath": "/logos/faroe-islands-1098.png"
+          }
+        },
+        {
+          "goalsFor": 3,
+          "awayGoals": 2,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Kazakhstan",
+          "goalDifference": -2,
+          "points": 1,
+          "badge": {
+            "label": "K",
+            "logoPath": "/logos/kazakhstan-1095.png"
+          }
+        }
+      ]
     },
     {
-      "rank": 11,
-      "team": "Getafe",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "G",
-        "logoPath": "/logos/getafe-546.png"
-      }
+      "groupKey": "C4",
+      "groupLabel": "C4",
+      "rows": [
+        {
+          "goalsFor": 7,
+          "awayGoals": 3,
+          "wins": 2,
+          "awayWins": 1,
+          "rank": 1,
+          "team": "Iceland",
+          "goalDifference": 6,
+          "points": 7,
+          "badge": {
+            "label": "I",
+            "logoPath": "/logos/iceland-18.png"
+          }
+        },
+        {
+          "goalsFor": 2,
+          "awayGoals": 1,
+          "wins": 1,
+          "awayWins": 0,
+          "rank": 2,
+          "team": "Estonia",
+          "goalDifference": 1,
+          "points": 5,
+          "badge": {
+            "label": "E",
+            "logoPath": "/logos/estonia-1101.png"
+          }
+        },
+        {
+          "goalsFor": 2,
+          "awayGoals": 2,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 3,
+          "team": "Luxembourg",
+          "goalDifference": -3,
+          "points": 3,
+          "badge": {
+            "label": "L",
+            "logoPath": "/logos/luxembourg-1102.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 4,
+          "team": "Bulgaria",
+          "goalDifference": -4,
+          "points": 1,
+          "badge": {
+            "label": "B",
+            "logoPath": "/logos/bulgaria-1103.png"
+          }
+        }
+      ]
     },
     {
-      "rank": 12,
-      "team": "KuPS",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "K",
-        "logoPath": "/logos/kups-1165.png"
-      }
+      "groupKey": "D1",
+      "groupLabel": "D1",
+      "rows": [
+        {
+          "goalsFor": 3,
+          "awayGoals": 2,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 1,
+          "team": "Malta",
+          "goalDifference": 1,
+          "points": 4,
+          "badge": {
+            "label": "M",
+            "logoPath": "/logos/malta-1112.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 1,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 2,
+          "team": "Gibraltar",
+          "goalDifference": 0,
+          "points": 2,
+          "badge": {
+            "label": "G",
+            "logoPath": "/logos/gibraltar-1093.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Andorra",
+          "goalDifference": -1,
+          "points": 1,
+          "badge": {
+            "label": "A",
+            "logoPath": "/logos/andorra-1110.png"
+          }
+        }
+      ]
     },
     {
-      "rank": 13,
-      "team": "CSKA Sofia",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "CS",
-        "logoPath": "/logos/cska-sofia-853.png"
-      }
-    },
-    {
-      "rank": 14,
-      "team": "HNK Hajduk Split",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "HHS",
-        "logoPath": "/logos/hnk-hajduk-split-608.png"
-      }
-    },
-    {
-      "rank": 15,
-      "team": "Pafos",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "P",
-        "logoPath": "/logos/pafos-3403.png"
-      }
-    },
-    {
-      "rank": 16,
-      "team": "Aarhus",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "A",
-        "logoPath": "/logos/aarhus-406.png"
-      }
-    },
-    {
-      "rank": 17,
-      "team": "FC Copenhagen",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "FC",
-        "logoPath": "/logos/fc-copenhagen-400.png"
-      }
-    },
-    {
-      "rank": 18,
-      "team": "FC Midtjylland",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "FM",
-        "logoPath": "/logos/fc-midtjylland-397.png"
-      }
-    },
-    {
-      "rank": 19,
-      "team": "FC Nordsjaelland",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "FN",
-        "logoPath": "/logos/fc-nordsjaelland-398.png"
-      }
-    },
-    {
-      "rank": 20,
-      "team": "Panathinaikos",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "P",
-        "logoPath": "/logos/panathinaikos-617.png"
-      }
-    },
-    {
-      "rank": 21,
-      "team": "Brann",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "B",
-        "logoPath": "/logos/brann-319.png"
-      }
-    },
-    {
-      "rank": 22,
-      "team": "SC Braga",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "SB",
-        "logoPath": "/logos/sc-braga.png"
-      }
-    },
-    {
-      "rank": 23,
-      "team": "Heart Of Midlothian",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "HOM",
-        "logoPath": "/logos/heart-of-midlothian-254.png"
-      }
-    },
-    {
-      "rank": 24,
-      "team": "FC Lugano",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "FL",
-        "logoPath": "/logos/fc-lugano-606.png"
-      }
-    },
-    {
-      "rank": 25,
-      "team": "FK Crvena Zvezda",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "FCZ",
-        "logoPath": "/logos/fk-crvena-zvezda-598.png"
-      }
-    },
-    {
-      "rank": 26,
-      "team": "FC Thun",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "FT",
-        "logoPath": "/logos/fc-thun-1012.png"
-      }
-    },
-    {
-      "rank": 27,
-      "team": "Trabzonspor",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "T",
-        "logoPath": "/logos/trabzonspor-998.png"
-      }
-    },
-    {
-      "rank": 28,
-      "team": "Borac Banja Luka",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "BBL",
-        "logoPath": "/logos/borac-banja-luka-3364.png"
-      }
-    },
-    {
-      "rank": 29,
-      "team": "Kairat Almaty",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "KA",
-        "logoPath": "/logos/kairat-almaty-664.png"
-      }
-    },
-    {
-      "rank": 30,
-      "team": "Egnatia Rrogozhinë",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "ER",
-        "logoPath": "/logos/egnatia-rrogozhine-3327.png"
-      }
-    },
-    {
-      "rank": 31,
-      "team": "Inter Club d'Escaldes",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "ICD",
-        "logoPath": "/logos/inter-club-d-escaldes-3342.png"
-      }
-    },
-    {
-      "rank": 32,
-      "team": "Kauno Žalgiris",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "KŽ",
-        "logoPath": "/logos/kauno-zalgiris-3872.png"
-      }
-    },
-    {
-      "rank": 33,
-      "team": "Universitatea Craiova",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "UC",
-        "logoPath": "/logos/universitatea-craiova-632.png"
-      }
-    },
-    {
-      "rank": 34,
-      "team": "FC Iberia 1999",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "FI1",
-        "logoPath": "/logos/fc-iberia-1999-3502.png"
-      }
-    },
-    {
-      "rank": 35,
-      "team": "Lincoln Red Imps FC",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "LRIF",
-        "logoPath": "/logos/lincoln-red-imps-fc-667.png"
-      }
-    },
-    {
-      "rank": 36,
-      "team": "Riga",
-      "played": 0,
-      "points": 0,
-      "goalDifference": 0,
-      "form": "",
-      "badge": {
-        "label": "R",
-        "logoPath": "/logos/riga-10124.png"
-      }
+      "groupKey": "D2",
+      "groupLabel": "D2",
+      "rows": [
+        {
+          "goalsFor": 3,
+          "awayGoals": 2,
+          "wins": 1,
+          "awayWins": 1,
+          "rank": 1,
+          "team": "Lithuania",
+          "goalDifference": 2,
+          "points": 4,
+          "badge": {
+            "label": "L",
+            "logoPath": "/logos/lithuania-1097.png"
+          }
+        },
+        {
+          "goalsFor": 1,
+          "awayGoals": 1,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 2,
+          "team": "Azerbaijan",
+          "goalDifference": 0,
+          "points": 2,
+          "badge": {
+            "label": "A",
+            "logoPath": "/logos/azerbaijan-1096.png"
+          }
+        },
+        {
+          "goalsFor": 0,
+          "awayGoals": 0,
+          "wins": 0,
+          "awayWins": 0,
+          "rank": 3,
+          "team": "Liechtenstein",
+          "goalDifference": -2,
+          "points": 1,
+          "badge": {
+            "label": "L",
+            "logoPath": "/logos/liechtenstein-1107.png"
+          }
+        }
+      ]
     }
   ],
-  "voiceoverEnabled": false
+  "introTitle": "UEFA Nations League",
+  "introSubtitle": "Group Stage",
+  "hookText": "The groups just shifted",
+  "coldOpenData": {
+    "tableRows": [
+      {
+        "rank": 1,
+        "club": "FRANCE",
+        "pts": 7
+      },
+      {
+        "rank": 2,
+        "club": "BELGIUM",
+        "pts": 6
+      },
+      {
+        "rank": 3,
+        "club": "ITALY",
+        "pts": 4
+      },
+      {
+        "rank": 4,
+        "club": "TÜRKIYE",
+        "pts": 0
+      }
+    ]
+  },
+  "voiceoverEnabled": false,
+  "voiceoverText": "UEFA Nations League group standings"
 }

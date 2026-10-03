@@ -3393,10 +3393,18 @@ const setRoundOptions = (rounds, selectedRound = '') => {
       ? 'Auto-detect next upcoming round'
       : 'Auto-detect latest completed round';
 
+  const normalizedSelectedRound =
+    Number(form.elements.leagueId.value) === 5
+      ? (() => {
+          const match = String(selectedRound ?? '').match(/(?:league\s+[a-d]\s*-\s*)?(\d+)\s*$/i);
+          return match ? `Round ${match[1]}` : String(selectedRound ?? '').trim();
+        })()
+      : String(selectedRound ?? '').trim();
+
   const options = [`<option value="">${hint}</option>`].concat(
     rounds.map((round) => {
       const value = String(round);
-      const selected = value === selectedRound ? ' selected' : '';
+      const selected = value === normalizedSelectedRound ? ' selected' : '';
       return `<option value="${value}"${selected}>${value}</option>`;
     })
   );

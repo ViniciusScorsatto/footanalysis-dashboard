@@ -12,7 +12,7 @@
   "soundtrackPath": "/audio/football/gol-de-arena.mp3",
   "soundtrackLabel": "Gol de Arena",
   "soundtrackVolume": 0.2,
-  "outputName": "brasileirao-serie-a-2026-palpites-regular-season-28-pt-br.mp4",
+  "outputName": "brasileirao-serie-a-2026-palpites-regular-season-31-pt-br.mp4",
   "durationInFrames": 360,
   "compositionId": "FootballStaticPredictionsShort",
   "leagueConfig": {
@@ -73,16 +73,170 @@
       }
     }
   },
-  "round": "Regular Season - 28",
-  "roundLabel": "Rodada 28",
+  "round": "Regular Season - 31",
+  "roundLabel": "Rodada 31",
   "ctaText": "Quem vence essa rodada?",
   "fixtures": [
     {
-      "fixtureId": 1492381,
-      "fixtureDateKey": "2026-09-19",
-      "homeTeam": "Atletico-MG",
+      "fixtureId": 1492412,
+      "fixtureDateKey": "2026-10-18",
+      "homeTeam": "Bahia",
+      "awayTeam": "Flamengo",
+      "homeScore": 1,
+      "awayScore": 2,
+      "predictionSource": "manual",
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "B",
+        "logoPath": "/logos/bahia-118.png"
+      },
+      "awayBadge": {
+        "label": "F",
+        "logoPath": "/logos/flamengo-127.png"
+      }
+    },
+    {
+      "fixtureId": 1492413,
+      "fixtureDateKey": "2026-10-18",
+      "homeTeam": "Botafogo",
       "awayTeam": "Chapecoense",
-      "homeScore": 3,
+      "homeScore": 2,
+      "awayScore": 0,
+      "predictionSource": "manual",
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "B",
+        "logoPath": "/logos/botafogo-120.png"
+      },
+      "awayBadge": {
+        "label": "C",
+        "logoPath": "/logos/chapecoense-sc-132.png"
+      }
+    },
+    {
+      "fixtureId": 1492415,
+      "fixtureDateKey": "2026-10-18",
+      "homeTeam": "Fluminense",
+      "awayTeam": "Santos",
+      "homeScore": 1,
+      "awayScore": 1,
+      "predictionSource": "manual",
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "F",
+        "logoPath": "/logos/fluminense-124.png"
+      },
+      "awayBadge": {
+        "label": "S",
+        "logoPath": "/logos/santos-128.png"
+      }
+    },
+    {
+      "fixtureId": 1492419,
+      "fixtureDateKey": "2026-10-18",
+      "homeTeam": "Sao Paulo",
+      "awayTeam": "Vasco DA Gama",
+      "homeScore": 1,
+      "awayScore": 2,
+      "predictionSource": "manual",
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "SP",
+        "logoPath": "/logos/sao-paulo-126.png"
+      },
+      "awayBadge": {
+        "label": "VDG",
+        "logoPath": "/logos/vasco-da-gama-133.png"
+      }
+    },
+    {
+      "fixtureId": 1492416,
+      "fixtureDateKey": "2026-10-18",
+      "homeTeam": "Gremio",
+      "awayTeam": "Cruzeiro",
+      "homeScore": 1,
+      "awayScore": 1,
+      "predictionSource": "manual",
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "G",
+        "logoPath": "/logos/gremio-130.png"
+      },
+      "awayBadge": {
+        "label": "C",
+        "logoPath": "/logos/cruzeiro-135.png"
+      }
+    },
+    {
+      "fixtureId": 1492414,
+      "fixtureDateKey": "2026-10-18",
+      "homeTeam": "Corinthians",
+      "awayTeam": "Vitoria",
+      "homeScore": 1,
+      "awayScore": 0,
+      "predictionSource": "manual",
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "C",
+        "logoPath": "/logos/corinthians-131.png"
+      },
+      "awayBadge": {
+        "label": "V",
+        "logoPath": "/logos/vitoria-136.png"
+      }
+    },
+    {
+      "fixtureId": 1492410,
+      "fixtureDateKey": "2026-10-18",
+      "homeTeam": "Athletico-PR",
+      "awayTeam": "Palmeiras",
+      "homeScore": 2,
+      "awayScore": 2,
+      "predictionSource": "manual",
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "A",
+        "logoPath": "/logos/atletico-paranaense-134.png"
+      },
+      "awayBadge": {
+        "label": "P",
+        "logoPath": "/logos/palmeiras-121.png"
+      }
+    },
+    {
+      "fixtureId": 1492411,
+      "fixtureDateKey": "2026-10-18",
+      "homeTeam": "Atletico-MG",
+      "awayTeam": "Coritiba",
+      "homeScore": 2,
       "awayScore": 0,
       "predictionSource": "manual",
       "homeEliminated": false,
@@ -96,14 +250,36 @@
       },
       "awayBadge": {
         "label": "C",
-        "logoPath": "/logos/chapecoense-sc-132.png"
+        "logoPath": "/logos/coritiba-147.png"
       }
     },
     {
-      "fixtureId": 1492385,
-      "fixtureDateKey": "2026-09-19",
+      "fixtureId": 1492418,
+      "fixtureDateKey": "2026-10-18",
+      "homeTeam": "Remo",
+      "awayTeam": "Bragantino",
+      "homeScore": 1,
+      "awayScore": 1,
+      "predictionSource": "manual",
+      "homeEliminated": false,
+      "awayEliminated": false,
+      "hasPenalties": false,
+      "homePenaltyScore": null,
+      "awayPenaltyScore": null,
+      "homeBadge": {
+        "label": "R",
+        "logoPath": "/logos/remo-1198.png"
+      },
+      "awayBadge": {
+        "label": "B",
+        "logoPath": "/logos/rb-bragantino-794.png"
+      }
+    },
+    {
+      "fixtureId": 1492417,
+      "fixtureDateKey": "2026-10-18",
       "homeTeam": "Mirassol",
-      "awayTeam": "Botafogo",
+      "awayTeam": "Internacional",
       "homeScore": 2,
       "awayScore": 1,
       "predictionSource": "manual",
@@ -117,184 +293,8 @@
         "logoPath": "/logos/mirassol-7848.png"
       },
       "awayBadge": {
-        "label": "B",
-        "logoPath": "/logos/botafogo-120.png"
-      }
-    },
-    {
-      "fixtureId": 1492386,
-      "fixtureDateKey": "2026-09-19",
-      "homeTeam": "Remo",
-      "awayTeam": "Santos",
-      "homeScore": 1,
-      "awayScore": 2,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "R",
-        "logoPath": "/logos/remo-1198.png"
-      },
-      "awayBadge": {
-        "label": "S",
-        "logoPath": "/logos/santos-128.png"
-      }
-    },
-    {
-      "fixtureId": 1492388,
-      "fixtureDateKey": "2026-09-19",
-      "homeTeam": "Vasco DA Gama",
-      "awayTeam": "Coritiba",
-      "homeScore": 2,
-      "awayScore": 0,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "VDG",
-        "logoPath": "/logos/vasco-da-gama-133.png"
-      },
-      "awayBadge": {
-        "label": "C",
-        "logoPath": "/logos/coritiba-147.png"
-      }
-    },
-    {
-      "fixtureId": 1492387,
-      "fixtureDateKey": "2026-09-19",
-      "homeTeam": "Sao Paulo",
-      "awayTeam": "Internacional",
-      "homeScore": 2,
-      "awayScore": 1,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "SP",
-        "logoPath": "/logos/sao-paulo-126.png"
-      },
-      "awayBadge": {
         "label": "I",
         "logoPath": "/logos/internacional-119.png"
-      }
-    },
-    {
-      "fixtureId": 1492384,
-      "fixtureDateKey": "2026-09-20",
-      "homeTeam": "Gremio",
-      "awayTeam": "Palmeiras",
-      "homeScore": 0,
-      "awayScore": 2,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "G",
-        "logoPath": "/logos/gremio-130.png"
-      },
-      "awayBadge": {
-        "label": "P",
-        "logoPath": "/logos/palmeiras-121.png"
-      }
-    },
-    {
-      "fixtureId": 1492382,
-      "fixtureDateKey": "2026-09-20",
-      "homeTeam": "Corinthians",
-      "awayTeam": "Fluminense",
-      "homeScore": 1,
-      "awayScore": 1,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "C",
-        "logoPath": "/logos/corinthians-131.png"
-      },
-      "awayBadge": {
-        "label": "F",
-        "logoPath": "/logos/fluminense-124.png"
-      }
-    },
-    {
-      "fixtureId": 1492389,
-      "fixtureDateKey": "2026-09-20",
-      "homeTeam": "Vitoria",
-      "awayTeam": "Cruzeiro",
-      "homeScore": 1,
-      "awayScore": 1,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "V",
-        "logoPath": "/logos/vitoria-136.png"
-      },
-      "awayBadge": {
-        "label": "C",
-        "logoPath": "/logos/cruzeiro-135.png"
-      }
-    },
-    {
-      "fixtureId": 1492383,
-      "fixtureDateKey": "2026-09-20",
-      "homeTeam": "Flamengo",
-      "awayTeam": "Bragantino",
-      "homeScore": 2,
-      "awayScore": 0,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "F",
-        "logoPath": "/logos/flamengo-127.png"
-      },
-      "awayBadge": {
-        "label": "B",
-        "logoPath": "/logos/rb-bragantino-794.png"
-      }
-    },
-    {
-      "fixtureId": 1492380,
-      "fixtureDateKey": "2026-09-20",
-      "homeTeam": "Athletico-PR",
-      "awayTeam": "Bahia",
-      "homeScore": 2,
-      "awayScore": 0,
-      "predictionSource": "manual",
-      "homeEliminated": false,
-      "awayEliminated": false,
-      "hasPenalties": false,
-      "homePenaltyScore": null,
-      "awayPenaltyScore": null,
-      "homeBadge": {
-        "label": "A",
-        "logoPath": "/logos/atletico-paranaense-134.png"
-      },
-      "awayBadge": {
-        "label": "B",
-        "logoPath": "/logos/bahia-118.png"
       }
     }
   ],

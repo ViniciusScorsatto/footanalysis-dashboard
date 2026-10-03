@@ -307,6 +307,7 @@ export const leaguePresets = [
   {label: 'Champions League', leagueId: 2, channels: ['en']},
   {label: 'Europa League', leagueId: 3, channels: ['en']},
   {label: 'Conference League', leagueId: 848, channels: ['en']},
+  {label: 'UEFA Nations League', leagueId: 5, channels: ['en']},
   {label: 'Custom league', leagueId: null, channels: ['pt', 'en']},
 ];
 
@@ -1226,6 +1227,32 @@ const getFixtureDateKey = (fixture, languageProfile = 'pt-br') => {
   }).format(new Date(fixtureDate));
 };
 
+const getNationsLeagueRoundNumber = (value) => {
+  const match = String(value ?? '').match(/(?:league\s+[a-d]\s*-\s*)?(\d+)\s*$/i);
+  return match ? Number(match[1]) : null;
+};
+
+const getNationsLeagueRoundLabel = (value) => {
+  const roundNumber = getNationsLeagueRoundNumber(value);
+  return Number.isFinite(roundNumber) ? `Round ${roundNumber}` : String(value ?? '').trim();
+};
+
+const getNationsLeagueGroupLabel = (value, languageProfile = 'en') => {
+  const match = String(value ?? '').match(/league\s+([a-d])/i);
+  if (!match) return '';
+  return languageProfile === 'pt-br' ? `Liga ${match[1].toUpperCase()}` : `League ${match[1].toUpperCase()}`;
+};
+
+const roundsMatch = ({leagueId, fixtureRound, selectedRound}) => {
+  if (Number(leagueId) === 5) {
+    const fixtureRoundNumber = getNationsLeagueRoundNumber(fixtureRound);
+    const selectedRoundNumber = getNationsLeagueRoundNumber(selectedRound);
+    return Number.isFinite(fixtureRoundNumber) && fixtureRoundNumber === selectedRoundNumber;
+  }
+
+  return fixtureRound === selectedRound;
+};
+
 export const loadLeagueRounds = async ({
   apiKey,
   apiHost = 'v3.football.api-sports.io',
@@ -1246,7 +1273,12 @@ export const loadLeagueRounds = async ({
     apiHost
   );
 
-  return Array.isArray(payload.response) ? payload.response : [];
+  const rounds = Array.isArray(payload.response) ? payload.response : [];
+  if (Number(leagueId) !== 5) return rounds;
+
+  return [...new Set(rounds.map(getNationsLeagueRoundLabel).filter(Boolean))].sort(
+    (left, right) => getNationsLeagueRoundNumber(left) - getNationsLeagueRoundNumber(right)
+  );
 };
 
 export const loadRoundDates = async ({
@@ -1267,10 +1299,11 @@ export const loadRoundDates = async ({
     return [];
   }
 
+  const roundQuery = Number(leagueId) === 5
+    ? `league=${leagueId}&season=${season}`
+    : `league=${leagueId}&season=${season}&round=${encodeURIComponent(round.trim())}`;
   const payload = await fetchJson(
-    `https://${apiHost}/fixtures?league=${leagueId}&season=${season}&round=${encodeURIComponent(
-      round.trim()
-    )}`,
+    `https://${apiHost}/fixtures?${roundQuery}`,
     apiKey,
     apiHost
   );
@@ -1278,6 +1311,7 @@ export const loadRoundDates = async ({
   return [
     ...new Set(
       (payload.response ?? [])
+        .filter((fixture) => roundsMatch({leagueId, fixtureRound: fixture.league?.round, selectedRound: round}))
         .filter((fixture) => isFixtureEligibleForTemplate(fixture, template, includeUnfinishedResults))
         .map((fixture) =>
           getFixtureDateKey(fixture, getFixtureDateKeyLanguageProfile(template, languageProfile))
@@ -1700,6 +1734,7 @@ const fetchPredictionSuggestion = async ({fixtureId, apiKey, apiHost}) => {
 
 const resolveTemplateFixtures = ({
   fixtures,
+  leagueId,
   template,
   round,
   matchDate,
@@ -1707,11 +1742,15 @@ const resolveTemplateFixtures = ({
   languageProfile,
   includeUnfinishedResults = false,
 }) => {
-  const detectedRound =
+  const detectedRoundValue =
     round?.trim() ||
     (template === 'results' || template === 'champion-final'
       ? pickLatestFinishedRound(fixtures)
       : pickNextUpcomingRound(fixtures));
+
+  const detectedRound = Number(leagueId) === 5
+    ? getNationsLeagueRoundLabel(detectedRoundValue)
+    : detectedRoundValue;
 
   if (!detectedRound) {
     throw new Error(`Could not detect a suitable round for template "${template}".`);
@@ -1721,7 +1760,7 @@ const resolveTemplateFixtures = ({
   const normalizedMatchDateSet = new Set(normalizedMatchDates);
   const dateKeyLanguageProfile = getFixtureDateKeyLanguageProfile(template, languageProfile);
   const roundFixtures = fixtures.filter((fixture) => {
-    if (fixture.league?.round !== detectedRound) {
+    if (!roundsMatch({leagueId, fixtureRound: fixture.league?.round, selectedRound: detectedRound})) {
       return false;
     }
 
@@ -1756,7 +1795,15 @@ const buildFixtures = async ({
   languageProfile = 'pt-br',
   includePredictionSuggestions = true,
 }) => {
-  const sorted = [...fixtures].sort((a, b) => (a.fixture?.timestamp ?? 0) - (b.fixture?.timestamp ?? 0));
+  const sorted = [...fixtures].sort((a, b) => {
+    if (Number(leagueId) === 5) {
+      const groupA = getNationsLeagueGroupLabel(a.league?.round, languageProfile);
+      const groupB = getNationsLeagueGroupLabel(b.league?.round, languageProfile);
+      const groupOrder = groupA.localeCompare(groupB);
+      if (groupOrder !== 0) return groupOrder;
+    }
+    return (a.fixture?.timestamp ?? 0) - (b.fixture?.timestamp ?? 0);
+  });
   const cards = [];
   const dateKeyLanguageProfile = getFixtureDateKeyLanguageProfile(template, languageProfile);
   for (const fixture of sorted) {
@@ -1801,6 +1848,10 @@ const buildFixtures = async ({
     cards.push({
       fixtureId,
       fixtureDateKey: getFixtureDateKey(fixture, dateKeyLanguageProfile) ?? undefined,
+      competitionLabel:
+        Number(leagueId) === 5
+          ? getNationsLeagueGroupLabel(fixture.league?.round, languageProfile)
+          : undefined,
       homeTeam,
       awayTeam,
       homeScore:
@@ -1969,6 +2020,7 @@ export const loadPredictionFixtures = async ({
   const {detectedRound, normalizedMatchDate, normalizedMatchDates, roundFixtures} =
     resolveTemplateFixtures({
     fixtures,
+    leagueId,
     template: 'predictions',
     round,
     matchDate,
@@ -2021,6 +2073,7 @@ export const loadNextFixtures = async ({
   const {detectedRound, normalizedMatchDate, normalizedMatchDates, roundFixtures} =
     resolveTemplateFixtures({
     fixtures,
+    leagueId,
     template: 'next-games',
     round,
     matchDate,
@@ -2073,6 +2126,7 @@ export const loadResultFixtures = async ({
   const {detectedRound, normalizedMatchDate, normalizedMatchDates, roundFixtures} =
     resolveTemplateFixtures({
     fixtures,
+    leagueId,
     template: 'results',
     round,
     matchDate,
@@ -2801,6 +2855,7 @@ const buildPlayerOfRoundJob = async ({
   const {detectedRound, normalizedMatchDate, normalizedMatchDates, roundFixtures} =
     resolveTemplateFixtures({
     fixtures,
+    leagueId,
     template: 'results',
     round,
     matchDate,
@@ -3064,6 +3119,16 @@ const flattenStandingsGroups = (standingsGroups) => {
 };
 
 const getContinentalGroupLabel = (groupName, languageProfile = 'pt-br') => {
+  const nationsLeagueMatch = String(groupName ?? '').match(
+    /league\s+([a-d]).*?group\s+([a-d]|\d+)\b/i
+  );
+  if (nationsLeagueMatch) {
+    const league = nationsLeagueMatch[1].toUpperCase();
+    const rawGroup = nationsLeagueMatch[2].toUpperCase();
+    const group = /^[A-D]$/.test(rawGroup) ? rawGroup.charCodeAt(0) - 64 : Number(rawGroup);
+    return `${league}${group}`;
+  }
+
   const match = String(groupName ?? '').match(/group\s+([a-z])/i);
   const letter = match?.[1]?.toUpperCase();
   if (!letter) {
@@ -3093,6 +3158,12 @@ const buildContinentalGroups = async (allStandingsGroups, leagueId, aliasesConfi
         const teamName = names.videoDisplayName;
 
         return {
+          ...(Number(leagueId) === 5 ? {
+            goalsFor: row.all?.goals?.for,
+            awayGoals: row.away?.goals?.for,
+            wins: row.all?.win,
+            awayWins: row.away?.win,
+          } : {}),
           rank: row.rank ?? 0,
           team: teamName,
           goalDifference: row.goalsDiff ?? 0,
@@ -3113,7 +3184,9 @@ const buildContinentalGroups = async (allStandingsGroups, leagueId, aliasesConfi
     );
 
     groups.push({
-      groupKey: getWorldCupGroupKey(groupName) ?? sanitize(groupName),
+      groupKey: Number(leagueId) === 5
+        ? getContinentalGroupLabel(groupName, languageProfile)
+        : getWorldCupGroupKey(groupName) ?? sanitize(groupName),
       groupLabel: getContinentalGroupLabel(groupName, languageProfile),
       rows,
     });
@@ -4121,7 +4194,9 @@ const buildContinentalGroupsJob = async ({
       outputName:
         outputName?.trim() ||
         `${sanitize(finalLeagueName)}-${languageProfile === 'en' ? 'group-standings' : 'grupos'}-${languageProfile}.mp4`,
-      durationInFrames: getFootballShortDurationInFrames('FootballContinentalGroupsShort'),
+      durationInFrames: Number(leagueId) === 5
+        ? Math.max(1, Math.ceil(groups.length / 2)) * 180
+        : getFootballShortDurationInFrames('FootballContinentalGroupsShort'),
       channelProfile,
       languageProfile,
       soundtrackPath,
@@ -6227,6 +6302,7 @@ export const prepareJob = async ({
   const {detectedRound, normalizedMatchDate, normalizedMatchDates, roundFixtures} =
     resolveTemplateFixtures({
     fixtures,
+    leagueId,
     template,
     round,
     matchDate,

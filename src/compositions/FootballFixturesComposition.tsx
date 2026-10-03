@@ -282,6 +282,9 @@ export const FootballFixturesComposition = ({
                 density={isCompactFixtureLayout ? 'compact' : 'expanded'}
                 fixtureCount={fixtures.length}
                 disableAnimation={isStatic}
+                showCompetitionLabel={
+                  index === 0 || fixture.competitionLabel !== fixtures[index - 1]?.competitionLabel
+                }
               />
             ))}
           </div>
