@@ -19,16 +19,20 @@ if (window.FOOT_ANALYSIS_ONLINE) {
   const nav = document.querySelector('.dashboard-top-nav');
   const logout = document.createElement('form');
   logout.method = 'POST'; logout.action = '/auth/logout';
-  const button = document.createElement('button');button.textContent = 'Sair';button.className = 'btn btn-secondary';logout.append(button);nav.append(logout);
+  const button = document.createElement('button');button.textContent = 'Sair';button.className = 'btn btn-secondary';logout.append(button);
   const panel = document.createElement('section');panel.className = 'panel online-renders';panel.id='video-settings';
-  const settingsLink=document.createElement('a');settingsLink.href='#video-settings';settingsLink.className='btn btn-secondary';settingsLink.textContent='Settings · Meus vídeos';nav.append(settingsLink);
-  const heading = document.createElement('h2');heading.textContent = 'Settings · Meus vídeos e armazenamento';
-  const note = document.createElement('p');note.textContent = 'Um render por vez. MP4 disponíveis por 48 horas após ficarem prontos. Você pode fechar a página e voltar depois.';
-  const summary=document.createElement('p');summary.textContent='Consultando armazenamento…';
-  const feedback=document.createElement('p');feedback.setAttribute('role','status');feedback.setAttribute('aria-live','polite');
-  const removeAll=document.createElement('button');removeAll.type='button';removeAll.className='btn btn-secondary';removeAll.textContent='Excluir todos os MP4';removeAll.disabled=true;
-  const deletionNote=document.createElement('p');deletionNote.textContent='A exclusão libera espaço dos MP4. Histórico, dados, músicas e renders em andamento são preservados. Você pode gerar novamente.';
-  const list = document.createElement('div');panel.append(heading,note,summary,removeAll,deletionNote,feedback,list);
+  const settingsLink=document.createElement('a');settingsLink.href='#video-settings';settingsLink.className='back-link';settingsLink.textContent='Meus vídeos';nav.append(settingsLink);
+  const storageLink=document.createElement('a');storageLink.href='#video-settings';storageLink.className='back-link';storageLink.textContent='Configurações';nav.append(storageLink,logout);
+  const heading = document.createElement('h2');heading.textContent = 'Meus vídeos';
+  const summary=document.createElement('p');summary.className='storage-summary';summary.textContent='Consultando armazenamento…';
+  const feedback=document.createElement('p');feedback.className='storage-feedback';feedback.setAttribute('role','status');feedback.setAttribute('aria-live','polite');
+  const removeAll=document.createElement('button');removeAll.type='button';removeAll.className='btn btn-secondary danger-action';removeAll.textContent='Excluir todos os MP4';removeAll.disabled=true;
+  const deletionNote=document.createElement('p');deletionNote.className='storage-note';deletionNote.textContent='MP4 disponíveis por 48 horas. Excluir libera espaço e preserva os dados para gerar novamente.';
+  const header=document.createElement('div');header.className='studio-videos-header';
+  const headerCopy=document.createElement('div');headerCopy.append(heading,summary);header.append(headerCopy,removeAll);
+  const columns=document.createElement('div');columns.className='studio-video-columns';columns.setAttribute('aria-hidden','true');
+  for(const label of ['Vídeo','Criado em','Estado','Tamanho','Ações']) {const cell=document.createElement('span');cell.textContent=label;columns.append(cell);}
+  const list = document.createElement('div');panel.append(header,deletionNote,feedback,columns,list);
   let storageFiles=0, busy=false, refreshing=false;
   const formatBytes=(bytes)=>bytes<1024?`${bytes} B`:bytes<1024**2?`${(bytes/1024).toFixed(1)} KB`:bytes>=1024**3?`${(bytes/1024**3).toFixed(2)} GB`:`${(bytes/1024**2).toFixed(2)} MB`;
   let pageIndex=0;
@@ -37,7 +41,7 @@ if (window.FOOT_ANALYSIS_ONLINE) {
   for(const b of [previous,next]) {b.className='btn btn-secondary';panel.append(b);}
   previous.onclick=()=>{pageIndex=Math.max(0,pageIndex-1);void refresh();};
   next.onclick=()=>{pageIndex++;void refresh();};
-  document.querySelector('.shell').append(panel);
+  document.querySelector('.log-panel').before(panel);
   const states = {queued: 'Na fila', rendering: 'Renderizando', completed: 'Pronto', failed: 'Falhou', cancelled: 'Cancelado'};
   async function action(url, method = 'POST') {
     const response = await fetch(url, {method});
@@ -54,7 +58,7 @@ if (window.FOOT_ANALYSIS_ONLINE) {
     finally {busy=false;await refresh();}
   };
   function addAction(card, text, url, method) {
-    const b = document.createElement('button');b.textContent = text;b.className = 'btn btn-secondary';
+    const b = document.createElement('button');b.textContent = text;b.className = `btn btn-secondary${method==='DELETE'?' danger-action':''}`;
     b.onclick = async () => {
       if(busy || (method==='DELETE' && !window.confirm('Excluir este MP4 para liberar espaço? Os dados serão mantidos para gerar novamente.'))) return;
       busy=true;b.disabled=true;removeAll.disabled=true;
@@ -69,7 +73,7 @@ if (window.FOOT_ANALYSIS_ONLINE) {
     refreshing=true;
     try {
       const response = await fetch(`/api/online/renders?page=${pageIndex}`);
-      if (response.status === 401) {note.textContent = 'Sessão expirada. Entre novamente pela página inicial.';return;}
+      if (response.status === 401) {feedback.textContent = 'Sessão expirada. Entre novamente pela página inicial.';return;}
       if (!response.ok) throw new Error('Falha ao consultar vídeos.');
       const {renders} = await response.json();
       const storageResponse=await fetch('/api/online/storage');
@@ -80,21 +84,25 @@ if (window.FOOT_ANALYSIS_ONLINE) {
       list.replaceChildren();
       if (!renders.length) {list.textContent = 'Nenhum vídeo criado ainda.';return;}
       for (const row of renders) {
-        const card = document.createElement('article');card.className = 'online-render';
+        const card = document.createElement('article');card.className = 'online-render';card.dataset.state=row.deleted_at?'deleted':row.state;
+        const info=document.createElement('div');info.className='render-info';
+        const actions=document.createElement('div');actions.className='render-actions';
         const title = document.createElement('strong');title.textContent = row.title;
         const status = document.createElement('p');status.textContent = `${row.state==='completed' && row.deleted_at ? 'MP4 removido' : states[row.state]}${row.state === 'rendering' ? ` · ${Math.round(row.progress * 100)}%` : ''}`;
-        card.append(title,status);
-        const metadata=document.createElement('p');metadata.textContent=`Criado em ${new Date(row.created_at).toLocaleString()} · ${row.template}${row.sizeBytes ? ` · ${formatBytes(row.sizeBytes)}` : ''}`;card.append(metadata);
-        if (row.error) {const error=document.createElement('p');error.textContent=row.error;card.append(error);}
+        status.className='render-state';
+        const created=document.createElement('p');created.textContent=new Date(row.created_at).toLocaleString();created.className='render-created';
+        const size=document.createElement('p');size.textContent=row.sizeBytes?formatBytes(row.sizeBytes):'—';size.className='render-size';
+        info.append(title);card.append(info,created,status,size,actions);
+        if (row.error) {const error=document.createElement('p');error.textContent=row.error;info.append(error);}
         const base = `/api/online/renders/${row.id}`;
         if (row.downloadUrl) {
-          const link = document.createElement('a');link.href=row.downloadUrl;link.textContent='Baixar MP4';link.className='btn btn-primary';card.append(link);
-          const play = document.createElement('a');play.href=`${row.downloadUrl}?inline=1`;play.target='_blank';play.rel='noopener';play.textContent='Reproduzir';play.className='btn btn-secondary';card.append(play);
-          const expiry = document.createElement('p');expiry.textContent=`Disponível até ${new Date(row.expires_at).toLocaleString()}`;card.append(expiry);
-        } else if (row.state === 'completed') {const expired=document.createElement('p');expired.textContent='MP4 expirado ou excluído. Os dados continuam disponíveis para gerar novamente.';card.append(expired);}
-        if(row.state==='completed' && !row.deleted_at && row.sizeBytes>0) addAction(card,'Excluir MP4',base,'DELETE');
-        if (['queued','rendering'].includes(row.state)) addAction(card,'Cancelar',`${base}/cancel`);
-        else addAction(card,'Gerar novamente',`${base}/retry`);
+          const link = document.createElement('a');link.href=row.downloadUrl;link.textContent='Baixar MP4';link.className='btn btn-primary';actions.append(link);
+          const play = document.createElement('a');play.href=`${row.downloadUrl}?inline=1`;play.target='_blank';play.rel='noopener';play.textContent='Reproduzir';play.className='btn btn-secondary';actions.append(play);
+          const expiry = document.createElement('p');expiry.className='render-detail';expiry.textContent=`Disponível até ${new Date(row.expires_at).toLocaleString()}`;info.append(expiry);
+        } else if (row.state === 'completed') {const expired=document.createElement('p');expired.className='render-detail';expired.textContent='MP4 expirado ou excluído. Dados preservados.';info.append(expired);}
+        if(row.state==='completed' && !row.deleted_at && row.sizeBytes>0) addAction(actions,'Excluir MP4',base,'DELETE');
+        if (['queued','rendering'].includes(row.state)) addAction(actions,'Cancelar',`${base}/cancel`);
+        else addAction(actions,'Gerar novamente',`${base}/retry`);
         list.append(card);
       }
     } catch {feedback.textContent='Sem conexão. Tentaremos atualizar novamente; o render continua no servidor.';removeAll.disabled=true;}

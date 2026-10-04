@@ -5,15 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Football Video Dashboard</title>
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/football/studio.css" />
   </head>
   <body class="football-dashboard">
     <main class="shell">
       <nav class="top-nav dashboard-top-nav">
-        <a class="back-link" href="/">All dashboards</a>
+        <a class="back-link studio-brand" href="/">Foot Analysis</a>
+        <a class="back-link studio-create-link" href="/football">Criar vídeo</a>
         <a class="back-link" href="/football-story-shorts">Shorts inteligentes</a>
-        <a class="back-link" href="/football-static" id="static-dashboard-link">Static videos</a>
+        <a class="back-link" href="/football-static" id="static-dashboard-link">Vídeos estáticos</a>
         <div class="dashboard-status">
-          <button type="button" class="settings-button ds-button ds-button--secondary ds-button--compact btn btn-secondary btn-compact" id="settings-toggle-button">Settings</button>
+          <button type="button" class="settings-button ds-button ds-button--secondary ds-button--compact btn btn-secondary btn-compact" id="settings-toggle-button">Configurações</button>
           <span class="ds-chip ds-chip--neutral status-chip neutral">Football</span>
           <span class="ds-chip ds-chip--neutral status-chip neutral" id="job-template-chip">loading</span>
           <span class="ds-chip ds-chip--ready status-chip ready" id="dashboard-channel-chip">channel</span>
@@ -87,7 +89,8 @@
       <form id="job-form" class="football-workspace-form">
         <section class="football-command-bar" aria-label="Football job command bar">
           <div class="command-title">
-            <h1>Football Dashboard</h1>
+            <h1>Criar vídeo</h1>
+            <p class="studio-description">Configure os dados, revise a prévia e gere seu Short.</p>
             <p id="dashboard-quick-status" class="quick-status">Choose a template and prepare a job.</p>
           </div>
 
@@ -101,7 +104,7 @@
               <input type="number" name="durationSeconds" id="static-duration-seconds" min="1" step="1" value="12" />
             </label>
             <label class="ds-field command-field">
-              Channel
+              Canal
               <select name="channelProfile" id="channel-profile"></select>
             </label>
             <label class="sr-optional">
@@ -109,22 +112,22 @@
               <select name="languageProfile" id="language-profile"></select>
             </label>
             <label class="ds-field command-field" id="league-preset-field">
-              League
+              Competição
               <select name="preset" id="preset"></select>
             </label>
             <label class="ds-field command-field command-field-season">
-              Season
+              Temporada
               <input type="number" name="season" required />
             </label>
             <div class="command-data-fields" id="data-section">
               <label class="ds-field command-field" id="round-field">
-                Round
+                Rodada
                 <select name="round" id="round-select">
                   <option value="">Leave blank to auto-detect</option>
                 </select>
               </label>
               <label class="ds-field command-field command-date-field" id="match-date-field">
-                Match date
+                Datas
                 <input type="hidden" name="matchDate" id="match-date-select" />
                 <div class="match-date-picker">
                   <div
@@ -155,8 +158,8 @@
           </div>
 
           <div class="command-actions">
-            <button type="button" id="prepare-button" class="ds-button ds-button--primary btn btn-primary">Prepare Preview</button>
-            <button type="button" id="render-button" class="ds-button ds-button--secondary btn btn-secondary">Render MP4</button>
+            <button type="button" id="prepare-button" class="ds-button ds-button--secondary btn btn-secondary">Preparar prévia</button>
+            <button type="button" id="render-button" class="ds-button ds-button--primary btn btn-primary">Gerar MP4</button>
           </div>
         </section>
 
@@ -456,7 +459,7 @@
           <aside class="preview-rail">
             <section class="ds-panel panel preview-panel">
               <div class="ds-panel__header panel-header">
-                <h2>Video Preview</h2>
+                <h2>Prévia</h2>
                 <span class="ds-chip ds-chip--neutral status-chip neutral">9:16</span>
               </div>
               <div class="preview-toolbar">
@@ -465,7 +468,7 @@
                   <input type="url" id="studio-url" placeholder="http://127.0.0.1:3000" />
                 </label>
                 <div class="preview-actions">
-                  <button type="button" id="apply-preview-button" class="ds-button ds-button--secondary btn btn-secondary">Load</button>
+                  <button type="button" id="apply-preview-button" class="ds-button ds-button--secondary btn btn-secondary">Atualizar</button>
                   <a id="open-preview-link" class="preview-link" href="#" target="_blank" rel="noreferrer">Open Studio</a>
                 </div>
               </div>
@@ -527,11 +530,12 @@
       </section>
 
       <details class="ds-panel panel log-panel compact-details">
-        <summary>Activity</summary>
+        <summary>Atividade</summary>
         <pre id="log-output" class="log-surface">Loading dashboard…</pre>
       </details>
 
     </main>
+    <script type="module" src="/football/layout.js"></script>
     <script type="module" src="/football/app.js"></script>
   </body>
 </html>

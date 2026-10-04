@@ -208,12 +208,12 @@ const configureDashboardMode = () => {
   staticDurationField.hidden = !isStaticDashboard;
   if (isStaticDashboard) {
     document.title = 'Football Static Videos Dashboard';
-    document.querySelector('.command-title h1').textContent = 'Football Static Videos';
+    document.querySelector('.command-title h1').textContent = 'Vídeos estáticos';
     dashboardQuickStatus.textContent = 'Choose a static template and prepare a frame-0 video.';
-    prepareButton.textContent = 'Prepare Static Preview';
-    renderButton.textContent = 'Render Static MP4';
+    prepareButton.textContent = 'Preparar prévia';
+    renderButton.textContent = 'Gerar MP4';
     staticDashboardLink.href = '/football';
-    staticDashboardLink.textContent = 'Animated dashboard';
+    staticDashboardLink.textContent = 'Vídeos animados';
   }
 };
 
@@ -450,18 +450,18 @@ const formatMatchDateParts = (dateValue) => {
 
 const describeMatchDateSelection = (selectedDates) => {
   if (availableMatchDates.length === 0) {
-    return 'Round dates will appear after choosing a round.';
+    return 'Escolha uma rodada para ver as datas.';
   }
 
   if (selectedDates.length === 0) {
-    return `All ${availableMatchDates.length} date${availableMatchDates.length === 1 ? '' : 's'} selected`;
+    return `Todas as datas selecionadas (${availableMatchDates.length})`;
   }
 
   if (selectedDates.length === 1) {
-    return `1 date selected: ${selectedDates[0]}`;
+    return `1 data selecionada: ${selectedDates[0]}`;
   }
 
-  return `${selectedDates.length} dates selected`;
+  return `${selectedDates.length} datas selecionadas`;
 };
 const EUROPEAN_LEAGUE_IDS = new Set([39, 40, 140, 135, 78, 61, 2, 3]);
 const UPCOMING_FIXTURE_TEMPLATES = new Set([NEXT_GAMES_TEMPLATE, 'predictions']);
@@ -3381,8 +3381,8 @@ const applyTemplateHints = () => {
   } else if (shouldUseRounds) {
     const hint =
       UPCOMING_FIXTURE_TEMPLATES.has(template)
-        ? 'Auto-detect next upcoming round'
-        : 'Auto-detect latest completed round';
+        ? 'Automática · próxima rodada'
+        : 'Automática · última concluída';
     if (roundSelect.options.length > 0) {
       roundSelect.options[0].textContent = hint;
     }
@@ -3396,8 +3396,8 @@ const setRoundOptions = (rounds, selectedRound = '') => {
   const template = templateSelect.value;
   const hint =
     UPCOMING_FIXTURE_TEMPLATES.has(template)
-      ? 'Auto-detect next upcoming round'
-      : 'Auto-detect latest completed round';
+      ? 'Automática · próxima rodada'
+      : 'Automática · última concluída';
 
   const normalizedSelectedRound =
     Number(form.elements.leagueId.value) === 5
@@ -3445,8 +3445,8 @@ const setMatchDateOptions = (dates, selectedDates = '') => {
 
   matchDateOptions.innerHTML = [
     `<button type="button" class="date-pill date-pill-all" data-date="" aria-pressed="false">
-      <span class="date-pill-title">All</span>
-      <span class="date-pill-meta">round</span>
+      <span class="date-pill-title">Todas</span>
+      <span class="date-pill-meta">datas</span>
     </button>`,
     ...availableMatchDates.map((dateValue) => {
       const {title, meta} = formatMatchDateParts(dateValue);

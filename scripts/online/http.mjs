@@ -111,7 +111,7 @@ export function createOnlineHttp({store = createOnlineStore(getDb()), config = p
         response.end(html.replace('</head>', '<script>window.FOOT_ANALYSIS_ONLINE=true;</script><link rel="stylesheet" href="/online.css"></head>').replace('</body>', '<script type="module" src="/online.js"></script></body>'));
         return true;
       }
-      if (['GET', 'HEAD'].includes(request.method) && ['/styles.css', '/online.css', '/online.js', '/football/app.js', '/football/helpers.js'].includes(url.pathname)) {await streamFile(request,response,path.join(root,'dashboard'),url.pathname.slice(1));return true;}
+      if (['GET', 'HEAD'].includes(request.method) && ['/styles.css', '/online.css', '/online.js', '/football/app.js', '/football/helpers.js', '/football/studio.css', '/football/layout.js'].includes(url.pathname)) {await streamFile(request,response,path.join(root,'dashboard'),url.pathname.slice(1));return true;}
       json(response, 404, {ok: false, error: 'Not available in the private Shorts dashboard'});
       return true;
     },
