@@ -1,4 +1,5 @@
 import {spawn} from 'node:child_process';
+import {logEvent} from './logging.mjs';
 process.env.FOOT_ANALYSIS_ONLINE = '1';
 const {initializeState, root} = await import('./paths.mjs');
 await initializeState();
@@ -17,8 +18,8 @@ function stop(code = 0) {
 for (const entry of ['scripts/dashboard-server.mjs','scripts/online/worker.mjs']) {
   const child = spawn(process.execPath,[entry],{cwd:root,env:process.env,stdio:'inherit'});
   children.push(child);
-  child.on('error',() => stop(1));
-  child.on('exit',(code) => {if(!stopping) stop(code || 1);});
+  child.on('error',(error) => {logEvent('process_failed', {entry, error}, 'error');stop(1);});
+  child.on('exit',(code, signal) => {logEvent('process_exited', {entry, code, signal, stopping}, !stopping ? 'error' : 'info');if(!stopping) stop(code || 1);});
 }
 process.on('SIGTERM',()=>stop());
 process.on('SIGINT',()=>stop());

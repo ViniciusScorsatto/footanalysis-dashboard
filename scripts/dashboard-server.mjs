@@ -5,6 +5,7 @@ import {execFile, spawn} from 'node:child_process';
 import {promisify} from 'node:util';
 import {online, publicRoot, outputRoot} from './online/paths.mjs';
 import {createOnlineHttp, validateShort} from './online/http.mjs';
+import {jobContext, logEvent, publicFailure, traceRequest} from './online/logging.mjs';
 import {
   footballChannelProfiles,
   footballLanguageProfiles,
@@ -103,7 +104,7 @@ const contentTypes = {
 
 const sendJson = (response, statusCode, data) => {
   if (onlineHttp) {
-    if (statusCode >= 400) data = {ok: false, error: 'Não foi possível concluir. Confira os dados e tente novamente.'};
+    if (statusCode >= 400) data = publicFailure(response, statusCode, {message: data.error ?? 'Request rejected', type: data.errorType});
     else if (data.job) data = {...data, previewId: onlineHttp.preview(data.job)};
     if (data.templates) data = {...data, templates: data.templates.filter((item) => item.value !== 'round-summary-long')};
   }
@@ -126,7 +127,9 @@ const readBody = async (request) => {
   }
 
   const raw = Buffer.concat(chunks).toString('utf8');
-  return raw ? JSON.parse(raw) : {};
+  const body = raw ? JSON.parse(raw) : {};
+  if (request.diagnostic && body && typeof body === 'object') Object.assign(request.diagnostic, jobContext(body));
+  return body;
 };
 
 const parseBooleanField = (value, defaultValue = true) => {
@@ -3265,8 +3268,14 @@ const server = http.createServer(async (request, response) => {
   try {url = new URL(request.url, `http://localhost:${port}`);}
   catch {response.writeHead(400);response.end();return;}
   if (onlineHttp) {
+    traceRequest(request, response, url);
     try {if (await onlineHttp.handle(request, response, url)) return;}
-    catch {if (!response.headersSent) sendJson(response, 500, {ok: false}); else response.end(); return;}
+    catch (error) {
+      const failure = publicFailure(response, 500, error);
+      if (!response.headersSent) {response.writeHead(500, {'content-type': 'application/json'});response.end(JSON.stringify(failure));}
+      else response.end();
+      return;
+    }
   }
 
   if (request.method === 'GET' && url.pathname === '/api/football/options') {
@@ -3792,8 +3801,10 @@ const server = http.createServer(async (request, response) => {
       const body = await readBody(request);
       if (onlineHttp) {
         const job = onlineHttp.store.getPreview(body.previewId);
-        if (!job) {sendJson(response, 400, {ok: false});return;}
-        sendJson(response, 202, {ok: true, job, render: onlineHttp.enqueue(job), message: 'Vídeo na fila. Você pode fechar esta aba e acompanhar em Meus vídeos.'});
+        if (!job) {sendJson(response, 400, {ok: false, error: 'Preview missing or expired. Prepare the job again.'});return;}
+        const render = onlineHttp.enqueue(job);
+        logEvent('render_queued', {...request.diagnostic, renderId: render.id, ...jobContext(job)});
+        sendJson(response, 202, {ok: true, job, render, message: 'Vídeo na fila. Você pode fechar esta aba e acompanhar em Meus vídeos.'});
         return;
       }
       const {job} = await prepareFootballJob(body);

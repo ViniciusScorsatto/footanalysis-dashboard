@@ -64,6 +64,18 @@ Também é possível usar backups de volume do Railway; verificar retenção e c
 
 ## Validação e recursos
 
+### Diagnóstico no Railway
+
+Após publicar a versão com logging, o servidor e o worker emitem linhas JSON em stdout/stderr, disponíveis nos logs do deploy do serviço. Não é necessário configurar outra variável nem contratar um serviço de logs.
+
+- Ao falhar uma preparação ou pedido de render, a mensagem do dashboard mostra `Referência: <UUID>`. Buscar esse UUID nos logs: `request_failed` contém a causa sanitizada; `request_finished` contém status e tempo. O mesmo identificador vai no header `X-Request-Id`.
+- `render_queued` conecta o `requestId` ao `renderId`. Buscar o `renderId` para acompanhar `render_started`, `render_composition_ready`, `render_completed`, `render_cancelled` ou `render_failed`.
+- Falhas do worker incluem etapa (`select_composition`, `render_media`, `save_output`), duração, timeout e interrupção do serviço. `worker_ready` confirma inicialização; `process_failed`/`process_exited` ajudam a identificar quedas dos processos.
+- Contexto de preparação inclui somente campos selecionados, como template, liga, temporada, canal e opção de voz. Não são registrados corpos completos de pedidos, narração ou snapshots. Credenciais conhecidas nas variáveis de ambiente, campos sensíveis, query strings de URLs e e-mails são ocultados. Detalhes internos ficam nos logs do servidor, não na resposta ao navegador.
+- Para investigar: tentar **Preparar** uma vez, copiar a referência e consultar o evento correspondente. O botão Render também prepara o vídeo antes de enfileirar: uma falha nessa etapa não gera `render_started`.
+
+Logs continuam sendo informação operacional privada; revisar antes de compartilhar. Esta instrumentação identifica a causa, mas não corrige por si só uma falha de preparação/render.
+
 `npm run test:online` cobre sessão/expiração, assinatura/claims Google, allowlist, CSRF, proteção de rotas, snapshots, recuperação da fila e ranges/traversal. `npm run build:online` compila Player + bundle independente dos jobs locais. `node scripts/online/verify.mjs --video` usa fixtures sem APIs para verificar frames dos templates PT/EN, modos animado/estático, e renderizar Nations League.
 
 Em uma imagem local: `docker build -t foot-analysis-online:test .`. Use um volume descartável e credenciais fictícias para testes; não há bypass de autenticação no app. Não usar credenciais fictícias para um deploy real.
