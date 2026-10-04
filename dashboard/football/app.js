@@ -3659,7 +3659,7 @@ const loadOptions = async () => {
     form.elements.voiceoverText.value = currentJob.voiceoverText ?? '';
     form.elements.topScorerPrediction.value = currentJob.topScorerPrediction ?? '';
     form.elements.bestPlayerPrediction.value = currentJob.bestPlayerPrediction ?? '';
-    voiceoverEnabledCheckbox.checked = currentJob.voiceoverEnabled !== false;
+    voiceoverEnabledCheckbox.checked = currentJob.voiceoverEnabled === true;
     includeUnfinishedResultsCheckbox.checked = currentJob.includeUnfinishedResults === true;
     form.elements.soundtrackPath.value = currentJob.soundtrackPath ?? '';
     setSoundtrackVolume(currentJob.soundtrackVolume ?? 0.2);
@@ -3701,7 +3701,7 @@ const loadOptions = async () => {
     form.elements.voiceoverText.value = '';
     form.elements.topScorerPrediction.value = '';
     form.elements.bestPlayerPrediction.value = '';
-    voiceoverEnabledCheckbox.checked = true;
+    voiceoverEnabledCheckbox.checked = false;
     includeUnfinishedResultsCheckbox.checked = false;
     form.elements.soundtrackPath.value = data.soundtrackPresets?.[0]?.value ?? '';
     setSoundtrackVolume(0.2);

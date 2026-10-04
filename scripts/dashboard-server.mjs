@@ -795,7 +795,7 @@ const prepareFootballJob = async (body) => {
     introSubtitle: body.introSubtitle,
     hookText: body.hookText,
     voiceoverText: body.voiceoverText,
-    voiceoverEnabled: parseBooleanField(body.voiceoverEnabled, true),
+    voiceoverEnabled: parseBooleanField(body.voiceoverEnabled, false),
     includeUnfinishedResults: parseBooleanField(body.includeUnfinishedResults, false),
     includeFinalResult: parseBooleanField(body.includeFinalResult, true),
     championFinalSelection: body.championFinalSelection,
