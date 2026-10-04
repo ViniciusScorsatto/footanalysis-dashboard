@@ -20,8 +20,12 @@ test('private middleware protects every surface and rejects excluded routes and 
   const api = createOnlineHttp({store, config: {PUBLIC_URL: 'https://private.example.com', GOOGLE_CLIENT_ID: 'client', GOOGLE_CLIENT_SECRET: 'test-secret', ALLOWED_EMAIL: 'owner@example.com'}});
   const {server, url} = await listen(async (req, res) => {if (!await api.handle(req,res,new URL(req.url,url))) {res.writeHead(200);res.end('legacy');}});
   t.after(() => {server.closeAllConnections();server.close();db.close();});
-  for(const route of ['/football','/football/app.js','/football/layout.js','/football/studio.css','/online/player.js','/online/preview','/logos/team.png','/api/online/renders','/out/test.mp4']) {
+  for(const route of ['/football/app.js','/football/layout.js','/football/studio.css','/online/player.js','/logos/team.png','/api/online/renders','/out/test.mp4']) {
     assert.equal((await fetch(url+route)).status,401,route);
+  }
+  for(const route of ['/football','/football/','/football-static','/football-static/','/online/preview']) {
+    const response=await fetch(url+route,{redirect:'manual'});assert.equal(response.status,302);assert.equal(response.headers.get('location'),'/');
+    const login=await fetch(url+route);assert.match(await login.text(),/Entrar com Google/);
   }
   assert.equal((await fetch(url+'/healthz')).status,200);
   const rejectedCookie = `fa_session=${store.createSession('other@example.com|other')}`;

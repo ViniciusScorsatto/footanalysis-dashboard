@@ -21,8 +21,8 @@ if (window.FOOT_ANALYSIS_ONLINE) {
   logout.method = 'POST'; logout.action = '/auth/logout';
   const button = document.createElement('button');button.textContent = 'Sair';button.className = 'btn btn-secondary';logout.append(button);
   const panel = document.createElement('section');panel.className = 'panel online-renders';panel.id='video-settings';
-  const settingsLink=document.createElement('a');settingsLink.href='#video-settings';settingsLink.className='back-link';settingsLink.textContent='Meus vídeos';nav.append(settingsLink);
-  const storageLink=document.createElement('a');storageLink.href='#video-settings';storageLink.className='back-link';storageLink.textContent='Configurações';nav.append(storageLink,logout);
+  const settingsLink=document.createElement('a');settingsLink.href='#videos';settingsLink.className='back-link';settingsLink.textContent='Meus vídeos';nav.append(settingsLink);
+  const storageLink=document.createElement('a');storageLink.href='#settings';storageLink.className='back-link';storageLink.textContent='Configurações';nav.append(storageLink,logout);
   const heading = document.createElement('h2');heading.textContent = 'Meus vídeos';
   const summary=document.createElement('p');summary.className='storage-summary';summary.textContent='Consultando armazenamento…';
   const feedback=document.createElement('p');feedback.className='storage-feedback';feedback.setAttribute('role','status');feedback.setAttribute('aria-live','polite');
@@ -42,6 +42,24 @@ if (window.FOOT_ANALYSIS_ONLINE) {
   previous.onclick=()=>{pageIndex=Math.max(0,pageIndex-1);void refresh();};
   next.onclick=()=>{pageIndex++;void refresh();};
   document.querySelector('.log-panel').before(panel);
+  const settings=document.createElement('section');settings.className='panel online-renders';settings.id='online-settings';
+  const settingsHeading=document.createElement('h2');settingsHeading.textContent='Configurações';
+  const settingsDescription=document.createElement('p');settingsDescription.textContent='Dashboard privado · acesso somente pela conta Google autorizada.';
+  const retention=document.createElement('p');retention.textContent='Armazenamento: os MP4 expiram 48 horas após a conclusão. Os dados dos vídeos são mantidos para gerar novamente.';
+  const settingsStorage=document.createElement('p');settingsStorage.textContent='Consultando armazenamento…';
+  const manage=document.createElement('a');manage.href='#videos';manage.className='btn btn-secondary';manage.textContent='Gerenciar vídeos e liberar espaço';
+  settings.append(settingsHeading,settingsDescription,retention,settingsStorage,manage);panel.after(settings);
+  const createLink=document.querySelector('.studio-create-link');
+  const showView=()=>{
+    const view=location.hash==='#settings'?'settings':['#videos','#video-settings'].includes(location.hash)?'videos':'create';
+    document.querySelector('#job-form').hidden=view!=='create';
+    document.querySelector('.log-panel').hidden=view!=='create';
+    panel.hidden=view!=='videos';settings.hidden=view!=='settings';
+    for(const [link,name] of [[createLink,'create'],[settingsLink,'videos'],[storageLink,'settings']]) link.setAttribute('aria-current',view===name?'page':'false');
+    const target=view==='settings'?settingsHeading:view==='videos'?heading:document.querySelector('.command-title h1');
+    target.tabIndex=-1;target.focus({preventScroll:true});window.scrollTo(0,0);
+  };
+  window.addEventListener('hashchange',showView);showView();
   const states = {queued: 'Na fila', rendering: 'Renderizando', completed: 'Pronto', failed: 'Falhou', cancelled: 'Cancelado'};
   async function action(url, method = 'POST') {
     const response = await fetch(url, {method});
@@ -79,7 +97,7 @@ if (window.FOOT_ANALYSIS_ONLINE) {
       const storageResponse=await fetch('/api/online/storage');
       if(!storageResponse.ok) throw new Error('Falha ao consultar armazenamento.');
       const {storage}=await storageResponse.json();
-      storageFiles=storage.files;summary.textContent=`${storage.files} MP4 armazenados · ${formatBytes(storage.bytes)} em vídeos (todas as páginas)`;removeAll.disabled=busy || storage.files===0;
+      storageFiles=storage.files;summary.textContent=`${storage.files} MP4 armazenados · ${formatBytes(storage.bytes)} em vídeos (todas as páginas)`;settingsStorage.textContent=summary.textContent;removeAll.disabled=busy || storage.files===0;
       previous.disabled=pageIndex===0;next.disabled=renders.length<100;
       list.replaceChildren();
       if (!renders.length) {list.textContent = 'Nenhum vídeo criado ainda.';return;}

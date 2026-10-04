@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import {logEvent} from './logging.mjs';
 
 const COOKIE = 'fa_session';
 const STATE_COOKIE = 'fa_oauth';
@@ -40,19 +41,25 @@ export function createAuth({store, origin, clientId, clientSecret, allowedEmail,
       }
       if (url.pathname === '/auth/google/callback' && request.method === 'GET') {
         response.setHeader('Set-Cookie', cookie(STATE_COOKIE, '', 0));
+        let stage = 'state_cookie';
         try {
           const state = url.searchParams.get('state');
           if (!state || state !== readCookie(request, STATE_COOKIE)) throw new Error('Invalid state');
+          stage = 'callback_state';
           const record = store.consumeOAuth(state);
           if (!record || !url.searchParams.get('code')) throw new Error('Invalid callback');
+          stage = 'token_exchange';
           const result = await fetchImpl('https://oauth2.googleapis.com/token', {method: 'POST', signal: AbortSignal.timeout(15000), headers: {'content-type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams({client_id: clientId, client_secret: clientSecret, redirect_uri: callback, grant_type: 'authorization_code', code: url.searchParams.get('code'), code_verifier: record.verifier})});
           if (!result.ok) throw new Error('Token exchange failed');
+          stage = 'identity_verification';
           const identity = await verifyGoogleIdentity((await result.json()).id_token, {clientId, email: allowedEmail, nonce: record.nonce, fetchImpl});
           response.setHeader('Set-Cookie', [cookie(STATE_COOKIE, '', 0), cookie(COOKIE, store.createSession(`${allowedEmail.toLowerCase()}|${identity.sub}`), 604800)]);
           redirect(response, '/football');
         } catch {
-          response.writeHead(403, {'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store'});
-          response.end('Login não autorizado. Tente novamente com a conta permitida.');
+          const reference=crypto.randomUUID();
+          logEvent('login_failed', {requestId:reference,stage}, 'error');
+          response.writeHead(403, {'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store'});
+          response.end(`<!doctype html><html lang="pt-br"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Entrar · Foot Analysis</title><body style="background:#0d1117;color:#edf2f7;font:16px system-ui;line-height:1.6;padding:24px;max-width:560px;margin:auto"><h1>Não foi possível entrar</h1><p>Use a conta Google autorizada. Se o login demorou ou foi aberto em outro navegador, inicie novamente neste navegador.</p><p>Se estiver dentro de outro aplicativo, abra o dashboard no Safari ou Chrome e tente novamente.</p><a style="display:inline-block;padding:12px;color:#78b2ff" href="/auth/google">Tentar novamente com Google</a><p style="overflow-wrap:anywhere">Referência: ${reference}</p></body></html>`);
         }
         return true;
       }

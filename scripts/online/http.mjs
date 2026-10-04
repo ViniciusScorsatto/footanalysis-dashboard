@@ -47,6 +47,9 @@ export function createOnlineHttp({store = createOnlineStore(getDb()), config = p
       if (url.pathname === '/healthz' && request.method === 'GET') {json(response, 200, {ok: true}); return true;}
       if (await auth.handle(request, response, url)) return true;
       if (!auth.authenticated(request)) {
+        if (request.method === 'GET' && ['/football','/football/','/football-static','/football-static/','/online/preview'].includes(url.pathname)) {
+          response.writeHead(302, {location: '/'});response.end();return true;
+        }
         if (url.pathname === '/' && request.method === 'GET') {
           response.writeHead(200, {'content-type': 'text/html; charset=utf-8'});
           response.end('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Foot Analysis</title><body style="background:#0b0d12;color:#f0f4f8;font:20px system-ui;padding:32px"><h1>Foot Analysis</h1><p>Dashboard privado de Shorts</p><a style="color:#70b7ff" href="/auth/google">Entrar com Google</a></body>');

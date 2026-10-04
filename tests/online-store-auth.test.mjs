@@ -83,3 +83,28 @@ test('production auth requires HTTPS and validates exact write origin', () => {
   assert.equal(auth.validWrite({headers: {origin: 'https://attacker.example.com'}}), false);
   assert.equal(auth.validWrite({headers: {}}), false);
 });
+
+test('fresh-browser OAuth establishes a session and invalid callbacks offer a safe retry', async () => {
+  const db=new Database(':memory:');const store=createOnlineStore(db);
+  const {privateKey,publicKey}=crypto.generateKeyPairSync('rsa',{modulusLength:2048});
+  let nonce;
+  const fetchImpl=async(url)=>({ok:true,json:async()=>{
+    if(url.includes('/certs')) return {keys:[{...publicKey.export({format:'jwk'}),kid:'test'}]};
+    const parts=[{alg:'RS256',kid:'test'},{iss:'https://accounts.google.com',aud:'client',sub:'subject',email:'owner@example.com',email_verified:true,nonce,iat:Math.floor(Date.now()/1000),exp:Math.floor(Date.now()/1000)+3600}].map(v=>Buffer.from(JSON.stringify(v)).toString('base64url'));
+    return {id_token:[...parts,crypto.sign('RSA-SHA256',Buffer.from(parts.join('.')),privateKey).toString('base64url')].join('.')};
+  }});
+  const auth=createAuth({store,origin:'https://private.example.com',clientId:'client',clientSecret:'secret',allowedEmail:'owner@example.com',fetchImpl});
+  const response=()=>({headers:{},setHeader(k,v){this.headers[k]=v;},writeHead(status,headers){this.status=status;Object.assign(this.headers,headers);},end(body){this.body=body;}});
+  try {
+    const start=response();await auth.handle({method:'GET',headers:{}},start,new URL('https://private.example.com/auth/google'));
+    const location=new URL(start.headers.location);nonce=location.searchParams.get('nonce');
+    assert.equal(location.searchParams.get('prompt'),'select_account');
+    const callback=new URL('https://private.example.com/auth/google/callback');callback.searchParams.set('state',location.searchParams.get('state'));callback.searchParams.set('code','test-code');
+    const completed=response();await auth.handle({method:'GET',headers:{cookie:start.headers['Set-Cookie'].split(';')[0]}},completed,callback);
+    assert.equal(completed.status,302);assert.equal(completed.headers.location,'/football');
+    const sessionCookie=completed.headers['Set-Cookie'].find(v=>v.startsWith('fa_session='));
+    assert.match(sessionCookie,/HttpOnly; Secure; SameSite=Lax/);assert.ok(auth.authenticated({headers:{cookie:sessionCookie.split(';')[0]}}));
+    const denied=response();await auth.handle({method:'GET',headers:{}},denied,callback);
+    assert.equal(denied.status,403);assert.match(denied.body,/Tentar novamente com Google/);assert.ok(!denied.body.includes('test-code'));
+  } finally {db.close();}
+});

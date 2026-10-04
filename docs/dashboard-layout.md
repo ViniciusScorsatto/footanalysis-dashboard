@@ -10,6 +10,8 @@ The animated and static football dashboards share `dashboard/football/studio.css
 - Data editors, soundtrack, narration and advanced settings use native keyboard-accessible disclosures.
 - The preview uses a portrait frame with an empty state until a preview URL is available.
 - Video history uses compact aligned rows on desktop and stacked entries on mobile. Download, playback, retry, cancel and confirmed deletion remain available.
+- Online navigation uses separate `#videos` and `#settings` views, with reload/back support. The former `#video-settings` link remains compatible. Creation controls stay mounted so changing views preserves the form.
+- Unauthenticated navigation to dashboard/preview pages redirects to the login entry instead of returning API JSON. APIs, private assets and downloads still require authentication. OAuth failures offer a retry link and a sanitized `login_failed` stage/reference in server logs; state, PKCE and identity checks remain mandatory.
 
 ## Intentional adaptations from the visual concept
 
