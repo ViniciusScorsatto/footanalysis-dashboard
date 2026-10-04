@@ -22,3 +22,14 @@ The implementation keeps the existing multi-date picker, unfinished-results opti
 Browser checks with isolated API fixtures cover 1536×1024 desktop, 768px tablet and 390px mobile, animated/static modes, local-mode controls, PT/EN switching, soundtrack volume, narration default, preparation payload, preview URL update, render enqueue and storage confirmation. No duplicate IDs, page errors or horizontal overflow were detected. Provider calls and a live Railway deployment are not exercised by these checks.
 
 `npm run test:online` checks access to the new protected CSS/JS assets alongside authentication, queue, streaming and storage deletion regressions.
+
+## Performance pass
+
+- Initialization loads rounds → dates → results/predictions once, retaining saved multi-date selections. The shell and empty preview are initialized before waiting on data requests.
+- Online previews stay at `about:blank` until a prepared preview ID exists. Unchanged preview URLs do not reload on incidental UI updates; the explicit refresh button still reloads.
+- Video/storage polling stops on the creation screen and while the browser tab is hidden. Settings requests storage only. Video history refreshes every five seconds when jobs are active, otherwise every thirty seconds; storage refreshes every thirty seconds. Navigation and actions trigger immediate refreshes. Identical history responses do not replace the DOM.
+- Shipped dashboard CSS/JS and the player bundle support gzip and private ETag revalidation. Authentication is checked before a 304 response. The browser must revalidate cached assets; APIs, snapshots, media and downloads keep their existing no-store policy and range handling.
+
+Local before/after browser evidence with the same fixtures: initial result-fixture requests **3 → 1**, initial player requests **1 → 0**, initial history/storage requests **2 → 0** on the creation screen. The four measured JS/CSS files, including the locally built player, total **747,088 bytes raw / 189,730 gzip (~75% smaller)**. These are request/transfer measurements, not a claim about live Railway latency or render speed.
+
+Browser checks also cover active/idle polling, settings-only storage requests, manual preview reload, deletion refresh and saved multi-date restoration. Server tests cover gzip opt-out, conditional requests, changed-file invalidation, HEAD, ranges and denial of cached-asset requests without a valid session.

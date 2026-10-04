@@ -34,13 +34,14 @@ if (window.FOOT_ANALYSIS_ONLINE) {
   for(const label of ['Vídeo','Criado em','Estado','Tamanho','Ações']) {const cell=document.createElement('span');cell.textContent=label;columns.append(cell);}
   const list = document.createElement('div');panel.append(header,deletionNote,feedback,columns,list);
   let storageFiles=0, busy=false, refreshing=false;
+  let currentView='create', lastStorageAt=0, lastRenderAt=0, activeRenders=false, listSignature='';
   const formatBytes=(bytes)=>bytes<1024?`${bytes} B`:bytes<1024**2?`${(bytes/1024).toFixed(1)} KB`:bytes>=1024**3?`${(bytes/1024**3).toFixed(2)} GB`:`${(bytes/1024**2).toFixed(2)} MB`;
   let pageIndex=0;
   const previous=document.createElement('button'),next=document.createElement('button');
   previous.textContent='Mais recentes';next.textContent='Mais antigos';
   for(const b of [previous,next]) {b.className='btn btn-secondary';panel.append(b);}
-  previous.onclick=()=>{pageIndex=Math.max(0,pageIndex-1);void refresh();};
-  next.onclick=()=>{pageIndex++;void refresh();};
+  previous.onclick=()=>{pageIndex=Math.max(0,pageIndex-1);void refresh(true);};
+  next.onclick=()=>{pageIndex++;void refresh(true);};
   document.querySelector('.log-panel').before(panel);
   const settings=document.createElement('section');settings.className='panel online-renders';settings.id='online-settings';
   const settingsHeading=document.createElement('h2');settingsHeading.textContent='Configurações';
@@ -52,12 +53,14 @@ if (window.FOOT_ANALYSIS_ONLINE) {
   const createLink=document.querySelector('.studio-create-link');
   const showView=()=>{
     const view=location.hash==='#settings'?'settings':['#videos','#video-settings'].includes(location.hash)?'videos':'create';
+    currentView=view;
     document.querySelector('#job-form').hidden=view!=='create';
     document.querySelector('.log-panel').hidden=view!=='create';
     panel.hidden=view!=='videos';settings.hidden=view!=='settings';
     for(const [link,name] of [[createLink,'create'],[settingsLink,'videos'],[storageLink,'settings']]) link.setAttribute('aria-current',view===name?'page':'false');
     const target=view==='settings'?settingsHeading:view==='videos'?heading:document.querySelector('.command-title h1');
     target.tabIndex=-1;target.focus({preventScroll:true});window.scrollTo(0,0);
+    void refresh(true);
   };
   window.addEventListener('hashchange',showView);showView();
   const states = {queued: 'Na fila', rendering: 'Renderizando', completed: 'Pronto', failed: 'Falhou', cancelled: 'Cancelado'};
@@ -73,7 +76,7 @@ if (window.FOOT_ANALYSIS_ONLINE) {
       if(!response.ok) throw new Error('Não foi possível excluir todos os arquivos. Atualize e tente novamente.');
       const result=await response.json();feedback.textContent=`${result.deleted} MP4 excluídos · ${formatBytes(result.freedBytes)} liberados. Dados preservados.`;
     } catch(error) {feedback.textContent=error.message;}
-    finally {busy=false;await refresh();}
+    finally {busy=false;listSignature='';await refresh(true);}
   };
   function addAction(card, text, url, method) {
     const b = document.createElement('button');b.textContent = text;b.className = `btn btn-secondary${method==='DELETE'?' danger-action':''}`;
@@ -82,22 +85,35 @@ if (window.FOOT_ANALYSIS_ONLINE) {
       busy=true;b.disabled=true;removeAll.disabled=true;
       try {await action(url,method);feedback.textContent=method==='DELETE'?'MP4 excluído. Dados preservados para gerar novamente.':'Ação realizada.';}
       catch(e) {feedback.textContent=e.message;}
-      finally {busy=false;await refresh();}
+      finally {busy=false;listSignature='';await refresh(true);}
     };
     card.append(b);
   }
-  async function refresh() {
-    if (document.hidden || busy || refreshing) return;
+  async function refresh(force=false) {
+    if (document.hidden || currentView==='create' || busy || refreshing) return;
+    const needStorage=force || Date.now()-lastStorageAt>=30000;
+    const needRenders=currentView==='videos' && (force || Date.now()-lastRenderAt>=(activeRenders?5000:30000));
+    if (!needStorage && !needRenders) return;
+    const requestedView=currentView, requestedPage=pageIndex;
     refreshing=true;
     try {
-      const response = await fetch(`/api/online/renders?page=${pageIndex}`);
-      if (response.status === 401) {feedback.textContent = 'Sessão expirada. Entre novamente pela página inicial.';return;}
-      if (!response.ok) throw new Error('Falha ao consultar vídeos.');
-      const {renders} = await response.json();
-      const storageResponse=await fetch('/api/online/storage');
-      if(!storageResponse.ok) throw new Error('Falha ao consultar armazenamento.');
-      const {storage}=await storageResponse.json();
-      storageFiles=storage.files;summary.textContent=`${storage.files} MP4 armazenados · ${formatBytes(storage.bytes)} em vídeos (todas as páginas)`;settingsStorage.textContent=summary.textContent;removeAll.disabled=busy || storage.files===0;
+      const [response,storageResponse]=await Promise.all([
+        needRenders?fetch(`/api/online/renders?page=${requestedPage}`):null,
+        needStorage?fetch('/api/online/storage'):null,
+      ]);
+      if ([response,storageResponse].some(r=>r?.status===401)) {feedback.textContent=settingsStorage.textContent='Sessão expirada. Entre novamente pela página inicial.';removeAll.disabled=true;return;}
+      if ([response,storageResponse].some(r=>r && !r.ok)) throw new Error('Falha ao consultar vídeos.');
+      if (storageResponse) {
+        const {storage}=await storageResponse.json();lastStorageAt=Date.now();
+        storageFiles=storage.files;summary.textContent=`${storage.files} MP4 armazenados · ${formatBytes(storage.bytes)} em vídeos (todas as páginas)`;settingsStorage.textContent=summary.textContent;removeAll.disabled=busy || storage.files===0;
+      }
+      if (requestedView!==currentView || requestedPage!==pageIndex) {queueMicrotask(()=>refresh(true));return;}
+      if (!response) return;
+      const {renders,activeCount}=await response.json();lastRenderAt=Date.now();
+      activeRenders=activeCount>0 || renders.some(row=>['queued','rendering'].includes(row.state));
+      const signature=JSON.stringify([requestedPage,renders]);
+      if(signature===listSignature) return;
+      listSignature=signature;
       previous.disabled=pageIndex===0;next.disabled=renders.length<100;
       list.replaceChildren();
       if (!renders.length) {list.textContent = 'Nenhum vídeo criado ainda.';return;}
@@ -126,8 +142,7 @@ if (window.FOOT_ANALYSIS_ONLINE) {
     } catch {feedback.textContent='Sem conexão. Tentaremos atualizar novamente; o render continua no servidor.';removeAll.disabled=true;}
     finally {refreshing=false;}
   }
-  setInterval(refresh,5000);
-  window.addEventListener('online-render-update',refresh);
-  document.addEventListener('visibilitychange',refresh);
-  void refresh();
+  setInterval(()=>refresh(),5000);
+  window.addEventListener('online-render-update',()=>{lastStorageAt=0;lastRenderAt=0;void refresh(true);});
+  document.addEventListener('visibilitychange',()=>refresh(true));
 }

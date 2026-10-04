@@ -33,6 +33,20 @@ test('private middleware protects every surface and rejects excluded routes and 
   const cookie = `fa_session=${store.createSession('owner@example.com|owner')}`;
   const headers = {cookie, origin:'https://private.example.com'};
   for (const route of ['/football/layout.js','/football/studio.css']) assert.equal((await fetch(url+route,{headers})).status,200);
+  const asset=await fetch(url+'/football/app.js',{headers:{...headers,'accept-encoding':'gzip'}});
+  assert.equal(asset.headers.get('content-encoding'),'gzip');
+  assert.match(asset.headers.get('cache-control'),/private, no-cache, must-revalidate/);
+  assert.match(await asset.text(),/loadOptions/);
+  const etag=asset.headers.get('etag');assert.ok(etag);
+  const cached=await fetch(url+'/football/app.js',{headers:{...headers,'if-none-match':etag}});
+  assert.equal(cached.status,304);assert.equal(await cached.text(),'');
+  assert.equal((await fetch(url+'/football/app.js',{headers:{'if-none-match':etag}})).status,401);
+  const expiredToken=store.createSession('owner@example.com|expired');store.logout(expiredToken);
+  assert.equal((await fetch(url+'/football/app.js',{headers:{cookie:`fa_session=${expiredToken}`,'if-none-match':etag}})).status,401);
+  const identity=await fetch(url+'/football/app.js',{headers:{...headers,'accept-encoding':'gzip;q=0'}});
+  assert.equal(identity.headers.get('content-encoding'),null);await identity.text();
+  const partial=await fetch(url+'/football/app.js',{headers:{...headers,range:'bytes=0-9'}});
+  assert.equal(partial.status,206);assert.equal(partial.headers.get('content-encoding'),null);assert.equal((await partial.text()).length,10);
   assert.equal((await fetch(url+'/api/online/renders',{headers})).status,200);
   for (const route of ['/api/football/publishing/youtube/upload','/api/football/thumbnails/render','/api/football/longform/render','/api/football/short-visual/generate']) {
     assert.equal((await fetch(url+route,{method:'POST',headers})).status,404,route);
@@ -68,6 +82,22 @@ test('streaming supports mobile ranges and rejects traversal and symlink escapes
   assert.equal((await fetch(url+'?file=../secret.txt')).status,404);
   assert.equal((await fetch(url+'?file=escape.txt')).status,404);
   assert.equal((await fetch(url,{method:'HEAD'})).headers.get('content-length'),'10');
+});
+
+test('static cache invalidates changed files while media remains uncached', async (t) => {
+  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'foot-static-cache-'));
+  await fs.writeFile(path.join(dir,'app.js'),'const version = 1;');
+  await fs.writeFile(path.join(dir,'video.mp4'),'video');
+  const {server,url}=await listen((req,res)=>{void streamFile(req,res,dir,req.url.slice(1),undefined,{cacheStatic:true});});
+  t.after(async()=>{server.closeAllConnections();server.close();await fs.rm(dir,{recursive:true,force:true});});
+  const first=await fetch(url+'/app.js');const etag=first.headers.get('etag');await first.text();
+  await fs.writeFile(path.join(dir,'app.js'),'const version = 200;');
+  const changed=await fetch(url+'/app.js',{headers:{'if-none-match':etag}});
+  assert.equal(changed.status,200);assert.notEqual(changed.headers.get('etag'),etag);assert.equal(await changed.text(),'const version = 200;');
+  const head=await fetch(url+'/app.js',{method:'HEAD',headers:{'accept-encoding':'gzip'}});
+  assert.equal(head.status,200);assert.equal(head.headers.get('content-encoding'),'gzip');assert.equal(await head.text(),'');
+  const media=await fetch(url+'/video.mp4',{headers:{'accept-encoding':'gzip'}});
+  assert.equal(media.headers.get('cache-control'),'private, no-store');assert.equal(media.headers.get('content-encoding'),null);assert.equal(media.headers.get('etag'),null);await media.text();
 });
 
 test('video storage supports authenticated downloads, single and bulk deletion across pages while preserving jobs', async (t) => {

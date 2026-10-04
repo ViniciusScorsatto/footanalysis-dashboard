@@ -78,7 +78,7 @@ export function createOnlineHttp({store = createOnlineStore(getDb()), config = p
         const page = Number(url.searchParams.get('page') || 0);
         if (!Number.isSafeInteger(page) || page < 0 || page > 1000000) {json(response,400,{ok:false});return true;}
         const renders = await Promise.all(store.list(page * 100).map(async (row) => ({...publicRender(row), sizeBytes: row.deleted_at ? 0 : await fileSize(row.id)})));
-        json(response, 200, {ok: true, renders});return true;
+        json(response, 200, {ok: true, renders, activeCount: store.activeCount()});return true;
       }
       const match = url.pathname.match(/^\/api\/online\/renders\/([a-f0-9-]{36})(?:\/(download|cancel|retry))?$/);
       if (match) {
@@ -105,7 +105,7 @@ export function createOnlineHttp({store = createOnlineStore(getDb()), config = p
         response.writeHead(200, {'content-type': 'text/html; charset=utf-8'});
         response.end('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Prévia</title><body style="margin:0;background:#0b0d12"><div id="player"></div><script src="/online/player.js"></script></body>');return true;
       }
-      if (url.pathname === '/online/player.js' && request.method === 'GET') {await streamFile(request,response,path.join(root,'build/online'),'player.js');return true;}
+      if (url.pathname === '/online/player.js' && request.method === 'GET') {await streamFile(request,response,path.join(root,'build/online'),'player.js',undefined,{cacheStatic:true});return true;}
       if (['GET', 'HEAD'].includes(request.method) && /^\/(audio|backgrounds|branding|fonts|logos|voiceovers)\//.test(url.pathname)) {await streamFile(request,response,publicRoot,decodeURIComponent(url.pathname.slice(1)));return true;}
       if (url.pathname.startsWith('/api/football/') && apiAllowed.has(url.pathname.slice('/api/football/'.length))) return false;
       if (['GET', 'HEAD'].includes(request.method) && ['/football', '/football/', '/football-static', '/football-static/'].includes(url.pathname)) {
@@ -114,7 +114,7 @@ export function createOnlineHttp({store = createOnlineStore(getDb()), config = p
         response.end(html.replace('</head>', '<script>window.FOOT_ANALYSIS_ONLINE=true;</script><link rel="stylesheet" href="/online.css"></head>').replace('</body>', '<script type="module" src="/online.js"></script></body>'));
         return true;
       }
-      if (['GET', 'HEAD'].includes(request.method) && ['/styles.css', '/online.css', '/online.js', '/football/app.js', '/football/helpers.js', '/football/studio.css', '/football/layout.js'].includes(url.pathname)) {await streamFile(request,response,path.join(root,'dashboard'),url.pathname.slice(1));return true;}
+      if (['GET', 'HEAD'].includes(request.method) && ['/styles.css', '/online.css', '/online.js', '/football/app.js', '/football/helpers.js', '/football/studio.css', '/football/layout.js'].includes(url.pathname)) {await streamFile(request,response,path.join(root,'dashboard'),url.pathname.slice(1),undefined,{cacheStatic:true});return true;}
       json(response, 404, {ok: false, error: 'Not available in the private Shorts dashboard'});
       return true;
     },

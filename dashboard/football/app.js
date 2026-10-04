@@ -3058,11 +3058,11 @@ const getStudioPreviewUrl = () => {
   return buildStudioPreviewUrl({studioUrl, compositionId, knownCompositionIds});
 };
 
-const updatePreview = () => {
+const updatePreview = (event) => {
   if (window.FOOT_ANALYSIS_ONLINE) {
-    const previewUrl = window.footAnalysisPreviewId ? `/online/preview?id=${encodeURIComponent(window.footAnalysisPreviewId)}` : '/online/preview';
-    previewFrame.src = previewUrl;
-    openPreviewLink.href = previewUrl;
+    const previewUrl = window.footAnalysisPreviewId ? `/online/preview?id=${encodeURIComponent(window.footAnalysisPreviewId)}` : 'about:blank';
+    if (previewFrame.getAttribute('src') !== previewUrl || event?.type === 'click') previewFrame.src = previewUrl;
+    openPreviewLink.href = previewUrl === 'about:blank' ? '#' : previewUrl;
     return;
   }
   const studioUrl = normalizeStudioUrl(studioUrlInput.value);
@@ -3536,7 +3536,7 @@ const loadRoundDates = async (preferredDate = form.elements.matchDate.value) => 
   }
 };
 
-const loadRounds = async (preferredRound = form.elements.round.value) => {
+const loadRounds = async (preferredRound = form.elements.round.value, preferredDates = form.elements.matchDate.value) => {
   const template = templateSelect.value;
   const leagueIdValue = form.elements.leagueId.value.trim();
   const seasonValue = form.elements.season.value.trim();
@@ -3576,7 +3576,7 @@ const loadRounds = async (preferredRound = form.elements.round.value) => {
 
     setRoundOptions(data.rounds ?? [], preferredRound);
     syncRoundLabelFromRound();
-    await loadRoundDates(form.elements.matchDate.value);
+    await loadRoundDates(preferredDates);
     syncOutputNameFromSelections();
     log(`Loaded ${data.rounds?.length ?? 0} rounds for league ${leagueId} season ${season}.`);
   } catch (error) {
@@ -3721,8 +3721,6 @@ const loadOptions = async () => {
   syncLanguageFromChannel();
   applyTemplateHints();
   updateLocalizedDefaults();
-  await loadRounds(canUseCurrentJob ? currentJob?.round ?? '' : '');
-  await loadRoundDates(canUseCurrentJob ? normalizeSelectedDates(currentJob.matchDates ?? currentJob.matchDate) : '');
   syncOutputNameFromSelections();
   renderCurrentJob(canUseCurrentJob ? currentJob : null);
   updateDashboardMeta();
@@ -3730,13 +3728,14 @@ const loadOptions = async () => {
   const savedStudioUrl = localStorage.getItem(STUDIO_URL_KEY) || 'http://127.0.0.1:3000';
   studioUrlInput.value = savedStudioUrl;
   updatePreview();
-  if (form.elements.template.value === 'predictions') {
-    await loadPredictionFixtures();
-  } else if (
+  // loadRounds already loads dates and then fixtures. Do not fetch them again here.
+  await loadRounds(canUseCurrentJob ? currentJob?.round ?? '' : '', canUseCurrentJob ? normalizeSelectedDates(currentJob.matchDates ?? currentJob.matchDate) : '');
+  syncOutputNameFromSelections();
+  updateDashboardMeta();
+  if (
     form.elements.template.value === 'results' ||
     form.elements.template.value === CHAMPION_FINAL_TEMPLATE
   ) {
-    await loadResultFixturesForEditor();
     if (form.elements.template.value === CHAMPION_FINAL_TEMPLATE) {
       await loadChampionFinalOptions();
     }
