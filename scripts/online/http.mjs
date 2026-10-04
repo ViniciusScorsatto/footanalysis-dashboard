@@ -19,7 +19,17 @@ export function publicRender(row) {
   return {...rest, title: job.outputName || job.leagueName || job.template, template: job.template, downloadUrl: available ? `/api/online/renders/${row.id}/download` : null};
 }
 
-export function createOnlineHttp({store = createOnlineStore(getDb()), config = process.env} = {}) {
+export function createOnlineHttp({store = createOnlineStore(getDb()), config = process.env, rendersRoot = outputRoot} = {}) {
+  async function fileSize(id) {
+    try {const stat = await fs.lstat(path.join(rendersRoot, `${id}.mp4`));return stat.isFile() ? stat.size : 0;}
+    catch (error) {if (error.code === 'ENOENT') return 0;throw error;}
+  }
+  async function storageSummary() {
+    const rows = store.storedVideos();
+    let bytes = 0, files = 0;
+    for (const row of rows) {const size = await fileSize(row.id);bytes += size;if (size > 0) files++;}
+    return {bytes, files};
+  }
   const auth = createAuth({store, origin: config.PUBLIC_URL, clientId: config.GOOGLE_CLIENT_ID, clientSecret: config.GOOGLE_CLIENT_SECRET, allowedEmail: config.ALLOWED_EMAIL});
   const apiAllowed = new Set(['options', 'short-durations', 'rounds', 'round-dates', 'prediction-fixtures', 'result-fixtures', 'next-fixtures', 'standings-editor', 'season-final-verdict-editor', 'top-scorers-editor', 'tierlist-teams', 'world-cup-groups', 'world-cup-standings-preview', 'copy/hook-cta', 'jobs/current', 'jobs/prepare', 'jobs/render', 'jobs/team-comparison', 'jobs/league-comparison', 'jobs/top-scorers-comparison', 'db/leagues', 'db/teams', 'db/standings', 'db/top-scorers', 'compare/teams', 'compare/leagues', 'compare/top-scorers']);
   return {
@@ -46,10 +56,26 @@ export function createOnlineHttp({store = createOnlineStore(getDb()), config = p
       if (!['GET', 'HEAD'].includes(request.method) && !auth.validWrite(request)) {json(response, 403, {ok: false, error: 'Invalid origin'}); return true;}
       if (url.pathname === '/') {response.writeHead(302, {location: '/football'});response.end();return true;}
       if (url.pathname === '/api/online/config') {json(response, 200, {online: true, retentionHours: 48});return true;}
+      if (url.pathname === '/api/online/storage' && request.method === 'GET') {
+        json(response, 200, {ok: true, storage: await storageSummary()});return true;
+      }
+      if (url.pathname === '/api/online/renders' && request.method === 'DELETE') {
+        if (request.headers['x-confirm-delete'] !== 'all-completed-mp4') {json(response, 400, {ok: false, error: 'Confirme a exclusão dos MP4 concluídos.'});return true;}
+        // Snapshot eligible IDs once: queued/active jobs and later completions are never deleted.
+        const targets = store.storedVideos();
+        let deleted = 0, freedBytes = 0;
+        for (const {id} of targets) {
+          const size = await fileSize(id);
+          await fs.rm(path.join(rendersRoot, `${id}.mp4`), {force: true});
+          store.markDeleted(id);freedBytes += size;if (size > 0) deleted++;
+        }
+        json(response, 200, {ok: true, deleted, freedBytes});return true;
+      }
       if (url.pathname === '/api/online/renders' && request.method === 'GET') {
         const page = Number(url.searchParams.get('page') || 0);
         if (!Number.isSafeInteger(page) || page < 0 || page > 1000000) {json(response,400,{ok:false});return true;}
-        json(response, 200, {ok: true, renders: store.list(page * 100).map(publicRender)});return true;
+        const renders = await Promise.all(store.list(page * 100).map(async (row) => ({...publicRender(row), sizeBytes: row.deleted_at ? 0 : await fileSize(row.id)})));
+        json(response, 200, {ok: true, renders});return true;
       }
       const match = url.pathname.match(/^\/api\/online\/renders\/([a-f0-9-]{36})(?:\/(download|cancel|retry))?$/);
       if (match) {
@@ -58,14 +84,14 @@ export function createOnlineHttp({store = createOnlineStore(getDb()), config = p
         if (!row) {json(response, 404, {ok: false});return true;}
         if (action === 'download' && ['GET', 'HEAD'].includes(request.method)) {
           if (!publicRender(row).downloadUrl) {json(response, 410, {ok: false, error: 'Arquivo expirado ou indisponível'});return true;}
-          await streamFile(request, response, outputRoot, `${id}.mp4`, url.searchParams.get('inline') === '1' ? undefined : `${id}.mp4`);
+          await streamFile(request, response, rendersRoot, `${id}.mp4`, url.searchParams.get('inline') === '1' ? undefined : `${id}.mp4`);
         } else if (action === 'cancel' && request.method === 'POST') {json(response, 200, {ok: true, render: publicRender(store.cancel(id))});}
         else if (action === 'retry' && request.method === 'POST') {
           if (['queued', 'rendering'].includes(row.state)) json(response, 409, {ok: false, error: 'Render ainda ativo'});
           else json(response, 202, {ok: true, render: this.enqueue(JSON.parse(row.snapshot))});
         } else if (!action && request.method === 'DELETE') {
           if (['queued', 'rendering'].includes(row.state)) json(response, 409, {ok: false, error: 'Cancele o render antes de excluir'});
-          else {await fs.rm(path.join(outputRoot, `${id}.mp4`), {force: true});store.markDeleted(id);json(response, 200, {ok: true});}
+          else {await fs.rm(path.join(rendersRoot, `${id}.mp4`), {force: true});store.markDeleted(id);json(response, 200, {ok: true});}
         } else if (!action && request.method === 'GET') json(response, 200, {ok: true, render: publicRender(row)});
         else json(response, 405, {ok: false});
         return true;

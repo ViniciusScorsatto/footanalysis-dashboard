@@ -64,3 +64,44 @@ test('streaming supports mobile ranges and rejects traversal and symlink escapes
   assert.equal((await fetch(url+'?file=escape.txt')).status,404);
   assert.equal((await fetch(url,{method:'HEAD'})).headers.get('content-length'),'10');
 });
+
+test('video storage supports authenticated downloads, single and bulk deletion across pages while preserving jobs', async (t) => {
+  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'foot-storage-test-'));
+  const db=new Database(':memory:');
+  const store=createOnlineStore(db);
+  const api=createOnlineHttp({store,rendersRoot:dir,config:{PUBLIC_URL:'https://private.example.com',GOOGLE_CLIENT_ID:'client',GOOGLE_CLIENT_SECRET:'test-secret',ALLOWED_EMAIL:'owner@example.com'}});
+  const {server,url}=await listen(async(req,res)=>{await api.handle(req,res,new URL(req.url,url));});
+  t.after(async()=>{server.closeAllConnections();server.close();db.close();await fs.rm(dir,{recursive:true,force:true});});
+  const headers={cookie:`fa_session=${store.createSession('owner@example.com|owner')}`,origin:'https://private.example.com'};
+  const job={template:'results',compositionId:'FootballResultsShort',durationInFrames:30};
+  const completed=[];
+  for(let i=0;i<102;i++) {
+    const row=store.enqueue({...job,outputName:`video-${i}.mp4`});store.claim();store.finish(row.id);completed.push(row.id);
+    await fs.writeFile(path.join(dir,`${row.id}.mp4`),'0123456789');
+  }
+  const active=store.enqueue(job);store.claim();const queued=store.enqueue(job);
+  await fs.writeFile(path.join(dir,`${active.id}.partial.mp4`),'active');
+  await fs.writeFile(path.join(dir,'unrelated.txt'),'preserve');
+  assert.equal((await fetch(url+'/api/online/storage')).status,401);
+  assert.equal((await fetch(url+'/api/online/renders',{method:'DELETE'})).status,401);
+  assert.equal((await fetch(url+'/api/online/renders',{method:'DELETE',headers:{...headers,origin:'https://evil.example','X-Confirm-Delete':'all-completed-mp4'}})).status,403);
+  assert.equal((await fetch(url+'/api/online/renders',{method:'DELETE',headers})).status,400);
+  assert.deepEqual((await (await fetch(url+'/api/online/storage',{headers})).json()).storage,{files:102,bytes:1020});
+  const secondPage=await (await fetch(url+'/api/online/renders?page=1',{headers})).json();
+  assert.equal(secondPage.renders.length,4);assert.equal(secondPage.renders[0].sizeBytes,10);
+  const base=`/api/online/renders/${completed[0]}`;
+  assert.equal((await fetch(url+base+'/download')).status,401);
+  assert.equal(await (await fetch(url+base+'/download',{headers})).text(),'0123456789');
+  assert.equal((await fetch(url+`/api/online/renders/${active.id}`,{method:'DELETE',headers})).status,409);
+  assert.equal((await fetch(url+base,{method:'DELETE',headers})).status,200);
+  assert.equal((await fetch(url+base+'/download',{headers})).status,410);
+  assert.ok(store.get(completed[0]).snapshot);
+  await assert.rejects(fs.stat(path.join(dir,`${completed[0]}.mp4`)),{code:'ENOENT'});
+  const removed=await (await fetch(url+'/api/online/renders',{method:'DELETE',headers:{...headers,'X-Confirm-Delete':'all-completed-mp4'}})).json();
+  assert.deepEqual(removed,{ok:true,deleted:101,freedBytes:1010});
+  assert.deepEqual((await (await fetch(url+'/api/online/storage',{headers})).json()).storage,{files:0,bytes:0});
+  assert.equal(store.get(active.id).state,'rendering');assert.equal(store.get(queued.id).state,'queued');
+  for(const id of completed) {assert.ok(store.get(id).deleted_at);assert.ok(store.get(id).snapshot);}
+  assert.deepEqual((await fs.readdir(dir)).sort(),[`${active.id}.partial.mp4`,'unrelated.txt'].sort());
+  assert.equal((await fetch(url+base+'/retry',{method:'POST',headers})).status,202);
+});

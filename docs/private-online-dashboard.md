@@ -64,6 +64,12 @@ Também é possível usar backups de volume do Railway; verificar retenção e c
 
 ## Validação e recursos
 
+### Settings · Meus vídeos e armazenamento
+
+No dashboard online, o link **Settings · Meus vídeos** abre a seção de histórico e armazenamento. Ela mostra data, template, estado, tamanho dos MP4 e espaço total ocupado pelos vídeos concluídos em todas as páginas. É possível baixar/reproduzir novamente enquanto o arquivo estiver disponível, excluir um MP4 ou usar **Excluir todos os MP4**, sempre com confirmação.
+
+A exclusão remove apenas arquivos de vídeos concluídos: preserva snapshots, histórico, músicas e trabalhos ativos/na fila. **Gerar novamente** cria outro render a partir dos dados salvos. A exclusão em lote também inclui arquivos expirados ainda aguardando a limpeza automática, cobre todas as páginas e não inclui renders que concluírem depois do início da operação. O total representa somente MP4, não todo o volume Railway. Não há recuperação do arquivo excluído, mas ele pode ser renderizado novamente.
+
 ### Diagnóstico no Railway
 
 Após publicar a versão com logging, o servidor e o worker emitem linhas JSON em stdout/stderr, disponíveis nos logs do deploy do serviço. Não é necessário configurar outra variável nem contratar um serviço de logs.

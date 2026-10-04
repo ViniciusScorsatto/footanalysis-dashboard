@@ -60,6 +60,7 @@ export function createOnlineStore(db, now = () => Date.now()) {
     get,
     activeCount() { return db.prepare("SELECT count(*) AS count FROM online_renders WHERE state IN ('queued','rendering')").get().count; },
     list(offset = 0) { return db.prepare('SELECT * FROM online_renders ORDER BY created_at DESC, rowid DESC LIMIT 100 OFFSET ?').all(offset); },
+    storedVideos() { return db.prepare("SELECT id FROM online_renders WHERE state='completed' AND deleted_at IS NULL").all(); },
     claim() {
       return db.transaction(() => {
         if (db.prepare("SELECT id FROM online_renders WHERE state='rendering'").get()) return null;
