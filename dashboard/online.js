@@ -50,6 +50,13 @@ if (window.FOOT_ANALYSIS_ONLINE) {
   const settingsStorage=document.createElement('p');settingsStorage.textContent='Consultando armazenamento…';
   const manage=document.createElement('a');manage.href='#videos';manage.className='btn btn-secondary';manage.textContent='Gerenciar vídeos e liberar espaço';
   settings.append(settingsHeading,settingsDescription,retention,settingsStorage,manage);panel.after(settings);
+  const securityHeading=document.createElement('h3');securityHeading.textContent='Segurança';
+  const logoutAllNote=document.createElement('p');logoutAllNote.textContent='Encerre o acesso ao dashboard em todos os navegadores, incluindo este. Vídeos e renders em andamento serão preservados. Isso não desconecta sua conta Google.';
+  const logoutAll=document.createElement('form');logoutAll.method='POST';logoutAll.action='/auth/logout-all';
+  const logoutAllButton=document.createElement('button');logoutAllButton.type='submit';logoutAllButton.className='btn btn-secondary danger-action';logoutAllButton.textContent='Sair de todos os dispositivos';
+  logoutAll.append(logoutAllButton);
+  logoutAll.addEventListener('submit',event=>{if(!window.confirm('Sair do dashboard em todos os dispositivos, incluindo este? Será necessário entrar com Google novamente.')) event.preventDefault();});
+  settings.append(securityHeading,logoutAllNote,logoutAll);
   const createLink=document.querySelector('.studio-create-link');
   const showView=()=>{
     const view=location.hash==='#settings'?'settings':['#videos','#video-settings'].includes(location.hash)?'videos':'create';

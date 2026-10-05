@@ -44,6 +44,10 @@ try {
     for(const file of ['/app/tests','/app/.git','/app/.env','/app/src/data/generated']) await assert.rejects(fs.access(file));
     console.log('PASS: production has runtime dependencies only, no compilers, tests, Git or local data');
   `}));
+  console.log(await docker(['run','--rm','--network','none','--read-only',
+    '--tmpfs','/tmp:rw,nosuid,nodev,size=128m','--user','1000:1000',
+    '--cap-drop','ALL','--security-opt','no-new-privileges=true',validationImage,
+    'sh','-c','node --test tests/online-*.test.mjs']));
   await docker(['run','-d','--name',name,...flags,'--mount',`type=volume,source=${volume},target=/data`,...env,validationImage]);
   await waitReady();
   console.log(await docker(['exec','-i','--user','1000:1000',name,'node','--input-type=module'], {input: `

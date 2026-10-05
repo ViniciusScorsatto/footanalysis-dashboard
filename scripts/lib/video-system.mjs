@@ -5,6 +5,7 @@ import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {promisify} from 'node:util';
+import {fetchLogo, logoUrl as validateLogoUrl} from './safe-logo.mjs';
 import {publicRoot, configRoot, generatedRoot, online, stateRoot} from '../online/paths.mjs';
 import {
   deriveFootballRoundLabel,
@@ -1524,10 +1525,10 @@ const downloadLogo = async (url, teamName, teamId) => {
     return undefined;
   }
 
-  const logoUrl = new URL(url);
+  const logoUrl = validateLogoUrl(url);
   const extension = path.extname(logoUrl.pathname) || '.png';
   const sourceLogoId = sanitize(path.basename(logoUrl.pathname, extension));
-  const stableLogoId = String(teamId ?? '').trim() || sourceLogoId;
+  const stableLogoId = sanitize(String(teamId ?? '').trim()) || sourceLogoId;
   const filename = `${sanitize(teamName)}${stableLogoId ? `-${stableLogoId}` : ''}${extension}`;
   const destination = path.join(logosDir, filename);
 
@@ -1538,14 +1539,17 @@ const downloadLogo = async (url, teamName, teamId) => {
     // Not cached yet.
   }
 
-  const response = await fetch(url);
-  if (!response.ok) {
-    return undefined;
-  }
-
-  const bytes = Buffer.from(await response.arrayBuffer());
-  await fs.writeFile(destination, bytes);
-  return `/logos/${filename}`;
+  const image = await fetchLogo(url);
+  if (!image) return undefined;
+  const safeFilename = `${sanitize(teamName)}${stableLogoId ? `-${stableLogoId}` : ''}${image.extension}`;
+  // Write atomically so interrupted downloads never leave partial cached images.
+  const finalPath = path.join(logosDir, safeFilename);
+  const temporary = `${finalPath}.${crypto.randomUUID()}.tmp`;
+  try {
+    await fs.writeFile(temporary, image.bytes, {flag:'wx', mode:0o600});
+    await fs.rename(temporary, finalPath);
+  } finally {await fs.rm(temporary,{force:true});}
+  return `/logos/${safeFilename}`;
 };
 
 const resolveTeamLogo = async ({

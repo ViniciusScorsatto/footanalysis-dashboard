@@ -61,7 +61,7 @@ export function createAuth({store, origin, clientId, clientSecret, allowedEmail,
           if (!result.ok) throw new Error('Token exchange failed');
           stage = 'identity_verification';
           const identity = await verifyGoogleIdentity((await result.json()).id_token, {clientId, email: allowedEmail, nonce: record.nonce, fetchImpl});
-          response.setHeader('Set-Cookie', [cookie(STATE_COOKIE, '', 0), cookie(COOKIE, store.createSession(`${allowedEmail.toLowerCase()}|${identity.sub}`), 604800)]);
+          response.setHeader('Set-Cookie', [cookie(STATE_COOKIE, '', 0), cookie(COOKIE, store.createSession(`${allowedEmail.toLowerCase()}|${identity.sub}`, record.epoch), 604800)]);
           redirect(response, '/football');
         } catch {
           const reference=crypto.randomUUID();
@@ -69,6 +69,15 @@ export function createAuth({store, origin, clientId, clientSecret, allowedEmail,
           response.writeHead(403, {'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store'});
           response.end(`<!doctype html><html lang="pt-br"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Entrar · Foot Analysis</title><body style="background:#0d1117;color:#edf2f7;font:16px system-ui;line-height:1.6;padding:24px;max-width:560px;margin:auto"><h1>Não foi possível entrar</h1><p>Use a conta Google autorizada. Se o login demorou ou foi aberto em outro navegador, inicie novamente neste navegador.</p><p>Se estiver dentro de outro aplicativo, abra o dashboard no Safari ou Chrome e tente novamente.</p><a style="display:inline-block;padding:12px;color:#78b2ff" href="/auth/google">Tentar novamente com Google</a><p style="overflow-wrap:anywhere">Referência: ${reference}</p></body></html>`);
         }
+        return true;
+      }
+      if (url.pathname === '/auth/logout-all' && request.method === 'POST') {
+        if (!this.authenticated(request)) {response.writeHead(401); response.end(); return true;}
+        if (!this.validWrite(request)) {response.writeHead(403); response.end(); return true;}
+        store.logoutAll();
+        response.setHeader('Set-Cookie', [cookie(COOKIE, '', 0), cookie(STATE_COOKIE, '', 0)]);
+        logEvent('sessions_revoked', {});
+        redirect(response, '/');
         return true;
       }
       if (url.pathname === '/auth/logout' && request.method === 'POST') {

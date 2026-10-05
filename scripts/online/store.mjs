@@ -7,6 +7,8 @@ export function createOnlineStore(db, now = () => Date.now()) {
     CREATE TABLE IF NOT EXISTS online_previews (id TEXT PRIMARY KEY, snapshot TEXT NOT NULL, created_at INTEGER NOT NULL);
     CREATE TABLE IF NOT EXISTS online_sessions (token_hash TEXT PRIMARY KEY, subject TEXT NOT NULL, expires_at INTEGER NOT NULL);
     CREATE TABLE IF NOT EXISTS online_oauth (state_hash TEXT PRIMARY KEY, nonce TEXT NOT NULL, verifier TEXT NOT NULL, expires_at INTEGER NOT NULL);
+    CREATE TABLE IF NOT EXISTS online_auth_epoch (id INTEGER PRIMARY KEY CHECK(id=1), epoch INTEGER NOT NULL);
+    INSERT OR IGNORE INTO online_auth_epoch VALUES (1,0);
     CREATE TABLE IF NOT EXISTS online_renders (
       id TEXT PRIMARY KEY, snapshot TEXT NOT NULL, state TEXT NOT NULL,
       progress REAL NOT NULL DEFAULT 0, created_at INTEGER NOT NULL,
@@ -16,6 +18,8 @@ export function createOnlineStore(db, now = () => Date.now()) {
     CREATE INDEX IF NOT EXISTS online_render_queue ON online_renders(state, created_at);
   `);
   db.prepare('INSERT OR IGNORE INTO online_schema_migrations VALUES (1,?)').run(now());
+  db.prepare('INSERT OR IGNORE INTO online_schema_migrations VALUES (2,?)').run(now());
+  const authEpoch = () => db.prepare('SELECT epoch FROM online_auth_epoch WHERE id=1').get().epoch;
   const digest = (token) => crypto.createHash('sha256').update(token).digest('hex');
   const get = (id) => db.prepare('SELECT * FROM online_renders WHERE id=?').get(id);
   return {
@@ -28,9 +32,12 @@ export function createOnlineStore(db, now = () => Date.now()) {
       const row = db.prepare('SELECT snapshot FROM online_previews WHERE id=?').get(id);
       return row ? JSON.parse(row.snapshot) : null;
     },
-    createSession(subject) {
+    createSession(subject, expectedEpoch = authEpoch()) {
       const token = crypto.randomBytes(32).toString('base64url');
-      db.prepare('INSERT INTO online_sessions VALUES (?,?,?)').run(digest(token), subject, now() + 7 * 86400000);
+      db.transaction(() => {
+        if (expectedEpoch !== authEpoch()) throw new Error('Login revoked; start again');
+        db.prepare('INSERT INTO online_sessions VALUES (?,?,?)').run(digest(token), subject, now() + 7 * 86400000);
+      })();
       return token;
     },
     session(token) {
@@ -38,6 +45,13 @@ export function createOnlineStore(db, now = () => Date.now()) {
       return db.prepare('SELECT subject FROM online_sessions WHERE token_hash=? AND expires_at>?').get(digest(token), now()) ?? null;
     },
     logout(token) { if (token) db.prepare('DELETE FROM online_sessions WHERE token_hash=?').run(digest(token)); },
+    logoutAll() {
+      db.transaction(() => {
+        db.prepare('UPDATE online_auth_epoch SET epoch=epoch+1 WHERE id=1').run();
+        db.prepare('DELETE FROM online_sessions').run();
+        db.prepare('DELETE FROM online_oauth').run();
+      })();
+    },
     startOAuth() {
       const state = crypto.randomBytes(32).toString('base64url');
       const nonce = crypto.randomBytes(32).toString('base64url');
@@ -57,7 +71,7 @@ export function createOnlineStore(db, now = () => Date.now()) {
       return db.transaction(() => {
         const record = db.prepare('SELECT * FROM online_oauth WHERE state_hash=? AND expires_at>?').get(digest(state), now());
         db.prepare('DELETE FROM online_oauth WHERE state_hash=?').run(digest(state));
-        return record;
+        return record ? {...record, epoch: authEpoch()} : undefined;
       })();
     },
     enqueue(snapshot) {
