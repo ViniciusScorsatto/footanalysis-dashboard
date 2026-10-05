@@ -1,0 +1,53 @@
+name: Container security
+on:
+  pull_request:
+  push:
+    branches: [main, codex/private-online-dashboard]
+  workflow_dispatch:
+  schedule:
+    - cron: '23 6 * * 1'
+permissions:
+  contents: read
+concurrency:
+  group: container-security-${{ github.ref }}
+  # Do not cancel a security gate that Railway may be waiting on.
+  cancel-in-progress: false
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Build production image with fresh OS packages
+        run: docker build --pull --no-cache --target production -t foot-analysis:security .
+      - name: Build isolated test target
+        run: docker build --target validation -t foot-analysis:validation .
+      - name: Test minimal image, worker environment and restricted runtime
+        run: node scripts/online/container-check.mjs foot-analysis:security foot-analysis:validation
+      - name: Scan all known image vulnerabilities
+        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7
+        with:
+          image: foot-analysis:security
+          grype-version: v0.120.0
+          output-format: json
+          output-file: image-vulnerabilities.json
+          fail-build: false
+      - name: Block high or critical findings with available fixes
+        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7
+        with:
+          image: foot-analysis:security
+          grype-version: v0.120.0
+          output-format: table
+          severity-cutoff: high
+          only-fixed: true
+          fail-build: true
+      - name: Retain full report including unfixed findings
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: image-vulnerabilities
+          path: image-vulnerabilities.json
+          retention-days: 14
+          if-no-files-found: warn

@@ -54,6 +54,35 @@ O prazo é **48 horas após a conclusão**, não após o enqueue. O acesso é bl
 
 ## Proteções de segurança
 
+### Imagem e processos
+
+- Docker multi-stage: `build` tem compiladores e dependências de desenvolvimento; `production` recebe apenas dependências npm de runtime, bundles prontos, assets, configurações e código do servidor. `python3`, `gcc`, `g++`, `make`, npm/npx, Yarn, CLI/Studio, bundler, esbuild e TypeScript não fazem parte do runtime. O Player continua funcionando pelo bundle JavaScript gerado no build. Os pacotes Debian são atualizados durante a construção da imagem; reconstruir é necessário para incorporar correções posteriores.
+- A imagem Node é fixada por digest. Dependabot propõe atualizações semanais de Docker, actions e npm; os pacotes Remotion são agrupados para revisão conjunta. Não há auto-merge nem deploy automático criado por este arquivo.
+- O worker recebe apenas PATH/locale/timezone/temporários e caminhos de dados/SQLite. Não herda credenciais Google, API-Sports, OpenAI, TTS ou variáveis arbitrárias novas; `NODE_OPTIONS`, preload de bibliotecas e proxies também não são repassados. Chromium/ffmpeg iniciados pelo worker herdam esse ambiente reduzido. **Isso não é uma fronteira de isolamento completa**: servidor e worker ainda compartilham UID, volume e namespace de processos. Isolamento forte exigiria serviços/usuários e armazenamento separados.
+- O alvo `validation` acrescenta testes e fixtures pré-compiladas à mesma base de runtime, sem reinstalar ferramentas de build. Não usar esse alvo no Railway; o último alvo/default é `production`.
+
+### Scanner e perfil restrito
+
+O workflow `.github/workflows/container-security.yml` faz build, teste do container e scan Grype em PRs, pushes para as branches configuradas, execução manual e semanalmente na branch padrão. Actions são fixadas por commit e o scanner por versão. Não usa credenciais de produção, não publica a imagem e tem apenas `contents: read`.
+
+O relatório JSON completo inclui findings sem correção disponível e fica nos artifacts por 14 dias. O gate falha para vulnerabilidades High/Critical com correção disponível; findings sem correção continuam exigindo análise, não são uma declaração de segurança. Falhas de download/execução do scanner também falham o job. O scanner cobre pacotes OS/npm identificáveis, mas não garante identificar todas as vulnerabilidades do Chromium baixado pelo Remotion: manter a versão Remotion/browser atualizada e revisar avisos do fornecedor continua necessário.
+
+Validação local em 2026-10-05, Linux ARM64, Grype 0.120.0: a imagem `sha256:e23adffed699f12185b9162fff58dbf93c3f575e4bfb15669a2ac7afe0274b5d` ficou sem findings High/Critical com correção disponível após remover npm/Yarn e atualizar os pacotes Debian. Ainda foram identificados **16 avisos Critical e 94 High distintos**, classificados como `not-fixed`/`wont-fix` pelo scanner (um aviso pode afetar vários pacotes). Isso não confirma exploração no dashboard, mas exige revisão de exposição e acompanhamento; não aceitar automaticamente por o gate passar. Os 33 testes e duas renderizações reais no perfil restrito passaram. O CI em Linux AMD64 ainda precisa executar no GitHub; resultados de outra arquitetura/data podem diferir.
+
+A imagem é testada com root filesystem somente leitura, `/tmp` em tmpfs, `/data` gravável, limite de processos e `no-new-privileges`. No bootstrap, só CHOWN, SETUID, SETGID e DAC_OVERRIDE são mantidas para preparar o volume; após a troca de UID o worker deve ter zero capabilities efetivas. Esses flags são aplicados pelo Docker no teste/CI, **não automaticamente pelo `railway.toml`**. A [referência de configuração Railway](https://docs.railway.com/config-as-code/reference) não documenta esses controles de runtime; não acrescentar campos sem suporte. A redução de UID e de variáveis, e a imagem enxuta, funcionam independentemente deles.
+
+Para reproduzir sem usar dados reais:
+
+```sh
+docker build --target production -t foot-analysis:security .
+docker build --target validation -t foot-analysis:validation .
+node scripts/online/container-check.mjs foot-analysis:security foot-analysis:validation
+```
+
+O script cria nomes únicos para container/volume, não publica portas, usa credenciais fictícias, confere ambiente do worker, gera dois vídeos e verifica persistência após restart. Remove somente os recursos que criou. O scan semanal não atualiza o serviço em produção: revisar/mesclar as atualizações e fazer novo deploy continua necessário. Para impedir que o Railway publique antes do check, configurar a espera pelo CI no projeto e/ou checks obrigatórios na branch; este código não altera essas configurações externas.
+
+### Acesso e aplicação
+
 - Limites globais por réplica, em janelas de um minuto: 600 requisições, 10 inícios de login, 30 callbacks e 60 operações de escrita. Respostas 429 incluem `Retry-After`. Como o serviço tem um único usuário, não se confia em `X-Forwarded-For` fornecido pelo cliente. `/healthz` não consome o orçamento. Um ataque ainda pode causar indisponibilidade; esses limites não substituem proteção de rede contra DDoS.
 - No máximo 100 estados OAuth pendentes no SQLite, inclusive após reinício. Estados vencidos são removidos na inserção; não se expulsa um login válido para aceitar novos. Sessões e estados também têm limpeza periódica.
 - CSP permite scripts locais e o único script inline com nonce por resposta; não permite `unsafe-eval`, plugins, formulários externos ou alteração de base. CSS inline é necessário ao Player. Imagens/mídia HTTPS externas continuam permitidas para assets das composições; `data:` em mídia permite o pequeno áudio interno usado pelo Player no mobile, mas não é permitido em scripts. HSTS, `nosniff`, restrição de frames e Permissions-Policy complementam a autenticação.
@@ -98,7 +127,7 @@ Logs continuam sendo informação operacional privada; revisar antes de comparti
 
 Em uma imagem local: `docker build -t foot-analysis-online:test .`. Use um volume descartável e credenciais fictícias para testes; não há bypass de autenticação no app. Não usar credenciais fictícias para um deploy real.
 
-Executar `tests/online-container.mjs` com `docker exec --user 1000:1000 CONTAINER node tests/online-container.mjs` no container descartável configurado com `PUBLIC_URL=https://validation.invalid`. O teste confere o UID do supervisor, código não gravável, dois renders, snapshots e proteção de downloads. `npm run test:online` também verifica throttling/429, teto persistente OAuth, nonce/CSP e escape dos campos de HTML.
+Executar `tests/online-container.mjs` com `docker exec --user 1000:1000 CONTAINER node tests/online-container.mjs` no alvo **validation**, configurado com `PUBLIC_URL=https://validation.invalid`. O alvo production não inclui testes nem esbuild. O teste confere o UID do supervisor, código não gravável, dois renders, snapshots e proteção de downloads. `npm run test:online` também verifica throttling/429, teto persistente OAuth, nonce/CSP, escape dos campos de HTML e allowlist do ambiente do worker.
 
 Antes de dimensionar recursos, medir no Railway um Short comum e Nations League completa: tempo até conclusão, pico de memória do serviço (inclui Chromium/ffmpeg), CPU e tamanho MP4. `docker stats` local é indicativo, não equivale ao hardware Railway. Manter concorrência 1 até medir. Evitar estimativas de custo sem esses dados.
 

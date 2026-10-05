@@ -1,6 +1,7 @@
 import {spawn} from 'node:child_process';
 import {logEvent} from './logging.mjs';
 import {dropContainerPrivileges} from './privileges.mjs';
+import {workerEnvironment} from './worker-env.mjs';
 await dropContainerPrivileges();
 process.env.FOOT_ANALYSIS_ONLINE = '1';
 const {initializeState, root} = await import('./paths.mjs');
@@ -18,7 +19,8 @@ function stop(code = 0) {
   Promise.all(children.map((child) => child.exitCode !== null ? Promise.resolve() : new Promise((resolve) => child.once('exit',resolve)))).then(() => {clearTimeout(deadline);process.exit(code);});
 }
 for (const entry of ['scripts/dashboard-server.mjs','scripts/online/worker.mjs']) {
-  const child = spawn(process.execPath,[entry],{cwd:root,env:process.env,stdio:'inherit'});
+  const env = entry === 'scripts/online/worker.mjs' ? workerEnvironment() : process.env;
+  const child = spawn(process.execPath,[entry],{cwd:root,env,stdio:'inherit'});
   children.push(child);
   child.on('error',(error) => {logEvent('process_failed', {entry, error}, 'error');stop(1);});
   child.on('exit',(code, signal) => {logEvent('process_exited', {entry, code, signal, stopping}, !stopping ? 'error' : 'info');if(!stopping) stop(code || 1);});

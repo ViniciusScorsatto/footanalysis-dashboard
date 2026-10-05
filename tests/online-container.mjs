@@ -1,7 +1,7 @@
 // Explicitly invoked inside a disposable validation container, never in production.
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
-import {build} from 'esbuild';
+import {pathToFileURL} from 'node:url';
 import {getDb} from '../scripts/lib/db.mjs';
 import {createOnlineStore} from '../scripts/online/store.mjs';
 if (process.env.PUBLIC_URL !== 'https://validation.invalid') throw new Error('Validation environment only');
@@ -13,8 +13,14 @@ if (process.env.FOOT_ANALYSIS_CONTAINER === '1') {
   await assert.rejects(fs.access('/app/package.json', fs.constants.W_OK));
 }
 const db=getDb(), store=createOnlineStore(db);
-const built=await build({entryPoints:['tests/online-fixtures.ts'],bundle:true,write:false,platform:'node',format:'esm'});
-const {jobs}=await import(`data:text/javascript;base64,${Buffer.from(built.outputFiles[0].text).toString('base64')}`);
+let fixtureUrl;
+if (process.env.FOOT_ANALYSIS_TEST_FIXTURES) fixtureUrl = pathToFileURL(process.env.FOOT_ANALYSIS_TEST_FIXTURES).href;
+else {
+  const {build} = await import('esbuild');
+  const built=await build({entryPoints:['tests/online-fixtures.ts'],bundle:true,write:false,platform:'node',format:'esm'});
+  fixtureUrl = `data:text/javascript;base64,${Buffer.from(built.outputFiles[0].text).toString('base64')}`;
+}
+const {jobs}=await import(fixtureUrl);
 const job={...jobs[0],durationInFrames:30,videoMode:'static'};
 const token=store.createSession(`${process.env.ALLOWED_EMAIL}|validation`);
 const headers={cookie:`fa_session=${token}`,origin:process.env.PUBLIC_URL,'content-type':'application/json'};
