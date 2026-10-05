@@ -33,7 +33,15 @@ export function createAuth({store, origin, clientId, clientSecret, allowedEmail,
     validWrite(request) { return request.headers.origin === canonicalOrigin; },
     async handle(request, response, url) {
       if (url.pathname === '/auth/google' && request.method === 'GET') {
-        const {state, nonce, verifier} = store.startOAuth();
+        let flow;
+        try { flow = store.startOAuth(); }
+        catch (error) {
+          if (error.code !== 'OAUTH_CAPACITY') throw error;
+          response.writeHead(429, {'Retry-After': '600', 'Cache-Control': 'no-store', 'Content-Type': 'text/plain; charset=utf-8'});
+          response.end('Muitas tentativas de login. Aguarde alguns minutos e tente novamente.');
+          return true;
+        }
+        const {state, nonce, verifier} = flow;
         const params = new URLSearchParams({client_id: clientId, redirect_uri: callback, response_type: 'code', scope: 'openid email', state, nonce, code_challenge: crypto.createHash('sha256').update(verifier).digest('base64url'), code_challenge_method: 'S256', prompt: 'select_account'});
         response.setHeader('Set-Cookie', cookie(STATE_COOKIE, state, 600));
         redirect(response, `https://accounts.google.com/o/oauth2/v2/auth?${params}`);

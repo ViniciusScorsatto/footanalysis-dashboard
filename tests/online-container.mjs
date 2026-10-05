@@ -5,6 +5,13 @@ import {build} from 'esbuild';
 import {getDb} from '../scripts/lib/db.mjs';
 import {createOnlineStore} from '../scripts/online/store.mjs';
 if (process.env.PUBLIC_URL !== 'https://validation.invalid') throw new Error('Validation environment only');
+if (process.env.FOOT_ANALYSIS_CONTAINER === '1') {
+  const supervisor = await fs.readFile('/proc/1/status', 'utf8');
+  assert.match(supervisor, /^Uid:\s+1000\s+1000\s+1000\s+1000$/m);
+  assert.match(supervisor, /^Gid:\s+1000\s+1000\s+1000\s+1000$/m);
+  assert.equal(process.getuid(), 1000, 'Run container validation with --user 1000:1000');
+  await assert.rejects(fs.access('/app/package.json', fs.constants.W_OK));
+}
 const db=getDb(), store=createOnlineStore(db);
 const built=await build({entryPoints:['tests/online-fixtures.ts'],bundle:true,write:false,platform:'node',format:'esm'});
 const {jobs}=await import(`data:text/javascript;base64,${Buffer.from(built.outputFiles[0].text).toString('base64')}`);

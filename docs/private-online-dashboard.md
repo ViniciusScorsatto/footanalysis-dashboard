@@ -52,6 +52,18 @@ O servidor valida assinatura RS256 com as chaves Google, issuer, audience, valid
 
 O prazo é **48 horas após a conclusão**, não após o enqueue. O acesso é bloqueado ao vencer; remoção física ocorre na inicialização ou na próxima limpeza horária. A exclusão manual remove somente MP4. Snapshots e assets são preservados para nova renderização. Arquivos parciais são removidos ao encerrar/falhar/cancelar; os abandonados são removidos no reinício. Não apagar `/data/public` para liberar espaço sem revisar referências dos jobs.
 
+## Proteções de segurança
+
+- Limites globais por réplica, em janelas de um minuto: 600 requisições, 10 inícios de login, 30 callbacks e 60 operações de escrita. Respostas 429 incluem `Retry-After`. Como o serviço tem um único usuário, não se confia em `X-Forwarded-For` fornecido pelo cliente. `/healthz` não consome o orçamento. Um ataque ainda pode causar indisponibilidade; esses limites não substituem proteção de rede contra DDoS.
+- No máximo 100 estados OAuth pendentes no SQLite, inclusive após reinício. Estados vencidos são removidos na inserção; não se expulsa um login válido para aceitar novos. Sessões e estados também têm limpeza periódica.
+- CSP permite scripts locais e o único script inline com nonce por resposta; não permite `unsafe-eval`, plugins, formulários externos ou alteração de base. CSS inline é necessário ao Player. Imagens/mídia HTTPS externas continuam permitidas para assets das composições; `data:` em mídia permite o pequeno áudio interno usado pelo Player no mobile, mas não é permitido em scripts. HSTS, `nosniff`, restrição de frames e Permissions-Policy complementam a autenticação.
+- Na imagem oficial, `FOOT_ANALYSIS_CONTAINER=1` exige `/data`. O bootstrap ajusta a propriedade do volume e **descarta root antes de importar/iniciar a aplicação**. Supervisor, servidor e worker rodam como UID/GID 1000. Não alterar o start command para executar diretamente o servidor ou worker. Links simbólicos, hard links de arquivos e outros mounts dentro do volume são rejeitados; arquivos regulares são preservados. `lost+found` do volume não é alterado.
+- O código, dependências e browser ficam sob `/app`, sem permissão de escrita para o usuário da aplicação. Novos dados recebem umask 077. O bootstrap root é necessário porque o [Railway monta volumes como root](https://docs.railway.com/volumes#permissions); nenhuma porta é aberta antes da redução de privilégios.
+- Conferir `npm audit` regularmente; atualizar todos os pacotes Remotion juntos e validar Player/render antes de deploy. A auditoria npm não cobre pacotes Debian, Chromium nem todas as vulnerabilidades possíveis.
+- Usar gerenciador de credenciais/SSH no Git, nunca tokens na URL do remoto. Se houver suspeita de exposição anterior, revogar o token no provedor e emitir outro: remover da URL não o revoga nem limpa cópias anteriores.
+
+Pendências operacionais: habilitar MFA/passkey nas contas Google, GitHub e Railway; configurar backups externos/automáticos e alertas de consumo. Essas mudanças de conta e infraestrutura não são aplicadas pelo código. Não usar dados ou credenciais reais nos testes.
+
 ## Backup e restauração
 
 1. Aguardar a fila esvaziar e não preparar/editar durante o backup.
@@ -85,6 +97,8 @@ Logs continuam sendo informação operacional privada; revisar antes de comparti
 `npm run test:online` cobre sessão/expiração, assinatura/claims Google, allowlist, CSRF, proteção de rotas, snapshots, recuperação da fila e ranges/traversal. `npm run build:online` compila Player + bundle independente dos jobs locais. `node scripts/online/verify.mjs --video` usa fixtures sem APIs para verificar frames dos templates PT/EN, modos animado/estático, e renderizar Nations League.
 
 Em uma imagem local: `docker build -t foot-analysis-online:test .`. Use um volume descartável e credenciais fictícias para testes; não há bypass de autenticação no app. Não usar credenciais fictícias para um deploy real.
+
+Executar `tests/online-container.mjs` com `docker exec --user 1000:1000 CONTAINER node tests/online-container.mjs` no container descartável configurado com `PUBLIC_URL=https://validation.invalid`. O teste confere o UID do supervisor, código não gravável, dois renders, snapshots e proteção de downloads. `npm run test:online` também verifica throttling/429, teto persistente OAuth, nonce/CSP e escape dos campos de HTML.
 
 Antes de dimensionar recursos, medir no Railway um Short comum e Nations League completa: tempo até conclusão, pico de memória do serviço (inclui Chromium/ffmpeg), CPU e tamanho MP4. `docker stats` local é indicativo, não equivale ao hardware Railway. Manter concorrência 1 até medir. Evitar estimativas de custo sem esses dados.
 

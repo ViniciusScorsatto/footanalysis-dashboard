@@ -42,7 +42,15 @@ export function createOnlineStore(db, now = () => Date.now()) {
       const state = crypto.randomBytes(32).toString('base64url');
       const nonce = crypto.randomBytes(32).toString('base64url');
       const verifier = crypto.randomBytes(48).toString('base64url');
-      db.prepare('INSERT INTO online_oauth VALUES (?,?,?,?)').run(digest(state), nonce, verifier, now() + 600000);
+      db.transaction(() => {
+        db.prepare('DELETE FROM online_oauth WHERE expires_at<=?').run(now());
+        if (db.prepare('SELECT count(*) AS n FROM online_oauth').get().n >= 100) {
+          const error = new Error('Login capacity reached');
+          error.code = 'OAUTH_CAPACITY';
+          throw error;
+        }
+        db.prepare('INSERT INTO online_oauth VALUES (?,?,?,?)').run(digest(state), nonce, verifier, now() + 600000);
+      })();
       return {state, nonce, verifier};
     },
     consumeOAuth(state) {

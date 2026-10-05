@@ -751,7 +751,7 @@ const renderLeaguePresetOptions = (preferredLeagueId = form.elements.leagueId.va
   presetSelect.innerHTML = presets
     .map((preset) => {
       const value = preset.leagueId === null ? '' : String(preset.leagueId);
-      return `<option value="${value}">${preset.label}</option>`;
+      return `<option value="${escapeHtml(value)}">${escapeHtml(preset.label)}</option>`;
     })
     .join('');
 
@@ -1956,20 +1956,20 @@ const renderPredictionEditor = (fixtures = []) => {
             type="number"
             min="0"
             step="1"
-            data-fixture-id="${fixture.fixtureId}"
+            data-fixture-id="${escapeHtml(fixture.fixtureId)}"
             data-side="home"
-            value="${fixture.homeScore ?? ''}"
-            aria-label="${fixture.homeTeam} score"
+            value="${escapeHtml(fixture.homeScore ?? '')}"
+            aria-label="${escapeHtml(fixture.homeTeam)} score"
           />
           <input
             class="prediction-score-input"
             type="number"
             min="0"
             step="1"
-            data-fixture-id="${fixture.fixtureId}"
+            data-fixture-id="${escapeHtml(fixture.fixtureId)}"
             data-side="away"
-            value="${fixture.awayScore ?? ''}"
-            aria-label="${fixture.awayTeam} score"
+            value="${escapeHtml(fixture.awayScore ?? '')}"
+            aria-label="${escapeHtml(fixture.awayTeam)} score"
           />
           <label class="prediction-team prediction-team-away">
             <span>${escapeHtml(fixture.awayTeam)}</span>
@@ -2013,7 +2013,7 @@ const renderResultEditor = (fixtures = []) => {
             <label class="eliminated-toggle">
               <input
                 type="checkbox"
-                data-fixture-id="${fixture.fixtureId}"
+                data-fixture-id="${escapeHtml(fixture.fixtureId)}"
                 data-side="home"
                 data-field="eliminated"
                 ${fixture.homeEliminated ? 'checked' : ''}
@@ -2029,10 +2029,10 @@ const renderResultEditor = (fixtures = []) => {
             type="number"
             min="0"
             step="1"
-            data-fixture-id="${fixture.fixtureId}"
+            data-fixture-id="${escapeHtml(fixture.fixtureId)}"
             data-side="home"
             data-field="score"
-            value="${fixture.homeScore ?? ''}"
+            value="${escapeHtml(fixture.homeScore ?? '')}"
             aria-label="${escapeHtml(fixture.homeTeam)} score"
           />
           <input
@@ -2040,10 +2040,10 @@ const renderResultEditor = (fixtures = []) => {
             type="number"
             min="0"
             step="1"
-            data-fixture-id="${fixture.fixtureId}"
+            data-fixture-id="${escapeHtml(fixture.fixtureId)}"
             data-side="away"
             data-field="score"
-            value="${fixture.awayScore ?? ''}"
+            value="${escapeHtml(fixture.awayScore ?? '')}"
             aria-label="${escapeHtml(fixture.awayTeam)} score"
           />
           <div class="prediction-team-block align-right">
@@ -2054,7 +2054,7 @@ const renderResultEditor = (fixtures = []) => {
               <span>Elim.</span>
               <input
                 type="checkbox"
-                data-fixture-id="${fixture.fixtureId}"
+                data-fixture-id="${escapeHtml(fixture.fixtureId)}"
                 data-side="away"
                 data-field="eliminated"
                 ${fixture.awayEliminated ? 'checked' : ''}
@@ -2065,7 +2065,7 @@ const renderResultEditor = (fixtures = []) => {
             <label class="eliminated-toggle penalty-toggle">
               <input
                 type="checkbox"
-                data-fixture-id="${fixture.fixtureId}"
+                data-fixture-id="${escapeHtml(fixture.fixtureId)}"
                 data-field="hasPenalties"
                 ${fixture.hasPenalties ? 'checked' : ''}
               />
@@ -2077,10 +2077,10 @@ const renderResultEditor = (fixtures = []) => {
                 type="number"
                 min="0"
                 step="1"
-                data-fixture-id="${fixture.fixtureId}"
+                data-fixture-id="${escapeHtml(fixture.fixtureId)}"
                 data-side="home"
                 data-field="penaltyScore"
-                value="${fixture.homePenaltyScore ?? ''}"
+                value="${escapeHtml(fixture.homePenaltyScore ?? '')}"
                 aria-label="${escapeHtml(fixture.homeTeam)} penalties"
               />
               <strong>–</strong>
@@ -2089,10 +2089,10 @@ const renderResultEditor = (fixtures = []) => {
                 type="number"
                 min="0"
                 step="1"
-                data-fixture-id="${fixture.fixtureId}"
+                data-fixture-id="${escapeHtml(fixture.fixtureId)}"
                 data-side="away"
                 data-field="penaltyScore"
-                value="${fixture.awayPenaltyScore ?? ''}"
+                value="${escapeHtml(fixture.awayPenaltyScore ?? '')}"
                 aria-label="${escapeHtml(fixture.awayTeam)} penalties"
               />
             </div>
@@ -2156,7 +2156,7 @@ const renderStandingsEditor = (rows = []) => {
         : `<span class="season-verdict-fallback-badge">${escapeHtml(row.badge?.label ?? '')}</span>`;
 
       return `
-        <div class="standings-editor-row editor-row" data-original-rank="${row.rank}">
+        <div class="standings-editor-row editor-row" data-original-rank="${escapeHtml(row.rank)}">
           <div class="standings-editor-team">
             ${badgeHtml}
             <input
@@ -2168,19 +2168,19 @@ const renderStandingsEditor = (rows = []) => {
           </div>
           <label>
             POS
-            <input type="number" min="1" step="1" data-field="rank" value="${row.rank}" />
+            <input type="number" min="1" step="1" data-field="rank" value="${escapeHtml(row.rank)}" />
           </label>
           <label>
             JG
-            <input type="number" min="0" step="1" data-field="played" value="${row.played}" />
+            <input type="number" min="0" step="1" data-field="played" value="${escapeHtml(row.played)}" />
           </label>
           <label>
             SG
-            <input type="number" step="1" data-field="goalDifference" value="${row.goalDifference}" />
+            <input type="number" step="1" data-field="goalDifference" value="${escapeHtml(row.goalDifference)}" />
           </label>
           <label>
             PTS
-            <input type="number" step="1" data-field="points" value="${row.points}" />
+            <input type="number" step="1" data-field="points" value="${escapeHtml(row.points)}" />
           </label>
           <label>
             Forma
@@ -2237,7 +2237,7 @@ const renderTopScorersEditor = (entries = []) => {
           </div>
           <label>
             Rank
-            <input type="number" min="1" max="20" step="1" data-field="rank" value="${entry.rank ?? index + 1}" />
+            <input type="number" min="1" max="20" step="1" data-field="rank" value="${escapeHtml(entry.rank ?? index + 1)}" />
           </label>
           <label>
             Player
@@ -2249,11 +2249,11 @@ const renderTopScorersEditor = (entries = []) => {
           </label>
           <label>
             Goals
-            <input type="number" min="0" step="1" data-field="goals" value="${entry.goals ?? 0}" />
+            <input type="number" min="0" step="1" data-field="goals" value="${escapeHtml(entry.goals ?? 0)}" />
           </label>
           <label>
             Ast
-            <input type="number" min="0" step="1" data-field="assists" value="${entry.assists ?? ''}" />
+            <input type="number" min="0" step="1" data-field="assists" value="${escapeHtml(entry.assists ?? '')}" />
           </label>
         </div>
       `;
@@ -2444,15 +2444,15 @@ const renderWorldCupStandingsEditor = (rows = []) => {
           </div>
           <label>
             POS
-            <input type="number" min="1" step="1" data-field="rank" value="${row.rank}" />
+            <input type="number" min="1" step="1" data-field="rank" value="${escapeHtml(row.rank)}" />
           </label>
           <label>
             PTS
-            <input type="number" min="0" step="1" data-field="points" value="${row.points}" />
+            <input type="number" min="0" step="1" data-field="points" value="${escapeHtml(row.points)}" />
           </label>
           <label>
             GD
-            <input type="number" step="1" data-field="goalDifference" value="${row.goalDifference}" />
+            <input type="number" step="1" data-field="goalDifference" value="${escapeHtml(row.goalDifference)}" />
           </label>
         </div>
       `;
@@ -2560,7 +2560,7 @@ const renderChampionFinalOptions = (rows = [], selectedRank = championFinalSelec
     '<option value="">Auto pela final selecionada</option>',
     ...rows.map((row) => {
       const selected = String(row.rank) === String(selectedRank) ? ' selected' : '';
-      return `<option value="${row.rank}"${selected}>${row.rank}. ${escapeHtml(row.team)}</option>`;
+      return `<option value="${escapeHtml(row.rank)}"${selected}>${escapeHtml(row.rank)}. ${escapeHtml(row.team)}</option>`;
     }),
   ].join('');
 };
@@ -2704,21 +2704,21 @@ const renderSeasonVerdictEditor = (rows = [], statusOptions = []) => {
         : `<span class="season-verdict-fallback-badge">${escapeHtml(row.badge?.label ?? '')}</span>`;
 
       return `
-        <div class="season-verdict-row editor-row" data-rank="${row.rank}">
+        <div class="season-verdict-row editor-row" data-rank="${escapeHtml(row.rank)}">
           <div class="season-verdict-team">
             ${badgeHtml}
             <div>
-              <strong>${row.rank}. ${escapeHtml(row.team)}</strong>
+              <strong>${escapeHtml(row.rank)}. ${escapeHtml(row.team)}</strong>
               <span>Auto: ${escapeHtml(row.autoStatusLabel ?? 'Mid-table')}</span>
             </div>
           </div>
           <div class="season-verdict-meta">
-            <span>${row.points} pts</span>
-            <span>SG ${row.goalDifference > 0 ? '+' : ''}${row.goalDifference}</span>
+            <span>${escapeHtml(row.points)} pts</span>
+            <span>SG ${row.goalDifference > 0 ? '+' : ''}${escapeHtml(row.goalDifference)}</span>
           </div>
           <label>
             Final status
-            <select data-rank="${row.rank}" data-team="${escapeHtml(row.team)}">
+            <select data-rank="${escapeHtml(row.rank)}" data-team="${escapeHtml(row.team)}">
               ${optionsHtml('auto')}
             </select>
           </label>
@@ -3411,7 +3411,7 @@ const setRoundOptions = (rounds, selectedRound = '') => {
     rounds.map((round) => {
       const value = String(round);
       const selected = value === normalizedSelectedRound ? ' selected' : '';
-      return `<option value="${value}"${selected}>${value}</option>`;
+      return `<option value="${escapeHtml(value)}"${selected}>${escapeHtml(value)}</option>`;
     })
   );
 
@@ -3605,19 +3605,19 @@ const loadOptions = async () => {
     : data.templates;
 
   templateSelect.innerHTML = templateOptions
-    .map((template) => `<option value="${template.value}">${template.label}</option>`)
+    .map((template) => `<option value="${escapeHtml(template.value)}">${escapeHtml(template.label)}</option>`)
     .join('');
 
   channelProfileSelect.innerHTML = allChannelProfiles
-    .map((profile) => `<option value="${profile.value}">${profile.label}</option>`)
+    .map((profile) => `<option value="${escapeHtml(profile.value)}">${escapeHtml(profile.label)}</option>`)
     .join('');
 
   languageProfileSelect.innerHTML = data.languageProfiles
-    .map((profile) => `<option value="${profile.value}">${profile.label}</option>`)
+    .map((profile) => `<option value="${escapeHtml(profile.value)}">${escapeHtml(profile.label)}</option>`)
     .join('');
 
   soundtrackSelect.innerHTML = data.soundtrackPresets
-    .map((preset) => `<option value="${preset.value}">${preset.label}</option>`)
+    .map((preset) => `<option value="${escapeHtml(preset.value)}">${escapeHtml(preset.label)}</option>`)
     .join('');
 
   const currentJob = data.currentJob;

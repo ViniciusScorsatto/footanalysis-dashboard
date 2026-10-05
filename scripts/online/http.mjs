@@ -1,10 +1,12 @@
 import path from 'node:path';
+import {randomBytes} from 'node:crypto';
 import fs from 'node:fs/promises';
 import {getDb} from '../lib/db.mjs';
 import {createOnlineStore} from './store.mjs';
 import {createAuth} from './auth.mjs';
 import {streamFile} from './files.mjs';
 import {root, publicRoot, outputRoot} from './paths.mjs';
+import {createRequestLimits, securityHeaders} from './security.mjs';
 
 const shortTemplates = new Set(['results', 'next-games', 'predictions', 'standings', 'serie-c-quadrangular', 'season-final-verdict', 'champion-final', 'top-scorers', 'player-of-round', 'championship-pace', 'relegation-line', 'tierlist', 'continental-groups-standings', 'world-cup-group-standings', 'world-cup-knockout', 'historical-champions', 'team-comparison', 'league-comparison', 'top-scorers-comparison']);
 export function validateShort(job) {
@@ -19,7 +21,7 @@ export function publicRender(row) {
   return {...rest, title: job.outputName || job.leagueName || job.template, template: job.template, downloadUrl: available ? `/api/online/renders/${row.id}/download` : null};
 }
 
-export function createOnlineHttp({store = createOnlineStore(getDb()), config = process.env, rendersRoot = outputRoot} = {}) {
+export function createOnlineHttp({store = createOnlineStore(getDb()), config = process.env, rendersRoot = outputRoot, limits = createRequestLimits()} = {}) {
   async function fileSize(id) {
     try {const stat = await fs.lstat(path.join(rendersRoot, `${id}.mp4`));return stat.isFile() ? stat.size : 0;}
     catch (error) {if (error.code === 'ENOENT') return 0;throw error;}
@@ -40,10 +42,15 @@ export function createOnlineHttp({store = createOnlineStore(getDb()), config = p
       return publicRender(store.enqueue(validateShort(job)));
     },
     async handle(request, response, url) {
-      response.setHeader('X-Content-Type-Options', 'nosniff');
-      response.setHeader('Referrer-Policy', 'same-origin');
-      response.setHeader('X-Frame-Options', 'SAMEORIGIN');
+      const nonce = randomBytes(18).toString('base64');
+      securityHeaders(response, nonce);
       response.setHeader('Cache-Control', 'private, no-store');
+      const retryAfter = limits.check(request, url);
+      if (retryAfter) {
+        response.setHeader('Retry-After', String(retryAfter));
+        json(response, 429, {ok: false, error: 'Muitas solicitações. Aguarde um minuto e tente novamente.'});
+        return true;
+      }
       if (url.pathname === '/healthz' && request.method === 'GET') {json(response, 200, {ok: true}); return true;}
       if (await auth.handle(request, response, url)) return true;
       if (!auth.authenticated(request)) {
@@ -111,7 +118,7 @@ export function createOnlineHttp({store = createOnlineStore(getDb()), config = p
       if (['GET', 'HEAD'].includes(request.method) && ['/football', '/football/', '/football-static', '/football-static/'].includes(url.pathname)) {
         const html = await fs.readFile(path.join(root, 'dashboard/football/index.html'), 'utf8');
         response.writeHead(200, {'content-type': 'text/html; charset=utf-8'});
-        response.end(html.replace('</head>', '<script>window.FOOT_ANALYSIS_ONLINE=true;</script><link rel="stylesheet" href="/online.css"></head>').replace('</body>', '<script type="module" src="/online.js"></script></body>'));
+        response.end(html.replace('</head>', `<script nonce="${nonce}">window.FOOT_ANALYSIS_ONLINE=true;</script><link rel="stylesheet" href="/online.css"></head>`).replace('</body>', '<script type="module" src="/online.js"></script></body>'));
         return true;
       }
       if (['GET', 'HEAD'].includes(request.method) && ['/styles.css', '/online.css', '/online.js', '/football/app.js', '/football/helpers.js', '/football/studio.css', '/football/layout.js'].includes(url.pathname)) {await streamFile(request,response,path.join(root,'dashboard'),url.pathname.slice(1),undefined,{cacheStatic:true});return true;}

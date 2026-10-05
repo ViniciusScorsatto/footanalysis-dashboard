@@ -1,5 +1,7 @@
 import {spawn} from 'node:child_process';
 import {logEvent} from './logging.mjs';
+import {dropContainerPrivileges} from './privileges.mjs';
+await dropContainerPrivileges();
 process.env.FOOT_ANALYSIS_ONLINE = '1';
 const {initializeState, root} = await import('./paths.mjs');
 await initializeState();

@@ -25,16 +25,16 @@
     "verify:current-job-stills": "node scripts/verify-current-job-stills.mjs"
   },
   "dependencies": {
-    "@remotion/bundler": "4.0.438",
-    "@remotion/player": "^4.0.271",
-    "@remotion/renderer": "4.0.438",
+    "@remotion/bundler": "4.0.532",
+    "@remotion/player": "4.0.532",
+    "@remotion/renderer": "4.0.532",
     "better-sqlite3": "^11.10.0",
     "react": "^18.3.1",
     "react-dom": "18.3.1",
-    "remotion": "^4.0.271"
+    "remotion": "4.0.532"
   },
   "devDependencies": {
-    "@remotion/cli": "^4.0.271",
+    "@remotion/cli": "4.0.532",
     "@types/react": "^18.3.12",
     "@types/react-dom": "18.3.1",
     "esbuild": "0.25.0",
