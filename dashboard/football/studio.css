@@ -73,7 +73,7 @@
 .football-dashboard.online-dashboard .preview-toolbar {position:absolute;top:14px;right:20px;margin:0;}
 .football-dashboard.online-dashboard .preview-panel .status-chip {display:none;}
 .football-dashboard.online-dashboard .preview-toolbar .btn,.football-dashboard.online-dashboard .preview-link {background:none;border:0;padding:4px;font-size:12px;font-weight:400;color:#78b2ff;box-shadow:none;}
-.football-dashboard.online-dashboard .preview-frame-shell {margin-top:20px;}
+.football-dashboard.online-dashboard .preview-frame-shell {width:100%;margin-top:20px;}
 .football-dashboard #preview-frame {width:100%;height:100%;min-height:0;border:0;}
 .studio-preview-empty {position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;text-align:center;color:#edf2f7;pointer-events:none;}
 .studio-preview-empty strong {font-size:14px;font-weight:550;}
@@ -123,7 +123,6 @@
   .football-dashboard .command-actions .btn {min-width:0;flex:1;}
   .football-dashboard :is(input,select,textarea) {font-size:16px;}
   .football-dashboard .preview-rail {position:static;}
-  .football-dashboard.online-dashboard .preview-frame-shell {width:min(100%,260px);}
   .studio-videos-header {align-items:flex-start;flex-direction:column;gap:8px;}
   .studio-video-columns {display:none;}
   .football-dashboard .online-render {grid-template-columns:1fr auto;gap:6px 14px;}
