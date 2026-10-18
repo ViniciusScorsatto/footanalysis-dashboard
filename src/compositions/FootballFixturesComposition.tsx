@@ -16,6 +16,7 @@ import {
 import {ResultRow} from '../components/ResultRow';
 import {SoundtrackBed} from '../components/SoundtrackBed';
 import {VoiceoverBed} from '../components/VoiceoverBed';
+import {staticResultsPageRange} from '../lib/static-results-pagination.mjs';
 import {
   HEADER_STAGGER_FRAMES,
   accentWipeWidth,
@@ -58,7 +59,7 @@ export const FootballFixturesComposition = ({
   languageProfile = 'pt-br',
   leagueName,
   roundLabel,
-  fixtures,
+  fixtures: allFixtures,
   brandName,
   brandLogoPath,
   soundtrackPath,
@@ -76,6 +77,9 @@ export const FootballFixturesComposition = ({
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const isStatic = presentation === 'static';
+  const pagination = staticResultsPageRange(allFixtures.length, frame, fps);
+  const isPaginated = isStatic && variant === 'results' && pagination.pages > 1;
+  const fixtures = isPaginated ? allFixtures.slice(pagination.start, pagination.end) : allFixtures;
   const contentStartFrame = isStatic ? 0 : SHORT_OPENING_DURATION_FRAMES;
   const contentFrame = isStatic
     ? 999
@@ -138,6 +142,7 @@ export const FootballFixturesComposition = ({
         soundtrackPath={soundtrackPath}
         volume={soundtrackVolume}
         duckUntilSeconds={voiceoverPath ? 3.2 : 0}
+        loop={isPaginated}
       />
       <FootballShortBackdrop
         template={variant}
@@ -256,13 +261,18 @@ export const FootballFixturesComposition = ({
             >
               {roundLabel}
             </div>
+            {isPaginated ? (
+              <div style={{fontFamily: TEASER_LABEL_FONT, fontSize: 20, color: '#c0ccd8'}}>
+                {isEnglish ? 'Page' : 'Página'} {pagination.page + 1}/{pagination.pages}
+              </div>
+            ) : null}
           </div>
 
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: fixtureListGap,
+              gap: isStatic && variant === 'results' && fixtures.length >= 11 ? 8 : fixtureListGap,
               paddingRight: 4,
               flex: isExpandedFixtureLayout ? 1 : undefined,
               justifyContent: isExpandedFixtureLayout ? 'center' : undefined,

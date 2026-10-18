@@ -135,7 +135,7 @@ const BrandedResultRow = ({
           ? 'minmax(0, 1fr) 160px minmax(0, 1fr)'
           : 'minmax(0, 1fr) 118px minmax(0, 1fr)',
         alignItems: 'center',
-        minHeight: isExpanded ? expandedRowHeight : 104,
+        minHeight: isExpanded ? expandedRowHeight : disableAnimation && variant === 'results' && fixtureCount >= 11 ? 86 : 104,
         padding: isExpanded ? '16px 24px' : '0 16px',
         borderRadius: isExpanded ? 30 : 24,
         background: surfaceColor,

@@ -14,6 +14,7 @@ import {FootballWorldCupKnockoutComposition} from '../compositions/FootballWorld
 import {FootballHistoricalChampionsComposition} from '../compositions/FootballHistoricalChampionsComposition';
 import {FootballComparisonComposition} from '../compositions/FootballComparisonComposition';
 import type {FootballVideoJob} from '../lib/types';
+import {staticResultsDuration} from '../lib/static-results-pagination.mjs';
 
 // One adapter is used by both the mobile Player and the server renderer.
 export const shortComponents = {
@@ -41,7 +42,9 @@ export const shortComponents = {
 export function shortMetadata(job: FootballVideoJob) {
   const durationInFrames = job.template === 'continental-groups-standings' && job.leagueId === 5
     ? Math.max(1, Math.ceil(job.groups.length / 2)) * 180
-    : job.durationInFrames;
+    : job.template === 'results' && job.videoMode === 'static'
+      ? staticResultsDuration(job.fixtures.length, job.durationInFrames)
+      : job.durationInFrames;
   if (!Number.isInteger(durationInFrames) || durationInFrames < 1) throw new Error('Invalid video duration');
   return {durationInFrames, fps: 30, width: 1080, height: 1920};
 }

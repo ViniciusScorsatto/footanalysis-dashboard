@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import {staticResultsDuration} from '../../src/lib/static-results-pagination.mjs';
 import fsSync from 'node:fs';
 import {execFile} from 'node:child_process';
 import crypto from 'node:crypto';
@@ -209,6 +210,9 @@ export const summarizeFootballShortDurations = (config = loadFootballShortDurati
   );
 
 export const normalizeFootballShortJobDuration = (job) => {
+  if (job?.videoMode === 'static' && job.template === 'results') {
+    return {...job, durationInFrames: staticResultsDuration(job.fixtures?.length ?? 0, job.durationInFrames)};
+  }
   if (job?.leagueId === 5 && job.template === 'continental-groups-standings') {
     return {...job, durationInFrames: Math.max(1, Math.ceil((job.groups?.length ?? 0) / 2)) * 180};
   }
@@ -4576,15 +4580,15 @@ const applyStaticFootballJobMode = ({job, videoMode, durationInFrames, durationS
   if (!compositionId) {
     throw new Error(`Static videos are not supported for template "${job.template}".`);
   }
+  const requestedDuration = resolveStaticFootballDurationInFrames({durationInFrames, durationSeconds}, job.durationInFrames);
 
   return {
     ...job,
     videoMode: 'static',
     compositionId,
-    durationInFrames: resolveStaticFootballDurationInFrames({
-      durationInFrames,
-      durationSeconds,
-    }, job.durationInFrames),
+    durationInFrames: job.template === 'results'
+      ? staticResultsDuration(job.fixtures?.length ?? 0, requestedDuration)
+      : requestedDuration,
     introTitle: undefined,
     introSubtitle: undefined,
     hookText: undefined,

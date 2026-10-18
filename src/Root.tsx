@@ -48,6 +48,7 @@ import {sampleTopScorersJob} from './data/topScorers';
 import {sampleWorldCupGroupJob, sampleWorldCupKnockoutJob} from './data/worldCup';
 import {sampleShortVisualComposition} from './data/shortVisualSample';
 import {getFootballShortDurationInFrames} from './lib/football-short-durations';
+import {staticResultsDuration} from './lib/static-results-pagination.mjs';
 import type {
   FootballPredictionsLongVideoJob,
   FootballRoundSummaryLongVideoJob,
@@ -1294,6 +1295,7 @@ export const RemotionRoot = () => {
       />
       <Composition
         id="FootballStaticResultsShort"
+        calculateMetadata={({props}) => ({durationInFrames: staticResultsDuration(props.fixtures.length, getStaticFootballDurationInFrames('FootballStaticResultsShort'))})}
         component={FootballFixturesComposition}
         durationInFrames={getStaticFootballDurationInFrames('FootballStaticResultsShort')}
         fps={30}

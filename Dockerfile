@@ -36,6 +36,7 @@ COPY dashboard ./dashboard
 COPY config ./config
 COPY public ./public
 COPY src/data/history ./src/data/history
+COPY src/lib/static-results-pagination.mjs ./src/lib/static-results-pagination.mjs
 # The startup bootstrap owns the mounted volume, then irreversibly drops to
 # node (1000:1000) before importing the application or opening any listener.
 ENV NODE_ENV=production FOOT_ANALYSIS_ONLINE=1 FOOT_ANALYSIS_DATA_DIR=/data FOOT_ANALYSIS_CONTAINER=1
